@@ -1,0 +1,15 @@
+import { LoaderIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+function Spinner({ className, ...props }) {
+  return <LoaderIcon role="status" aria-label="Loading" className={cn("size-4 animate-spin", className)} {...props} />;
+}
+
+export default function Loading() {
+  return (
+    <div className="flex items-center justify-center min-h-screen gap-4">
+      <Spinner className={"size-10 text-primary-500"} />
+    </div>
+  );
+}
