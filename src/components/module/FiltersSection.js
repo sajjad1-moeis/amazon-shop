@@ -11,7 +11,7 @@ const shops = [
   { name: "آمازون آمریکا", id: "a3" },
 ];
 
-function FiltersSection({ dynamicFilters }) {
+function FiltersSection({ dynamicFilters, isInventory }) {
   const [checkedOptions, setCheckedOptions] = useState({});
 
   const handleCheckboxChange = (filterId, optionId) => {
@@ -45,7 +45,7 @@ function FiltersSection({ dynamicFilters }) {
       {/* Shops */}
       <div className="mt-7 border-b border-gray-200 pb-4 mb-4">
         <p>فروشگاه</p>
-        <div className="flex flex-col gap-3 mt-4">
+        <div className="flex flex-col gap-5 mt-4">
           {shops.map((shop) => (
             <div key={shop.id} className="flex items-center gap-3">
               <Checkbox
@@ -62,12 +62,14 @@ function FiltersSection({ dynamicFilters }) {
       </div>
 
       {/* Switch */}
-      <div className="mb-4">
-        <div className="flex justify-between items-center">
-          <Label htmlFor="airplane-mode">فقط کالاهای موجود</Label>
-          <Switch className="data-[state=checked]:bg-primary-500" dir="ltr" id="airplane-mode" />
+      {isInventory && (
+        <div className="mb-4">
+          <div className="flex justify-between items-center">
+            <Label htmlFor="airplane-mode">فقط کالاهای موجود</Label>
+            <Switch className="data-[state=checked]:bg-primary-500" dir="ltr" id="airplane-mode" />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Dynamic Filters Accordion */}
       <Accordion type="multiple">

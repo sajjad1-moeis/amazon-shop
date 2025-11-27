@@ -4,6 +4,7 @@ import React from "react";
 function DirectPurchase() {
   return (
     <AboutServiceCard
+      className={"container"}
       src={"/image/About-Us/TeamLogo.png"}
       title="خرید مستقیم از امارات و تحویل در ایران"
       desc={

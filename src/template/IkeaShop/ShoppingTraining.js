@@ -14,7 +14,6 @@ function ShoppingTraining() {
       <p className="text-lg text-gray-600">2. انتخاب محصول و اضافه کردن به سبد خرید</p>
       <p className="text-lg text-gray-600">3. تأیید محصول و آدرس ارسال</p>
       <p className="text-lg text-gray-600">4. انتخاب نحوه ارسال پستی</p>
-
       <div class="mt-14">
         <p className="text-gray-700 text-3xl">آموزش ویدیویی</p>
         <div class="bg-[#FF6F00] h-[556px] flex-center rounded-xl text-white mt-4">عکس</div>

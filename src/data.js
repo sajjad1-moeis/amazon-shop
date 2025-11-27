@@ -207,3 +207,45 @@ export const purchasingSteps = [
     description: " بعد از تایید شما، محصول به صورت امن توسط میکرولس خریداری می‌شود.",
   },
 ];
+
+const format = (v) => v?.toLocaleString("fa-IR");
+
+export const PRIMARY = [
+  {
+    name: "link",
+    label: "لینک",
+    placeholder: "لینک محصول خود را وارد کنید",
+    rules: {
+      required: "لطفاً لینک محصول را وارد کنید",
+      pattern: {
+        value: /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[\w-./?%&=]*)?$/,
+        message: "فرمت لینک صحیح نیست",
+      },
+    },
+  },
+];
+
+const USD = 83000;
+const SHIP = 1200;
+
+export const SECONDARY = [
+  {
+    name: "priceUSD",
+    label: "قیمت (دلار)",
+    placeholder: "قیمت را وارد کنید",
+    helper: `هر دلار ${format(USD)} تومان`,
+    rules: {
+      required: "قیمت دلاری را وارد کنید",
+      pattern: { value: /^[0-9]+(\.[0-9]+)?$/, message: "فقط عدد مجاز است" },
+    },
+  },
+  {
+    name: "weightGram",
+    label: "وزن (گرم)",
+    placeholder: "وزن محصول را وارد کنید",
+    helper: `حمل هر گرم ${format(SHIP)} تومان`,
+    rules: {
+      pattern: { value: /^[0-9]+(\.[0-9]+)?$/, message: "فقط عدد مجاز است" },
+    },
+  },
+];

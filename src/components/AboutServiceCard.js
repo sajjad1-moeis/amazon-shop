@@ -1,11 +1,12 @@
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
 
-function AboutServiceCard({ title, desc, src }) {
+function AboutServiceCard({ title, desc, src, className }) {
   return (
-    <div className="grid grid-cols-3 mt-28 items-center container">
+    <div className={cn("grid grid-cols-3 mt-28 items-center", className)}>
       <div>
-        <div className="relative aspect-square max-h-[401px] w-full h-full">
+        <div className="relative aspect-square max-h-[300px] w-full h-full">
           <Image src={src} alt={`درخواست محصول از تیکت`} fill className="object-cover rounded-xl" />
         </div>
       </div>

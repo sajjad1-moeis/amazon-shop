@@ -23,7 +23,7 @@ function SearchBoxShop() {
           className="px-2 outline-none bg-transparent placeholder:text-sm"
           placeholder="لینک یا نام کالا را وارد کنید ..."
         />
-        <Button className="bg-yellow-500 text-primary-800 flex-flex-between rounded-xl">
+        <Button variant="ghost" className="bg-yellow-500 text-primary-800 flex-flex-between rounded-xl">
           <SearchNormal1 /> جستجو
         </Button>
       </div>

@@ -4,7 +4,7 @@ import { brands } from "@/data";
 
 export default function BrandsSection() {
   return (
-    <div className="container px-4 py-12" dir="rtl">
+    <div className="container px-4 mt-28" dir="rtl">
       <p className="text-center text-gray-700 mb-10 leading-7">
         در پایین میتوانید لیست سایت ها دیگر کشور امارات که میتوانید از آن کالای مورد نظرتان را خرید کنید لیست شده است.
         برای مشاهده سایت های دیگر کلیک کنید
