@@ -5,7 +5,7 @@ import React from "react";
 function BlogCard() {
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow">
-      <div className="relative aspect-square max-h-[300px] w-full">
+      <div className="relative aspect-square max-h-[177px] lg:max-h-[300px] w-full">
         <Image src="/image/Blogs/blog.png" alt={`عکس بلاگ`} fill className="object-cover rounded-md" />
       </div>
       <div class="p-3">

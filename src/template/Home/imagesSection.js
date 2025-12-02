@@ -3,7 +3,7 @@ import React from "react";
 
 function ImagesSection() {
   return (
-    <div className="grid grid-cols-2 gap-8 mt-22 container">
+    <div className="grid md:grid-cols-2 gap-8 mt-14 md:mt-22 container ">
       <Image
         src="/image/Home/image1.png"
         alt="banner"

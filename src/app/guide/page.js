@@ -1,0 +1,87 @@
+"use client";
+
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import ShippingReturnPolicy from "@/template/Guide/ShippingReturnPolicy";
+import IndexLayout from "@/layout/IndexLayout";
+import IntroductionCard from "@/components/IntroductionCard";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { GUIDE_ITEMS } from "@/data";
+
+export default function GuidesPage() {
+  const [activeGuide, setActiveGuide] = useState("shipping-return");
+
+  const ActiveComponent = GUIDE_ITEMS.find((item) => item.id === activeGuide)?.component || ShippingReturnPolicy;
+  const activeClasses =
+    "data-[state=active]:bg-gray-50 data-[state=active]:border-b-2 border-yellow-500  flex-none " +
+    "data-[state=active]:!text-yellow-600 text-gray-500 px-5 py-3 rounded-none transition";
+
+  return (
+    <IndexLayout>
+      <IntroductionCard
+        desc="تمام مراحل خرید، ارسال و استفاده از خدمات میکرولس به‌صورت ساده و مرحله‌به‌مرحله"
+        title={"راهنمای خدمات سایت"}
+      />
+      <div className=" bg-gray-50  md:py-8 lg:px-4 ">
+        <div class="max-lg:px-4 lg:container">
+          <div className=" mx-auto max-lg:hidden ">
+            <div className="flex flex-col lg:flex-row gap-6">
+              {/* Sidebar */}
+              <aside className="w-full lg:w-80 shrink-0">
+                <div
+                  className="bg-white rounded-2xl p-6 sticky top-8"
+                  style={{ boxShadow: "0px 1px 5px -1px #0000001F" }}
+                >
+                  <h2 className="text-xl font-bold text-gray-900 mb-6">فهرست راهنماها</h2>
+                  <nav className="space-y-2">
+                    {GUIDE_ITEMS.map((item) => (
+                      <button
+                        key={item.id}
+                        onClick={() => setActiveGuide(item.id)}
+                        className={cn(
+                          "w-full text-right px-4 py-3 rounded-lg transition-colors text-sm font-medium",
+                          activeGuide === item.id
+                            ? "bg-gray-100 text-yellow-600"
+                            : "bg-white text-gray-700 hover:bg-gray-50"
+                        )}
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                  </nav>
+                </div>
+              </aside>
+
+              {/* Main Content */}
+              <main className="flex-1 bg-white rounded-2xl border border-gray-200 shadow-sm py-4 px-6">
+                <ActiveComponent />
+              </main>
+            </div>
+          </div>
+          <div className="pt-10 pb-20 bg-gray-50 ">
+            <Tabs
+              dir="rtl"
+              defaultValue="shipping-return"
+              className=" w-full rounded-xl overflow-hidden shadow rounded-t-xl"
+            >
+              <TabsList className="bg-white  w-full justify-between  h-full  rounded-b-none p-0 flex flex-nowrap overflow-auto">
+                {GUIDE_ITEMS.map((tab) => (
+                  <TabsTrigger key={tab.id} value={tab.id} className={activeClasses}>
+                    {tab.label}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+
+              {/* محتوا برای هر تب */}
+              {GUIDE_ITEMS.map((tab) => (
+                <TabsContent key={tab.id} value={tab.id} className="p-2 bg-white space-y-4 mt-0">
+                  <tab.component />
+                </TabsContent>
+              ))}
+            </Tabs>
+          </div>
+        </div>
+      </div>
+    </IndexLayout>
+  );
+}

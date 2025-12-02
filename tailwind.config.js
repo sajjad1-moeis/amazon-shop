@@ -35,8 +35,7 @@ module.exports = {
       container: {
         center: true,
         padding: {
-          DEFAULT: "16px",
-          md: "10px",
+          DEFAULT: "8px",
         },
         screens: {
           sm: "576px",
@@ -52,11 +51,9 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
-        info: {
-          200: "#ADD3F2",
-        },
         red: {
           400: "#F98080",
+          500: "#F05252",
         },
         gray: {
           100: "#F3F4F6",
@@ -70,6 +67,7 @@ module.exports = {
         yellow: {
           400: "#FFCD38",
           500: "#F9CE2E",
+          600: "#D19D00",
           700: "#9D7600",
         },
         neutral: {
@@ -84,10 +82,12 @@ module.exports = {
           600: "#d19d00",
         },
         info: {
+          200: "#ADD3F2",
           500: "#2196F3",
         },
         green: {
           200: "#BCF0DA",
+          500: "#23A26D",
           600: "#057A55",
         },
         background: "hsl(var(--background))",
@@ -102,6 +102,7 @@ module.exports = {
         },
         primary: {
           50: "#EDEFF7",
+          100: "#DBDEEF",
           200: "#B6BCDF",
           300: "#8995D6",
           400: "#6171C8",

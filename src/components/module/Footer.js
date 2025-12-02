@@ -1,18 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import {
-  ArrowUp,
-  Bag2,
-  Call,
-  CardPos,
-  Instagram,
-  Send,
-  Send2,
-  Shield,
-  Truck,
-  Whatsapp,
-  Youtube,
-} from "iconsax-reactjs";
+import { ArrowUp, Bag2, CardPos, Instagram, Send2, Shield, Truck, Whatsapp, Youtube } from "iconsax-reactjs";
 import RecentVisits from "./RecentVisits";
 import { Button } from "../ui/button";
 import Link from "next/link";
@@ -35,13 +23,13 @@ export default function Footer() {
           <RecentVisits />
 
           {/* --- Feature Icons row --- */}
-          <div className="grid grid-cols-5 gap-4 py-6">
+          <div className="grid grid-cols-2 md:grid-cols-4  lg:grid-cols-5  py-6">
             <FeatureItem icon={<CardPos size={22} />} title="پرداخت امن ریالی" />
             <FeatureItem icon={<Bag2 size={22} />} title="خرید مستقیم از آمازون" />
             <FeatureItem icon={<Truck size={22} />} title="ارسال مطمئن به ایران" />
             <FeatureItem icon={<Shield size={22} />} title="تضمین اصالت و کیفیت" />
 
-            <div className="flex items-center justify-end gap-3">
+            <div className="flex items-center justify-end gap-3 max-lg:hidden">
               <button
                 className="flex items-center gap-2 bg-white border border-gray-400 text-gray-400 px-3 py-2 rounded-lg shadow-sm hover:shadow-md"
                 aria-label="بازگشت به بالای صفحه"
@@ -57,7 +45,7 @@ export default function Footer() {
 
           {/* --- Newsletter & Contact --- */}
           <div className="flex flex-col lg:flex-row items-center justify-between gap-4 py-4">
-            <div className="flex items-center gap-8 text-sm text-gray-600">
+            <div className="flex flex-col  md:flex-row max-md:items-start max-md:w-full md:items-center gap-8 text-sm text-gray-600">
               <div className="flex items-center gap-3">
                 <span className="text-sm">تلفن تماس :</span>
                 <a href="mailto:info@microless.ir" className="text-primary-500 font-medium">
@@ -92,7 +80,7 @@ export default function Footer() {
           </div>
 
           {/* Social Icons */}
-          <div className="flex  gap-3 mb-6 p-3 rounded-xl bg-gray-100 border border-gray-200">
+          <div className="flex max-md:justify-between  gap-3 mb-6 p-3 rounded-xl bg-gray-100 border border-gray-200">
             <SocialCircle icon={<Youtube />} bg="bg-red-500" />
             <SocialCircle icon={<Whatsapp />} bg="bg-green-500" />
             <SocialCircle icon={<Instagram />} bg="bg-pink-400" />
@@ -114,7 +102,7 @@ export default function Footer() {
               فراهم می‌کنیم.
             </p>
           </div>
-          <div className="mt-8 flex-between">
+          <div className="mt-8 flex-between max-md:flex-col">
             {/* Side Features */}
             <aside className="col-span-1">
               <h5 className="text-xl font-semibold text-right mb-3">با میکروالس می‌توانید</h5>
@@ -127,7 +115,7 @@ export default function Footer() {
                 <li>خدمات بسته‌بندی و بیمه مسئولیت</li>
               </ul>
             </aside>
-            <div className="flex gap-4 mt-6 flex-wrap">
+            <div className="flex gap-2 md:gap-4 mt-6 flex-wrap">
               {[1, 2, 3, 4].map((b) => (
                 <div
                   key={b}
@@ -143,9 +131,9 @@ export default function Footer() {
 
           {/* Bottom Links */}
           <div className="py-6 flex flex-col lg:flex-row justify-between items-center text-sm text-gray-600">
-            <div className="flex gap-0.5 flex-wrap justify-center lg:justify-start bg-gray-200">
+            <div className="flex gap-y-4 md:gap-0.5 flex-wrap justify-center lg:justify-start w-full">
               {links.map((item, index) => (
-                <Link key={index} href={item.href} className="hover:underline bg-white px-4">
+                <Link key={index} href={item.href} className="hover:underline bg-white px-4 border-l">
                   {item.title}
                 </Link>
               ))}
@@ -164,11 +152,11 @@ export default function Footer() {
 /* --- Feature Icon Item --- */
 function FeatureItem({ icon, title }) {
   return (
-    <div className="flex items-center gap-3 p-3">
-      <div className="w-10 h-10 rounded-md bg-gray-200 flex items-center justify-center border border-gray-300 text-gray-700">
+    <div className="flex items-center gap-3 ,d:p-3">
+      <div className="w-10 h-10 rounded-xl bg-gray-400 flex items-center justify-center border border-gray-300 text-white">
         {icon}
       </div>
-      <div className="text-right text-sm text-gray-700">{title}</div>
+      <div className="text-right text-xs md:text-sm text-gray-700">{title}</div>
     </div>
   );
 }

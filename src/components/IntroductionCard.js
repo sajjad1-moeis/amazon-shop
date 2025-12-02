@@ -9,9 +9,9 @@ import {
 } from "./ui/breadcrumb";
 import { Home } from "iconsax-reactjs";
 
-function IntroductionCard({ items = [], title }) {
+function IntroductionCard({ items = [], title, desc = "" }) {
   return (
-    <div className="relative bg-[url(/image/BgIntroduction.png)] py-8 flex items-center justify-center">
+    <div className="relative bg-[url(/image/BgIntroduction.png)] py-8 flex items-center justify-center flex-col">
       {/* Breadcrumb */}
       <div className="absolute top-4 right-6">
         <Breadcrumb>
@@ -46,7 +46,8 @@ function IntroductionCard({ items = [], title }) {
       </div>
 
       {/* عنوان */}
-      <p className="text-4xl text-primary-700 font-bold">{title}</p>
+      <p className="text-2xl md:text-3xl lg:text-4xl text-primary-700 font-bold  max-lg:mt-5 text-center">{title}</p>
+      <p className="md:mt-5 mt-2 text-gray-500 max-md:text-xs text-center">{desc}</p>
     </div>
   );
 }

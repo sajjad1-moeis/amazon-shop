@@ -6,7 +6,7 @@ import { SearchNormal1 } from "iconsax-reactjs";
 function SearchBoxShop() {
   return (
     <div
-      className="relative rounded-2xl bg-white -mt-[3%] p-4 max-w-4xl mx-auto"
+      className="relative rounded-2xl bg-white -mt-[10%] md:-mt-[3%] p-4 max-w-4xl mx-auto"
       style={{ boxShadow: "0px 1px 8px 0px #0000001F" }}
     >
       <div class="flex items-center gap-2">

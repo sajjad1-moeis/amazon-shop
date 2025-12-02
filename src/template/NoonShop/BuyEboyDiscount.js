@@ -4,7 +4,7 @@ import React from "react";
 function BuyEboyDiscount() {
   return (
     <div className={"grid grid-cols-3 my-28 items-center container"}>
-      <div class="md:col-span-2 p-10">
+      <div class="md:col-span-2 p-4 md:p-10">
         <div className="mb-4">
           <h2 className="text-3xl  text-primary-700 mb-2 text-right flex items-center gap-3">
             <div className="w-1 h-8 bg-primary-400 rounded"></div>

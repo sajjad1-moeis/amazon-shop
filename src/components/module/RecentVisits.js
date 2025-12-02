@@ -4,9 +4,9 @@ import React from "react";
 function RecentVisits() {
   return (
     <div>
-      <h3 className="text-2xl font-semibold text-right mb-6 text-gray-700">بازدید های اخیر شما</h3>
+      <h3 className="md:text-2xl font-semibold text-right mb-6 text-gray-700">بازدید های اخیر شما</h3>
 
-      <div className="grid grid-cols-1 sm:grid-cols-5 gap-6 mb-6">
+      <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 md:gap-6 mb-6">
         {[1, 2, 3].map((i) => (
           <div
             key={i}

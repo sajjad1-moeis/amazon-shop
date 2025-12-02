@@ -53,73 +53,75 @@ export default function ProductPurchaseForm() {
   };
 
   return (
-    <div className="mx-auto max-w-2xl rounded-3xl border bg-white shadow-sm px-6 py-4">
-      <p className=" text-gray-700 text-2xl">فرم خرید محصول</p>
+    <div class="p-4">
+      <div className="container rounded-3xl border bg-white shadow-sm px-6 py-4">
+        <p className=" text-gray-700 text-2xl">فرم خرید محصول</p>
 
-      <form className="space-y-5 mt-6" onSubmit={handleSubmit(onSubmit)}>
-        {PRIMARY.map((f) => (
-          <div key={f.name} className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">{f.label}</label>
-            <Input placeholder={f.placeholder} className="bg-gray-50 border" {...register(f.name, f.rules)} />
-            {errors[f.name] && <p className="text-xs text-red-500">{errors[f.name]?.message}</p>}
-          </div>
-        ))}
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          {SECONDARY.map((f) => (
+        <form className="space-y-5 mt-6" onSubmit={handleSubmit(onSubmit)}>
+          {PRIMARY.map((f) => (
             <div key={f.name} className="space-y-2">
               <label className="text-sm font-medium text-gray-700">{f.label}</label>
-              <Input
-                inputMode="decimal"
-                placeholder={f.placeholder}
-                className="bg-gray-50 border"
-                {...register(f.name, f.rules)}
-              />
+              <Input placeholder={f.placeholder} className="bg-gray-50 border" {...register(f.name, f.rules)} />
               {errors[f.name] && <p className="text-xs text-red-500">{errors[f.name]?.message}</p>}
             </div>
           ))}
-        </div>
 
-        <div className="rounded-2xl border border-dashed bg-gray-50/60 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-700">توضیحات</p>
-              <p className="text-xs text-gray-500 mt-2">در صورت نیاز این بخش را باز کنید.</p>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setShowDesc((s) => !s)}
-              className="flex size-9 items-center justify-center rounded-full border text-gray-500 hover:text-amber-500"
-            >
-              <Plus className={cn("size-5 transition-transform", showDesc && "rotate-45")} />
-            </button>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {SECONDARY.map((f) => (
+              <div key={f.name} className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">{f.label}</label>
+                <Input
+                  inputMode="decimal"
+                  placeholder={f.placeholder}
+                  className="bg-gray-50 border"
+                  {...register(f.name, f.rules)}
+                />
+                {errors[f.name] && <p className="text-xs text-red-500">{errors[f.name]?.message}</p>}
+              </div>
+            ))}
           </div>
 
-          {showDesc && (
-            <textarea
-              rows={3}
-              placeholder="توضیحات دلخواه"
-              className="mt-4 w-full rounded-2xl border bg-white px-4 py-3 text-sm"
-              {...register("description")}
-            />
-          )}
-        </div>
+          <div className="rounded-2xl border border-dashed bg-gray-50/60 p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-700">توضیحات</p>
+                <p className="text-xs text-gray-500 mt-2">در صورت نیاز این بخش را باز کنید.</p>
+              </div>
 
-        <div className="flex-between mt-12">
-          <p className="text-lg text-gray-400">قیمت قابل پرداخت</p>
-          <p className="text-xl  text-gray-900">{format(payable)} تومان</p>
-        </div>
-        <div>
-          <Button
-            variant="ghost"
-            disabled={isSubmitting}
-            className="w-full rounded-lg bg-yellow-400 text-primary-800 py-5 text-base"
-          >
-            {isSubmitting ? "در حال ارسال..." : "ارسال درخواست"}
-          </Button>
-        </div>
-      </form>
+              <button
+                type="button"
+                onClick={() => setShowDesc((s) => !s)}
+                className="flex size-9 items-center justify-center rounded-full border text-gray-500 hover:text-amber-500"
+              >
+                <Plus className={cn("size-5 transition-transform", showDesc && "rotate-45")} />
+              </button>
+            </div>
+
+            {showDesc && (
+              <textarea
+                rows={3}
+                placeholder="توضیحات دلخواه"
+                className="mt-4 w-full rounded-2xl border bg-white px-4 py-3 text-sm"
+                {...register("description")}
+              />
+            )}
+          </div>
+
+          <div className="flex-between mt-12">
+            <p className="text-lg text-gray-400">قیمت قابل پرداخت</p>
+            <p className="text-xl  text-gray-900">{format(payable)} تومان</p>
+          </div>
+          <div>
+            <Button
+              variant="ghost"
+              disabled={isSubmitting}
+              className="w-full rounded-lg bg-yellow-400 text-primary-800 py-5 text-base"
+            >
+              {isSubmitting ? "در حال ارسال..." : "ارسال درخواست"}
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

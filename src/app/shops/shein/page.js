@@ -1,19 +1,24 @@
 import AboutServiceCard from "@/components/AboutServiceCard";
 import ProductPurchaseForm from "@/components/module/ProductPurchaseForm";
 import ShopsLayout from "@/layout/ShopsLayout";
-import ShoppingTraining from "@/template/NoonShop/ShoppingTraining";
+import ShoppingTraining from "@/template/Shein/ShoppingTraining";
 import AvailableProducts from "@/template/Shein/AvailableProducts";
 import DirectPurchase from "@/template/Shein/DirectPurchase";
 import React from "react";
 
 function Page() {
   return (
-    <ShopsLayout direct={<DirectPurchase />} title={"شین"} src="/image/Shops/shein.png">
+    <ShopsLayout
+      direct={<DirectPurchase />}
+      title={"شین"}
+      src="/image/Shops/shein.png"
+      imgClassName={"max-md:max-h-44"}
+    >
       <div class="bg-gray-50">
         <ProductPurchaseForm />
         <AvailableProducts />
         <AboutServiceCard
-          className={"container"}
+          className={"container max-md:mt-14"}
           src={"/image/Shein/banner3.png"}
           title="مزایای خرید از شی این امارات"
           desc={

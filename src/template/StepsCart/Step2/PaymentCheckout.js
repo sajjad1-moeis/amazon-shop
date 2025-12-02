@@ -36,7 +36,7 @@ export default function PaymentCheckout({
         {/* Payment Methods */}
         <div className="space-y-4">
           <h2 className="text-xl  text-gray-700 mb-4">انتخاب روش پرداخت:</h2>
-          <div className="space-y-3">
+          <div className="gap-3 grid max-lg:grid-cols-2 max-md:!grid-cols-1">
             {paymentMethods.map((method) => (
               <PaymentMethodItem
                 key={method.id}
@@ -51,11 +51,11 @@ export default function PaymentCheckout({
         </div>
 
         {/* Order Summary */}
-        <div className="space-y-4">
+        <div className="md:space-y-4">
           <OrderSummary orderPrice={orderPrice} discount={discount} />
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-3 pt-4">
+          <div className="md:flex items-center gap-3 p-3 md:pt-4 max-md:fixed bg-white grid grid-cols-2 right-0 bottom-0 w-full">
             <Button
               onClick={onBack}
               variant="outline"
@@ -71,9 +71,9 @@ export default function PaymentCheckout({
             </Button>
           </div>
 
-          <p className="text-xs text-gray-500 text-center pt-2">
+          <div className="text-xs text-gray-500 text-center pt-2 max-md:mb-10">
             بعد از پرداخت هزینه، سفارش شما قابل پیگیری است و مراحل مختلف اطلاع رسانی خواهند شد.
-          </p>
+          </div>
         </div>
       </div>
     </div>

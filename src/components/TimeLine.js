@@ -12,7 +12,7 @@ export default function Timeline({ currentStep = 1, steps }) {
   const isComplete = currentStep === steps?.length;
 
   return (
-    <div className="relative w-full mx-auto px-14 select-none">
+    <div className="relative w-full mx-auto px-5 md:px-14 select-none">
       {/* خط پس‌زمینه */}
       <div className="absolute top-6 right-0 w-full h-2.5 bg-black/10 rounded-full" />
       <div className="absolute top-[21px] -right-1 size-4 bg-primary-600 rounded-full" />

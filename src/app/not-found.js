@@ -5,11 +5,15 @@ import React from "react";
 
 function Notfound() {
   return (
-    <div className="bg-[#F4F6F5] relative">
-      <div className="absolute top-40 m-auto inset-x-0 size-max">
-        <h1 className="text-[#0448A9] text-6xl font-bold"> این صفحه تحویل داده نشد !</h1>
-        <h2 className="text-center mt-5 text-xl text-gray-600">
-          مثل یک بسته اشتباهی، این صفحه به مقصد نرسیده. مسیر جدید انتخاب کنید
+    <div className="bg-[#F4F6F5] relative min-h-screen">
+      <div className="lg:absolute pt-32  max-md:pt-40 m-auto inset-x-0 size-max">
+        <h1 className="text-[#0448A9]  text-3xl text-center md:text-4xl lg:text-6xl font-bold">
+          {" "}
+          این صفحه تحویل داده نشد !
+        </h1>
+        <h2 className="text-center mt-5 text-sm md:text-lg lg:text-xl text-gray-600">
+          مثل یک بسته اشتباهی، این صفحه به مقصد نرسیده. <br className="md:hidden" />
+          مسیر جدید انتخاب کنید
         </h2>
         <div className="flex justify-center">
           <Link href={"/"}>

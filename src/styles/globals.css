@@ -94,3 +94,13 @@
   justify-content: center;
   align-items: center;
 }
+
+.box-wrapper {
+  box-shadow: 0 8px 32px 0 #66666629;
+  border-radius: 20px; /* اگر نیاز داری */
+}
+.box-payment {
+  padding-bottom: 40px;
+  mask: radial-gradient(15px at bottom, #0000 calc(100% - 1px), #000) 50%/27.75px 100%;
+  -webkit-mask: radial-gradient(15px at bottom, #0000 calc(100% - 1px), #000) 50%/27.75px 100%;
+}

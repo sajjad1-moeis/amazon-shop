@@ -3,15 +3,15 @@ import React from "react";
 
 function BuyEboyDiscount() {
   return (
-    <div className={"grid grid-cols-3 my-28 items-center container"}>
-      <div class="md:col-span-2 p-10">
+    <div className={"grid lg:grid-cols-3 my-14 lg:my-28 items-center container"}>
+      <div class="lg:col-span-2 p-4 lg:p-10">
         <div className="mb-4">
-          <h2 className="text-3xl  text-primary-700 mb-2 text-right flex items-center gap-3">
+          <h2 className="text-xl md:text-2xl lg:text-3xl text-primary-700 mb-2 text-right flex items-center gap-3">
             <div className="w-1 h-8 bg-primary-400 rounded"></div>
             خرید از ایبی در تخفیفات
           </h2>
         </div>
-        <div class="text-gray-600 text-justify leading-8 mt-4">
+        <div class="text-gray-600 text-justify leading-8 mt-4 max-lg:text-sm">
           <p>
             یکی دیگر از ویژگی‌هایی که باعث شده مردم به سمت خرید از فروشگاه‌های خارجی خصوصا ebay روی بیاورد وجود جشنوارها
             و تخفیفات شگفت انگیز می باشد.

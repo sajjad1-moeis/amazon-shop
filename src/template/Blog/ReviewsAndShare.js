@@ -13,9 +13,19 @@ export default function ReviewsAndShare() {
     <div className="container bg-white p-8" dir="rtl">
       {/* Top Section - Icons and Tags */}
       <div className="bg-gray-100 p-4 rounded-2xl w-full">
-        <h3 className="text-2xl font-semibold text-gray-800 mb-4 text-right">برچسب ها</h3>
+        <div class="flex-between mb-4">
+          <h3 className="md:text-2xl font-semibold text-gray-800  text-right">برچسب ها</h3>
+          <div className="flex items-center gap-2 md:hidden">
+            <button className="text-gray-500">
+              <Heart size={28} />
+            </button>
+            <button className="text-primary-500">
+              <Share size={28} />
+            </button>
+          </div>
+        </div>
         <div class="flex-between">
-          <div className="flex flex-wrap gap-2 justify-end">
+          <div className="flex flex-wrap gap-2 md:justify-end">
             {tags.map((tag, index) => (
               <span
                 key={index}
@@ -25,7 +35,7 @@ export default function ReviewsAndShare() {
               </span>
             ))}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 max-md:hidden">
             <button className="text-gray-500">
               <Heart size={28} />
             </button>

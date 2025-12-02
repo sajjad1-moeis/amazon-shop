@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowDown2, Element3, RowVertical, Sort } from "iconsax-reactjs";
+import { ArrowDown2, Candle, Element3, RowVertical, Sort } from "iconsax-reactjs";
 import React from "react";
 
 const VIEW_MODES = [
@@ -9,7 +9,7 @@ const VIEW_MODES = [
 
 function HeaderSection({ viewMode, setViewMode }) {
   return (
-    <div className="container mt-4">
+    <div className="max-lg:px-4 lg:container mt-4">
       <div className="flex-between">
         {/* LEFT */}
         <div className="flex-between gap-1">
@@ -18,30 +18,39 @@ function HeaderSection({ viewMode, setViewMode }) {
         </div>
 
         {/* RIGHT */}
-        <div className="flex-between gap-2">
-          {/* SORT BUTTON */}
-          <Button variant="ghost" className="bg-gray-100 border border-gray-300 rounded-lg flex-between text-gray-500">
-            <Sort size={20} />
-            مرتب سازی
-            <ArrowDown2 size={18} />
-          </Button>
+        <div class="flex gap-2">
+          <div className="flex-between gap-2 max-md:hidden">
+            {/* SORT BUTTON */}
+            <Button
+              variant="ghost"
+              className="max-lg:hidden bg-gray-100 border border-gray-300 rounded-lg flex-between text-gray-500"
+            >
+              <Sort size={20} />
+              مرتب سازی
+              <ArrowDown2 size={18} />
+            </Button>
 
-          {/* DYNAMIC VIEW MODE BUTTONS */}
-          {VIEW_MODES.map(({ id, icon: Icon }) => (
-            <button
-              key={id}
-              onClick={() => setViewMode(id)}
-              className={`border rounded-lg p-2 transition 
+            {/* DYNAMIC VIEW MODE BUTTONS */}
+            {VIEW_MODES.map(({ id, icon: Icon }) => (
+              <button
+                key={id}
+                onClick={() => setViewMode(id)}
+                className={`border rounded-lg p-2 transition 
                 ${
                   viewMode === id
                     ? "bg-primary-500 text-white border-primary-500"
                     : "bg-gray-100 text-gray-500 border-gray-200 hover:bg-primary-500 hover:text-white"
                 }
               `}
-            >
-              <Icon size={22} />
-            </button>
-          ))}
+              >
+                <Icon size={22} />
+              </button>
+            ))}
+          </div>
+          <Button variant="ghost" className="bg-gray-100 rounded-lg flex-between text-gray-600 lg:hidden">
+            <Candle size={16} />
+            فیلترها
+          </Button>
         </div>
       </div>
     </div>

@@ -4,17 +4,12 @@ import React from "react";
 
 function TeamSite() {
   return (
-    <div className="mt-32">
-      <div className="container grid grid-cols-3 gap-10 items-center">
-        <div className="relative aspect-square  rounded-xl overflow-hidden">
-          <Image
-            src="/image/About-Us/TeamLogo.png"
-            alt={`محصول بازدید شده شماره `}
-            fill
-            className="object-cover rounded-md "
-          />
+    <div className="mt-32 mb-20">
+      <div className="container grid lg:grid-cols-3 gap-10 items-center">
+        <div className="relative aspect-square  w-full rounded-xl overflow-hidden max-h-[412px]">
+          <Image src="/image/About-Us/TeamLogo.png" alt={`محصول بازدید شده شماره `} fill className=" rounded-md " />
         </div>
-        <div className="md:col-span-2">
+        <div className="lg:col-span-2">
           <TitleCard title={"تیم میکرولس"} titleClassName={"text-3xl"} />
           <div className="text-gray-600 space-y-2 mt-6">
             <p>

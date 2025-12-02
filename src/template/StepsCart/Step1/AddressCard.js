@@ -7,8 +7,8 @@ export default function AddressCard({ address, isSelected, onSelect, onEdit, onD
     <div
       onClick={onSelect}
       className={cn(
-        "border-2 rounded-lg p-5 flex items-start gap-4 cursor-pointer transition-all",
-        isSelected ? "bg-blue-50/50 border-blue-200" : "bg-white border-gray-200 hover:border-gray-300"
+        "border-2 rounded-xl p-2 md:p-5 flex items-start gap-4 cursor-pointer transition-all",
+        isSelected ? "bg-primary-50 border-primary-300" : "bg-white border-gray-200 hover:border-gray-300"
       )}
     >
       {/* Radio Button */}
@@ -26,30 +26,32 @@ export default function AddressCard({ address, isSelected, onSelect, onEdit, onD
       </div>
 
       {/* Address Content */}
-      <div className="flex-1 flex items-start justify-between gap-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <Location className="size-5 text-gray-700" />
-            <span className="font-semibold text-gray-900">{address.name}</span>
+      <div class="w-full">
+        <div className="flex-1 flex items-start justify-between gap-4">
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-2">
+              <Location variant="Bold" className="size-5 text-gray-700" />
+              <span className="font-semibold text-gray-900 max-md:text-sm">{address.name}</span>
+            </div>
+            <div className="flex items-start gap-2 text-sm max-md:hidden">
+              <span className="text-gray-500 flex-none">آدرس :</span>
+              <span className="text-gray-900 line-clamp-2 overflow-hidden">{address.address}</span>
+            </div>
           </div>
-          <div className="flex items-start gap-2 text-sm">
-            <span className="text-gray-500">آدرس :</span>
-            <span className="text-gray-900">{address.address}</span>
+
+          {/* Action Icons */}
+          <div className="flex items-center gap-2 shrink-0" onClick={(e) => e.stopPropagation()}>
+            <button onClick={onEdit} className=" hover:bg-blue-50 rounded transition-colors" aria-label="ویرایش آدرس">
+              <Edit2 className=" text-blue-500" />
+            </button>
+            <button onClick={onDelete} className=" hover:bg-red-50 rounded transition-colors" aria-label="حذف آدرس">
+              <Trash className=" text-red-500" />
+            </button>
           </div>
         </div>
-
-        {/* Action Icons */}
-        <div className="flex items-center gap-2 shrink-0" onClick={(e) => e.stopPropagation()}>
-          <button
-            onClick={onEdit}
-            className="p-1.5 hover:bg-blue-50 rounded transition-colors"
-            aria-label="ویرایش آدرس"
-          >
-            <Edit2 className=" text-blue-500" />
-          </button>
-          <button onClick={onDelete} className="p-1.5 hover:bg-red-50 rounded transition-colors" aria-label="حذف آدرس">
-            <Trash className=" text-red-500" />
-          </button>
+        <div className="flex items-start gap-2 text-sm max-md:text-xs md:hidden mt-3">
+          <span className="text-gray-500 flex-none">آدرس :</span>
+          <span className="text-gray-900 line-clamp-2 overflow-hidden ">{address.address}</span>
         </div>
       </div>
     </div>

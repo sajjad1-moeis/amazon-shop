@@ -43,7 +43,7 @@ function FiltersSection({ dynamicFilters, isInventory }) {
       </div>
 
       {/* Shops */}
-      <div className="mt-7 border-b border-gray-200 pb-4 mb-4">
+      <div className="mt-7 border-b border-gray-200 pb-5 ">
         <p>فروشگاه</p>
         <div className="flex flex-col gap-5 mt-4">
           {shops.map((shop) => (
@@ -63,7 +63,7 @@ function FiltersSection({ dynamicFilters, isInventory }) {
 
       {/* Switch */}
       {isInventory && (
-        <div className="mb-4">
+        <div className="my-4">
           <div className="flex justify-between items-center">
             <Label htmlFor="airplane-mode">فقط کالاهای موجود</Label>
             <Switch className="data-[state=checked]:bg-primary-500" dir="ltr" id="airplane-mode" />

@@ -6,7 +6,12 @@ import React from "react";
 
 function Page() {
   return (
-    <ShopsLayout direct={<DirectPurchase />} title={"نون"} src="/image/Shops/noonShop.png">
+    <ShopsLayout
+      direct={<DirectPurchase />}
+      title={"نون"}
+      src="/image/Shops/noonShop.png"
+      imgClassName={"max-md:max-h-44"}
+    >
       <div class="bg-gray-50">
         <ProductPurchaseForm />
         <ShoppingTraining />

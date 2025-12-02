@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "../components/module/Header";
 import Footer from "../components/module/Footer";
+import BottomNavigation from "@/components/module/BottomNavigation";
 
 function IndexLayout({ children }) {
   return (
@@ -8,6 +9,7 @@ function IndexLayout({ children }) {
       <Header />
       {children}
       <Footer />
+      <BottomNavigation />
     </div>
   );
 }

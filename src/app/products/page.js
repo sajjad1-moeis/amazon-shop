@@ -32,9 +32,11 @@ function Page() {
   return (
     <IndexLayout>
       <HeaderSection setViewMode={setViewMode} viewMode={viewMode} />
-      <div className="grid grid-cols-4 container mt-10 gap-8">
-        <FiltersSection dynamicFilters={dynamicFilters} />
-        <div className="md:col-span-3">
+      <div className="grid  lg:grid-cols-4 max-lg:px-4 lg:container mt-10 gap-4 md:gap-8">
+        <div class="max-lg:hidden">
+          <FiltersSection dynamicFilters={dynamicFilters} isInventory={true} />
+        </div>
+        <div className=" lg:col-span-3">
           <ProductList viewMode={viewMode} />
         </div>
       </div>

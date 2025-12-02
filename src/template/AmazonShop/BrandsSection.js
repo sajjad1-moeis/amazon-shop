@@ -10,7 +10,7 @@ export default function BrandsSection() {
         برای مشاهده سایت های دیگر کلیک کنید
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5  gap-8">
+      <div className="grid grid-cols-2 lg:grid-cols-5  gap-4 lg:gap-8">
         {brands.map((brand, idx) => (
           <div
             style={{ boxShadow: "0px 1px 48px 0px #0000000F" }}
@@ -18,7 +18,7 @@ export default function BrandsSection() {
             className={`
               bg-white rounded-xl p-4 border border-gray-100
               hover:shadow-md transition-all flex flex-col h-full
-              ${idx % 2 == 1 ? "mt-10" : ""}
+              ${idx % 2 == 1 ? "lg:mt-10" : ""}
             `}
           >
             {/* جای لوگو */}

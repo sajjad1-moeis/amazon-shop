@@ -1,9 +1,8 @@
 export default function MicroLessDescription() {
   return (
-    <div className="container my-10">
+    <div className=" mt-10 lg:my-10">
       <div
-        className=" bg-white rounded-2xl p-6 md:p-8 leading-8 text-gray-600 text-right
-      "
+        className=" bg-white rounded-2xl p-4 md:p-6 lg:p-8 leading-8 text-gray-600 text-right max-md:text-sm"
         style={{ "box-shadow": "0px 0px 8px 0px #0968F640" }}
       >
         {/* --- Paragraph 1 --- */}

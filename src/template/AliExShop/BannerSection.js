@@ -3,8 +3,8 @@ import React from "react";
 
 function BannerSection() {
   return (
-    <div class="grid grid-cols-2 gap-5 container my-28">
-      <div className="relative aspect-square max-h-[250px] w-full">
+    <div class="grid md:grid-cols-2 gap-5 container my-14 md:my-28">
+      <div className="relative aspect-square max-h-40 md:max-h-[250px] w-full">
         <Image
           src="/image/AliEx/banner1.png"
           alt={`محصول بازدید شده شماره `}
@@ -12,7 +12,7 @@ function BannerSection() {
           className="object-cover rounded-2xl"
         />
       </div>
-      <div className="relative aspect-square max-h-[250px] w-full">
+      <div className="relative aspect-square max-h-40 md:max-h-[250px] w-full">
         <Image
           src="/image/AliEx/banner2.png"
           alt={`محصول بازدید شده شماره `}

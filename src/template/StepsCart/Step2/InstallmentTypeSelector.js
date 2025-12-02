@@ -9,14 +9,14 @@ export default function InstallmentTypeSelector({ selectedType, setSelectedType 
 
   return (
     <div className="bg-gray-50 border border-gray-200 space-y-3 p-3 rounded-2xl">
-      <h3 className="font-semibold text-gray-700 mb-2 text-xl">انتخاب نوع اقساط :</h3>
+      <h3 className=" text-gray-700 mb-2 md:text-xl">انتخاب نوع اقساط :</h3>
       {installmentTypes.map((type) => {
         const isSelected = selectedType === type.id;
         return (
           <div
             key={type.id}
             onClick={() => setSelectedType(type.id)}
-            className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-1 md:gap-3 cursor-pointer p-2 rounded hover:bg-gray-50 transition-colors"
           >
             <div
               className={cn(
@@ -26,7 +26,7 @@ export default function InstallmentTypeSelector({ selectedType, setSelectedType 
             >
               {isSelected && <div className="w-2 h-2 rounded-full bg-primary-500"></div>}
             </div>
-            <span className={cn("text-sm", isSelected ? "text-primary-500 font-medium" : "text-gray-600")}>
+            <span className={cn("text-sm ", isSelected ? "text-primary-500 font-medium" : "text-gray-600")}>
               {type.title}
             </span>
           </div>

@@ -10,7 +10,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="fa">
-      <body dir="rtl">{children}</body>
+      <body dir="rtl">
+        <main className="overflow-hidden">{children}</main>
+      </body>
       <Toaster position="top-right" dir="rtl" />
     </html>
   );

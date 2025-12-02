@@ -13,7 +13,7 @@ export default function AmazonSection() {
       <div className="w-full container -mt-[10%] relative">
         <div className="w-full border-2 border-primary-300 rounded-2xl p-4 flex gap-4 overflow-x-auto bg-white shadow-[0_0_20px_rgba(0,0,0,0.05)]">
           {/* Explosion Offer Box */}
-          <div className="min-w-[200px]  rounded-xl p-4  flex justify-center items-center text-center">
+          <div className="min-w-[150px] lg:min-w-[200px]  rounded-xl p-4  flex justify-center items-center text-center max-md:hidden">
             <div>
               <div className="flex items-center justify-center">
                 <svg width="135" height="105" viewBox="0 0 135 105" fill="none" xmlns="http://www.w3.org/2000/svg">

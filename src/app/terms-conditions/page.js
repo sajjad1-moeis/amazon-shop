@@ -19,9 +19,9 @@ function Page() {
     <IndexLayout>
       <IntroductionCard title="قوانین و مقررات" items={[{ label: "قوانین و مقررات" }]} />
 
-      <div>
+      <div className="mb-20">
         <Tabs dir="rtl" defaultValue="a4" className="container mt-10 w-full rounded-xl overflow-hidden">
-          <TabsList className="bg-white shadow w-full justify-start overflow-hidden rounded-t-xl rounded-b-none p-0">
+          <TabsList className="bg-white shadow w-full justify-start overflow-auto rounded-t-xl rounded-b-none p-0">
             {tabs.map((tab) => (
               <TabsTrigger key={tab.value} value={tab.value} className={activeClasses}>
                 {tab.label}

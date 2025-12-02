@@ -28,8 +28,8 @@ function InvoiceCart() {
             </div>
           </div>
           <div className="flex-between mt-4 bg-gray-50 border border-gray-200 rounded-lg ps-2">
-            <div className="flex-between gap-2">
-              <Gift className="text-gray-500" size={20} />
+            <div className="flex items-center gap-2  max-w-[70%]">
+              <Gift className="text-gray-500 flex-none" size={20} />
               <input
                 className="bg-transparent placeholder:text-sm placeholder:text-gray-400 outline-none"
                 placeholder="کد تخفیف را وارد کنید"

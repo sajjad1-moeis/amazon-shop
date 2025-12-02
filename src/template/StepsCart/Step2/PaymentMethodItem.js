@@ -18,11 +18,11 @@ export default function PaymentMethodItem({
       <div
         onClick={() => onSelect(method.id)}
         className={cn(
-          "border-2 rounded-xl p-4 cursor-pointer transition-all",
+          "border-2 h-full rounded-xl p-3 md:p-4 cursor-pointer transition-all",
           isSelected ? "bg-primary-50 border-primary-300" : "bg-white border-gray-200 hover:border-gray-300"
         )}
       >
-        <div className="flex items-start gap-4">
+        <div className="flex items-start gap-2 md:gap-4">
           {/* Radio Button */}
           <div className="flex items-center pt-1 shrink-0">
             <div
@@ -42,11 +42,11 @@ export default function PaymentMethodItem({
 
           {/* Content */}
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-2 mb-1 max-md:text-sm">
               <h3 className={`font-semibold ${isSelected ? "text-primary-500" : "text-gray-900"} `}>{method.title}</h3>
             </div>
             <div className="flex items-center gap-2">
-              <p className="text-sm text-gray-600">{method.subtitle}</p>
+              <p className="text-sm text-gray-600 max-md:text-xs">{method.subtitle}</p>
               {method.hasInfo && (
                 <button
                   onClick={(e) => e.stopPropagation()}

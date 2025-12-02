@@ -5,8 +5,8 @@ import React from "react";
 
 function HeaderSection() {
   return (
-    <div className="px-20 py-5 flex-between bg-white">
-      <Image alt="logo img" src="/image/logo-blue.png" width={165} height={30} />
+    <div className="px-4 md:px-20 py-5 flex-between bg-white">
+      <Image alt="logo img" src="/image/logo-blue.png" width={120} height={30} />
 
       <Link href={"/cart"}>
         <ArrowLeft className="text-gray-600" size={34} />

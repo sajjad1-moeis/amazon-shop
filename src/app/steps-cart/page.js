@@ -30,11 +30,12 @@ function Page() {
   const prevStep = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 1));
   };
+
   return (
     <div>
       <HeaderSection />
       <div className="bg-[#F9F9F9] min-h-screen  pb-10">
-        <div className="flex flex-col p-8 max-w-6xl mx-auto 2xl:container">
+        <div className="flex flex-col p-8 lg:container">
           <h1 className="text-2xl font-bold text-right">پرداخت سفارش آمازون امارات</h1>
           <p className="text-primary-500 my-4">{steps[currentStep - 1].label}</p>
 
@@ -42,7 +43,7 @@ function Page() {
         </div>
 
         {/* نمایش فرم متناسب با step */}
-        <div class="w-full max-w-6xl mx-auto max-lg:px-5 2xl:container mt-32">
+        <div class="w-full max-lg:px-5 lg:container mt-32">
           {currentStep === 2 && <DeliveryAddressDemo onNext={nextStep} />}
           {currentStep === 3 && (
             <PaymentCheckout orderPrice={12450000} discount={150000} onConfirm={handleConfirm} onBack={prevStep} />

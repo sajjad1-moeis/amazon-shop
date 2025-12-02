@@ -6,12 +6,12 @@ import Image from "next/image";
 
 export default function ContactSection() {
   return (
-    <div className="w-full mt-20 container">
+    <div className="w-full mt-14 md:mt-20 container">
       {/* Title */}
       <h2 className="text-center text-2xl font-bold mb-6 text-gray-700">راه های ارتباطی</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 items-center lg:grid-cols-4 gap-2 bg-primary-600 text-white p-6 rounded-xl  mx-auto w-3/4">
+      <div className="flex flex-col-reverse lg:grid grid-cols-1 sm:grid-cols-2 items-center lg:grid-cols-4 gap-2 bg-primary-600 text-white p-6 rounded-xl  mx-auto lg:w-3/4">
         {/* Address */}
-        <div className="border-l  lg:border-l border-white/20 px-4">
+        <div className="lg:border-l border-white/20 px-4">
           <div className="flex items-center gap-2 text-primary-200">
             <Location />
             <p className="text-xl">آدرس دفتر</p>
@@ -22,7 +22,7 @@ export default function ContactSection() {
         </div>
 
         {/* Phone */}
-        <div className="flex flex-col justify-center gap-1 border-l border-white/20 px-4 h-full ">
+        <div className="flex flex-col justify-center gap-1 max-lg:border-b max-lg:pb-5 lg:border-l border-white/20 px-4 h-full  max-lg:w-full">
           <div className="flex items-center gap-2 text-primary-200">
             <CallCalling />
             <p className="text-xl">تلفن</p>
@@ -31,7 +31,7 @@ export default function ContactSection() {
         </div>
 
         {/* Email */}
-        <div className="flex flex-col justify-center gap-1 border-l border-white/20 px-4  h-full">
+        <div className="flex flex-col justify-center gap-1 max-lg:border-b max-lg:pb-5 lg:border-l border-white/20 px-4  h-full max-lg:w-full">
           <div className="flex items-center gap-2 text-primary-200">
             <Sms />
             <p className="text-xl">ایمیل</p>
@@ -40,7 +40,7 @@ export default function ContactSection() {
         </div>
 
         {/* WhatsApp */}
-        <div className="flex flex-col justify-center gap-1 px-4">
+        <div className="flex flex-col justify-center gap-1 px-4 max-lg:w-full max-lg:border-b max-lg:pb-5 border-white/20">
           <p className="text-sm opacity-80"></p>
           <div className="flex items-center gap-2 text-primary-200">
             <Whatsapp />
@@ -61,8 +61,8 @@ export default function ContactSection() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-20 h-max">
         {/* MAP */}
         <div className="bg-white h-max">
-          <h3 className="text-2xl font-bold mb-2 text-right text-gray-700">ارسال پیام برای تیم میکرولس</h3>
-          <p className="text-gray-400  mb-6  text-right">
+          <h3 className="text-lg lg:text-2xl font-bold mb-2 text-right text-gray-700">ارسال پیام برای تیم میکرولس</h3>
+          <p className="text-gray-400  mb-6  text-right max-lg:text-sm">
             برای هرگونه سوال، پیشنهاد یا درخواست پشتیبانی می‌توانید از طریق فرم زیر یا اطلاعات تماس درج‌شده با ما در
             ارتباط باشید.
           </p>
@@ -101,7 +101,11 @@ export default function ContactSection() {
             </div>
 
             {/* Submit button */}
-            <Button size="lg" type="submit" className="bg-yellow-400 hover:bg-yellow-500 w-1/2 text-primary-800">
+            <Button
+              size="lg"
+              type="submit"
+              className="bg-yellow-400 hover:bg-yellow-500 w-1/2 text-primary-800 max-lg:w-full"
+            >
               ارسال پیام
             </Button>
           </form>
