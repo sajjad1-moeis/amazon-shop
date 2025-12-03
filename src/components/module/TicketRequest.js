@@ -3,20 +3,20 @@ import React from "react";
 
 function TicketRequest() {
   return (
-    <div className="grid lg:grid-cols-3 mt-28 items-center  bg-white max-lg:bg-[#3F51B5]">
+    <div className="grid lg:grid-cols-3 mt-28 items-center  bg-white max-lg:bg-dark-primary dark:bg-primary-800">
       <div>
         <div className="relative aspect-square max-h-[401px] w-full h-full max-lg:hidden">
           <Image src="/image/ticketRequest.png" alt={`درخواست محصول از تیکت`} fill className="object-cover" />
         </div>
       </div>
-      <div class="lg:col-span-2 p-4 lg:p-10">
+      <div className="lg:col-span-2 p-4 lg:p-10">
         <div className="mb-8">
-          <h2 className="text-xl md:text-2xl lg:text-3xl  text-primary-50 lg:text-primary-700 mb-2 text-right flex items-center gap-3">
-            <div className="w-1 h-8 bg-primary-400 rounded max-lg:hidden"></div>
+          <h2 className="text-xl md:text-2xl lg:text-3xl  text-primary-50 dark:text-dark-title lg:text-primary-700 mb-2 text-right flex items-center gap-3">
+            <div className="w-1 h-8 bg-primary-400 dark:bg-dark-title rounded max-lg:hidden"></div>
             درخواست محصول از طریق تیکت پشتیبانی
           </h2>
         </div>
-        <div class="text-[#DBDEEFBF] lg:text-gray-600 text-justify leading-8 max-lg:text-[14px]">
+        <div className="text-[#DBDEEFBF] lg:text-gray-600 dark:text-dark-text text-justify leading-8 max-lg:text-[14px]">
           <p>
             برای سفارش کالای درخواستی خود در این روش می توانید از طریق{" "}
             <span className="text-yellow-600 font-bold">تیکت پشتیبانی</span> اقدام کنید برای ارسال تیکت پشتیبانی ابتدا

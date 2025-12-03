@@ -8,7 +8,7 @@ import ShoppingTraining from "@/template/EboyShop/ShoppingTraining";
 function Page() {
   return (
     <ShopsLayout title={"ایبی"} direct={<DirectPurchase />} src="/image/Shops/eboyShop.png">
-      <div class="bg-gray-50">
+      <div>
         <ProductPurchaseForm />
         <BuyEboyDiscount />
         <ShoppingTraining />

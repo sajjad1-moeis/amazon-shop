@@ -4,7 +4,7 @@ import React from "react";
 
 function ViewAllProductsCard({ className }) {
   return (
-    <div className={cn("flex  justify-center mt-5  text-primary-400 gap-2 md:hidden", className)}>
+    <div className={cn("flex  justify-center mt-5 dark:text-dark-title text-primary-400 gap-2 md:hidden", className)}>
       <p>مشاهده همه محصولات</p>
       <ArrowLeft2 size={20} />
     </div>

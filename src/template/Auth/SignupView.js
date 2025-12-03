@@ -37,7 +37,7 @@ export default function SignupView({
           />
         </LabeledField>
 
-        <div class="grid md:grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-2 gap-4">
           <LabeledField label="رمز عبور">
             <Input
               dir="ltr"

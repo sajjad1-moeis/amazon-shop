@@ -1,18 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { ButtonGroup, ButtonGroupText } from "@/components/ui/button-group";
+import { ButtonGroup } from "@/components/ui/button-group";
 import { Card, CardContent } from "@/components/ui/card";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
-import { Label } from "@/components/ui/label";
 import { ShieldTick, Trash, TruckFast } from "iconsax-reactjs";
-import { Link2Icon, MinusIcon, PlusIcon } from "lucide-react";
+import { MinusIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
 function CartItem() {
   return (
-    <Card className="rounded-xl border overflow-hidden border-gray-200 shadow-sm hover:shadow-md transition p-0">
+    <Card className="rounded-xl border overflow-hidden border-gray-200 dark:bg-dark-box  dark:border-dark-field shadow-sm hover:shadow-md transition p-0">
       <CardContent className="p-0 grid grid-cols-3 sm:grid-cols-4 md:gap-4 ">
-        <div class="">
+        <div className="">
           <div className="relative aspect-square max-h-32 h-full md:max-h-56 w-full">
             <Image
               src="/image/Home/product.png"
@@ -25,11 +23,11 @@ function CartItem() {
 
         {/* LEFT SECTION (INFO) */}
         <div className="col-span-2 sm:col-span-3 p-3">
-          <div className="flex flex-col gap-3 border-b pb-4 mb-4 border-gray-200">
+          <div className="flex flex-col gap-3 border-b pb-4 mb-4 border-gray-200 dark:border-dark-stroke">
             {/* TITLE */}
             <div className="flex justify-between items-start">
               <div className="">
-                <h2 className="font-bold text-sm md:text-lg  text-neutral-800">
+                <h2 className="font-bold text-sm md:text-lg  text-neutral-800 dark:text-dark-titre">
                   ساعت مچی مردانه Invicta مدل 0361 سری Reserve کرونوگراف
                 </h2>
                 <div className="flex items-center gap-2 mt-2">
@@ -49,12 +47,12 @@ function CartItem() {
                 <div className="size-4.5 bg-[#E2BB30] rounded-full" />
                 <p>رنگ طلایی</p>
               </div>
-              <div class="flex gap-1 md:gap-2 max-md:mt-3">
-                <div className="flex-between bg-gray-100 border p-1 rounded-lg border-gray-200 max-md:text-xs text-sm gap-2 text-[#0554DB]">
+              <div className="flex gap-1 md:gap-2 max-md:mt-3">
+                <div className="flex-between bg-gray-100 dark:bg-dark-field dark:border-0 border p-1 rounded-lg border-gray-200 max-md:text-xs text-sm gap-0.5 md:gap-2 text-[#0554DB]">
                   <ShieldTick size={22} variant="Bold" />
                   <p>دارای سپر کیفیت</p>
                 </div>
-                <div className="flex-between bg-gray-100 border p-1 rounded-lg border-gray-200 max-md:text-xs text-sm gap-2 ">
+                <div className="flex-between bg-gray-100 dark:bg-dark-field dark:border-0 border p-1 rounded-lg border-gray-200 max-md:text-xs text-sm gap-0.5 md:gap-2 ">
                   <div className="bg-green-600 p-0.5 rounded-lg">
                     <TruckFast size={18} className="text-white" />
                   </div>
@@ -75,13 +73,13 @@ function CartItem() {
               </div>
               <div className="grid  gap-6">
                 <ButtonGroup aria-label="Media controls" className="h-fit">
-                  <Button variant="ghost" className="bg-primary-700 size-8 text-white !rounded-lg">
+                  <Button variant="ghost" className="bg-primary-700 dark:bg-dark-primary size-8 text-white !rounded-lg">
                     <MinusIcon />
                   </Button>
                   <Button size="icon" variant="link" className="size-8">
                     5
                   </Button>
-                  <Button variant="ghost" className="bg-primary-700 size-8 text-white !rounded-lg">
+                  <Button variant="ghost" className="bg-primary-700 dark:bg-dark-primary size-8 text-white !rounded-lg">
                     <PlusIcon />
                   </Button>
                 </ButtonGroup>

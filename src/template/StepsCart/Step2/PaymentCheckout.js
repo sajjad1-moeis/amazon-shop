@@ -31,11 +31,14 @@ export default function PaymentCheckout({
   };
 
   return (
-    <div className=" bg-white border border-gray-200 rounded-2xl shadow-sm p-4" dir="rtl">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div
+      className=" bg-white dark:bg-dark-field dark:border-dark-stroke border border-gray-200 rounded-2xl shadow-sm p-4"
+      dir="rtl"
+    >
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {/* Payment Methods */}
-        <div className="space-y-4">
-          <h2 className="text-xl  text-gray-700 mb-4">انتخاب روش پرداخت:</h2>
+        <div className="space-y-4 xl:col-span-2">
+          <h2 className="text-xl  text-gray-700 mb-4 dark:text-dark-titre">انتخاب روش پرداخت:</h2>
           <div className="gap-3 grid max-lg:grid-cols-2 max-md:!grid-cols-1">
             {paymentMethods.map((method) => (
               <PaymentMethodItem
@@ -51,27 +54,26 @@ export default function PaymentCheckout({
         </div>
 
         {/* Order Summary */}
-        <div className="md:space-y-4">
-          <OrderSummary orderPrice={orderPrice} discount={discount} />
+        <div className="md:space-y-4 ">
+          <OrderSummary orderPrice={orderPrice} discount={discount}>
+            <div className="md:flex items-center dark:bg-dark-field dark:rounded-t-xl gap-3 p-3 md:pt-4 max-md:fixed bg-white grid grid-cols-2 right-0 bottom-0 w-full">
+              <Button
+                onClick={onBack}
+                variant="outline"
+                className="flex-1 bg-gray-100 dark:bg-dark-stroke dark:border-0 dark:text-white text-gray-600 hover:bg-gray-200 border-gray-300 font-medium px-6 py-2.5 rounded-lg"
+              >
+                بازگشت
+              </Button>
+              <Button
+                onClick={handleConfirm}
+                className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-medium px-6 py-2.5 rounded-lg"
+              >
+                تأیید و پرداخت
+              </Button>
+            </div>
+          </OrderSummary>
 
-          {/* Action Buttons */}
-          <div className="md:flex items-center gap-3 p-3 md:pt-4 max-md:fixed bg-white grid grid-cols-2 right-0 bottom-0 w-full">
-            <Button
-              onClick={onBack}
-              variant="outline"
-              className="flex-1 bg-gray-100 text-gray-600 hover:bg-gray-200 border-gray-300 font-medium px-6 py-2.5 rounded-lg"
-            >
-              بازگشت
-            </Button>
-            <Button
-              onClick={handleConfirm}
-              className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-medium px-6 py-2.5 rounded-lg"
-            >
-              تأیید و پرداخت
-            </Button>
-          </div>
-
-          <div className="text-xs text-gray-500 text-center pt-2 max-md:mb-10">
+          <div className="max-md:text-xs text-sm text-gray-500 dark:text-gray-400 text-center pt-2 max-md:mb-10">
             بعد از پرداخت هزینه، سفارش شما قابل پیگیری است و مراحل مختلف اطلاع رسانی خواهند شد.
           </div>
         </div>

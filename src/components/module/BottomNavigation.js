@@ -28,7 +28,7 @@ export default function BottomNavigation({ activeItem = "home" }) {
   }, [activeId]);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white z-50 md:hidden">
+    <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-dark-header z-50 md:hidden ">
       <div
         className="absolute top-0 transition-all duration-300 ease-out z-[99999] h-1 bg-[#386BF6]"
         style={{

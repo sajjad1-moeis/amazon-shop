@@ -6,7 +6,7 @@ import React from "react";
 
 function ProductRowCard() {
   return (
-    <Card className="rounded-xl border overflow-hidden border-gray-200 shadow-sm hover:shadow-md transition p-0">
+    <Card className="rounded-xl border overflow-hidden border-gray-200 dark:border-dark-field  dark:bg-dark-box shadow-sm hover:shadow-md transition p-0">
       <CardContent className="p-0 grid grid-cols-4 gap-4 ">
         <div className="relative aspect-square max-h-64 w-full">
           <Image
@@ -19,14 +19,14 @@ function ProductRowCard() {
 
         {/* LEFT SECTION (INFO) */}
         <div className="md:col-span-3 p-3">
-          <div className="flex flex-col gap-3 border-b pb-4 mb-4 border-gray-200">
+          <div className="flex flex-col gap-3 border-b pb-4 mb-4 border-gray-200 ">
             {/* TITLE */}
-            <h2 className="font-bold text-lg  text-neutral-800">
+            <h2 className="font-bold text-lg  text-neutral-800 dark:text-dark-titre">
               ساعت مچی مردانه Invicta مدل 0361 سری Reserve کرونوگراف
             </h2>
 
             {/* DESCRIPTION */}
-            <p className="text-gray-600 text-sm ">
+            <p className="text-gray-600 text-sm dark:text-[#7B7F86]">
               ساعت مچی مردانه Invicta مدل 3641 از سری Reserve. ترکیبی از قدرت، دقت، و طراحی خاص.
             </p>
 
@@ -69,7 +69,11 @@ function ProductRowCard() {
                   <p className="text-gray-400 text-xs">شامل هزینه حمل و گمرک</p>
                 </div>
               </div>
-              <Button variant="outline" className="bg-primary-700 text-white rounded-lg py-6" size="lg">
+              <Button
+                variant="outline"
+                className="bg-primary-700 dark:bg-dark-primary text-white rounded-lg py-6"
+                size="lg"
+              >
                 مشاهده جزئیات
               </Button>
             </div>

@@ -11,15 +11,17 @@ import { ArrowLeft2, ArrowRight2 } from "iconsax-reactjs";
 function Categories() {
   return (
     <div className=" mt-14 lg:mt-20 container categories relative">
-      <h2 className="text-primary-600 text-xl lg:text-3xl text-center mb-8 font-semibold">دسته بندی </h2>
-      <div class="grid grid-cols-3 gap-4 lg:hidden">
+      <h2 className="text-primary-600 text-xl lg:text-3xl text-center mb-8 font-semibold dark:text-dark-title">
+        دسته بندی{" "}
+      </h2>
+      <div className="grid grid-cols-3 gap-4 lg:hidden">
         {[...Array(9)].map((_, i) => (
-          <div className="relative  h-40 sm:h-60 md:h-80 ">
+          <div className="relative  h-36 sm:h-60 md:h-80 ">
             <Image src={"/image/Home/category.png"} alt="category" fill className="rounded-md" />
           </div>
         ))}
       </div>
-      <div class="max-lg:hidden">
+      <div className="max-lg:hidden">
         <Swiper
           slidesPerView={1}
           spaceBetween={10}

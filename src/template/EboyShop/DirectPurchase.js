@@ -3,7 +3,7 @@ import React from "react";
 
 function DirectPurchase() {
   return (
-    <div class="container">
+    <div className="container">
       <AboutServiceCard
         src={"/image/Eboy-Shop/buyEboy.png"}
         title="خرید از eBay چگونه انجام می شود؟"

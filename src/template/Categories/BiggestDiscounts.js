@@ -11,7 +11,7 @@ import ViewAllProductsCard from "@/components/ViewAllProductsCard";
 
 function BiggestDiscounts() {
   return (
-    <div className="mt-14 md:mt-22 container categories relative  max-md:border-y  max-md:py-5">
+    <div className="mt-14 md:mt-22 container categories relative  max-md:border-y  dark:border-dark-field  max-md:py-5">
       <TitleCard title={"بیشترین تخفیف‌ها"} content={"مشاهده همه محصولات"} className={"mb-8"} />
 
       <Swiper

@@ -4,7 +4,7 @@ import DescriptionBlog from "./DescriptionBlog";
 
 export default function AmazonGuideArticle() {
   return (
-    <div className="container bg-white p-4 py-8 lg:p-8 " dir="rtl">
+    <div className="container bg-white dark:bg-dark-bg p-4 py-8 lg:p-8 " dir="rtl">
       {/* Header Section */}
       <div className="mb-8 relative">
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-6">
@@ -19,7 +19,7 @@ export default function AmazonGuideArticle() {
             </div>
           </div>
           <div className="md:col-span-2 lg:col-span-3 w-full ">
-            <h1 className="text-lg md:text-2xl lg:text-4xl font-bold text-primary-700 lg:leading-[50px] text-right">
+            <h1 className="text-lg md:text-2xl lg:text-4xl font-bold dark:text-dark-title text-primary-700 lg:leading-[50px] text-right">
               چگونه از آمازون آمریکا خرید کنیم؟ (راهنمای کامل برای خریداران ایرانی)
             </h1>
 
@@ -40,13 +40,13 @@ export default function AmazonGuideArticle() {
                 <button className="text-gray-500 max-md:text-gray-300">
                   <Heart size={28} />
                 </button>
-                <button className="text-primary-500">
+                <button className="text-primary-500 dark:text-dark-primary">
                   <Share size={28} />
                 </button>
               </div>
             </div>
 
-            <div class="border-t border-gray-200 pt-4 mt-4 text-gray-500 max-md:text-sm">
+            <div className="border-t border-gray-200 pt-4 mt-4 text-gray-500 max-md:text-sm dark:text-dark-text">
               <p>
                 خرید از آمازون همیشه یکی از جذاب‌ترین گزینه‌ها برای دسترسی به محصولات اصل و متنوع دنیا بوده است. اما
                 برای کاربران ایرانی، این فرآیند ممکن است کمی پیچیده به‌نظر برسد.{" "}

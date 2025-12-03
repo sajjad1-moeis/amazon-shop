@@ -9,13 +9,13 @@ export default function ProductList({ viewMode }) {
     <>
       <div className="max-md:hidden">
         {viewMode === "list" ? (
-          <div className="w-full space-y-4 bg-white ">
+          <div className="w-full space-y-4 bg-white dark:bg-transparent">
             {products.map((item) => (
               <ProductRowCard key={item} />
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3  gap-4">
             {products.map((item) => (
               <ProductCard key={item} />
             ))}

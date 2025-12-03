@@ -2,8 +2,8 @@ export default function MicroLessDescription() {
   return (
     <div className=" mt-10 lg:my-10">
       <div
-        className=" bg-white rounded-2xl p-4 md:p-6 lg:p-8 leading-8 text-gray-600 text-right max-md:text-sm"
-        style={{ "box-shadow": "0px 0px 8px 0px #0968F640" }}
+        className=" bg-white  dark:bg-dark-box shadow-[0px_0px_8px_0px_#0968F640] dark:shadow-none dark:text-dark-text rounded-2xl p-4 md:p-6 lg:p-8 leading-8 text-gray-600 text-right max-md:text-sm"
+        style={{ "box-shadow": "" }}
       >
         {/* --- Paragraph 1 --- */}
         <p className="mb-6">
@@ -18,9 +18,9 @@ export default function MicroLessDescription() {
           <span className="text-secondary-700 font-semibold mx-1">مستقیماً از آمازون آمریکا و امارات</span> سفارش دهید.
           تمامی کالاها با قیمت شفاف و واقعی نمایش داده می‌شوند؛ یعنی شامل هزینه‌ی پایه، حمل بین‌المللی، گمرک و خدمات
           بررسی کیفیت
-          <span className="text-gray-500">(در صورت انتخاب سیر کیفیت)</span>. هدف ما این است که تجربه‌ای مطمئن از خرید
-          بین‌المللی بدون واسطه را برای کاربران ایرانی فراهم کنیم. بدون نیاز به کارت ارزی، بدون پیچیدگی‌های گمرکی، و با
-          پشتیبانی کامل از زمان ثبت سفارش تا لحظه‌ی تحویل کالا.
+          <span className="text-gray-500 dark:text-dark-text">(در صورت انتخاب سیر کیفیت)</span>. هدف ما این است که
+          تجربه‌ای مطمئن از خرید بین‌المللی بدون واسطه را برای کاربران ایرانی فراهم کنیم. بدون نیاز به کارت ارزی، بدون
+          پیچیدگی‌های گمرکی، و با پشتیبانی کامل از زمان ثبت سفارش تا لحظه‌ی تحویل کالا.
         </p>
 
         {/* --- Paragraph 3 --- */}

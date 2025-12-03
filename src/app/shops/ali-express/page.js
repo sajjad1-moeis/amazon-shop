@@ -9,6 +9,7 @@ import ShoppingTraining from "@/template/AliExShop/ShoppingTraining";
 function Page() {
   return (
     <ShopsLayout
+      title={"علی اکسپرس"}
       direct={
         <>
           <Categories />
@@ -19,11 +20,9 @@ function Page() {
       removeStepBuyComp
       src={"/image/AliEx/aliExShop.png"}
     >
-      <div class="bg-[#FBFBFB]">
-        <div class="bg-gray-50">
-          <ProductPurchaseForm />
-          <ShoppingTraining />
-        </div>
+      <div>
+        <ProductPurchaseForm />
+        <ShoppingTraining />
       </div>
     </ShopsLayout>
   );

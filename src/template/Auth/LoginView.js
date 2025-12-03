@@ -33,7 +33,7 @@ export default function LoginView({ phone, password, onChangePhone, onChangePass
             className={fieldClassName}
           />
         </LabeledField>
-        <div class="flex mt-3 text-gray-400 text-sm gap-1">
+        <div className="flex mt-3 text-gray-400 text-sm gap-1">
           رمز عبور خود را فراموش کرده‌اید؟
           <button type="button" onClick={onGoReset} className=" text-amber-500">
             بازیابی رمز عبور

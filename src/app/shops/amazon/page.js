@@ -6,9 +6,15 @@ import ShopsLayout from "@/layout/ShopsLayout";
 
 function Page() {
   return (
-    <ShopsLayout direct={<DirectPurchase />} removeStepBuyComp src={"/image/Amazon-Shop/buyEmarat.png"}>
-      <div class="bg-[#FBFBFB] ">
-        <div class="bg-gray-50">
+    <ShopsLayout
+      direct={<DirectPurchase />}
+      imgClassName={"max-md:max-h-44"}
+      removeStepBuyComp
+      title={"آمازون"}
+      src={"/image/Amazon-Shop/buyEmarat.jpg"}
+    >
+      <div>
+        <div>
           <ShoppingTraining />
           <BrandsSection />
         </div>

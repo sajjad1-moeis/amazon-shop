@@ -8,9 +8,9 @@ export default function ReviewCard({ experience, onClick }) {
   return (
     <article
       onClick={onClick}
-      className="rounded-lg border relative border-gray-200 bg-white shadow-sm transition hover:shadow-lg cursor-pointer"
+      className="rounded-lg border relative border-gray-200 dark:bg-dark-box dark:border-dark-field bg-white shadow-sm transition hover:shadow-lg cursor-pointer"
     >
-      <div class="absolute top-2 z-50 right-2 text-gray-600 md:hidden">
+      <div className="absolute top-2 z-50 right-2 text-gray-600 md:hidden">
         <Heart size={26} />
       </div>
       {/* Image */}
@@ -21,13 +21,17 @@ export default function ReviewCard({ experience, onClick }) {
       {/* Text */}
       <div className="space-y-3 px-2 md:px-5 py-4">
         <div>
-          <h3 className="text-sm md:text-base font-semibold text-neutral-800">{experience.title}</h3>
-          <p className="text-xs md:text-sm text-gray-500 mt-1 line-clamp-1">{experience.description}</p>
+          <h3 className="text-sm md:text-base font-semibold text-neutral-800 dark:text-dark-titre">
+            {experience.title}
+          </h3>
+          <p className="text-xs md:text-sm text-gray-500 mt-1 line-clamp-1 dark:text-dark-text">
+            {experience.description}
+          </p>
         </div>
 
         {/* Rating + Likes */}
-        <div className="flex items-center justify-between pt-2 border-t border-gray-200">
-          <div className="flex items-center gap-1 text-xs text-gray-500">
+        <div className="flex items-center justify-between pt-2 dark:border-dark-field border-t border-gray-200">
+          <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-dark-text">
             <Star className="size-5 fill-amber-400 text-amber-400" />
             <span className="font-semibold">{experience.rating}</span>
             <span className="text-gray-400">({experience.reviewsCount})</span>
@@ -35,7 +39,7 @@ export default function ReviewCard({ experience, onClick }) {
 
           <div className="flex items-center gap-1">
             <Like1 className="size-5 text-gray-400" variant="Bold" />
-            <span className="text-gray-500 text-xs">{experience.likes}</span>
+            <span className="text-gray-500 text-xs dark:text-dark-text">{experience.likes}</span>
           </div>
         </div>
       </div>

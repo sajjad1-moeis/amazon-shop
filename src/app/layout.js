@@ -11,7 +11,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="fa">
       <body dir="rtl">
-        <main className="overflow-hidden">{children}</main>
+        <main className="overflow-hidden max-md:pb-20 dark:bg-dark-bg">{children}</main>
       </body>
       <Toaster position="top-right" dir="rtl" />
     </html>

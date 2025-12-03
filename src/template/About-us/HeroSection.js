@@ -4,14 +4,22 @@ import React from "react";
 
 function HeroSection() {
   return (
-    <div className=" bg-[#FAFAFA]">
+    <div className=" bg-[#FAFAFA] dark:bg-dark-bg">
       <div className="flex flex-col-reverse md:grid  md:grid-cols-3 container pt-14 md:items-center">
         <div className="md:col-span-2">
-          <TitleCard className={"max-md:hidden"} title={"پلی مطمئن میان شما و دنیای خرید جهانی"} />
+          <TitleCard
+            className={"max-md:hidden"}
+            title={
+              <>
+                <span className="text-[#B3B3FF] dark:text-dark-title">پلی مطمئن</span>{" "}
+                <span className="dark:text-dark-titre">میان شما و دنیای خرید جهانی</span>
+              </>
+            }
+          />
           <h1 className=" md:hidden text-2xl mt-6">
-            <span className="text-primary-700">پلی مطمئن</span> میان شما و دنیای خرید جهانی
+            <span className="text-primary-700 dark:text-dark-title">پلی مطمئن</span> میان شما و دنیای خرید جهانی
           </h1>
-          <div className="mt-6 text-gray-600 space-y-2">
+          <div className="mt-6 dark:text-dark-text text-gray-600 space-y-2">
             <p>همه‌چیز از یک سؤال ساده شروع شد:</p>
             <p>چرا خرید از آمازون برای کاربران ایرانی باید این‌قدر سخت و پرابهام باشد؟</p>
             <p>
@@ -31,7 +39,14 @@ function HeroSection() {
             src="/image/About-Us/amazon-box.png"
             alt={`عکس باکس آمازون`}
             fill
-            className="object-cover rounded-md"
+            className="object-cover rounded-md dark:hidden"
+            priority={1}
+          />
+          <Image
+            src="/image/About-Us/amazon-box-dark.png"
+            alt={`عکس باکس آمازون`}
+            fill
+            className="object-cover rounded-md dark:block hidden"
             priority={1}
           />
         </div>

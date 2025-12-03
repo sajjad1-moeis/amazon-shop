@@ -5,7 +5,9 @@ function TitleCard({ className, title, content, titleClassName }) {
   return (
     <div class={`flex-between ${className}`}>
       <div className="">
-        <p className={`text-gray-700 mb-3  ${titleClassName || "text-lg md:text-2xl"} `}>{title}</p>
+        <p className={`text-gray-700  dark:text-dark-title mb-3  ${titleClassName || "text-lg md:text-2xl "} `}>
+          {title}
+        </p>
         <svg
           className="max-md:max-w-32"
           width="178"
@@ -28,7 +30,7 @@ function TitleCard({ className, title, content, titleClassName }) {
           />
         </svg>
       </div>
-      <div className="flex-between text-primary-400 gap-2 max-md:hidden">
+      <div className="flex-between text-primary-400 dark:text-[#ADB4FF] gap-2 max-md:hidden">
         <p>{content}</p>
         {content && <ArrowLeft2 size={20} />}
       </div>

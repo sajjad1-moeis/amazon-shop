@@ -24,91 +24,101 @@ export const customsSteps = [
   },
 ];
 
+function SectionHeader({ title }) {
+  return (
+    <div className="flex items-center gap-3">
+      <div className="w-1 h-8 bg-primary-400 dark:bg-dark-title rounded-l"></div>
+      <h2 className="text-xl md:text-2xl font-bold text-primary-600 dark:text-dark-titre">{title}</h2>
+    </div>
+  );
+}
+
+function DeliveryItem({ item }) {
+  return (
+    <div className="space-y-3 mt-8">
+      <h3 className="text-base md:text-lg text-gray-700 dark:text-dark-titre">
+        {item.id}) {item.title}
+      </h3>
+      <ul className="space-y-2 text-gray-600 list-disc list-inside mt-3 max-md:text-sm dark:text-dark-text">
+        <p>{item.description}</p>
+      </ul>
+      {item.bottomLinks?.length && (
+        <div className="max-md:space-y-2 md:flex-between text-blue-700 dark:text-primary-300 text-sm font-medium mt-6">
+          {item.bottomLinks.map((link, index) => (
+            <li key={index} className="hover:underline cursor-pointer">
+              {link}
+            </li>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function CustomsShippingServices() {
   return (
-    <div className="w-full  p-4 text-right max-md:text-sm" dir="rtl">
-      <p className="text-gray-600 leading-relaxed">
+    <div className="w-full p-3 text-right max-md:text-sm" dir="rtl">
+      <p className="text-gray-600 leading-relaxed dark:text-dark-titre">
         در این بخش مهم‌ترین اطلاعاتی که لازم است درباره قوانین گمرکی بدانید را خلاصه کرده‌ایم تا بدون پیچیدگی با فرآیند
         آشنا شوید.
       </p>
-      {/* مراحل کامل فرایند شکوفه */}
 
+      {/* مراحل کامل فرایند شکوفه */}
       <div className="flex items-center gap-3 mt-12">
-        <div className="w-1 h-8 bg-primary-400 rounded-l"></div>
-        <h2 className="text-xl md:text-2xl font-bold text-primary-600">مراحل کامل فرآیند گمرکی</h2>
+        <div className="w-1 h-8 bg-primary-400 dark:bg-dark-title rounded-l"></div>
+        <h2 className="text-xl md:text-2xl font-bold text-primary-600 dark:text-dark-titre">مراحل کامل فرآیند گمرکی</h2>
       </div>
 
       <div className="space-y-6 mt-8">
         {customsSteps.map((step) => (
-          <StepBox {...step} />
+          <StepBox key={step.id} {...step} />
         ))}
       </div>
 
-      <div className="space-y-10 mt-8 md:mt-12 pt-12 border-t-2 border-gray-200">
-        <div className="flex items-center gap-3 ">
-          <div className="w-1 h-8 bg-primary-400 rounded-l"></div>
-          <h2 className="text-xl md:text-2xl font-bold text-primary-600">حمل و نقل</h2>
-        </div>
-        {deliveryInfo.map((item) => (
-          <div className="space-y-3 mt-8">
-            <h3 className="text-base md:text-lg text-gray-700">
-              {item.id}) {item.title}
-            </h3>
-            <ul className="space-y-2 text-gray-600 list-disc list-inside mt-3 max-md:text-sm">
-              <p>{item.description}</p>
-            </ul>
-            {item.bottomLinks?.length && (
-              <div className="max-md:space-y-2 md:flex-between text-blue-700 text-sm font-medium mt-6">
-                {item.bottomLinks.map((item) => (
-                  <li className="hover:underline cursor-pointer">{item}</li>
-                ))}
-              </div>
-            )}
-          </div>
+      <div className="space-y-10 mt-8 md:mt-12 pt-12 border-t-2 border-gray-200 dark:border-dark-field">
+        <SectionHeader title="حمل و نقل" />
+
+        {deliveryInfo.map((item, index) => (
+          <DeliveryItem key={item.id || index} item={item} />
         ))}
       </div>
 
       {/* هزینه تحویل */}
-      <div className="space-y-6 mt-8 md:mt-12 pt-8 md:pt-12 border-t-2 border-gray-200">
-        <div className="flex items-center gap-3 ">
-          <div className="w-1 h-8 bg-primary-400 rounded-l"></div>
-          <h2 className="text-xl md:text-2xl font-bold text-primary-600">هزینه تحویل چقدر است؟</h2>
-        </div>
-        <p className="text-gray-600 leading-7">
-          پس از افزودن کالای مورد نظر به سبد خرید می توانید هزینه نهایی سفارش خود را مشاهده کنید. اگر سفارش شما حاوی یک
+      <div className="space-y-6 mt-8 md:mt-12 pt-8 md:pt-12 border-t-2 dark:border-dark-field border-gray-200">
+        <SectionHeader title="هزینه تحویل چقدر است؟" />
+
+        <p className="text-gray-600 leading-7 dark:text-dark-text">
+          پس از افزودن کالای مورد نظر به سبد خرید می توانید هزینه نهایی سفارش خود را مشاهده کنید. اگر سفارش شما حاوی یک
           کالای بزرگ باشد، ممکن است هزینه های ارسال بیشتری دریافت شود در این صورت اگر هزینه ای ارسال بیشتری لحاظ شود به
-          شما اطلاع خواهیم دادپس از افزودن کالای مورد نظر به سبد خرید می توانید هزینه نهایی سفارش خود را مشاهده
-          کنید. اگر سفارش شما حاوی یک کالای بزرگ باشد، ممکن است هزینه های ارسال بیشتری دریافت شود در این صورت اگر هزینه
-          ای ارسال بیشتری لحاظ شود به شما اطلاع خواهیم داد
+          شما اطلاع خواهیم دادپس از افزودن کالای مورد نظر به سبد خرید می توانید هزینه نهایی سفارش خود را مشاهده کنید.
+          اگر سفارش شما حاوی یک کالای بزرگ باشد، ممکن است هزینه های ارسال بیشتری دریافت شود در این صورت اگر هزینه ای
+          ارسال بیشتری لحاظ شود به شما اطلاع خواهیم داد
         </p>
       </div>
 
-      <div className="space-y-6 mt-8 md:mt-12 pt-8 md:pt-12 border-t-2 border-gray-200">
-        <div className="flex items-center gap-3 ">
-          <div className="w-1 h-8 bg-primary-400 rounded-l"></div>
-          <h2 className="text-xl md:text-2xl font-bold text-primary-600">در دسترس بودن کالا</h2>
-        </div>
-        <p className="text-gray-600 leading-7">
-          موجودی کالاهای موجود در این وب سایت فقط برای اطلاع شما است. در حالی که ما تلاش می کنیم تا اطلاعات موجودی در
+      <div className="space-y-6 mt-8 md:mt-12 pt-8 md:pt-12 border-t-2 dark:border-dark-field border-gray-200">
+        <SectionHeader title="در دسترس بودن کالا" />
+
+        <p className="text-gray-600 leading-7 dark:text-dark-text">
+          موجودی کالاهای موجود در این وب سایت فقط برای اطلاع شما است. در حالی که ما تلاش می کنیم تا اطلاعات موجودی در
           انبار را تا حد امکان دقیق و به موقع نگه داریم، اطلاعات موجود ممکن است قدیمی شود و ممکن است بین زمانی که کالا
-          را به سبد خرید خود اضافه می کنید و زمان پردازش سفارش شما تغییر کند. در موارد نادر، ممکن است کالا موجود نباشد،
-          یا تعداد واحدهایی که سفارش داده‌اید در دسترس نباشد در این صورت ما در مورد بهترین راه با شما در ارتباط خواهیم
+          را به سبد خرید خود اضافه می کنید و زمان پردازش سفارش شما تغییر کند. در موارد نادر، ممکن است کالا موجود نباشد،
+          یا تعداد واحدهایی که سفارش داده‌اید در دسترس نباشد در این صورت ما در مورد بهترین راه با شما در ارتباط خواهیم
           بود.
         </p>
       </div>
 
-      <div className=" mt-8 md:mt-12 pt-12 border-t-2 border-gray-200">
-        <div className="flex items-center gap-3 ">
-          <div className="w-1 h-8 bg-primary-400 rounded-l"></div>
-          <h2 className="text-xl md:text-2xl font-bold text-primary-600">گمرک</h2>
-        </div>
-        <p className="text-gray-600 leading-7 mt-6">
+      <div className="mt-8 md:mt-12 pt-12 border-t-2 dark:border-dark-field border-gray-200">
+        <SectionHeader title="گمرک" />
+
+        <p className="text-gray-600 leading-7 mt-6 dark:text-dark-text">
           از آنجایی که برخی از اقلام از انبار ما در خارج از کشور ارسال می‌شوند، ما این حق را برای خود محفوظ می‌داریم که
           محصول سفارش داده شده در صورتی که از نظر اخلاقی ، مذهبی ، امنیتی با مقررات کشوری که محصول در آن تحویل می‌شود
           مغایرت داشته باشد سفارش شما لغو کنیم. در این صورت به شما اطلاع داده می شود و هزینه ای از شما دریافت نمی شود.
         </p>
-        <p className="text-gray-600 leading-7">
-          به خصوص به دلیل تغییر قوانین و سیاست گمرک ها ممکن است کالایی در گمرک ممنوعنیت ورود به کشور مقصد را داشته  باشد
+
+        <p className="text-gray-600 leading-7 dark:text-dark-text">
+          به خصوص به دلیل تغییر قوانین و سیاست گمرک ها ممکن است کالایی در گمرک ممنوعنیت ورود به کشور مقصد را داشته باشد
           سفارش شما لغو و در صورتی که کالا به انبار ما در مبدا برگشت بخورد هزینه از شما دریافت نمی گردد.
         </p>
       </div>

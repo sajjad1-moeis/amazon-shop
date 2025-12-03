@@ -2,6 +2,7 @@
 import { useState } from "react";
 import ExperienceModal from "./ExperienceModal";
 import ReviewCard from "./ReviewCard";
+import PaginationBlogs from "../Blogs/PaginationBlogs";
 
 const PLACEHOLDER_IMAGE =
   "https://images.unsplash.com/photo-1588422333075-3c537f7e07c7?auto=format&fit=crop&w=1600&q=80";
@@ -38,6 +39,8 @@ export default function ReviewsBoard() {
           <ReviewCard key={exp.id} experience={exp} onClick={() => openModal(exp)} />
         ))}
       </div>
+
+      <PaginationBlogs count={6} />
 
       <ExperienceModal
         open={!!selectedExperience}

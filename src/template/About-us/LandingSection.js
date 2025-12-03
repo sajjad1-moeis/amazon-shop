@@ -26,12 +26,14 @@ const features = [
 
 export default function LandingSection() {
   return (
-    <div className="w-full flex flex-col items-center bg-[#f8fafc] py-20">
+    <div className="w-full flex flex-col items-center bg-[#f8fafc] dark:bg-dark-bg py-20">
       {/* Top Section */}
       <div className="container w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
         {/* Left Box */}
-        <div className="bg-white shadow-lg rounded-2xl p-4 text-right leading-7 text-gray-600 h-max my-auto max-lg:text-sm">
-          <h2 className="text-lg md:text-2xl lg:text-3xl font-bold mb-4 text-gray-700">چشم‌انداز ما روشن است:</h2>
+        <div className="bg-white  dark:bg-white/15 shadow-lg rounded-2xl p-4 text-right leading-7 text-gray-600 dark:text-dark-text h-max my-auto max-lg:text-sm">
+          <h2 className="text-lg md:text-2xl lg:text-3xl font-bold mb-4 text-gray-700 dark:text-dark-titre">
+            چشم‌انداز ما روشن است:
+          </h2>
           <p>میکروپارس می‌خواهد به اولین انتخاب ایرانیان برای خرید جهانی تبدیل شود.</p>
           <p> جایی که شفافیت، سرعت و اصالت سه اصل همیشگی‌اند.</p>
           <p className="mt-4">
@@ -46,8 +48,10 @@ export default function LandingSection() {
         </div>
 
         {/* Right Box */}
-        <div className="bg-white shadow-lg rounded-2xl p-4 text-right leading-7 text-gray-600 my-auto h-max max-lg:text-sm">
-          <h2 className="md:text-2xl lg:text-3xl font-bold mb-4 text-gray-700">ماموریت ما ساده اما عمیق است:</h2>
+        <div className="bg-white dark:bg-white/15 shadow-lg rounded-2xl p-4 text-right leading-7 text-gray-600 dark:text-dark-text my-auto h-max max-lg:text-sm">
+          <h2 className="md:text-2xl lg:text-3xl font-bold mb-4 text-gray-700 dark:text-dark-titre">
+            ماموریت ما ساده اما عمیق است:
+          </h2>
           <p>
             در میکروپارس، تمام هزینه‌ها از قیمت کالا تا حمل و گمرک، به‌صورت شفاف نمایش داده می‌شود. شما می‌دانید دقیقاً
             چه چیزی می‌پردازید و چرا.
@@ -60,14 +64,16 @@ export default function LandingSection() {
       </div>
 
       {/* Features Title */}
-      <h3 className="text-2xl lg:text-3xl font-bold mt-14 md:mt-20 mb-10">ویژگی‌هایی که ما را متمایز می‌کند</h3>
+      <h3 className="text-2xl lg:text-3xl font-bold mt-14 md:mt-20 mb-10 dark:text-dark-title">
+        ویژگی‌هایی که ما را متمایز می‌کند
+      </h3>
 
       <div className="container w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
         {features.map((item, index) => (
-          <div key={index} className="bg-white shadow rounded-2xl p-6 flex flex-col  ">
-            <div className="bg-primary-700 text-primary-50 p-2.5 rounded-lg w-max">{item.icon}</div>
-            <p className="mt-3 font-bold text-xl text-primary-700">{item.title}</p>
-            <p className="text-sm mt-3 text-gray-500">{item.desc}</p>
+          <div key={index} className="bg-white dark:bg-white/15 shadow rounded-2xl p-6 flex flex-col  ">
+            <div className="bg-primary-700 dark:bg-primary-400 text-primary-50 p-2.5 rounded-lg w-max">{item.icon}</div>
+            <p className="mt-3 font-bold text-xl text-primary-700 dark:text-primary-200">{item.title}</p>
+            <p className="text-sm mt-3 text-gray-500 dark:text-dark-text">{item.desc}</p>
           </div>
         ))}
       </div>

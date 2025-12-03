@@ -53,15 +53,19 @@ export default function ProductPurchaseForm() {
   };
 
   return (
-    <div class="p-4">
-      <div className="container rounded-3xl border bg-white shadow-sm px-6 py-4">
-        <p className=" text-gray-700 text-2xl">فرم خرید محصول</p>
+    <div className="p-4">
+      <div className="max-w-5xl mx-auto rounded-3xl border dark:bg-dark-box dark:border-dark-field bg-white shadow-sm p-3 md:px-6 md:py-4">
+        <p className=" text-gray-700 text-lg md:text-2xl dark:text-dark-titre">فرم خرید محصول</p>
 
         <form className="space-y-5 mt-6" onSubmit={handleSubmit(onSubmit)}>
           {PRIMARY.map((f) => (
             <div key={f.name} className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">{f.label}</label>
-              <Input placeholder={f.placeholder} className="bg-gray-50 border" {...register(f.name, f.rules)} />
+              <label className="text-sm font-medium text-gray-700 dark:text-dark-titre">{f.label}</label>
+              <Input
+                placeholder={f.placeholder}
+                className="bg-gray-50 border dark:bg-dark-field dark:border-dark-stroke max-md:placeholder:text-sm"
+                {...register(f.name, f.rules)}
+              />
               {errors[f.name] && <p className="text-xs text-red-500">{errors[f.name]?.message}</p>}
             </div>
           ))}
@@ -69,11 +73,11 @@ export default function ProductPurchaseForm() {
           <div className="grid gap-4 sm:grid-cols-2">
             {SECONDARY.map((f) => (
               <div key={f.name} className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">{f.label}</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-dark-titre">{f.label}</label>
                 <Input
                   inputMode="decimal"
                   placeholder={f.placeholder}
-                  className="bg-gray-50 border"
+                  className="bg-gray-50 border dark:bg-dark-field dark:border-dark-stroke  max-md:placeholder:text-sm"
                   {...register(f.name, f.rules)}
                 />
                 {errors[f.name] && <p className="text-xs text-red-500">{errors[f.name]?.message}</p>}
@@ -81,17 +85,17 @@ export default function ProductPurchaseForm() {
             ))}
           </div>
 
-          <div className="rounded-2xl border border-dashed bg-gray-50/60 p-4">
+          <div className="rounded-2xl border border-dashed bg-gray-50/60 dark:bg-dark-field dark:border-dark-stroke p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-700">توضیحات</p>
-                <p className="text-xs text-gray-500 mt-2">در صورت نیاز این بخش را باز کنید.</p>
+                <p className="text-sm font-medium text-gray-700 dark:text-dark-titre">توضیحات</p>
+                <p className="text-xs text-gray-500 mt-2 dark:text-dark-text">در صورت نیاز این بخش را باز کنید.</p>
               </div>
 
               <button
                 type="button"
                 onClick={() => setShowDesc((s) => !s)}
-                className="flex size-9 items-center justify-center rounded-full border text-gray-500 hover:text-amber-500"
+                className="flex size-9 items-center justify-center  dark:border-dark-title rounded-full border text-gray-500 hover:text-amber-500"
               >
                 <Plus className={cn("size-5 transition-transform", showDesc && "rotate-45")} />
               </button>
@@ -108,8 +112,8 @@ export default function ProductPurchaseForm() {
           </div>
 
           <div className="flex-between mt-12">
-            <p className="text-lg text-gray-400">قیمت قابل پرداخت</p>
-            <p className="text-xl  text-gray-900">{format(payable)} تومان</p>
+            <p className="text-sm md:text-lg text-gray-400 dark:text-[#9CA3AF]">قیمت قابل پرداخت</p>
+            <p className="md:text-xl  text-gray-900 dark:text-dark-titre">{format(payable)} تومان</p>
           </div>
           <div>
             <Button

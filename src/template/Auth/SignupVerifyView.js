@@ -25,7 +25,7 @@ export default function SignupVerifyView({ phone, code, onChangeCode, onBack }) 
           تایید و ادامه
         </Button>
       </form>
-      <div class="flex gap-1 text-sm">
+      <div className="flex gap-1 text-sm">
         شماره موبایل را اشتباه وارد کردید ؟
         <button onClick={onBack} className="mb-1 text-yellow-600 text-muted-foreground">
           ویرایش شماره موبایل

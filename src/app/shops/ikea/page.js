@@ -20,13 +20,13 @@ function Page() {
       <ShoppingTraining />
     </ShopsLayout>
     // <IndexLayout>
-    //   <div class="bg-[#FBFBFB] ">
+    //   <div className="bg-[#FBFBFB] ">
     //     <div className="relative aspect-square max-h-[480px] w-full">
     //       <Image alt={`محصول بازدید شده شماره `} fill className="object-cover" />
     //     </div>
     //     <SearchBoxShop />
     //     <div className=" relative mt-28">
-    //       <div class="bg-gray-50">
+    //       <div className="bg-gray-50">
     //         <DirectPurchase />
     //         <PurchasingSteps title="مراحل خرید از ایکیا" />
     //         <div className="relative  max-w-4xl w-full mx-auto mt-28">

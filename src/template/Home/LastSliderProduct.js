@@ -10,9 +10,9 @@ import { Navigation } from "swiper/modules";
 function LastSliderProduct() {
   return (
     <div className="container mb-22">
-      <div className="mt-22 categories relative border-2 border-primary-600 bg-primary-50 rounded-2xl overflow-hidden">
+      <div className="mt-22 categories relative border-2 border-primary-600 dark:bg-[#191C24] bg-primary-50 rounded-2xl overflow-hidden">
         {/* --- Header Section --- */}
-        <div className="bg-primary-600 p-4 flex-between">
+        <div className="bg-primary-600 dark:bg-[#32419166] p-4 flex-between">
           <p className="text-xl lg:text-2xl text-white">پرینتر های سه بعدی</p>
 
           <div className="grid grid-cols-4 gap-4 max-md:hidden">
@@ -36,7 +36,7 @@ function LastSliderProduct() {
           ))}
         </div>
 
-        <div class="lg:hidden p-4">
+        <div className="lg:hidden p-4">
           {" "}
           <Swiper
             slidesPerView={1.5}

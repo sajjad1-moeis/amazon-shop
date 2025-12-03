@@ -18,8 +18,10 @@ export default function PaymentMethodItem({
       <div
         onClick={() => onSelect(method.id)}
         className={cn(
-          "border-2 h-full rounded-xl p-3 md:p-4 cursor-pointer transition-all",
-          isSelected ? "bg-primary-50 border-primary-300" : "bg-white border-gray-200 hover:border-gray-300"
+          "border-2 max-lg:h-full max-md:!h-max rounded-xl p-3 md:p-4 cursor-pointer transition-all",
+          isSelected
+            ? "bg-primary-50 dark:bg-[#8893BF3D]  border-primary-300"
+            : "bg-white dark:bg-white/10 border-gray-200 dark:border-dark-stroke hover:border-gray-300"
         )}
       >
         <div className="flex items-start gap-2 md:gap-4">
@@ -27,11 +29,11 @@ export default function PaymentMethodItem({
           <div className="flex items-center pt-1 shrink-0">
             <div
               className={cn(
-                "w-5 h-5 rounded-full border-2 bg-white flex items-center justify-center transition-all",
-                isSelected ? "border-primary-500" : "border-gray-300"
+                "w-5 h-5 rounded-full border-2 bg-white dark:bg-transparent flex items-center justify-center transition-all",
+                isSelected ? "border-primary-500 dark:border-primary-400" : "border-gray-300"
               )}
             >
-              {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-primary-500"></div>}
+              {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-primary-500 dark:bg-primary-400"></div>}
             </div>
           </div>
 
@@ -43,10 +45,16 @@ export default function PaymentMethodItem({
           {/* Content */}
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1 max-md:text-sm">
-              <h3 className={`font-semibold ${isSelected ? "text-primary-500" : "text-gray-900"} `}>{method.title}</h3>
+              <h3
+                className={`font-semibold ${
+                  isSelected ? "text-primary-500 dark:text-dark-title" : "dark:text-dark-titre text-gray-900"
+                } `}
+              >
+                {method.title}
+              </h3>
             </div>
             <div className="flex items-center gap-2">
-              <p className="text-sm text-gray-600 max-md:text-xs">{method.subtitle}</p>
+              <p className="text-sm text-gray-600 max-md:text-xs dark:text-dark-text">{method.subtitle}</p>
               {method.hasInfo && (
                 <button
                   onClick={(e) => e.stopPropagation()}

@@ -9,7 +9,10 @@ function BtnShowLoginModal() {
 
   return (
     <>
-      <button onClick={() => setOpen(!open) + console.log("asd")} className="p-3 rounded-lg border-2 border-white">
+      <button
+        onClick={() => setOpen(!open) + console.log("asd")}
+        className="p-3 rounded-lg border-2 dark:border-[#898989] dark:text-[#898989] border-white"
+      >
         <User />
       </button>
       <AuthModal open={open} onClose={() => setOpen(false)} />

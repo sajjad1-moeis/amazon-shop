@@ -4,14 +4,14 @@ import ByAmazonSlider from "./ByAmazonSlider";
 
 export default function AmazonSection() {
   return (
-    <div className="w-full bg-white ">
+    <div className="w-full bg-white  dark:bg-dark-bg">
       {/* Hero Section */}
 
       <Image src="/image/Home/amazonBg.png" alt="banner" width={0} height={0} sizes="100vw" className="w-full h-auto" />
 
       {/* Product Slider Box */}
       <div className="w-full container -mt-[10%] relative">
-        <div className="w-full border-2 border-primary-300 rounded-2xl p-4 flex gap-4 overflow-x-auto bg-white shadow-[0_0_20px_rgba(0,0,0,0.05)]">
+        <div className="w-full border-2  dark:border-[#50578152] border-primary-300 rounded-2xl p-4 flex gap-4 overflow-x-auto bg-white dark:bg-dark-bg shadow-[0_0_20px_rgba(0,0,0,0.05)]">
           {/* Explosion Offer Box */}
           <div className="min-w-[150px] lg:min-w-[200px]  rounded-xl p-4  flex justify-center items-center text-center max-md:hidden">
             <div>
@@ -70,10 +70,10 @@ export default function AmazonSection() {
                   </defs>
                 </svg>
               </div>
-              <p className="text-[#333] font-semibold text-lg -mt-2">تخفیف های</p>
+              <p className="dark:text-white text-[#333] font-semibold text-lg -mt-2">تخفیف های</p>
               <p className="my-7 font-bold text-3xl">انفجاری</p>
 
-              <div className=" py-2 flex items-center justify-center gap-1 text-gray-700 border-red-400 border text-xl rounded-xl font-bold">
+              <div className=" py-2 flex items-center justify-center gap-1 dark:bg-black dark:text-[#B0B9CA] dark:border-[#7F4142] text-gray-700 border-red-400 border text-xl rounded-xl font-bold">
                 <span>44</span>
                 <span className="text-xl">15:12</span>
               </div>

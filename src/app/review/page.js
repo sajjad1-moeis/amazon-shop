@@ -38,10 +38,10 @@ function Page() {
         title={" تجربه واقعی خریداران از میکرولس"}
       />
       <div className="grid  lg:grid-cols-4 container mt-10 gap-8">
-        <div class="max-lg:hidden">
+        <div className="max-lg:hidden">
           <FiltersSection isInventory={false} dynamicFilters={dynamicFilters} />
         </div>
-        <div className=" lg:col-span-3">
+        <div className=" lg:col-span-3 mb-20">
           <div className="space-y-6">
             <TopBar viewMode={viewMode} setViewMode={setViewMode} />
 

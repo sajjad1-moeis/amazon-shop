@@ -10,11 +10,11 @@ function Page() {
   return (
     <ShopsLayout
       direct={<DirectPurchase />}
-      title={"شین"}
+      title={"شین امارات"}
       src="/image/Shops/shein.png"
       imgClassName={"max-md:max-h-44"}
     >
-      <div class="bg-gray-50">
+      <div>
         <ProductPurchaseForm />
         <AvailableProducts />
         <AboutServiceCard

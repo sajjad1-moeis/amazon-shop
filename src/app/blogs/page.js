@@ -8,12 +8,12 @@ import React from "react";
 function Page() {
   return (
     <IndexLayout>
-      <div class="bg-gray-50 pb-20">
-        <div className="relative aspect-square max-h-40 lg:max-h-[376px] w-full mb-20">
+      <div className="bg-gray-50 pb-20 dark:bg-dark-bg">
+        <div className="relative aspect-square max-h-40 lg:max-h-[376px] w-full mb-10 md:mb-20">
           <Image src="/image/Blogs/blogBg.png" alt={`محصول بازدید شده شماره `} fill className="object-cover" />
         </div>{" "}
         <BlogList count={6} />
-        <div class="grid lg:grid-cols-2 gap-5 container my-8">
+        <div className="grid lg:grid-cols-2 gap-5 container my-4 md:my-8">
           <div className="relative aspect-square max-h-40 md:max-h-[250px] w-full">
             <Image
               src="/image/Blogs/banner1.png"
@@ -31,7 +31,7 @@ function Page() {
             />
           </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3  gap-3 lg:gap-6 container">
+        <div className="grid grid-cols-1 md:grid-cols-3  gap-3 lg:gap-6 container">
           {[...Array(6)].map((blog) => (
             <BlogCard />
           ))}

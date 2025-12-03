@@ -67,11 +67,14 @@ export default function DeliveryAddress({
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow-sm p-6 " dir="rtl">
+      <div
+        className="bg-white dark:bg-dark-field rounded-2xl shadow-sm p-6 dark:border dark:border-dark-stroke"
+        dir="rtl"
+      >
         {/* Header */}
 
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-gray-900">آدرس تحویل سفارش</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-dark-titre">آدرس تحویل سفارش</h2>
           <button
             onClick={handleAddClick}
             className="flex items-center gap-2 text-yellow-600 hover:text-yellow-500 transition-colors max-md:hidden"
@@ -91,7 +94,7 @@ export default function DeliveryAddress({
 
         {/* Action Buttons */}
 
-        <div class="md:hidden mb-10">
+        <div className="md:hidden">
           <button
             onClick={handleAddClick}
             className="flex justify-center w-full items-center gap-2 text-yellow-600 hover:text-yellow-500 transition-colors"
@@ -100,9 +103,9 @@ export default function DeliveryAddress({
             <span className="font-medium">افزودن آدرس جدید</span>
           </button>
         </div>
-        <div className="grid grid-cols-2 items-center p-3 gap-3 max-md:fixed bottom-0 md:flex md:relative bg-white w-full right-0 ">
+        <div className="grid grid-cols-2 dark:bg-dark-field dark:rounded-t-xl items-center p-3 gap-3 max-md:fixed bottom-0 md:flex md:relative  bg-white w-full right-0 ">
           <Link href={"/cart"}>
-            <Button className="bg-gray-100 max-md:w-full text-gray-600 hover:bg-gray-200 font-medium px-6 py-2 rounded-lg">
+            <Button className="bg-gray-100 dark: max-md:w-full text-gray-600 dark:text-white dark:bg-dark-stroke hover:bg-gray-200 font-medium px-6 py-2 rounded-lg">
               لغو
             </Button>
           </Link>

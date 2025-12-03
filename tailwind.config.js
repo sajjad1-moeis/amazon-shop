@@ -35,7 +35,7 @@ module.exports = {
       container: {
         center: true,
         padding: {
-          DEFAULT: "8px",
+          DEFAULT: "16px",
         },
         screens: {
           sm: "576px",
@@ -51,6 +51,17 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
+        dark: {
+          header: "#202020",
+          title: "#B3B3FF",
+          box: "#373737",
+          text: "#A7A4A4",
+          bg: "#262626",
+          titre: "#D2D2D2",
+          field: "#484848",
+          stroke: "#686869",
+          primary: "#3F51B5",
+        },
         red: {
           400: "#F98080",
           500: "#F05252",
@@ -64,6 +75,7 @@ module.exports = {
           600: "#4B5563",
           700: "#374151",
         },
+
         yellow: {
           400: "#FFCD38",
           500: "#F9CE2E",

@@ -3,15 +3,19 @@ import React from "react";
 
 function AvailableProducts() {
   return (
-    <div className={"flex flex-col max-lg:gap-8 lg:grid lg:grid-cols-3 mt-14  lg:mt-28 lg:items-center container"}>
-      <div class="lg:col-span-2 p-4 lg:p-10">
+    <div
+      className={
+        "flex flex-col max-lg:gap-8 lg:grid lg:grid-cols-3 mt-14  lg:mt-28 lg:items-center container p-4 lg:p-10"
+      }
+    >
+      <div className="lg:col-span-2">
         <div className="mb-4">
-          <h2 className="text-xl md:text-2xl lg:text-3xl  text-primary-700 mb-2 text-right flex items-center gap-3">
-            <div className="w-1 h-8 bg-primary-400 rounded"></div>
+          <h2 className="text-xl md:text-2xl lg:text-3xl dark:text-dark-title text-primary-700 mb-2 text-right flex items-center gap-3">
+            <div className="w-1 h-8 bg-primary-400 dark:bg-dark-title rounded"></div>
             کالاهای موجود در سایت شین امارات
           </h2>
         </div>
-        <div class="text-gray-600 text-justify leading-8 mt-4 max-lg:text-sm">
+        <div className="text-gray-600 text-justify leading-8 mt-4 max-lg:text-sm dark:text-dark-text">
           <p>
             شین یکی از محبوب‌ترین فروشگاه‌های پوشاک محسوب می‌شود. در این مجموعه لباس‌های کودکان، اکسسوری‌های خاص، کفش،
             کیف و همینطور بسیاری از اقلام مد عرضه می‌شود. شین در عرضه لباس‌های زنانه و مردانه بیشترین مانور را می‌دهد.

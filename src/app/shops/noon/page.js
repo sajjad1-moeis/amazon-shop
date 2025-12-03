@@ -8,11 +8,11 @@ function Page() {
   return (
     <ShopsLayout
       direct={<DirectPurchase />}
-      title={"نون"}
+      title={"نون امارت"}
       src="/image/Shops/noonShop.png"
       imgClassName={"max-md:max-h-44"}
     >
-      <div class="bg-gray-50">
+      <div>
         <ProductPurchaseForm />
         <ShoppingTraining />
       </div>

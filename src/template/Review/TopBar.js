@@ -19,7 +19,9 @@ export default function TopBar({ viewMode, setViewMode }) {
               onClick={() => setViewMode(mode.id)}
               className={cn(
                 "rounded-lg flex-between gap-2 border px-3 h-10 text-sm font-medium transition",
-                viewMode === mode.id ? " bg-primary-50 border-primary-300 shadow-sm text-primary-600" : "text-gray-500"
+                viewMode === mode.id
+                  ? " bg-primary-50 dark:border-0 dark:bg-dark-field dark:text-primary-300 border-primary-300 shadow-sm text-primary-600"
+                  : "text-gray-500 dark:bg-dark-field dark:text-dark-text"
               )}
             >
               {viewMode === mode.id && <TickCircle variant="Bold" />}
@@ -28,11 +30,14 @@ export default function TopBar({ viewMode, setViewMode }) {
           ))}
         </div>
       </div>
-      <div class="flex gap-2 max-md:justify-between max-md:w-full">
-        <Button className="rounded-lg bg-primary-700 px-6 py-2 text-white shadow-[0_12px_30px_rgba(79,70,229,0.25)] hover:bg-indigo-700">
+      <div className="flex gap-2 max-md:justify-between max-md:w-full">
+        <Button className="rounded-lg bg-primary-700 px-6 py-2 dark:bg-dark-primary text-white shadow-[0_12px_30px_rgba(79,70,229,0.25)] hover:bg-indigo-700">
           ثبت تجربه جدید
         </Button>
-        <Button variant="ghost" className="bg-gray-100 rounded-lg flex-between text-gray-600 lg:hidden">
+        <Button
+          variant="ghost"
+          className="bg-gray-100 rounded-lg flex-between text-gray-600 lg:hidden dark:bg-dark-field dark:text-dark-titre"
+        >
           <Candle size={16} />
           فیلترها
         </Button>

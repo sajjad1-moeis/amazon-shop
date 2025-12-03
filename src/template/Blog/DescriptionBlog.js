@@ -7,7 +7,7 @@ function DescriptionBlog() {
       {/* Introduction Section */}
       <section>
         <TitleCard title={"مقدمه"} />
-        <p className="text-gray-500 leading-7 text-right mt-8">
+        <p className="text-gray-500 leading-7 text-right mt-8 dark:text-dark-text">
           خرید از آمازون همیشه یکی از جذاب‌ترین گزینه‌ها برای دسترسی به محصولات اصل و متنوع دنیا بوده است. اما برای
           کاربران ایرانی، این فرآیند ممکن است کمی پیچیده به‌نظر برسد. در این مقاله قدم‌به‌قدم به شما نشان می‌دهیم که
           چگونه از آمازون آمریکا خرید کنید و کالا را بدون دردسر به ایران برسانید . شما کالا را به ضمانت ما خریداری می
@@ -16,7 +16,7 @@ function DescriptionBlog() {
       </section>
       <section className="mt-14">
         <TitleCard title={"جمع‌بندی"} />
-        <p className="text-gray-500 leading-7 text-right mt-8">
+        <p className="text-gray-500 leading-7 text-right mt-8 dark:text-dark-text">
           خرید از آمازون همیشه یکی از جذاب‌ترین گزینه‌ها برای دسترسی به محصولات اصل و متنوع دنیا بوده است. اما برای
           کاربران ایرانی، این فرآیند ممکن است کمی پیچیده به‌نظر برسد. در این مقاله قدم‌به‌قدم به شما نشان می‌دهیم که
           چگونه از آمازون آمریکا خرید کنید و کالا را بدون دردسر به ایران برسانید . شما کالا را به ضمانت ما خریداری می

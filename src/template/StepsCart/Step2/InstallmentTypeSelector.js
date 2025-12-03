@@ -8,25 +8,30 @@ export default function InstallmentTypeSelector({ selectedType, setSelectedType 
   ];
 
   return (
-    <div className="bg-gray-50 border border-gray-200 space-y-3 p-3 rounded-2xl">
-      <h3 className=" text-gray-700 mb-2 md:text-xl">انتخاب نوع اقساط :</h3>
+    <div className="bg-gray-50 dark:bg-white/10 dark:border-dark-stroke border border-gray-200 space-y-3 p-3 rounded-2xl">
+      <h3 className=" text-gray-700 mb-2 md:text-xl dark:text-dark-titre">انتخاب نوع اقساط :</h3>
       {installmentTypes.map((type) => {
         const isSelected = selectedType === type.id;
         return (
           <div
             key={type.id}
             onClick={() => setSelectedType(type.id)}
-            className="flex items-center gap-1 md:gap-3 cursor-pointer p-2 rounded hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-1 md:gap-3 cursor-pointer p-2 rounded hover:bg-gray-50  transition-colors"
           >
             <div
               className={cn(
-                "w-4 h-4 rounded-full border-2 bg-white flex items-center justify-center transition-all shrink-0",
-                isSelected ? "border-primary-500" : "border-gray-300"
+                "w-4 h-4 rounded-full border-2  dark:bg-transparent bg-white flex items-center justify-center transition-all shrink-0",
+                isSelected ? "border-primary-500 dark:border-primary-400" : "border-gray-300"
               )}
             >
-              {isSelected && <div className="w-2 h-2 rounded-full bg-primary-500"></div>}
+              {isSelected && <div className="w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400"></div>}
             </div>
-            <span className={cn("text-sm ", isSelected ? "text-primary-500 font-medium" : "text-gray-600")}>
+            <span
+              className={cn(
+                "text-sm ",
+                isSelected ? "text-primary-500 font-medium dark:text-primary-400" : "text-gray-600 dark:text-dark-text"
+              )}
+            >
               {type.title}
             </span>
           </div>

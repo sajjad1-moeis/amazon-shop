@@ -21,7 +21,7 @@ export default function App() {
             slidesPerView: 4.5,
           },
         }}
-        className="mySwiper"
+        className="mySwiper "
       >
         {[1, 2, 3, 5, 5, 5, 5].map((i) => (
           <SwiperSlide>
