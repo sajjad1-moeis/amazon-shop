@@ -1,4 +1,4 @@
-import { Calendar, CardPos, ConvertCard } from "iconsax-reactjs";
+import { Calendar, CardPos, ConvertCard, DollarCircle, Gift, GlobalRefresh, Paypal, ShieldTick } from "iconsax-reactjs";
 import ShippingReturnPolicy from "./template/Guide/ShippingReturnPolicy";
 import CustomsShippingServices from "./template/Guide/CustomsShipping";
 import AmazonShoppingGuide from "./template/Guide/AmazonShopping";
@@ -475,4 +475,119 @@ export const GUIDE_ITEMS = [
     label: "شرایط استفاده از امتیازات",
     component: PointsTerms,
   },
+];
+
+import {
+  Headphone,
+  Flash,
+  TickCircle,
+  Wallet3,
+  Card,
+  Global,
+  MoneyRecive,
+  DocumentText,
+  DocumentText1,
+  TickCircle as TickCircleIcon,
+  WalletMoney,
+  MoneySend,
+  DocumentText as ReceiptText,
+} from "iconsax-reactjs";
+import CurrencyPaymentForm from "./template/CurrencyServices/CurrencyPayment";
+
+export const benefits = [
+  { id: 4, icon: TickCircle, title: "کارمزد شفاف", description: "نرخ مشخص و بدون هزینه پنهان" },
+  { id: 3, icon: Flash, title: "انجام سریع تراکنش", description: "انجام پرداخت در کوتاه ترین زمان" },
+  { id: 2, icon: Headphone, title: "پشتیبانی تخصصی", description: "تیم پشتیبانی مالی و ارزی" },
+  { id: 1, icon: ShieldTick, title: "امنیت بالا", description: "پرداخت از کانال های معتبر بین المللی" },
+];
+
+export const paymentSteps = [
+  { id: 1, number: 1, icon: DocumentText1, title: "ثبت درخواست", description: "ارسال فرم و مشخصات مبلغ" },
+  { id: 2, number: 2, icon: TickCircleIcon, title: "بررسی و تایید", description: "بررسی اطلاعات توسط تیم ما" },
+  { id: 3, number: 3, icon: WalletMoney, title: "پرداخت مشتری", description: "پرداخت ریالی توسط کاربر" },
+  { id: 4, number: 4, icon: MoneySend, title: "انجام تراکنش ارزی", description: "پرداخت ارزی در سیستم بین المللی" },
+  { id: 5, number: 5, icon: ReceiptText, title: "ارسال تاییدیه پرداخت", description: "ارسال رسید رسمی برای کاربر" },
+];
+
+export const services = [
+  {
+    id: 1,
+    icon: Wallet3,
+    title: "شارژ حساب ارزی",
+    features: ["شارژ PayPal, Amazon", "شارژ PayPal, Amazon", "شارژ PayPal, Amazon"],
+    buttonText: "درخواست شارژ",
+  },
+  {
+    id: 2,
+    icon: Card,
+    title: "پرداخت آمازون",
+    features: ["پرداخت سفارش آمریکا/امارات"],
+    buttonText: "ثبت سفارش آمازون",
+  },
+  {
+    id: 3,
+    icon: Global,
+    title: "پرداخت ارزی بین المللی",
+    features: ["Visa / Mastercard"],
+    buttonText: "ثبت درخواست پرداخت",
+  },
+  {
+    id: 4,
+    icon: MoneyRecive,
+    title: "تسویه حساب بین المللی",
+    features: ["پرداخت به اشخاص خارجی"],
+    buttonText: "شروع فرایند تسویه",
+  },
+  {
+    id: 5,
+    icon: Global,
+    title: "پرداخت سرویس های خارجی",
+    features: ["Adobe, Apple, Google"],
+    buttonText: "ثبت درخواست",
+  },
+  {
+    id: 6,
+    icon: DocumentText,
+    title: "پرداخت هزینه های گمرکی",
+    features: ["پرداخت Tax و Duty"],
+    buttonText: "درخواست پرداخت",
+  },
+];
+
+export const testimonials = [
+  { id: 1, name: "الهام حسینی", text: "تو دنیای امروز...", rating: 4.5 },
+  { id: 2, name: "سارا اکبری", text: "تو دنیای امروز...", rating: 4.5 },
+  { id: 3, name: "محمدرضا شفیعی", text: "تو دنیای امروز...", rating: 4.5 },
+  { id: 4, name: "علی کریمی", text: "تو دنیای امروز...", rating: 4.5 },
+];
+
+export const selectConfigs = {
+  service: {
+    options: [
+      { value: "paypal", label: "PayPal" },
+      { value: "amazon", label: "Amazon Pay" },
+      { value: "wallet", label: "Wallet" },
+      { value: "swift", label: "SWIFT" },
+    ],
+    className:
+      "h-[51px] bg-gray-50 dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-xl text-right",
+  },
+  currency: {
+    options: [
+      { value: "usd", label: "USD", flag: "🇺🇸" },
+      { value: "eur", label: "EUR", flag: "🇪🇺" },
+      { value: "gbp", label: "GBP", flag: "🇬🇧" },
+    ],
+    className: "h-12 border-none outline-none bg-transparent dark:bg-transparent rounded-xl text-right",
+    showFlag: true,
+  },
+};
+
+export const tabsCurrency = [
+  { value: "forex", label: "پرداخت ارزی", icon: Global, componnet: CurrencyPaymentForm },
+  { value: "card", label: "صدور کردیت کارت", icon: CardPos, componnet: CurrencyPaymentForm },
+  { value: "wallet", label: "وال پی", icon: Paypal, componnet: CurrencyPaymentForm },
+  { value: "swift", label: "سوییفت", icon: GlobalRefresh, componnet: CurrencyPaymentForm },
+  { value: "giftcard", label: "گیفت کارت", icon: Gift, componnet: CurrencyPaymentForm },
+  { value: "other", label: "خدمات دیگر", icon: DollarCircle, componnet: CurrencyPaymentForm },
 ];

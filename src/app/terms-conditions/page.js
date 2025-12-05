@@ -12,7 +12,7 @@ function Page() {
   ];
 
   const activeClasses =
-    "data-[state=active]:bg-primary-50 data-[state=active]:bg-white/10 data-[state=active]:border-b-2 border-primary-500 dark:border-dark-title " +
+    "data-[state=active]:bg-primary-50 dark:data-[state=active]:bg-white/10 data-[state=active]:border-b-2 border-primary-500 dark:border-dark-title " +
     "data-[state=active]:text-primary-600 data-[state=active]:dark:text-dark-title text-gray-500 px-4 py-2 rounded-none transition";
 
   return (

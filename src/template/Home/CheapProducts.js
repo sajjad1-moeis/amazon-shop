@@ -28,7 +28,7 @@ function Categories() {
           1444: { slidesPerView: 5 },
         }}
         modules={[Navigation]}
-        className="mySwiper"
+        className="mySwiper pb-1"
       >
         {[...Array(9)].map((_, i) => (
           <SwiperSlide key={i}>

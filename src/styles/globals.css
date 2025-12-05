@@ -128,3 +128,10 @@
     rgba(229, 231, 235, 0) 100%
   );
 }
+
+.liner-currency-dark {
+  background: linear-gradient(180deg, #262626 0%, rgba(38, 38, 38, 0) 50%, #262626 100%);
+}
+.liner-currency-white {
+  background: linear-gradient(180deg, #fafafa 0%, rgba(250, 250, 250, 0) 50%, #fafafa 100%);
+}

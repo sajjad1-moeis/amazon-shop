@@ -2,6 +2,7 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/
 import { cancelOrderAccordion } from "@/data";
 import { InfoCircle } from "iconsax-reactjs";
 import StepBox from "./StepBox";
+import TitreCard from "@/components/TitreCard";
 
 export default function ShippingReturnPolicy() {
   const steps = [
@@ -35,10 +36,11 @@ export default function ShippingReturnPolicy() {
       </div>
 
       {/* Main Title */}
-      <div className="flex items-center gap-3 mt-12">
+      {/* <div className="flex items-center gap-3">
         <div className="w-1 h-8 bg-primary-400  rounded-l"></div>
-        <h2 className="text-xl md:text-2xl font-bold text-primary-600 dark:text-dark-titre">شرایط کامل بازگشت کالا</h2>
-      </div>
+        <h2 className="text-xl md:text-2xl font-bold text-primary-600 dark:text-dark-titre"></h2>
+      </div> */}
+      <TitreCard title={"شرایط کامل بازگشت کالا"} className="mt-12" />
 
       {/* Section 1 */}
       <div className="space-y-3 mt-8">
@@ -63,14 +65,9 @@ export default function ShippingReturnPolicy() {
         </ul>
       </div>
 
-      <div className="space-y-10 mt-8 md:mt-12 pt-12 border-t-2 dark:border-dark-field border-gray-200 dark:border-dark-field">
+      <div className="space-y-10 mt-8 md:mt-12 pt-12 border-t-2 border-gray-200 dark:border-dark-field">
         <div>
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-1 h-8 bg-primary-400 rounded-l"></div>
-            <h2 className="text-xl md:text-2xl font-bold text-primary-600 dark:text-dark-titre">
-              روند واقعی ثبت مرجوعی
-            </h2>
-          </div>
+          <TitreCard title={"روند واقعی ثبت مرجوعی"} />
 
           <div className="space-y-6">
             {steps.map((step) => (
@@ -82,10 +79,7 @@ export default function ShippingReturnPolicy() {
 
       {/* ----- لغو سفارش ----- */}
       <div className="mt-8 md:mt-12 pt-12 border-t-2 dark:border-dark-field">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-1 h-8 bg-primary-400 rounded-l"></div>
-          <h2 className="text-xl md:text-2xl font-bold text-primary-600 dark:text-dark-titre">لغو سفارش</h2>
-        </div>
+        <TitreCard title={"لغو سفارش"} />
 
         <Accordion type="single" collapsible className="w-full space-y-3">
           {cancelOrderAccordion.map((item) => (
@@ -105,10 +99,8 @@ export default function ShippingReturnPolicy() {
 
       {/* ----- بازپرداخت ----- */}
       <div className="mt-8 md:mt-12 pt-12 border-t-2 dark:border-dark-field">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-1 h-8 bg-primary-400 rounded-l"></div>
-          <h2 className="text-xl md:text-2xl font-bold text-primary-600 dark:text-dark-titre">بازپرداخت</h2>
-        </div>
+        <TitreCard title={"بازپرداخت"} />
+
         <p className="text-gray-600 text-sm dark:text-dark-text">
           بازپرداخت‌ها طی ۲ تا ۷ روز کاری پس از تایید کامل انجام می‌شود.
         </p>

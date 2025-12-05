@@ -1,12 +1,11 @@
+import TitreCard from "@/components/TitreCard";
 import { Bag2 } from "iconsax-reactjs";
 
 export default function PointsTerms() {
   return (
     <div>
-      <div className="flex items-center gap-3 mb-8">
-        <div className="w-1 h-8 bg-primary-400 rounded-l"></div>
-        <h2 className="text-xl md:text-2xl font-bold text-primary-600 dark:text-dark-titre">روش‌های دریافت امتیاز</h2>
-      </div>
+      <TitreCard title={"روش‌های دریافت امتیاز"} />
+
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
         {[...Array(4)].map((item) => (
           <div className="p-2 md:p-4 rounded-xl border-2 border-primary-500 dark:border-dark-title">
@@ -20,13 +19,9 @@ export default function PointsTerms() {
       </div>
 
       <div className="mt-8 md:mt-12 pt-8 md:pt-12 border-t-2 border-gray-200 dark:border-dark-field">
-        <div className="flex items-center gap-3 ">
-          <div className="w-1 h-8 bg-primary-400 rounded-l"></div>
-          <h2 className="text-xl md:text-2xl font-bold text-primary-600 dark:text-dark-titre">
-            چطور از امتیازها استفاده کنیم؟
-          </h2>
-        </div>
-        <div class="text-gray-600 dark:text-dark-text  mt-6">
+        <TitreCard title={"چطور از امتیازها استفاده کنیم؟"} />
+
+        <div class="text-gray-600 dark:text-dark-text">
           <p className="leading-7">امتیازات جمع‌آوری‌شده می‌تواند برای کاهش قیمت برخی سفارش‌ها استفاده شود.</p>
           <p className="leading-7">
             در زمان ثبت سفارش جدید، اگر امتیاز کافی در حساب شما وجود داشته باشد، سیستم گزینه «استفاده از امتیاز» را
@@ -53,12 +48,8 @@ export default function PointsTerms() {
       </div>
 
       <div className="!mt-8 md:mt-12 pt-8 md:pt-12 border-t-2 border-gray-200 dark:border-dark-field ">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-1 h-8 bg-primary-400 rounded-l"></div>
-          <h2 className="text-xl md:text-2xl font-bold text-primary-600 dark:text-dark-titre">
-            قوانین استفاده از امتیازات
-          </h2>
-        </div>
+        <TitreCard title={"قوانین استفاده از امتیازات"} />
+
         <div className="space-y-3 mt-8">
           <h3 className="text-base md:text-lg text-gray-700  dark:text-dark-titre">
             مطابق دستورالعمل‌های رسمی میکرولس :

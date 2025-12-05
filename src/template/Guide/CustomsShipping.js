@@ -1,5 +1,6 @@
 import { deliveryInfo } from "@/data";
 import StepBox from "./StepBox";
+import TitreCard from "@/components/TitreCard";
 
 export const customsSteps = [
   {
@@ -23,15 +24,6 @@ export const customsSteps = [
     desc: "پس از پرداخت عوارض و تأیید نهایی، کالا ترخیص شده و برای ارسال داخلی به شرکت حمل تحویل داده می‌شود.",
   },
 ];
-
-function SectionHeader({ title }) {
-  return (
-    <div className="flex items-center gap-3">
-      <div className="w-1 h-8 bg-primary-400 dark:bg-dark-title rounded-l"></div>
-      <h2 className="text-xl md:text-2xl font-bold text-primary-600 dark:text-dark-titre">{title}</h2>
-    </div>
-  );
-}
 
 function DeliveryItem({ item }) {
   return (
@@ -63,11 +55,7 @@ export default function CustomsShippingServices() {
         آشنا شوید.
       </p>
 
-      {/* مراحل کامل فرایند شکوفه */}
-      <div className="flex items-center gap-3 mt-12">
-        <div className="w-1 h-8 bg-primary-400 dark:bg-dark-title rounded-l"></div>
-        <h2 className="text-xl md:text-2xl font-bold text-primary-600 dark:text-dark-titre">مراحل کامل فرآیند گمرکی</h2>
-      </div>
+      <TitreCard className={"mt-12"} title={"مراحل کامل فرآیند گمرکی"} />
 
       <div className="space-y-6 mt-8">
         {customsSteps.map((step) => (
@@ -76,7 +64,7 @@ export default function CustomsShippingServices() {
       </div>
 
       <div className="space-y-10 mt-8 md:mt-12 pt-12 border-t-2 border-gray-200 dark:border-dark-field">
-        <SectionHeader title="حمل و نقل" />
+        <TitreCard title="حمل و نقل" />
 
         {deliveryInfo.map((item, index) => (
           <DeliveryItem key={item.id || index} item={item} />
@@ -85,7 +73,7 @@ export default function CustomsShippingServices() {
 
       {/* هزینه تحویل */}
       <div className="space-y-6 mt-8 md:mt-12 pt-8 md:pt-12 border-t-2 dark:border-dark-field border-gray-200">
-        <SectionHeader title="هزینه تحویل چقدر است؟" />
+        <TitreCard title="هزینه تحویل چقدر است؟" />
 
         <p className="text-gray-600 leading-7 dark:text-dark-text">
           پس از افزودن کالای مورد نظر به سبد خرید می توانید هزینه نهایی سفارش خود را مشاهده کنید. اگر سفارش شما حاوی یک
@@ -97,7 +85,7 @@ export default function CustomsShippingServices() {
       </div>
 
       <div className="space-y-6 mt-8 md:mt-12 pt-8 md:pt-12 border-t-2 dark:border-dark-field border-gray-200">
-        <SectionHeader title="در دسترس بودن کالا" />
+        <TitreCard title="در دسترس بودن کالا" />
 
         <p className="text-gray-600 leading-7 dark:text-dark-text">
           موجودی کالاهای موجود در این وب سایت فقط برای اطلاع شما است. در حالی که ما تلاش می کنیم تا اطلاعات موجودی در
@@ -109,7 +97,9 @@ export default function CustomsShippingServices() {
       </div>
 
       <div className="mt-8 md:mt-12 pt-12 border-t-2 dark:border-dark-field border-gray-200">
-        <SectionHeader title="گمرک" />
+        {/* <SectionHeader title="گمرک" /> */}
+
+        <TitreCard title={"گمرک"} />
 
         <p className="text-gray-600 leading-7 mt-6 dark:text-dark-text">
           از آنجایی که برخی از اقلام از انبار ما در خارج از کشور ارسال می‌شوند، ما این حق را برای خود محفوظ می‌داریم که

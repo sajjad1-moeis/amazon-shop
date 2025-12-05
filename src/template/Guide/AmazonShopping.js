@@ -1,3 +1,5 @@
+import TitreCard from "@/components/TitreCard";
+
 export const amazonSteps = [
   {
     id: 1,
@@ -44,13 +46,8 @@ export default function AmazonShoppingGuide() {
         </p>
       </div>
       <div className=" mt-12 pt-12 ">
-        <div className="flex items-center gap-3 ">
-          <div className="w-1 h-8 bg-primary-400 dark:bg-dark-title rounded-l"></div>
-          <h2 className="text-xl md:text-2xl font-bold text-primary-600 dark:text-dark-titre">
-            آموزش کامل خرید از آمازون از طریق میکرولس
-          </h2>
-        </div>
-        <div class="space-y-2 text-gray-700 dark:text-dark-text mt-6">
+        <TitreCard title={"آموزش کامل خرید از آمازون از طریق میکرولس"} />
+        <div class="space-y-2 text-gray-700 dark:text-dark-text">
           <p className="leading-7 ">
             خرید از آمازون با استفاده از خدمات میکرولس بسیار ساده است. ابتدا لینک محصول مورد نظر را در سایت آمازون پیدا
             می‌کنید و آن را در بخش «درخواست خرید» یا «محاسبه‌گر قیمت» میکرولس وارد می‌کنید. سیستم به‌صورت خودکار قیمت
@@ -70,12 +67,7 @@ export default function AmazonShoppingGuide() {
 
       <div className="!mt-8 md:mt-12 pt-8 md:pt-12 border-t-2 border-gray-200 dark:border-dark-field">
         <div>
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-1 h-8 bg-primary-400 dark:bg-dark-title rounded-l"></div>
-            <h2 className="text-xl md:text-2xl font-bold text-primary-600 dark:text-dark-titre">
-              روند واقعی ثبت مرجوعی
-            </h2>
-          </div>
+          <TitreCard title={"روند واقعی ثبت مرجوعی"} />
 
           <div className="space-y-6">
             {amazonSteps.map((item) => (
@@ -97,12 +89,8 @@ export default function AmazonShoppingGuide() {
       </div>
 
       <div className="!mt-8 md:mt-12 pt-8 md:pt-12 border-t-2 border-gray-200">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-1 h-8 bg-primary-400 dark:bg-dark-title rounded-l"></div>
-          <h2 className="text-xl md:text-2xl font-bold text-primary-600 dark:text-dark-titre">
-            نکات بسیار مهمی که قبل از خرید از آمازون باید بدانید
-          </h2>
-        </div>
+        <TitreCard title={"نکات بسیار مهمی که قبل از خرید از آمازون باید بدانید"} />
+
         <div className="space-y-3 mt-8">
           <h3 className="text-base md:text-lg text-gray-700 dark:text-dark-titre">
             پیش از ثبت سفارش بهتر است به چند نکته کلیدی توجه کنید:
@@ -125,12 +113,8 @@ export default function AmazonShoppingGuide() {
         </div>
       </div>
       <div className="!mt-8 md:mt-12 pt-8 md:pt-12 border-t-2 border-gray-200 dark:border-dark-field">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-1 h-8 bg-primary-400 dark:bg-dark-title rounded-l"></div>
-          <h2 className="text-xl md:text-2xl font-bold text-primary-600 dark:text-dark-titre">
-            چطور در آمازون بهترین محصول را انتخاب کنیم؟
-          </h2>
-        </div>
+        <TitreCard title={"چطور در آمازون بهترین محصول را انتخاب کنیم؟"} />
+
         <div className="space-y-3 mt-8">
           <h3 className="text-base md:text-lg text-gray-700 dark:text-dark-titre">
             برای انتخاب محصول مناسب در آمازون باید چند معیار مهم را در نظر بگیرید.

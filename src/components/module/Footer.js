@@ -21,7 +21,7 @@ export default function Footer() {
       className="w-full bg-white dark:bg-[#101010] text-gray-700 dark:text-white border-t border-neutral-100 dark:border-gray-800"
       dir="rtl"
     >
-      <div className="container">
+      <div className="px-6 lg:container">
         {/* --- Recent Visits --- */}
         <section className="pt-8">
           <RecentVisits />
@@ -169,7 +169,7 @@ export default function Footer() {
 /* --- Feature Icon Item --- */
 function FeatureItem({ icon, title }) {
   return (
-    <div className="flex items-center gap-3 md:p-3">
+    <div className="flex items-center gap-3 lg:p-3">
       <div className="w-10 h-10 rounded-xl bg-gray-400 dark:bg-[#626771] flex items-center justify-center border border-gray-300 dark:border-gray-600 text-white">
         {icon}
       </div>
