@@ -2,13 +2,20 @@ import SectionContainer from "./SectionContainer";
 import LabeledField from "./LabeledField";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "iconsax-reactjs";
+import { fieldClassName } from "./AuthModal.";
 
 export default function ResetRequestView({ phone, onChangePhone, onBack, onNext }) {
   return (
-    <SectionContainer title="بازیابی رمز عبور" description="شماره موبایل خود را وارد کنید تا کد ارسال شود.">
-      <button onClick={onBack} className="mb-1 text-[11px] text-muted-foreground">
-        &larr; بازگشت
-      </button>
+    <SectionContainer title="بازیابی رمز عبور">
+      <div class="flex justify-between mb-1 gap-6">
+        <p className="text-gray-400 text-sm ">
+          برای بازیابی رمز عبور خود، شماره موبایل ثبت‌شده را وارد کنید. کد تأیید برای شما ارسال خواهد شد.
+        </p>
+        <button onClick={onBack} className=" text-[11px] h-max text-muted-foreground">
+          <ArrowLeft />
+        </button>
+      </div>
 
       <form
         onSubmit={(e) => {
@@ -24,11 +31,13 @@ export default function ResetRequestView({ phone, onChangePhone, onBack, onNext 
             placeholder="0912xxxxxxx"
             value={phone}
             onChange={(e) => onChangePhone(e.target.value)}
-            className="h-10 rounded-lg bg-background text-right placeholder:text-xs"
+            className={fieldClassName}
           />
         </LabeledField>
 
-        <Button className="mt-3 h-10 w-full rounded-lg text-sm">ارسال کد تایید</Button>
+        <Button className="mt-3 h-10 w-full rounded-lg text-sm bg-primary-700 dark:bg-dark-primary text-white">
+          ارسال کد تایید
+        </Button>
       </form>
     </SectionContainer>
   );

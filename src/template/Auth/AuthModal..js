@@ -9,9 +9,10 @@ import SignupVerifyView from "./SignupVerifyView";
 import ResetRequestView from "./ResetRequestView";
 import ResetVerifyView from "./ResetVerifyView";
 
-export const fieldClassName = "h-10 rounded-lg bg-gray-50 border text-right placeholder:text-xs";
+export const fieldClassName =
+  "h-10 rounded-lg bg-gray-50 border text-right placeholder:text-xs dark:bg-dark-field dark:border-dark-stroke";
 
-export function AuthModal({ open, onOpenChange }) {
+export function AuthModal({ open, onClose }) {
   const [view, setView] = useState(VIEWS.LOGIN);
 
   const [phone, setPhone] = useState("");
@@ -36,12 +37,12 @@ export function AuthModal({ open, onOpenChange }) {
       resetFields();
       setPhone("");
     }
-    onOpenChange?.(state);
+    onClose();
   };
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-md p-0 overflow-hidden rounded-2xl bg-white">
+      <DialogContent className="max-w-md p-0 overflow-hidden !rounded-2xl bg-white dark:bg-dark-box">
         {view === VIEWS.LOGIN && (
           <LoginView
             phone={phone}
@@ -67,7 +68,7 @@ export function AuthModal({ open, onOpenChange }) {
         )}
 
         {view === VIEWS.SIGNUP_VERIFY && (
-          <SignupVerifyView phone={phone} code={code} onChangeCode={setCode} onBack={() => goTo(VIEWS.SIGNUP)} />
+          <SignupVerifyView phone={phone} code={code} onChangeCode={setCode} onBack={() => goTo(VIEWS.RESET_REQUEST)} />
         )}
 
         {view === VIEWS.RESET_REQUEST && (

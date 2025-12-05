@@ -40,13 +40,13 @@ export default function LoginView({ phone, password, onChangePhone, onChangePass
           </button>
         </div>
 
-        <Button className="mt-10 mb-3 h-10 w-full hover:bg-primary-400 rounded-lg text-sm bg-primary-700 text-white">
+        <Button className="mt-10 mb-3 h-10 w-full dark:bg-dark-primary hover:bg-primary-400 rounded-lg text-sm bg-primary-700 text-white">
           ورود به حساب
         </Button>
 
         <Button
-          variant="outline"
-          className="h-10 w-full rounded-lg text-xs border-primary-500 border-2 text-primary-500"
+          variant="ghost"
+          className="h-10 w-full rounded-lg text-xs border-primary-500 border-2 text-primary-500 dark:border-dark-primary dark:text-dark-primary"
         >
           <Google />
           ورود با گوگل

@@ -66,7 +66,7 @@ export default function SignupView({
           <span>با قوانین سایت موافقم</span>
         </label>
 
-        <Button className="mt-3 h-10 w-full hover:bg-primary-400 rounded-lg text-sm bg-primary-700 ">
+        <Button className="mt-3 h-10 w-full dark:bg-dark-primary dark:text-white hover:bg-primary-400 rounded-lg text-sm bg-primary-700 ">
           ارسال کد تایید
         </Button>
       </form>
