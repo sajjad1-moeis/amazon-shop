@@ -1,15 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import SectionContainer from "./SectionContainer";
 import LabeledField from "./LabeledField";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { fieldClassName } from "./AuthModal";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 export default function SignupVerifyView({ onBack, onSuccess }) {
   const { verifyRegistrationOtp, resendOtp, loading } = useAuth();
+  const router = useRouter();
   const [phone, setPhone] = useState("");
   const [code, setCode] = useState("");
 
@@ -23,19 +26,28 @@ export default function SignupVerifyView({ onBack, onSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!phone) {
+    
+    if (!code || code.length !== 6) {
+      toast.error("لطفاً کد تایید ۶ رقمی را وارد کنید");
       return;
     }
+
+    if (!phone) {
+      toast.error("شماره موبایل یافت نشد");
+      return;
+    }
+    
     const result = await verifyRegistrationOtp(phone, code);
     if (result.success) {
       localStorage.removeItem("signup_phone");
       onSuccess?.();
+      router.push("/dashboard");
     }
   };
 
   const handleResend = async () => {
     if (!phone) return;
-    await resendOtp(phone, "registration");
+    await resendOtp(phone, "register");
   };
 
   return (

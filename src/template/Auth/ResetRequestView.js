@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "iconsax-reactjs";
 import { fieldClassName } from "./AuthModal";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 export default function ResetRequestView({ onBack, onSuccess }) {
   const { sendForgotPasswordOtp, loading } = useAuth();
@@ -15,6 +16,14 @@ export default function ResetRequestView({ onBack, onSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // اعتبارسنجی شماره تلفن: باید با 09 شروع شود و 11 رقم باشد
+    const phoneRegex = /^09\d{9}$/;
+    if (!phone || !phoneRegex.test(phone)) {
+      toast.error("شماره موبایل باید با 09 شروع شود و 11 رقم باشد");
+      return;
+    }
+
     const result = await sendForgotPasswordOtp(phone);
     if (result.success) {
       localStorage.setItem("reset_phone", phone);
@@ -40,7 +49,7 @@ export default function ResetRequestView({ onBack, onSuccess }) {
             inputMode="tel"
             placeholder="0912xxxxxxx"
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 11))}
             className={fieldClassName}
             required
           />

@@ -37,12 +37,7 @@ export default function ResetVerifyView({ onBack, onSuccess }) {
       return;
     }
 
-    const result = await resetPassword({
-      phoneNumber: phone,
-      otpCode: code,
-      newPassword: password,
-      confirmPassword: passwordRepeat,
-    });
+    const result = await resetPassword({ phoneNumber: phone, otpCode: code, newPassword: password });
     if (result.success) {
       localStorage.removeItem("reset_phone");
       onSuccess?.();
@@ -51,7 +46,7 @@ export default function ResetVerifyView({ onBack, onSuccess }) {
 
   const handleResend = async () => {
     if (!phone) return;
-    await resendOtp(phone, "forgot");
+    await resendOtp(phone, "forgotPassword");
   };
 
   return (
