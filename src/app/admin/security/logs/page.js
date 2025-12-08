@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+import PageHeader from "@/template/Admin/PageHeader";
+import LogsTable from "@/template/Admin/security/logs/LogsTable";
 
 const mockLogs = [
   { id: 1, action: "ورود به سیستم", user: "مدیر", ip: "192.168.1.1", date: "1403/09/20 10:30", status: "success" },
@@ -16,41 +15,11 @@ export default function SecurityLogsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">لاگ‌های سیستم</h1>
-        <p className="text-gray-400">مشاهده لاگ‌های سیستم و فعالیت‌ها</p>
-      </div>
+      <div className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-6">
+        <PageHeader title="لاگ‌های سیستم" />
 
-      <Card className="bg-gray-800 border-gray-700">
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-gray-700 hover:bg-gray-700/50">
-                <TableHead className="text-gray-300">عملیات</TableHead>
-                <TableHead className="text-gray-300">کاربر</TableHead>
-                <TableHead className="text-gray-300">IP</TableHead>
-                <TableHead className="text-gray-300">تاریخ و زمان</TableHead>
-                <TableHead className="text-gray-300">وضعیت</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {logs.map((log) => (
-                <TableRow key={log.id} className="border-gray-700 hover:bg-gray-700/50">
-                  <TableCell className="text-white font-medium">{log.action}</TableCell>
-                  <TableCell className="text-gray-300">{log.user}</TableCell>
-                  <TableCell className="text-gray-300">{log.ip}</TableCell>
-                  <TableCell className="text-gray-300">{log.date}</TableCell>
-                  <TableCell>
-                    <Badge variant={log.status === "success" ? "default" : "destructive"}>
-                      {log.status === "success" ? "موفق" : "ناموفق"}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+        <LogsTable logs={logs} />
+      </div>
     </div>
   );
 }

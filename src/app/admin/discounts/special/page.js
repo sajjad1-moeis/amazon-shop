@@ -1,70 +1,76 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Edit, Trash } from "iconsax-reactjs";
-import { Badge } from "@/components/ui/badge";
+import { Add } from "iconsax-reactjs";
+import PageHeader from "@/template/Admin/PageHeader";
+import SpecialDiscountsTable from "@/template/Admin/discounts/special/SpecialDiscountsTable";
 
+// داده‌های تستی
 const mockSpecialDiscounts = [
-  { id: 1, name: "تخفیف ویژه نوروز", discount: 30, startDate: "1403/01/01", endDate: "1403/01/15", status: "active" },
-  { id: 2, name: "تخفیف آخر فصل", discount: 25, startDate: "1403/12/20", endDate: "1403/12/29", status: "active" },
+  {
+    id: 1,
+    code: "SPECIAL50",
+    type: "percentage",
+    value: 50,
+    minPurchase: 500000,
+    maxDiscount: 1000000,
+    usageLimit: 50,
+    used: 25,
+    status: "active",
+    startDate: "1403/09/01",
+    endDate: "1403/12/29",
+  },
+  {
+    id: 2,
+    code: "VIP100",
+    type: "fixed",
+    value: 100000,
+    minPurchase: 1000000,
+    maxDiscount: null,
+    usageLimit: 100,
+    used: 45,
+    status: "active",
+    startDate: "1403/09/15",
+    endDate: "1403/10/15",
+  },
+  {
+    id: 3,
+    code: "BLACKFRIDAY",
+    type: "percentage",
+    value: 30,
+    minPurchase: 200000,
+    maxDiscount: 500000,
+    usageLimit: 200,
+    used: 200,
+    status: "expired",
+    startDate: "1403/08/01",
+    endDate: "1403/08/31",
+  },
 ];
 
 export default function SpecialDiscountsPage() {
   const [discounts] = useState(mockSpecialDiscounts);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredDiscounts = discounts.filter((discount) =>
+    discount.code.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">تخفیف‌های ویژه</h1>
-        <p className="text-gray-400">مدیریت تخفیف‌های ویژه و رویدادها</p>
-      </div>
+      <div className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-6">
+        <PageHeader
+          title="تخفیف‌های ویژه"
+          buttonText="تخفیف ویژه جدید"
+          buttonIcon={<Add size={20} className="ml-2" />}
+          buttonHref="/admin/discounts/special/create"
+          searchPlaceholder="جستجو ..."
+          searchValue={searchTerm}
+          onSearchChange={setSearchTerm}
+        />
 
-      <Card className="bg-gray-800 border-gray-700">
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-gray-700 hover:bg-gray-700/50">
-                <TableHead className="text-gray-300">نام</TableHead>
-                <TableHead className="text-gray-300">درصد تخفیف</TableHead>
-                <TableHead className="text-gray-300">تاریخ شروع</TableHead>
-                <TableHead className="text-gray-300">تاریخ پایان</TableHead>
-                <TableHead className="text-gray-300">وضعیت</TableHead>
-                <TableHead className="text-gray-300">عملیات</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {discounts.map((discount) => (
-                <TableRow key={discount.id} className="border-gray-700 hover:bg-gray-700/50">
-                  <TableCell className="text-white font-medium">{discount.name}</TableCell>
-                  <TableCell className="text-gray-300">{discount.discount}%</TableCell>
-                  <TableCell className="text-gray-300">{discount.startDate}</TableCell>
-                  <TableCell className="text-gray-300">{discount.endDate}</TableCell>
-                  <TableCell>
-                    <Badge variant={discount.status === "active" ? "default" : "secondary"}>
-                      {discount.status === "active" ? "فعال" : "غیرفعال"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-green-400 hover:bg-green-400/20">
-                        <Edit size={18} />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-red-400 hover:bg-red-400/20">
-                        <Trash size={18} />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+        <SpecialDiscountsTable discounts={filteredDiscounts} />
+      </div>
     </div>
   );
 }
-
