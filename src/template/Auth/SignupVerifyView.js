@@ -1,37 +1,79 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import SectionContainer from "./SectionContainer";
 import LabeledField from "./LabeledField";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { fieldClassName } from "./AuthModal.";
+import { fieldClassName } from "./AuthModal";
+import { useAuth } from "@/contexts/AuthContext";
 
-export default function SignupVerifyView({ phone, code, onChangeCode, onBack }) {
+export default function SignupVerifyView({ onBack, onSuccess }) {
+  const { verifyRegistrationOtp, resendOtp, loading } = useAuth();
+  const [phone, setPhone] = useState("");
+  const [code, setCode] = useState("");
+
+  // دریافت شماره تلفن از localStorage یا state قبلی
+  useEffect(() => {
+    const savedPhone = localStorage.getItem("signup_phone");
+    if (savedPhone) {
+      setPhone(savedPhone);
+    }
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!phone) {
+      return;
+    }
+    const result = await verifyRegistrationOtp(phone, code);
+    if (result.success) {
+      localStorage.removeItem("signup_phone");
+      onSuccess?.();
+    }
+  };
+
+  const handleResend = async () => {
+    if (!phone) return;
+    await resendOtp(phone, "registration");
+  };
+
   return (
     <SectionContainer
       title="تایید حساب"
-      description={`کد تأییدی به شماره موبایل ${phone} ارسال شده است. لطفاً آن را در کادر زیر وارد کنید تا حساب شما فعال شود.`}
+      description={`کد تأییدی به شماره موبایل ${phone || "شما"} ارسال شده است. لطفاً آن را در کادر زیر وارد کنید تا حساب شما فعال شود.`}
     >
-      <form className="space-y-4 text-xs">
+      <form onSubmit={handleSubmit} className="space-y-4 text-xs">
         <LabeledField label="کد تایید">
           <Input
             dir="ltr"
             inputMode="numeric"
             placeholder="123456"
             value={code}
-            onChange={(e) => onChangeCode(e.target.value)}
+            onChange={(e) => setCode(e.target.value)}
             className={fieldClassName}
+            required
+            maxLength={6}
           />
         </LabeledField>
 
         <Button
-          className="mt-3 h-10 w-full rounded-lg text-sm bg-primary-700 text-white dark:bg-dark-primary"
-          variant="ghost"
+          type="submit"
+          disabled={loading || !phone}
+          className="mt-3 h-10 w-full rounded-lg text-sm bg-primary-700 text-white dark:bg-dark-primary disabled:opacity-50"
         >
-          تایید و ادامه
+          {loading ? "در حال تایید..." : "تایید و ادامه"}
         </Button>
       </form>
       <div className="flex gap-1 text-sm text-gray-400">
+        کد را دریافت نکردید؟
+        <button type="button" onClick={handleResend} className="mb-1 text-yellow-600 text-muted-foreground">
+          ارسال مجدد
+        </button>
+      </div>
+      <div className="flex gap-1 text-sm text-gray-400">
         شماره موبایل را اشتباه وارد کردید ؟
-        <button onClick={onBack} className="mb-1 text-yellow-600 text-muted-foreground">
+        <button type="button" onClick={onBack} className="mb-1 text-yellow-600 text-muted-foreground">
           ویرایش شماره موبایل
         </button>
       </div>

@@ -44,10 +44,19 @@ function Header() {
               </button>
 
               <Link href={"/"}>
-                <img
+                {/* <img
                   alt="logo img"
                   src="/image/logo.png"
                   className=" w-full lg:h-12 h-9 md:min-w-36 lg:min-w-[170px]"
+                /> */}
+
+                <Image
+                  alt="لوگو میکروالس"
+                  src="/image/logo.png"
+                  width={170}
+                  height={48}
+                  className="w-full lg:h-12 h-9 md:min-w-36 lg:min-w-[170px]"
+                  priority
                 />
               </Link>
             </div>

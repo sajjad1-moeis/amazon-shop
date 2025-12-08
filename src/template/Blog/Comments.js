@@ -17,7 +17,7 @@ function Comments() {
             <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
           </svg>
         ))}
-        <span className="mr-2 text-[#888A8C] dark:text-gray-400 font-medium">{rating}</span>
+        <span className="mr-2 text-caption dark:text-gray-400 font-medium">{rating}</span>
       </div>
     );
   };
@@ -61,7 +61,7 @@ function Comments() {
               <div className="flex-between w-full">
                 {renderStars(review.rating)}
 
-                <div className="flex items-center gap-2 text-[#888A8C] dark:text-gray-400">
+                <div className="flex items-center gap-2 text-caption dark:text-gray-400">
                   <div className="">
                     <button className="flex items-center gap-2  hover:text-gray-900 dark:hover:text-white transition-colors">
                       <Dislike size={20} />

@@ -1,6 +1,6 @@
 "use client";
 
-import { AuthModal } from "@/template/Auth/AuthModal.";
+import { AuthModal } from "@/template/Auth/AuthModal";
 import { User } from "iconsax-reactjs";
 import React, { useState } from "react";
 
@@ -10,7 +10,7 @@ function BtnShowLoginModal() {
   return (
     <>
       <button
-        onClick={() => setOpen(!open) + console.log("asd")}
+        onClick={() => setOpen(!open)}
         className="p-3 rounded-lg border-2 dark:border-[#898989] dark:text-[#898989] border-white"
       >
         <User />

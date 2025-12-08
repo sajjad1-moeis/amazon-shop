@@ -491,6 +491,7 @@ import {
   WalletMoney,
   MoneySend,
   DocumentText as ReceiptText,
+  DocumentText as DocumentTextIcon,
 } from "iconsax-reactjs";
 import CurrencyPaymentForm from "./template/CurrencyServices/CurrencyPayment";
 

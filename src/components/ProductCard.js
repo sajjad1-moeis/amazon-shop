@@ -15,7 +15,7 @@ function ProductCard({ className }) {
       </div> */}
 
       <div className="relative aspect-square">
-        <Image src="/image/Home/product.png" alt={`محصول بازدید شده شماره `} fill className="object-cover rounded-md" />
+        <Image src="/image/Home/product.png" alt="تصویر محصول" fill className="object-cover rounded-xl " />
       </div>
 
       <div className="p-2 lg:p-4 dark:text-dark-titre">

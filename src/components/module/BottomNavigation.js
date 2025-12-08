@@ -13,8 +13,7 @@ const navigationItems = [
 
 export default function BottomNavigation({ activeItem = "home" }) {
   const [activeId, setActiveId] = useState(activeItem);
-  const [offset, setOffset] = useState({ ofsset: 0, width: 0 });
-
+  const [offset, setOffset] = useState({ left: 0, width: 0 });
   // ساختن ref برای هر دکمه
   const itemRefs = useRef({});
 
@@ -23,7 +22,7 @@ export default function BottomNavigation({ activeItem = "home" }) {
     const activeBtn = itemRefs.current[activeId];
     if (activeBtn) {
       const rect = activeBtn.getBoundingClientRect();
-      setOffset({ ofsset: rect.left, width: rect.width });
+      setOffset({ left: rect.left, width: rect.width });
     }
   }, [activeId]);
 
@@ -31,10 +30,7 @@ export default function BottomNavigation({ activeItem = "home" }) {
     <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-dark-header z-50 md:hidden ">
       <div
         className="absolute top-0 transition-all duration-300 ease-out z-[99999] h-1 bg-[#386BF6]"
-        style={{
-          left: offset.ofsset + "px",
-          width: offset.width,
-        }}
+        style={{ left: offset.left + "px", width: offset.width }}
       ></div>
 
       <div className="relative flex items-center justify-around py-2 px-2">

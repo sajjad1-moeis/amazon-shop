@@ -9,6 +9,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-iran-sans)", "sans-serif"],
+      },
       screens: {
         xs: "390px",
         sm: "576px",
@@ -102,6 +105,8 @@ module.exports = {
           500: "#23A26D",
           600: "#057A55",
         },
+        titre: "#2D323A",
+        caption: "#888A8C",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
