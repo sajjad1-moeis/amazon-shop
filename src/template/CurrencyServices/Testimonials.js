@@ -24,7 +24,7 @@ const CommentBox = ({ t }) => {
             className="object-cover rounded-2xl"
           />
         </div>
-        <h3 className="text-lg font-bold text-gray-900  px-3 border-gray-200 dark:text-white mb-3">{t.name}</h3>
+        <h3 className="text-lg text-gray-900  px-3 border-gray-200 dark:text-white mb-3">{t.name}</h3>
       </div>
       <p className="text-sm text-gray-700 dark:text-gray-300 flex-1 mb-4">
         تو دنیای امروز هر کسب‌وکاری که داشته باشی به پرداخت ارزی نیاز پیدا میکنی؛ اینجاست که مالتینا پی به دادت میرسه.

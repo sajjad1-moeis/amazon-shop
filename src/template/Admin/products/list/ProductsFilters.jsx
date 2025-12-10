@@ -33,3 +33,4 @@ export default function ProductsFilters({ filterCategory, setFilterCategory, fil
   );
 }
 
+

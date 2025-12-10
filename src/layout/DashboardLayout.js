@@ -1,21 +1,28 @@
+"use client";
+
 import DashboardHeader from "@/template/Dashboard/Header";
 import DashboardSidebar from "@/template/Dashboard/Sidebar";
-import React from "react";
+import React, { useState } from "react";
 
 export default function DashboardLayout({ children }) {
-  return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900" dir="rtl">
-      {/* Header */}
-      <DashboardHeader />
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-      <div className="flex">
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col" dir="rtl">
+      {/* Header */}
+      <DashboardHeader onMenuClick={toggleMobileMenu} />
+
+      {/* Content Area: Sidebar + Main */}
+      <div className="flex flex-1 relative md:px-4 md:pt-4 md:pb-4 overflow-hidden">
         {/* Sidebar */}
-        <DashboardSidebar />
+        <DashboardSidebar isMobileOpen={isMobileMenuOpen} onMobileClose={() => setIsMobileMenuOpen(false)} />
 
         {/* Main Content */}
-        <main className="flex-1 mr-0 md:mr-64 lg:mr-72 mt-16 p-4 md:p-6 lg:p-8 max-w-full overflow-x-hidden">
-          {children}
-        </main>
+        <main className="flex-1 px-6  max-w-full overflow-y-auto min-h-0">{children}</main>
       </div>
     </div>
   );

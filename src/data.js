@@ -1,4 +1,23 @@
-import { Calendar, CardPos, ConvertCard, DollarCircle, Gift, GlobalRefresh, Paypal, ShieldTick } from "iconsax-reactjs";
+import {
+  Bag,
+  BitcoinConvert,
+  Calendar,
+  CardPos,
+  Category,
+  Category2,
+  ConvertCard,
+  DollarCircle,
+  Element4,
+  Eye,
+  Gift,
+  GlobalRefresh,
+  Heart,
+  Home,
+  Paypal,
+  Profile,
+  ShieldTick,
+  ShoppingCart,
+} from "iconsax-reactjs";
 import ShippingReturnPolicy from "./template/Guide/ShippingReturnPolicy";
 import CustomsShippingServices from "./template/Guide/CustomsShipping";
 import AmazonShoppingGuide from "./template/Guide/AmazonShopping";
@@ -649,5 +668,35 @@ export const mockProducts = [
     sold: 34,
     status: "active",
     image: "/image/products/tablet.jpg",
+  },
+];
+
+export const navigationItems = [
+  { id: "dashboard", label: "داشبورد", icon: Element4, href: "/dashboard", hasChildren: false },
+  { id: "currency", label: "خدمات ارزی", icon: BitcoinConvert, href: "/currency-services", hasChildren: false },
+  {
+    id: "orders",
+    label: "خرید و سفارشها",
+    icon: Bag,
+    href: "/orders",
+    hasChildren: true,
+    children: [
+      { label: "خریدهای من", href: "/purchases" },
+      { label: "سفارشهای من", href: "/orders" },
+      { label: "فاکتورها", href: "/invoices" },
+      { label: "درخواست های مرجوعی", href: "/returns" },
+    ],
+  },
+  { id: "favorites", label: "علاقه مندی ها", icon: Heart, href: "/favorites", hasChildren: false },
+  { id: "support", label: "تیکت و پشتیبانی", icon: Headphone, href: "/support", hasChildren: false },
+  { id: "comparisons", label: "مقایسه های ذخیره شده", icon: DocumentText, href: "/comparisons", hasChildren: false },
+  { id: "recent-views", label: "بازدیدهای اخیر", icon: Eye, href: "/recent-views", hasChildren: false },
+  {
+    id: "account",
+    label: "حساب کاربری من",
+    icon: Profile,
+    href: "/account",
+    hasChildren: true,
+    children: [],
   },
 ];

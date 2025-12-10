@@ -77,6 +77,15 @@ export function useAddresses(initialAddresses = [], initialSelectedId = null) {
     });
   };
 
+  const setDefaultAddress = (addressId) => {
+    setAddresses((prev) =>
+      prev.map((a) => ({
+        ...a,
+        isDefault: a.id === addressId,
+      }))
+    );
+  };
+
   return {
     addresses,
     selectedAddressId,
@@ -85,6 +94,7 @@ export function useAddresses(initialAddresses = [], initialSelectedId = null) {
     addAddress,
     updateAddress,
     deleteAddress,
+    setDefaultAddress,
     DEFAULT_FORM_DATA,
   };
 }

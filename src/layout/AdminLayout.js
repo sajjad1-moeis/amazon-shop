@@ -15,7 +15,7 @@ export default function AdminLayout({ children }) {
         <AdminTopBar />
 
         {/* Main content area */}
-        <main className="flex-1 p-4 lg:p-6 overflow-y-auto">{children}</main>
+        <main className="flex-1 p-4 lg:p-6">{children}</main>
       </div>
     </div>
   );

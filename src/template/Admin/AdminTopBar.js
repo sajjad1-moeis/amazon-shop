@@ -6,8 +6,9 @@ import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { Menu, Logout, User } from "iconsax-reactjs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { SideBarContent } from "./AdminSidebar";
+
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { SideBarContent } from "./AdminSidebar";
 
 // تابع ساده برای نمایش تاریخ شمسی
 const getPersianDate = () => {
@@ -75,8 +76,13 @@ export default function AdminTopBar() {
       </header>
 
       <Drawer open={open} onOpenChange={setOpen}>
-        <DrawerContent className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg lg:hidden p-5 max-h-screen overflow-auto">
-          <SideBarContent />
+        <DrawerContent
+          closeRowClassName="bg-gray-700"
+          className="bg-gray-800 border border-gray-700 shadow-lg lg:hidden max-h-[85vh] flex flex-col overflow-hidden"
+        >
+          <div className="overflow-y-auto flex-1 px-5 py-4 min-h-0">
+            <SideBarContent />
+          </div>
         </DrawerContent>
       </Drawer>
     </div>

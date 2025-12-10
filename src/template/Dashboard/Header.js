@@ -1,56 +1,68 @@
 "use client";
 
 import React from "react";
-import { Search, Bell, User } from "lucide-react";
+import { Search, Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
+import Image from "next/image";
+import Link from "next/link";
+import { Notification, SearchNormal1, User } from "iconsax-reactjs";
 
-export default function DashboardHeader() {
+export default function DashboardHeader({ onMenuClick }) {
   const { user } = useAuth();
-  const userName = user?.fullName || user?.firstName || "کاربر";
+  const userName = user?.fullName || user?.firstName || "محمد داوری";
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#1e3a5f] dark:bg-[#1a2f4a] border-b border-[#2a4a6f] dark:border-[#2a4a6f]/50">
-      <div className="flex items-center justify-between h-16 px-4 md:px-6 lg:px-8" dir="rtl">
-        {/* Left: Page Title */}
-        <div className="flex items-center">
-          <h1 className="text-sm md:text-base font-medium text-white/90">my favnote page</h1>
+    <header className="w-full bg-primary-500 border-b border-[#2a4a6f]">
+      <div className="flex items-center justify-between py-4 px-3 sm:px-4 md:px-6 lg:px-8 gap-2 md:gap-20" dir="rtl">
+        {/* Left: Mobile Menu Button & Page Title */}
+        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+          {/* Mobile Menu Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden text-white hover:bg-white/10 h-9 w-9"
+            onClick={onMenuClick}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+          <Image
+            alt="لوگو میکروالس"
+            src="/image/logo.png"
+            width={120}
+            height={48}
+            className="w-full lg:h-12 h-9 md:min-w-36 lg:min-w-[120px]"
+            priority
+          />
         </div>
 
-        {/* Center: User Info & Search */}
-        <div className="flex items-center gap-3 md:gap-4 flex-1 justify-center max-w-2xl mx-4">
-          {/* User Name */}
-          <div className="hidden sm:flex items-center gap-2 text-white">
-            <span className="text-sm md:text-base font-medium">{userName}</span>
+        {/* Center: Search Bar */}
+        <div className="bg-white dark:bg-[#8989893D] w-full rounded-lg p-1 flex-between">
+          <input
+            type="text"
+            className="px-2 outline-none placeholder:max-md:text-xs bg-transparent"
+            placeholder="جستجو ..."
+          />
+          <button className="bg-yellow-500 hover:bg-yellow-600 text-primary-800 gap-2 flex-between rounded-lg p-2 md:px-3 py-2">
+            <SearchNormal1 className="max-lg:size-6" /> <span className="max-lg:hidden">جستجو</span>
+          </button>
+        </div>
+
+        {/* Right: User Info & Logo */}
+        <div className="flex items-center gap-2 sm:gap-3 md:gap-4 flex-shrink-0">
+          {/* User Name & Icons - Hidden on mobile */}
+          <div className="hidden sm:flex items-center gap-1.5 md:gap-2 text-white">
+            <Notification size={28} />
+            <User size={28} />
+            <span className="text-xs md:text-sm lg:text-base font-medium hidden md:inline">{userName}</span>
+          </div>
+
+          {/* Mobile: Only Icons */}
+          <div className="sm:hidden flex items-center gap-2 text-white">
+            <Notification className="h-5 w-5" />
             <User className="h-5 w-5" />
           </div>
-
-          {/* Notifications */}
-          <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 dark:hover:bg-white/5 h-9 w-9">
-            <Bell className="h-5 w-5" />
-          </Button>
-
-          {/* Search Bar */}
-          <div className="hidden md:flex flex-1 max-w-xs">
-            <div className="relative w-full">
-              <Input
-                type="text"
-                placeholder="جستجو..."
-                className="w-full pr-10 pl-4 bg-white/10 dark:bg-white/5 border-white/20 text-white placeholder:text-white/60 focus-visible:ring-white/20 h-9 text-sm"
-                dir="rtl"
-              />
-              <Button className="absolute left-2 top-1/2 -translate-y-1/2 bg-yellow-500 hover:bg-yellow-600 text-white h-7 px-3 text-xs font-medium">
-                جستجو
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Right: Logo */}
-        <div className="flex items-center">
-          <Image src="/image/logo.png" alt="میکرو لس" width={120} height={40} className="h-8 w-auto" priority />
         </div>
       </div>
     </header>

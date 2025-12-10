@@ -29,8 +29,8 @@ export const SideBarContent = () => {
   };
 
   return (
-    <div className="h-full lg:bg-gray-800 lg:bg-opacity-50 border-0 lg:!border-l lg:border-gray-700 backdrop-blur-md lg:p-4 flex flex-col lg:shadow-lg">
-      <Link href="/" className="flex flex-col items-center">
+    <div className="h-full lg:bg-gray-800 lg:bg-opacity-50 border-0 lg:!border-l lg:border-gray-700 backdrop-blur-md lg:p-4 flex flex-col lg:shadow-lg max-lg:h-auto max-lg:bg-transparent max-lg:backdrop-blur-none max-lg:p-0 max-lg:min-h-0 max-lg:w-full">
+      <Link href="/" className="flex flex-col items-center max-lg:hidden">
         <Image
           src="/image/logo.png"
           alt="لوگو"
@@ -40,7 +40,7 @@ export const SideBarContent = () => {
         />
       </Link>
 
-      <nav className="mt-5 flex-grow">
+      <nav className="mt-5 flex-grow max-lg:flex-grow-0 max-lg:mt-0 w-full">
         <Accordion type="single" collapsible defaultValue={defaultValue} className="w-full">
           {ADMIN_SIDEBAR_ITEMS.map((item) => {
             const Icon = item.icon;

@@ -2,101 +2,96 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, Clock, AlertCircle, Truck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const tickets = [
   {
     id: 1,
-    title: "پاسخ داده شده",
+    title: "تاخیر در ارسال",
     status: "answered",
-    icon: CheckCircle2,
-    color: "text-green-600 dark:text-green-400",
-    bgColor: "bg-green-50 dark:bg-green-950/30",
+    date: "۱۴۰۳/۱۰/۰۹",
+    statusText: "پاسخ داده شده",
+    buttonText: "نمایش",
+    statusBgColor: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
   },
   {
     id: 2,
-    title: "در حال پردازش",
-    status: "processing",
-    icon: Clock,
-    color: "text-blue-600 dark:text-blue-400",
-    bgColor: "bg-blue-50 dark:bg-blue-950/30",
-    active: true,
-  },
-  {
-    id: 3,
     title: "مشکل در پرداخت",
-    status: "payment",
-    icon: AlertCircle,
-    color: "text-orange-600 dark:text-orange-400",
-    bgColor: "bg-orange-50 dark:bg-orange-950/30",
-    date: "۱۴۰۳/۱۰/۰۸",
-  },
-  {
-    id: 4,
-    title: "تاخیر در ارسال",
-    status: "shipping",
-    icon: Truck,
-    color: "text-red-600 dark:text-red-400",
-    bgColor: "bg-red-50 dark:bg-red-950/30",
+    status: "processing",
     date: "۱۴۰۳/۱۰/۰۹",
+    statusText: "در حال پردازش",
+    buttonText: "مشاهده تیکت",
+    statusBgColor: "bg-primary-100 text-blue-700 dark:bg-primary-900/30 dark:text-blue-400",
   },
 ];
 
 export default function SupportTickets() {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 md:p-6 mb-6">
-      <div className="mb-4 md:mb-6">
-        <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-2">آخرین تیکت های پشتیبانی</h3>
-        <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">وضعیت آخرین درخواست های شما</p>
+    <div
+      className="bg-white dark:bg-gray-800 rounded-2xl shadow-box p-3 mb-6"
+      style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
+    >
+      <div className="flex justify-between mb-4 md:mb-8">
+        <div>
+          <h3 className="text-lg text-gray-700 dark:text-white mb-1">آخرین تیکتهای پشتیبانی</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">وضعیت آخرین درخواستهای شما</p>
+        </div>
+        <Button
+          variant="ghost"
+          className="text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 text-sm p-0 "
+        >
+          مشاهده همه تیکت ها
+        </Button>
       </div>
 
-      <div className="space-y-3 mb-4 md:mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
         {tickets.map((ticket) => {
-          const Icon = ticket.icon;
+          const getButtonClassName = () => {
+            if (ticket.status === "answered") {
+              return "border-2 border-primary-700 text-primary-700 hover:bg-primary-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-primary-900/20";
+            } else if (ticket.status === "processing") {
+              return "bg-primary-600 text-white hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600";
+            }
+            return "";
+          };
+
           return (
             <div
               key={ticket.id}
-              className={cn(
-                "flex items-center justify-between p-3 md:p-4 rounded-lg border transition-colors",
-                ticket.active
-                  ? "bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800"
-                  : "bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700"
-              )}
+              className={cn("p-3 rounded-2xl border transition-colors bg-gray-50 border-gray-200 dark:border-gray-700")}
             >
-              <div className="flex items-center gap-3">
-                <div className={cn("p-2 rounded-lg", ticket.bgColor)}>
-                  <Icon className={cn("h-5 w-5", ticket.color)} />
+              {/* Status Badge */}
+              <div className="flex justify-between">
+                {/* Title */}
+                <div className="">
+                  <p className="text-sm md:text-base font-medium text-gray-800 dark:text-white mb-2">{ticket.title}</p>
+
+                  {/* Date */}
+                  <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mb-3">تاریخ : {ticket.date}</p>
                 </div>
-                <div>
-                  <p className="text-sm md:text-base font-medium text-gray-900 dark:text-white">{ticket.title}</p>
-                  {ticket.date && (
-                    <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mt-1">{ticket.date}</p>
-                  )}
+                <div className="mb-3">
+                  <span
+                    className={cn(
+                      "inline-flex items-center px-3 py-1 rounded-md text-xs font-medium",
+                      ticket.statusBgColor
+                    )}
+                  >
+                    {ticket.statusText}
+                  </span>
                 </div>
               </div>
-              {ticket.active && (
-                <Button size="sm" variant="default" className="text-xs md:text-sm">
-                  مشاهده تیکت
-                </Button>
-              )}
+              {/* Button */}
+              <button
+                className={cn(
+                  " items-center w-full text-center px-4 py-2 rounded-md text-xs md:text-sm font-medium transition-colors",
+                  getButtonClassName()
+                )}
+              >
+                {ticket.buttonText}
+              </button>
             </div>
           );
         })}
-      </div>
-
-      <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
-        <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
-          نمایش
-        </Button>
-        <div className="text-center sm:text-right">
-          <Button
-            variant="ghost"
-            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm"
-          >
-            مشاهده همه تیکت ها
-          </Button>
-        </div>
       </div>
     </div>
   );

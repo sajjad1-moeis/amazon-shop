@@ -34,3 +34,4 @@ export default function DeleteProductDialog({ open, onOpenChange, product, onCon
   );
 }
 
+

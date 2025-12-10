@@ -15,9 +15,27 @@ export const fieldClassName =
 export function AuthModal({ open, onClose }) {
   const [view, setView] = useState(VIEWS.LOGIN);
 
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordRepeat, setPasswordRepeat] = useState("");
+  const [code, setCode] = useState("");
+
+  const resetFields = () => {
+    setPassword("");
+    setPasswordRepeat("");
+    setCode("");
+  };
+
+  const goTo = (v) => {
+    resetFields();
+    setView(v);
+  };
+
   const handleClose = (state) => {
     if (!state) {
       setView(VIEWS.LOGIN);
+      resetFields();
+      setPhone("");
     }
     onClose();
   };
@@ -27,37 +45,49 @@ export function AuthModal({ open, onClose }) {
       <DialogContent className="max-w-md p-0 overflow-hidden !rounded-2xl bg-white dark:bg-dark-box">
         {view === VIEWS.LOGIN && (
           <LoginView
-            onGoSignup={() => setView(VIEWS.SIGNUP)}
-            onGoReset={() => setView(VIEWS.RESET_REQUEST)}
-            onSuccess={() => handleClose(false)}
+            phone={phone}
+            password={password}
+            onChangePhone={setPhone}
+            onChangePassword={setPassword}
+            onGoSignup={() => goTo(VIEWS.SIGNUP)}
+            onGoReset={() => goTo(VIEWS.RESET_REQUEST)}
           />
         )}
 
         {view === VIEWS.SIGNUP && (
           <SignupView
-            onGoLogin={() => setView(VIEWS.LOGIN)}
-            onSuccess={() => setView(VIEWS.SIGNUP_VERIFY)}
+            phone={phone}
+            password={password}
+            passwordRepeat={passwordRepeat}
+            onChangePhone={setPhone}
+            onChangePassword={setPassword}
+            onChangePasswordRepeat={setPasswordRepeat}
+            onGoLogin={() => goTo(VIEWS.LOGIN)}
+            onSubmitSignup={() => goTo(VIEWS.SIGNUP_VERIFY)}
           />
         )}
 
         {view === VIEWS.SIGNUP_VERIFY && (
-          <SignupVerifyView
-            onBack={() => setView(VIEWS.SIGNUP)}
-            onSuccess={() => handleClose(false)}
-          />
+          <SignupVerifyView phone={phone} code={code} onChangeCode={setCode} onBack={() => goTo(VIEWS.RESET_REQUEST)} />
         )}
 
         {view === VIEWS.RESET_REQUEST && (
           <ResetRequestView
-            onBack={() => setView(VIEWS.LOGIN)}
-            onSuccess={() => setView(VIEWS.RESET_VERIFY)}
+            phone={phone}
+            onChangePhone={setPhone}
+            onBack={() => goTo(VIEWS.LOGIN)}
+            onNext={() => goTo(VIEWS.RESET_VERIFY)}
           />
         )}
 
         {view === VIEWS.RESET_VERIFY && (
           <ResetVerifyView
-            onBack={() => setView(VIEWS.RESET_REQUEST)}
-            onSuccess={() => handleClose(false)}
+            phone={phone}
+            code={code}
+            password={password}
+            onChangeCode={setCode}
+            onChangePassword={setPassword}
+            onBack={() => goTo(VIEWS.RESET_REQUEST)}
           />
         )}
       </DialogContent>

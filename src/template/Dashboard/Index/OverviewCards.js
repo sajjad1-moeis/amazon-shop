@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { Heart, Mail, Package, Wallet } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Box, Heart, Sms, Wallet } from "iconsax-reactjs";
 
 const overviewCards = [
   {
@@ -17,7 +17,7 @@ const overviewCards = [
     id: 2,
     title: "تیکت های باز",
     value: "۱ تیکت",
-    icon: Mail,
+    icon: Sms,
     iconColor: "text-blue-500",
     bgColor: "bg-blue-50 dark:bg-blue-950/20",
   },
@@ -25,7 +25,7 @@ const overviewCards = [
     id: 3,
     title: "سفارش های فعال",
     value: "۳ سفارش",
-    icon: Package,
+    icon: Box,
     iconColor: "text-green-500",
     bgColor: "bg-green-50 dark:bg-green-950/20",
   },
@@ -42,27 +42,27 @@ const overviewCards = [
 export default function OverviewCards() {
   return (
     <div className="mb-8">
-      <div className="mb-4">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">داشبورد</h2>
-        <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">وضعیت کلی حساب شما در یک نگاه</p>
+      <div className="mb-8 pb-4 border-gray-200 border-b">
+        <h2 className="text-2xl  text-primary-700 dark:text-white mb-2">داشبورد</h2>
+        <p className="text-sm  text-[#6B7280] dark:text-gray-400">وضعیت کلی حساب شما در یک نگاه</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
         {overviewCards.map((card) => {
           const Icon = card.icon;
           return (
             <div
               key={card.id}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 md:p-6 hover:shadow-md transition-shadow"
+              className="bg-white dark:bg-gray-800 gap-3 flex items-center rounded-2xl shadow-md p-3 md:p-4 hover:shadow-md transition-shadow"
             >
-              <div className="flex items-center justify-between mb-4">
-                <div className={cn("p-3 rounded-lg", card.bgColor)}>
-                  <Icon className={cn("h-6 w-6", card.iconColor)} />
+              <div className="flex items-center justify-between">
+                <div className={cn("p-3 rounded-lg bg-primary-700")}>
+                  <Icon size={32} className={cn(" text-primary-50")} variant="Bold" />
                 </div>
               </div>
               <div>
-                <p className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-1">{card.value}</p>
-                <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">{card.title}</p>
+                <p className="text-xl font-bold text-primary-700 dark:text-white mb-1">{card.value}</p>
+                <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1">{card.title}</p>
               </div>
             </div>
           );

@@ -1,8 +1,7 @@
-import AdminLayout from "@/layout/AdminLayout";
-import React from "react";
+"use client";
 
-function Layout({ children }) {
+import AdminLayout from "@/layout/AdminLayout";
+
+export default function AdminLayoutWrapper({ children }) {
   return <AdminLayout>{children}</AdminLayout>;
 }
-
-export default Layout;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import SectionContainer from "./SectionContainer";
 import LabeledField from "./LabeledField";
 import { Input } from "@/components/ui/input";
@@ -9,17 +10,33 @@ import AuthToggle from "./AuthToggle";
 import { fieldClassName } from "./AuthModal";
 import { Google } from "iconsax-reactjs";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 export default function LoginView({ onGoSignup, onGoReset, onSuccess }) {
   const { login, loading } = useAuth();
+  const router = useRouter();
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // اعتبارسنجی شماره تلفن: باید با 09 شروع شود و 11 رقم باشد
+    const phoneRegex = /^09\d{9}$/;
+    if (!phone || !phoneRegex.test(phone)) {
+      toast.error("شماره موبایل باید با 09 شروع شود و 11 رقم باشد");
+      return;
+    }
+
+    if (!password || password.length < 6) {
+      toast.error("لطفاً رمز عبور را وارد کنید");
+      return;
+    }
+
     const result = await login(phone, password);
     if (result.success) {
       onSuccess?.();
+      router.push("/dashboard");
     }
   };
 

@@ -62,6 +62,7 @@ const SelectContent = React.forwardRef(({ className, children, position = "poppe
           "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
         className
       )}
+      dir="rtl"
       position={position}
       {...props}
     >

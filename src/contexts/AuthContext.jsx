@@ -31,34 +31,6 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // بارگذاری اولیه
-  useEffect(() => {
-    const initAuth = async () => {
-      try {
-        const savedUser = getUser();
-        const tokens = getTokens();
-
-        if (tokens && savedUser && !isRefreshTokenExpired()) {
-          setUser(savedUser);
-
-          // اگر Access Token منقضی شده، تازه‌سازی کن
-          if (isAccessTokenExpired()) {
-            await refreshTokenSilently();
-          }
-        } else {
-          removeTokens();
-        }
-      } catch (error) {
-        console.error("خطا در بارگذاری اولیه:", error);
-        removeTokens();
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    initAuth();
-  }, []);
-
   // تازه‌سازی خودکار توکن
   const refreshTokenSilently = useCallback(async () => {
     if (isRefreshing) return;
@@ -96,6 +68,35 @@ export const AuthProvider = ({ children }) => {
       setIsRefreshing(false);
     }
   }, [isRefreshing]);
+
+  // بارگذاری اولیه
+  useEffect(() => {
+    const initAuth = async () => {
+      try {
+        const savedUser = getUser();
+        const tokens = getTokens();
+
+        if (tokens && savedUser && !isRefreshTokenExpired()) {
+          setUser(savedUser);
+
+          // اگر Access Token منقضی شده، تازه‌سازی کن
+          if (isAccessTokenExpired()) {
+            await refreshTokenSilently();
+          }
+        } else {
+          removeTokens();
+        }
+      } catch (error) {
+        console.error("خطا در بارگذاری اولیه:", error);
+        removeTokens();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initAuth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // تازه‌سازی توکن (برای استفاده دستی)
   const refreshToken = useCallback(async () => {

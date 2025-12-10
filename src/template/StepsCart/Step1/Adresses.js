@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AddressList from "./AddressList";
-import AddressForm from "./AddAddressModal";
+import AddressModal from "@/components/module/AddressModal";
 import { useAddresses } from "@/utils/func/use-address";
 import { formatAddress, formatFullName, parseAddressData } from "@/utils/func/address-utlis";
 import { toast } from "sonner";
@@ -120,7 +120,7 @@ export default function DeliveryAddress({
         </div>
       </div>
 
-      <AddressForm
+      <AddressModal
         isOpen={isDialogOpen}
         onClose={handleCloseDialog}
         defaultValues={editingAddress ? parseAddressData(editingAddress) : null}

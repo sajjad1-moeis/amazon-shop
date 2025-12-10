@@ -72,3 +72,4 @@ export default function ProductsTable({ products, onEdit, onDelete, onView }) {
   );
 }
 
+
