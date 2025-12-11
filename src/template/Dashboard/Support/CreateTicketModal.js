@@ -2,23 +2,11 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DocumentUpload } from "iconsax-reactjs";
 import { cn } from "@/lib/utils";
 
@@ -184,12 +172,17 @@ export default function CreateTicketModal({ isOpen, onClose, onSubmit }) {
           </div>
 
           {/* Action Buttons */}
-          <DialogFooter className="flex-row-reverse gap-2">
-            <Button type="submit" className="bg-primary-600 hover:bg-primary-700 text-white">
-              ثبت تیکت
-            </Button>
-            <Button type="button" variant="outline" onClick={onClose}>
+          <DialogFooter className="flex-row gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="border-2 border-primary-600 w-full text-primary-700 hover:border-primary-700 "
+              onClick={onClose}
+            >
               لغو
+            </Button>
+            <Button type="submit" className="bg-primary-600 w-full hover:bg-primary-700 text-white">
+              ثبت تیکت
             </Button>
           </DialogFooter>
         </form>

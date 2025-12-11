@@ -1,55 +1,58 @@
 "use client";
 
+import { Clock, TickCircle, Wallet3 } from "iconsax-reactjs";
 import React from "react";
-import { cn } from "@/lib/utils";
 
-const overviewCards = [
-  {
-    id: "pending",
-    title: "موجودی در انتظار تایید",
-    value: "۲,۳۵۰,۰۰۰",
-    bgColor: "bg-gradient-to-br from-amber-500 to-amber-700",
-    textColor: "text-white",
-  },
-  {
-    id: "withdrawable",
-    title: "قابل برداشت",
-    value: "۱,۸۵۲,۰۰۰",
-    bgColor: "bg-gradient-to-br from-green-500 to-green-700",
-    textColor: "text-white",
-  },
-  {
-    id: "total",
-    title: "کل موجودی",
-    value: "۲,۳۵۰,۰۰۰",
-    bgColor: "bg-gradient-to-br from-primary-600 to-primary-800",
-    textColor: "text-white",
-  },
-];
+const walletData = {
+  total: "۲۵,۰۰۰,۰۰۰",
+  pending: "۲,۰۰۰,۰۰۰",
+  withdrawable: "۲۳,۰۰۰,۰۰۰",
+};
 
 export default function WalletOverviewCards() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mb-8">
-      {overviewCards.map((card) => (
-        <div
-          key={card.id}
-          className={cn(
-            "rounded-2xl p-6 shadow-md transition-transform hover:scale-105",
-            card.bgColor,
-            card.textColor
-          )}
-          style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
-        >
-          <div className="mb-2">
-            <p className="text-sm md:text-base opacity-90">{card.title}</p>
-          </div>
-          <div>
-            <p className="text-2xl md:text-3xl font-bold">{card.value}</p>
-            <p className="text-xs md:text-sm mt-1 opacity-80">تومان</p>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Total Balance */}
+      <div
+        className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 md:p-6"
+        style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
+      >
+        <div className="flex items-center justify-between mb-4">
+          <div className="p-3 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
+            <Wallet3 size={24} className="text-primary-600 dark:text-primary-400" variant="Bold" />
           </div>
         </div>
-      ))}
+        <h3 className="text-sm text-gray-600 dark:text-gray-400 mb-2">موجودی کل</h3>
+        <p className="text-2xl font-bold text-gray-900 dark:text-white">{walletData.total} تومان</p>
+      </div>
+
+      {/* Pending Balance */}
+      <div
+        className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 md:p-6"
+        style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
+      >
+        <div className="flex items-center justify-between mb-4">
+          <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+            <Clock size={24} className="text-yellow-600 dark:text-yellow-400" variant="Bold" />
+          </div>
+        </div>
+        <h3 className="text-sm text-gray-600 dark:text-gray-400 mb-2">در انتظار</h3>
+        <p className="text-2xl font-bold text-gray-900 dark:text-white">{walletData.pending} تومان</p>
+      </div>
+
+      {/* Withdrawable Balance */}
+      <div
+        className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 md:p-6"
+        style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
+      >
+        <div className="flex items-center justify-between mb-4">
+          <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+            <TickCircle size={24} className="text-green-600 dark:text-green-400" variant="Bold" />
+          </div>
+        </div>
+        <h3 className="text-sm text-gray-600 dark:text-gray-400 mb-2">قابل برداشت</h3>
+        <p className="text-2xl font-bold text-gray-900 dark:text-white">{walletData.withdrawable} تومان</p>
+      </div>
     </div>
   );
 }
-

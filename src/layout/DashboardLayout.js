@@ -7,22 +7,17 @@ import React, { useState } from "react";
 export default function DashboardLayout({ children }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col" dir="rtl">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900" dir="rtl">
       {/* Header */}
-      <DashboardHeader onMenuClick={toggleMobileMenu} />
+      <DashboardHeader onMenuClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} />
 
-      {/* Content Area: Sidebar + Main */}
-      <div className="flex flex-1 relative md:px-4 md:pt-4 md:pb-4 overflow-hidden">
+      <div className="flex relative py-6 px-8">
         {/* Sidebar */}
-        <DashboardSidebar isMobileOpen={isMobileMenuOpen} onMobileClose={() => setIsMobileMenuOpen(false)} />
+        <DashboardSidebar isMobileOpen={isMobileMenuOpen} setIsMobileOpen={setIsMobileMenuOpen} />
 
         {/* Main Content */}
-        <main className="flex-1 px-6  max-w-full overflow-y-auto min-h-0">{children}</main>
+        <main className="flex-1 mt-16 md:mt-0 px-4 md:px-6  max-w-full overflow-x-hidden">{children}</main>
       </div>
     </div>
   );

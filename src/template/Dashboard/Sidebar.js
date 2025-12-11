@@ -1,164 +1,211 @@
 "use client";
 
-import React, { useState } from "react";
-import { Logout, ArrowDown2, Wallet3, ArrowLeft2, Cup } from "iconsax-reactjs";
-import { cn } from "@/lib/utils";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useAuth } from "@/contexts/AuthContext";
-import { navigationItems } from "@/data";
+import { cn } from "@/lib/utils";
 
-export default function DashboardSidebar({ isMobileOpen = false, onMobileClose }) {
+import {
+  Wallet,
+  ArrowLeft2,
+  Cup,
+  Element4,
+  BitcoinConvert,
+  Bag,
+  Heart,
+  Headphone,
+  DocumentText,
+  Eye,
+  Profile,
+  ArrowDown2,
+  LogoutCurve,
+  Menu,
+  CloseCircle,
+} from "iconsax-reactjs";
+
+const items = [
+  { id: "dashboard", label: "داشبورد", href: "/dashboard", icon: Element4 },
+
+  {
+    id: "currency",
+    label: "خدمات ارزی",
+    href: "/dashboard/currency-services",
+    icon: BitcoinConvert,
+  },
+
+  {
+    id: "orders",
+    label: "خرید و سفارش‌ها",
+    icon: Bag,
+    children: [
+      { label: "خریدهای من", href: "/dashboard/purchases" },
+      { label: "سفارش‌های من", href: "/dashboard/orders" },
+      { label: "فاکتورها", href: "/dashboard/invoices" },
+      { label: "درخواست‌های مرجوعی", href: "/dashboard/return-requests" },
+    ],
+  },
+
+  { id: "favorites", label: "علاقه‌مندی‌ها", href: "/dashboard/favorites", icon: Heart },
+  { id: "support", label: "تیکت و پشتیبانی", href: "/dashboard/support", icon: Headphone },
+  { id: "comparisons", label: "مقایسه‌های ذخیره شده", href: "/dashboard/comparisons", icon: DocumentText },
+  { id: "recent", label: "بازدیدهای اخیر", href: "/dashboard/recent-views", icon: Eye },
+
+  {
+    id: "account",
+    label: "حساب کاربری من",
+    icon: Profile,
+    children: [
+      { label: "پروفایل کاربری", href: "/dashboard/account/profile" },
+      { label: "آدرس‌های من", href: "/dashboard/account/addresses" },
+      { label: "نظرات و سوالات", href: "/dashboard/account/comments" },
+      { label: "دعوت دوستان", href: "/dashboard/account/invite" },
+    ],
+  },
+];
+
+export default function DashboardSidebar({ isMobileOpen, setIsMobileOpen }) {
   const pathname = usePathname();
-  const { logout } = useAuth();
-  const [openItems, setOpenItems] = useState([]);
+  const [expanded, setExpanded] = useState([]);
 
-  const handleLogout = async () => {
-    await logout();
+  // Auto-expand if a child is active
+  useEffect(() => {
+    items.forEach((item) => {
+      if (item.children) {
+        const activeChild = item.children.find((c) => c.href === pathname);
+        if (activeChild && !expanded.includes(item.id)) {
+          setExpanded((prev) => [...prev, item.id]);
+        }
+      }
+    });
+  }, [pathname]);
+
+  const toggleExpand = (id) => {
+    setExpanded((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   };
 
-  const toggleItem = (itemId) => {
-    setOpenItems((prev) => (prev.includes(itemId) ? prev.filter((id) => id !== itemId) : [...prev, itemId]));
+  const isActive = (item) => {
+    if (item.children) return item.children.some((c) => pathname === c.href);
+    return pathname === item.href;
   };
 
   return (
     <>
-      {/* Sidebar */}
+      {/* Mobile Toggle */}
+      <button
+        className="fixed top-4 left-4 z-50 md:hidden bg-white p-2 rounded-xl border"
+        onClick={() => setIsMobileOpen(!isMobileOpen)}
+      >
+        {isMobileOpen ? <CloseCircle /> : <Menu />}
+      </button>
+
       <aside
+        dir="rtl"
         className={cn(
-          "fixed md:relative right-0 top-16 md:top-0 h-[calc(100vh-4rem)] md:h-full w-64 md:w-56 lg:w-[238px] z-40 transition-transform duration-300",
-          "md:translate-x-0 md:block",
+          "w-64  bg-white border-2 border-primary-200 p-3  rounded-2xl  md:static z-40 transition-transform",
           isMobileOpen ? "translate-x-0" : "translate-x-full md:translate-x-0"
         )}
-        dir="rtl"
       >
-        <div className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-2xl border-2 border-primary-200 dark:border-gray-700 shadow-sm overflow-hidden">
-          {/* Wallet & Score Section */}
-          <div className="p-3 border-b border-gray-200 dark:border-gray-700">
-            {/* Wallet */}
-            <Link href="/dashboard/wallet" className="block">
-              <div className="gap-3 mb-4 p-2 rounded-xl bg-[#DCE1FC] border-b-2 border-primary-200 dark:bg-gray-700/50 cursor-pointer hover:bg-[#C8D0F5] transition-colors">
-                <div className="flex items-center justify-between">
-                  <div className="flex gap-3 text-primary-600">
-                    <Wallet3 variant="Bold" size={20} />
-                    <p className="text-sm dark:text-gray-400 mb-1">موجودی کیف پول</p>
-                  </div>
-                  <ArrowLeft2 size={20} />
-                </div>
-                <div className="mt-1 bg-[#B6BCDF66] p-2 rounded">
-                  <p className="text-base font-bold text-gray-900 dark:text-white">۲,۵۰۰,۰۰۰ تومان</p>
-                </div>
-              </div>
-            </Link>
-
-            {/* Score */}
-            <div className="gap-3 mb-4 p-2 rounded-xl bg-[#EEA8261A] border-b-2 border-[#EEA82699] dark:bg-gray-700/50">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3 text-warning-500">
-                  <div className="-mt-4">
-                    <div className="bg-warning-500 text-white rounded-full text-[10px] py-px px-1">طلایی</div>
-                    <Cup variant="Bold" size={20} className="mx-auto" />
-                  </div>
-                  <p className="text-sm dark:text-gray-400 mb-1">امتیاز شما</p>
-                </div>
-                <ArrowLeft2 size={20} />
-              </div>
-              <div className="mt-1 bg-[#EEA82629] p-2 rounded">
-                <p className="text-base font-bold text-[#C27803] dark:text-white">240 امتیاز</p>
-              </div>
+        {/* Wallet Card */}
+        <div className="bg-[#DCE1FC] p-2 rounded-xl mb-3 border-b-2 border-primary-200">
+          <div className="flex justify-between items-center text-[#3F51B5] pb-2">
+            <div className="flex gap-2 items-center">
+              <Wallet size={20} />
+              <span className="text-sm">موجودی کیف‌پول</span>
             </div>
+            <ArrowLeft2 size={18} />
           </div>
-
-          {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-1 overflow-y-auto min-h-0">
-            {navigationItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
-              const isOpen = openItems.includes(item.id);
-
-              return (
-                <div key={item.id}>
-                  {item.hasChildren ? (
-                    <>
-                      <button
-                        onClick={() => toggleItem(item.id)}
-                        className={cn(
-                          "w-full flex items-center justify-between gap-3 px-4 py-3 rounded-lg text-right transition-colors",
-                          "text-sm font-medium",
-                          isActive
-                            ? "bg-[#E3E5F2] dark:bg-blue-900/30 text-primary-500 dark:text-blue-400"
-                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50"
-                        )}
-                      >
-                        <div className="flex items-center gap-3">
-                          <Icon size={20} variant={isActive ? "Bold" : "Outline"} />
-                          <span>{item.label}</span>
-                        </div>
-                        <ArrowDown2
-                          size={16}
-                          className={cn("transition-transform text-gray-400", isOpen ? "rotate-180" : "")}
-                        />
-                      </button>
-                      {/* Children Menu */}
-                      {isOpen && item.children && item.children.length > 0 && (
-                        <div className="mr-8 mt-1 space-y-1">
-                          {item.children.map((child) => {
-                            const isChildActive = pathname === child.href || pathname.startsWith(child.href + "/");
-                            return (
-                              <Link
-                                key={child.href}
-                                href={child.href}
-                                onClick={onMobileClose}
-                                className={cn(
-                                  "block px-4 py-2 rounded-lg text-right text-sm transition-colors",
-                                  isChildActive
-                                    ? "bg-[#E3E5F2] dark:bg-blue-900/30 text-primary-500 dark:text-blue-400 font-medium"
-                                    : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50"
-                                )}
-                              >
-                                {child.label}
-                              </Link>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <Link
-                      href={item.href}
-                      onClick={onMobileClose}
-                      className={cn(
-                        "w-full flex items-center gap-3 px-4 py-3 rounded-lg text-right transition-colors",
-                        "text-sm font-medium",
-                        isActive
-                          ? "bg-[#E3E5F2] dark:bg-blue-900/30 text-primary-500 dark:text-blue-400"
-                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50"
-                      )}
-                    >
-                      <Icon size={20} variant={isActive ? "Bold" : "Outline"} />
-                      <span>{item.label}</span>
-                    </Link>
-                  )}
-                </div>
-              );
-            })}
-          </nav>
-
-          {/* Logout */}
-          <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-right text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
-            >
-              <Logout size={20} variant="Outline" />
-              <span>خروج از حساب کاربری</span>
-            </button>
-          </div>
+          <div className="bg-[#B6BCDF66] p-2 rounded-lg font-medium">۲,۵۰۰,۰۰۰ تومان</div>
         </div>
+
+        {/* Score Card */}
+        <div className="bg-[#FFF1D8] p-2 rounded-xl mb-6 border-b-2 border-[#EEA82699]">
+          <div className="flex justify-between items-center pb-1">
+            <div className="flex gap-2 items-center">
+              <div className="flex flex-col items-center">
+                <span className="text-[10px] bg-[#EEA826] text-white px-1 rounded">طلایی</span>
+                <Cup size={20} color="#EEA826" variant="Bold" />
+              </div>
+              <span className="text-sm text-[#C27803]">امتیاز شما</span>
+            </div>
+            <ArrowLeft2 size={18} color="#C27803" />
+          </div>
+          <div className="bg-[#FFE9C7] p-2 rounded-lg text-[#C27803]">۲۴۰ امتیاز</div>
+        </div>
+
+        {/* Navigation */}
+        <nav className="space-y-2">
+          {items.map((item) => {
+            const Active = isActive(item);
+            const Icon = item.icon;
+
+            if (!item.children)
+              return (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all",
+                    Active ? "text-[#3F51B5] bg-[#E3E7FF] font-medium" : "text-gray-700 hover:bg-gray-50"
+                  )}
+                >
+                  <Icon size={22} variant={Active ? "Bold" : "Outline"} color={Active ? "#3F51B5" : "#555"} />
+                  <span>{item.label}</span>
+                </Link>
+              );
+
+            return (
+              <div key={item.id}>
+                {/* Parent */}
+                <button
+                  onClick={() => toggleExpand(item.id)}
+                  className={cn(
+                    "flex w-full items-center gap-3 px-3 py-2.5 rounded-lg transition-all",
+                    Active ? "text-[#3F51B5] font-medium" : "text-gray-700 hover:bg-gray-50"
+                  )}
+                >
+                  <Icon size={22} variant={Active ? "Bold" : "Outline"} color={Active ? "#3F51B5" : "#555"} />
+                  <span className="flex-1">{item.label}</span>
+
+                  <ArrowDown2
+                    size={16}
+                    color={Active ? "#3F51B5" : "#555"}
+                    className={cn("transition-transform", expanded.includes(item.id) && "rotate-180")}
+                  />
+                </button>
+
+                {expanded.includes(item.id) && (
+                  <div className="pl-8 mt-1 space-y-1">
+                    {item.children.map((child) => {
+                      const CActive = pathname === child.href;
+                      return (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          className={cn(
+                            "flex items-center gap-2 px-3 py-2 rounded-lg text-sm",
+                            CActive ? "bg-[#E3E7FF] text-[#3F51B5] font-medium" : "text-gray-600 hover:bg-gray-50"
+                          )}
+                        >
+                          {child.label}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </nav>
+
+        {/* Logout */}
+        <button className="mt-8 w-full flex items-center gap-3 px-3 py-3 text-gray-700 hover:bg-gray-50 rounded-lg">
+          <LogoutCurve size={22} />
+          خروج از حساب کاربری
+        </button>
       </aside>
 
       {/* Mobile Overlay */}
-      {isMobileOpen && <div className="fixed inset-0 bg-black/50 z-30 md:hidden" onClick={onMobileClose} />}
+      {isMobileOpen && <div className="fixed inset-0 bg-black/40 md:hidden" onClick={() => setIsMobileOpen(false)} />}
     </>
   );
 }

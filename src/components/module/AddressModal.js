@@ -1,138 +1,186 @@
 "use client";
 
-import { useMemo, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ADDRESS_FORM_FIELDS } from "@/data";
-import { DEFAULT_FORM_DATA } from "@/utils/func/use-address";
+import { toast } from "sonner";
 
-export default function AddressModal({ isOpen, onClose, defaultValues, onSubmit }) {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({
-    defaultValues: defaultValues || DEFAULT_FORM_DATA,
+export default function AddressModal({ isOpen, onClose, onSubmit, initialData }) {
+  const [formData, setFormData] = useState({
+    title: "",
+    name: "",
+    phone: "",
+    address: "",
+    postalCode: "",
   });
 
+  const [errors, setErrors] = useState({});
+
   useEffect(() => {
-    if (isOpen) {
-      reset(defaultValues || DEFAULT_FORM_DATA);
+    if (initialData) {
+      setFormData({
+        title: initialData.title || "",
+        name: initialData.name || "",
+        phone: initialData.phone || "",
+        address: initialData.address || "",
+        postalCode: initialData.postalCode || "",
+      });
+    } else {
+      setFormData({
+        title: "",
+        name: "",
+        phone: "",
+        address: "",
+        postalCode: "",
+      });
     }
-  }, [isOpen, defaultValues, reset]);
+    setErrors({});
+  }, [initialData, isOpen]);
 
-  const groupedFields = useMemo(() => {
-    const groups = [];
-    let currentGroup = null;
-
-    ADDRESS_FORM_FIELDS.forEach((field) => {
-      if (field.gridCols === 1) {
-        if (currentGroup) {
-          groups.push(currentGroup);
-          currentGroup = null;
-        }
-        groups.push({ fields: [field], gridCols: 1 });
-      } else {
-        if (!currentGroup || currentGroup.gridCols !== 2) {
-          if (currentGroup) groups.push(currentGroup);
-          currentGroup = { fields: [], gridCols: 2 };
-        }
-        currentGroup.fields.push(field);
-
-        if (currentGroup.fields.length === 2) {
-          groups.push(currentGroup);
-          currentGroup = null;
-        }
-      }
-    });
-
-    if (currentGroup && currentGroup.fields.length > 0) {
-      groups.push(currentGroup);
+  const handleChange = (name, value) => {
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
+  };
 
-    return groups;
-  }, []);
-
-  const renderField = (field) => {
-    const commonProps = {
-      ...register(field.id, {
-        required: field.required ? `${field.label || field.placeholder} الزامی است` : false,
-      }),
-      className: "bg-gray-50 dark:bg-dark-field dark:border-none",
-      placeholder: field.placeholder,
-    };
-
-    const hasError = errors[field.id];
-
-    if (field.type === "textarea") {
-      return (
-        <div>
-          <Textarea {...commonProps} className="bg-gray-50 min-h-[100px] dark:bg-dark-field dark:border-none" />
-          {hasError && <p className="text-sm text-red-500 mt-1">{hasError.message}</p>}
-        </div>
-      );
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.title.trim()) {
+      newErrors.title = "عنوان آدرس الزامی است";
     }
+    if (!formData.name.trim()) {
+      newErrors.name = "نام گیرنده الزامی است";
+    }
+    if (!formData.phone.trim()) {
+      newErrors.phone = "شماره تماس الزامی است";
+    } else if (!/^09\d{9}$/.test(formData.phone.replace(/\s/g, ""))) {
+      newErrors.phone = "شماره تماس معتبر نیست";
+    }
+    if (!formData.address.trim()) {
+      newErrors.address = "آدرس الزامی است";
+    }
+    if (!formData.postalCode.trim()) {
+      newErrors.postalCode = "کد پستی الزامی است";
+    } else if (!/^\d{10}$/.test(formData.postalCode.replace(/\s/g, ""))) {
+      newErrors.postalCode = "کد پستی باید ۱۰ رقم باشد";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-    return (
-      <div>
-        <Input {...commonProps} type={field.type} />
-        {hasError && <p className="text-sm text-red-500 mt-1">{hasError.message}</p>}
-      </div>
-    );
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validate()) {
+      onSubmit(formData);
+      setFormData({
+        title: "",
+        name: "",
+        phone: "",
+        address: "",
+        postalCode: "",
+      });
+      setErrors({});
+      toast.success(initialData ? "آدرس با موفقیت ویرایش شد" : "آدرس با موفقیت اضافه شد");
+    }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose} dir="rtl">
-      <DialogContent className="sm:max-w-[600px]  max-h-[90vh] overflow-y-auto dark:bg-dark-box dark:border-dark-stroke">
-        <DialogHeader className="text-right">
-          <DialogTitle className="text-2xl font-bold mb-2">
-            {defaultValues ? "ویرایش آدرس" : "افزودن آدرس جدید"}
-          </DialogTitle>
-          <DialogDescription className="text-sm text-gray-600 dark:text-gray-400">
-            {defaultValues
-              ? "اطلاعات آدرس را ویرایش کنید"
-              : "لطفاً محل تحویل سفارش خود را روی نقشه مشخص کنید."}
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>{initialData ? "ویرایش آدرس" : "افزودن آدرس جدید"}</DialogTitle>
+          <DialogDescription>
+            {initialData ? "اطلاعات آدرس را ویرایش کنید" : "آدرس جدید خود را اضافه کنید"}
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-5 py-4">
-          {groupedFields.map((group, groupIndex) => (
-            <div key={groupIndex} className={group.gridCols === 2 ? "grid grid-cols-2 gap-4" : "grid gap-2"}>
-              {group.fields.map((field) => (
-                <div key={field.id} className="grid gap-2">
-                  {field.label && (
-                    <Label htmlFor={field.id} className="text-right font-semibold">
-                      {field.label}
-                    </Label>
-                  )}
-                  {renderField(field)}
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Title */}
+          <div>
+            <Label htmlFor="title">عنوان آدرس *</Label>
+            <Input
+              id="title"
+              value={formData.title}
+              onChange={(e) => handleChange("title", e.target.value)}
+              placeholder="مثال: خانه، اداره،..."
+              className={errors.title ? "border-red-500" : ""}
+            />
+            {errors.title && <p className="text-sm text-red-500 mt-1">{errors.title}</p>}
+          </div>
 
-        <DialogFooter className="mt-4">
-          <Button
-            variant="ghost"
-            onClick={handleSubmit(onSubmit)}
-            className="w-full bg-yellow-400 text-white font-bold py-3 rounded-lg dark:text-gray-900"
-          >
-            {defaultValues ? "ذخیره تغییرات" : "تأیید و ثبت آدرس"}
-          </Button>
-        </DialogFooter>
+          {/* Name */}
+          <div>
+            <Label htmlFor="name">نام گیرنده *</Label>
+            <Input
+              id="name"
+              value={formData.name}
+              onChange={(e) => handleChange("name", e.target.value)}
+              placeholder="نام و نام خانوادگی"
+              className={errors.name ? "border-red-500" : ""}
+            />
+            {errors.name && <p className="text-sm text-red-500 mt-1">{errors.name}</p>}
+          </div>
+
+          {/* Phone */}
+          <div>
+            <Label htmlFor="phone">شماره تماس *</Label>
+            <Input
+              id="phone"
+              value={formData.phone}
+              onChange={(e) => handleChange("phone", e.target.value)}
+              placeholder="۰۹۱۲۳۴۵۶۷۸۹"
+              className={errors.phone ? "border-red-500" : ""}
+            />
+            {errors.phone && <p className="text-sm text-red-500 mt-1">{errors.phone}</p>}
+          </div>
+
+          {/* Address */}
+          <div>
+            <Label htmlFor="address">آدرس *</Label>
+            <Textarea
+              id="address"
+              value={formData.address}
+              onChange={(e) => handleChange("address", e.target.value)}
+              placeholder="آدرس کامل را وارد کنید"
+              rows={4}
+              className={errors.address ? "border-red-500" : ""}
+            />
+            {errors.address && <p className="text-sm text-red-500 mt-1">{errors.address}</p>}
+          </div>
+
+          {/* Postal Code */}
+          <div>
+            <Label htmlFor="postalCode">کد پستی *</Label>
+            <Input
+              id="postalCode"
+              value={formData.postalCode}
+              onChange={(e) => handleChange("postalCode", e.target.value)}
+              placeholder="۱۲۳۴۵۶۷۸۹۰"
+              className={errors.postalCode ? "border-red-500" : ""}
+            />
+            {errors.postalCode && <p className="text-sm text-red-500 mt-1">{errors.postalCode}</p>}
+          </div>
+
+          {/* Actions */}
+          <div className="flex justify-end gap-3 pt-4">
+            <Button type="button" variant="outline" onClick={onClose}>
+              انصراف
+            </Button>
+            <Button type="submit" className="bg-primary-600 hover:bg-primary-700">
+              {initialData ? "ذخیره تغییرات" : "افزودن آدرس"}
+            </Button>
+          </div>
+        </form>
       </DialogContent>
     </Dialog>
   );

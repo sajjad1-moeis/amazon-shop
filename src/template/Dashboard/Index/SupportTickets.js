@@ -31,9 +31,9 @@ export default function SupportTickets() {
       className="bg-white dark:bg-gray-800 rounded-2xl shadow-box p-3 mb-6"
       style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
     >
-      <div className="flex justify-between mb-4 md:mb-8">
+      <div className="flex justify-between mb-4 md:mb-6">
         <div>
-          <h3 className="text-lg text-gray-700 dark:text-white mb-1">آخرین تیکتهای پشتیبانی</h3>
+          <h3 className="text-lg font-bold text-gray-700 dark:text-white mb-2">آخرین تیکتهای پشتیبانی</h3>
           <p className="text-sm text-gray-500 dark:text-gray-400">وضعیت آخرین درخواستهای شما</p>
         </div>
         <Button
@@ -44,11 +44,11 @@ export default function SupportTickets() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {tickets.map((ticket) => {
           const getButtonClassName = () => {
             if (ticket.status === "answered") {
-              return "border-2 border-primary-700 text-primary-700 hover:bg-primary-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-primary-900/20";
+              return "border border-primary-700 text-primary-700 hover:bg-primary-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-primary-900/20";
             } else if (ticket.status === "processing") {
               return "bg-primary-600 text-white hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600";
             }

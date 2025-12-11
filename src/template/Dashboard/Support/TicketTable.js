@@ -2,14 +2,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Eye, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -32,7 +25,7 @@ export default function TicketTable({ tickets, onDelete }) {
         );
       case "medium":
         return (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 bg-yellow-100 p-2 w-max">
             <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
             <span className="text-sm text-gray-700 dark:text-gray-300">متوسط</span>
           </div>
@@ -53,19 +46,19 @@ export default function TicketTable({ tickets, onDelete }) {
     switch (status) {
       case "reviewing":
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
             در حال بررسی
           </span>
         );
       case "answered":
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
             پاسخ داده شده
           </span>
         );
       case "pending":
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
+          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
             در انتظار
           </span>
         );
@@ -125,15 +118,6 @@ export default function TicketTable({ tickets, onDelete }) {
                           مشاهده
                         </Button>
                       </Link>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="gap-2 text-red-600 border-red-500 hover:bg-red-50 dark:text-red-400 dark:border-red-400 dark:hover:bg-red-900/20"
-                        onClick={() => handleDelete(ticket.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                        حذف
-                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>

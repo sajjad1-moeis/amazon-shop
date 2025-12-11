@@ -1,0 +1,78 @@
+"use client";
+
+import React from "react";
+import { SearchNormal1, Add } from "iconsax-reactjs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+
+export default function ReturnRequestsFilter({ filters, onFiltersChange, onCreateNew }) {
+  const handleFilterChange = (name, value) => {
+    onFiltersChange((prev) => ({ ...prev, [name]: value === "all" ? "" : value }));
+  };
+
+  return (
+    <div className="flex flex-col md:flex-row gap-4 items-end">
+      {/* Search Input */}
+      <div className="flex-1 relative">
+        <SearchNormal1 size={20} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        <Input
+          type="text"
+          value={filters.searchQuery || ""}
+          onChange={(e) => onFiltersChange((prev) => ({ ...prev, searchQuery: e.target.value }))}
+          placeholder="جستجو بر اساس شماره درخواست یا نام کالا...."
+          className="pr-10"
+          dir="rtl"
+        />
+      </div>
+
+      {/* Sort By */}
+      <Select value={filters.sortBy || undefined} onValueChange={(value) => handleFilterChange("sortBy", value)}>
+        <SelectTrigger className="w-full md:w-[160px]" dir="rtl">
+          <SelectValue placeholder="مرتب سازی" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">همه</SelectItem>
+          <SelectItem value="newest">جدیدترین</SelectItem>
+          <SelectItem value="oldest">قدیمی‌ترین</SelectItem>
+        </SelectContent>
+      </Select>
+
+      {/* Status */}
+      <Select value={filters.status || undefined} onValueChange={(value) => handleFilterChange("status", value)}>
+        <SelectTrigger className="w-full md:w-[160px]" dir="rtl">
+          <SelectValue placeholder="وضعیت" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">همه</SelectItem>
+          <SelectItem value="reviewing">در حال بررسی</SelectItem>
+          <SelectItem value="approved">تأیید شده</SelectItem>
+          <SelectItem value="rejected">رد شده</SelectItem>
+        </SelectContent>
+      </Select>
+
+      {/* Category */}
+      <Select value={filters.category || undefined} onValueChange={(value) => handleFilterChange("category", value)}>
+        <SelectTrigger className="w-full md:w-[160px]" dir="rtl">
+          <SelectValue placeholder="دسته بندی" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">همه</SelectItem>
+          <SelectItem value="electronics">الکترونیک</SelectItem>
+          <SelectItem value="clothing">پوشاک</SelectItem>
+          <SelectItem value="home">خانه و آشپزخانه</SelectItem>
+        </SelectContent>
+      </Select>
+
+      {/* New Request Button */}
+      <Link href="/dashboard/return-requests/new">
+        <Button className="bg-yellow-500 hover:bg-yellow-600 text-white gap-2">
+          <Add size={20} />
+          ثبت درخواست جدید +
+        </Button>
+      </Link>
+    </div>
+  );
+}
+

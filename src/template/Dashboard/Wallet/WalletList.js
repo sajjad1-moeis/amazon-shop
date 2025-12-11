@@ -7,43 +7,78 @@ import WalletOverviewCards from "./WalletOverviewCards";
 import TransactionsFilter from "./TransactionsFilter";
 import TransactionsTable from "./TransactionsTable";
 
+const initialTransactions = [
+  {
+    id: "TRX-001",
+    type: "charge",
+    amount: "۵,۰۰۰,۰۰۰",
+    date: "۱۴۰۳/۱۰/۲۱",
+    status: "completed",
+    description: "شارژ کیف پول",
+  },
+  {
+    id: "TRX-002",
+    type: "withdraw",
+    amount: "۲,۰۰۰,۰۰۰",
+    date: "۱۴۰۳/۱۰/۲۰",
+    status: "pending",
+    description: "برداشت از کیف پول",
+  },
+  {
+    id: "TRX-003",
+    type: "charge",
+    amount: "۱۰,۰۰۰,۰۰۰",
+    date: "۱۴۰۳/۱۰/۱۹",
+    status: "completed",
+    description: "شارژ کیف پول",
+  },
+];
+
 export default function WalletList() {
   const [filters, setFilters] = useState({
-    searchQuery: "",
-    dateRange: "",
+    sortBy: "",
+    type: "",
     status: "",
-    transactionType: "",
+    dateFilter: "",
+    searchQuery: "",
   });
 
   return (
     <>
       {/* Top Section: Header */}
-      <PageHeader title="کیف پول من" description="مدیریت موجودی و تراکنشهای مالی" />
+      <PageHeader
+        title="کیف پول من"
+        description="مدیریت موجودی و تراکنش‌های کیف پول"
+      />
 
-      {/* Bottom Section: Wallet Content */}
+      {/* Wallet Actions */}
+      <div className="mb-6">
+        <WalletActions />
+      </div>
+
+      {/* Overview Cards */}
+      <div className="mb-6">
+        <WalletOverviewCards />
+      </div>
+
+      {/* Transactions Section */}
       <div
         className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 md:p-6"
         style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
       >
-        {/* Action Buttons */}
-        <WalletActions />
+        <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-6">
+          تاریخچه تراکنش‌ها
+        </h2>
 
-        {/* Overview Cards */}
-        <WalletOverviewCards />
-
-        {/* Transaction History */}
-        <div className="mt-8">
-          <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-4">تاریخچه تراکنشها</h2>
-
-          {/* Filter Section */}
+        {/* Filters */}
+        <div className="mb-6">
           <TransactionsFilter filters={filters} onFiltersChange={setFilters} />
-
-          {/* Transactions Table */}
-          <div className="mt-6">
-            <TransactionsTable />
-          </div>
         </div>
+
+        {/* Transactions Table */}
+        <TransactionsTable transactions={initialTransactions} />
       </div>
     </>
   );
 }
+

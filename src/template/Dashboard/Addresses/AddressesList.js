@@ -9,40 +9,10 @@ import PageHeader from "@/template/Dashboard/Common/PageHeader";
 import { useAddresses } from "@/utils/func/use-address";
 import { formatAddress, formatFullName, parseAddressData } from "@/utils/func/address-utlis";
 import { toast } from "sonner";
+import { mockAddresses } from "@/data";
 
-const mockAddresses = [
-  {
-    id: 1,
-    name: "محسن رضایی",
-    mobile: "۰۹۱۲۹۸۱۴۴۲۱",
-    province: "تهران",
-    city: "پونک",
-    postalCode: "۱۴۵۶۷۵۹۲۲۱",
-    address: "تهران، شهر ری خیابان کریم خان ، کوچه آزاده ۲ پلاک ۱۲",
-    isDefault: true,
-  },
-  {
-    id: 2,
-    name: "محسن رضایی",
-    mobile: "۰۹۱۲۹۸۱۴۴۲۱",
-    province: "تهران",
-    city: "سعادت آباد",
-    postalCode: "۱۹۸۷۶۱۳۴۵۱",
-    address: "بلوار دریا، خیابان صراف ها، پلاک ۳۴",
-    isDefault: false,
-  },
-];
-
-export default function AddressesList() {
+export default function AddressesList({ isModalOpen, setIsModalOpen, editingAddress, setEditingAddress }) {
   const { addresses, addAddress, updateAddress, deleteAddress, setDefaultAddress } = useAddresses(mockAddresses);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingAddress, setEditingAddress] = useState(null);
-
-  const handleAddClick = () => {
-    setEditingAddress(null);
-    setIsModalOpen(true);
-  };
 
   const handleEditClick = (addressId) => {
     const address = addresses.find((a) => a.id === addressId);
@@ -54,14 +24,13 @@ export default function AddressesList() {
 
   const handleDeleteClick = (addressId) => {
     if (addresses.length <= 1) {
-      toast.error("حداقل باید یک آدرس وجود داشته باشد");
+      toast.error("حداقل باید یک آدرس وجود داشته باشد", { richColors: true });
       return;
     }
 
     if (window.confirm("آیا از حذف این آدرس اطمینان دارید؟")) {
       try {
         deleteAddress(addressId);
-        toast.success("آدرس با موفقیت حذف شد");
       } catch (error) {
         toast.error(error.message);
       }
@@ -100,16 +69,6 @@ export default function AddressesList() {
   return (
     <>
       {/* Top Section: Header and Add Button */}
-      <PageHeader
-        title="آدرس های من"
-        description="مدیریت آدرسهای ثبت شده برای ارسال سفارش ها"
-        actionButton={
-          <Button onClick={handleAddClick} className="bg-yellow-500 hover:bg-yellow-600 text-white">
-            <Add size={20} className="ml-2" />
-            افزودن آدرس
-          </Button>
-        }
-      />
 
       {/* Bottom Section: Addresses List */}
       <div
@@ -140,4 +99,3 @@ export default function AddressesList() {
     </>
   );
 }
-

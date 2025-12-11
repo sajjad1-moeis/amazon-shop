@@ -3,95 +3,73 @@
 import React from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 export default function FavoriteCard({ product }) {
   return (
     <div
-      className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 md:p-6 hover:shadow-lg transition-shadow"
-      style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
+      className="w-full bg-white rounded-2xl p-4 flex items-center justify-between gap-4 shadow-sm"
+      style={{
+        boxShadow: "0px 1px 6px 0px #0000000F",
+        direction: "rtl",
+      }}
     >
-      <div className="flex flex-col md:flex-row gap-4 md:gap-6">
-        {/* Product Image */}
-        <div className="relative w-full md:w-48 h-48 md:h-48 bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden flex-shrink-0">
-          <Image
-            src={product.image}
-            alt={product.title}
-            fill
-            className="object-contain"
-            sizes="(max-width: 768px) 100vw, 200px"
-          />
-        </div>
+      {/* Product Image */}
+      <div className="w-36 h-28 relative flex-shrink-0 rounded-xl overflow-hidden">
+        <Image src={product.image} alt={product.title} fill className="object-cover" />
+      </div>
 
-        {/* Product Details */}
-        <div className="flex-1 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          {/* Left: Product Info */}
-          <div className="flex-1">
-            {/* Product Name */}
-            <h3 className="text-base md:text-lg font-bold text-gray-900 dark:text-white mb-2">
-              {product.title}
-            </h3>
+      {/* Middle Content */}
+      <div className="flex-1 flex flex-col gap-3">
+        {/* Product Title */}
+        <h3 className="text-[15px] font-bold text-gray-900 leading-6">{product.title}</h3>
 
-            {/* Brand Logo */}
-            <div className="mb-3">
-              <span className="text-sm md:text-base font-bold text-gray-700 dark:text-gray-300">{product.brand}</span>
-            </div>
-
-            {/* Price Info */}
-            <div className="space-y-2 mb-3">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600 dark:text-gray-400">قیمت فعلی (تومان)</span>
-                <span className="text-base md:text-lg font-bold text-gray-900 dark:text-white">
-                  {product.currentPrice}
-                </span>
-              </div>
-
-              {/* Price Change */}
-              <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 px-3 py-1 rounded-md">
-                <span className="text-xs md:text-sm text-gray-600 dark:text-gray-400">تغییر قیمت اخیر</span>
-                <span className="text-xs md:text-sm font-bold text-blue-600 dark:text-blue-400">
-                  {product.priceChange}%
-                </span>
-              </div>
-            </div>
-
-            {/* Tracking Status and Last Checked */}
-            <div className="flex flex-wrap items-center gap-3">
-              <span
-                className={cn(
-                  "inline-flex items-center px-3 py-1 rounded-full text-xs font-medium",
-                  "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                )}
-              >
-                وضعیت ردیابی فعال
-              </span>
-              <span className="text-xs md:text-sm text-gray-600 dark:text-gray-400">
-                آخرین بررسی {product.lastChecked}
-              </span>
-            </div>
+        {/* Brand Section */}
+        <div className="flex items-center justify-between w-full">
+          {/* Brand Logo */}
+          <div className="w-20 h-6 relative">
+            <Image src={product.brandLogo} alt="brand logo" fill className="object-contain" />
           </div>
-
-          {/* Right: Action Buttons */}
-          <div className="flex flex-col gap-2 md:w-auto w-full">
-            <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-medium py-2">
-              مشاهده محصول
-            </Button>
-            <Button
-              variant="outline"
-              className="w-full border-primary-600 bg-primary-600 text-white hover:bg-primary-700 dark:border-primary-500 dark:bg-primary-500 dark:hover:bg-primary-600 text-sm font-medium py-2"
-            >
-              تنظیم هشدار قیمت
-            </Button>
-            <Button
-              variant="outline"
-              className="w-full border-red-500 text-red-600 hover:bg-red-50 dark:border-red-400 dark:text-red-400 dark:hover:bg-red-900/20 text-sm font-medium py-2"
-            >
-              حذف
-            </Button>
+          <div className="flex items-center gap-2">
+            <span className="text-gray-600 text-sm">وضعیت ردیابی</span>
+            <span className="bg-green-100 text-green-700 text-xs px-3 py-1 rounded-lg">فعال</span>
           </div>
         </div>
+
+        {/* Three Gray Boxes Row */}
+        <div className="w-full flex items-center justify-between gap-3">
+          {/* Box 1 */}
+          <div className="flex-1 bg-gray-100 px-3 py-2 rounded-xl flex justify-between items-center">
+            <span className="text-gray-600 text-sm">قیمت فعلی</span>
+            <span className="text-gray-900 font-bold text-base">{product.currentPrice}</span>
+          </div>
+
+          {/* Box 2 */}
+          <div className="flex-1 bg-gray-100 px-3 py-2 rounded-xl flex justify-between items-center">
+            <span className="text-gray-600 text-sm">کمترین قیمت</span>
+            <span className="text-gray-900 font-bold text-base">{product.lowestPrice}</span>
+          </div>
+
+          {/* Box 3 */}
+          <div className="flex-1 bg-gray-100 px-3 py-2 rounded-xl flex justify-between items-center">
+            <span className="text-gray-600 text-sm">بیشترین قیمت</span>
+            <span className="text-gray-900 font-bold text-base">{product.highestPrice}</span>
+          </div>
+        </div>
+      </div>
+      {/* Left Buttons */}
+      <div className="flex flex-col gap-2 w-32 flex-shrink-0">
+        <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-medium text-sm py-2 rounded-lg">
+          مشاهده محصول
+        </Button>
+
+        <Button className="w-full bg-primary-700 hover:bg-[#3143D8] text-white font-medium text-sm py-2 rounded-lg">
+          تنظیم هشدار قیمت
+        </Button>
+
+        <Button className="w-full bg-[#F6F7FB] text-red-500 hover:bg-red-50 font-medium text-sm py-2 rounded-lg border border-red-200">
+          حذف
+        </Button>
       </div>
     </div>
   );
 }
-
