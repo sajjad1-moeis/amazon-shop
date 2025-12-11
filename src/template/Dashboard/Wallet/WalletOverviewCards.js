@@ -1,57 +1,34 @@
 "use client";
 
-import { Clock, TickCircle, Wallet3 } from "iconsax-reactjs";
 import React from "react";
 
 const walletData = {
-  total: "۲۵,۰۰۰,۰۰۰",
-  pending: "۲,۰۰۰,۰۰۰",
-  withdrawable: "۲۳,۰۰۰,۰۰۰",
+  pending: "۲,۳۵۰,۰۰۰",
+  withdrawable: "۱,۸۵۲,۰۰۰",
+  total: "۲,۳۵۰,۰۰۰",
 };
 
 export default function WalletOverviewCards() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {/* Total Balance */}
-      <div
-        className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 md:p-6"
-        style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
-      >
-        <div className="flex items-center justify-between mb-4">
-          <div className="p-3 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
-            <Wallet3 size={24} className="text-primary-600 dark:text-primary-400" variant="Bold" />
-          </div>
-        </div>
-        <h3 className="text-sm text-gray-600 dark:text-gray-400 mb-2">موجودی کل</h3>
-        <p className="text-2xl font-bold text-gray-900 dark:text-white">{walletData.total} تومان</p>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+      {/* Total Balance - Dark Blue */}
+
+      <div className="bg-primary-600 text-center rounded-xl p-6 text-white">
+        <p className="text-3xl  mb-2">{walletData.total}</p>
+        <h3 className="text-sm text-gray-100">کل موجودی</h3>
       </div>
 
-      {/* Pending Balance */}
-      <div
-        className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 md:p-6"
-        style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
-      >
-        <div className="flex items-center justify-between mb-4">
-          <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
-            <Clock size={24} className="text-yellow-600 dark:text-yellow-400" variant="Bold" />
-          </div>
-        </div>
-        <h3 className="text-sm text-gray-600 dark:text-gray-400 mb-2">در انتظار</h3>
-        <p className="text-2xl font-bold text-gray-900 dark:text-white">{walletData.pending} تومان</p>
+      {/* Withdrawable Balance - Green */}
+
+      <div className="bg-green-600 text-center rounded-xl p-6 text-white">
+        <p className="text-3xl  mb-2">{walletData.withdrawable}</p>
+        <h3 className="text-sm text-gray-100">قابل برداشت</h3>
       </div>
 
-      {/* Withdrawable Balance */}
-      <div
-        className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 md:p-6"
-        style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
-      >
-        <div className="flex items-center justify-between mb-4">
-          <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
-            <TickCircle size={24} className="text-green-600 dark:text-green-400" variant="Bold" />
-          </div>
-        </div>
-        <h3 className="text-sm text-gray-600 dark:text-gray-400 mb-2">قابل برداشت</h3>
-        <p className="text-2xl font-bold text-gray-900 dark:text-white">{walletData.withdrawable} تومان</p>
+      {/* Pending Balance - Gold/Brown */}
+      <div className="bg-yellow-700 text-center rounded-xl p-6 text-white">
+        <p className="text-3xl  mb-2">{walletData.pending}</p>
+        <h3 className="text-sm text-gray-100">موجودی در انتظار تایید</h3>
       </div>
     </div>
   );

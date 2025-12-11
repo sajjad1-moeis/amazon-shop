@@ -2,12 +2,12 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Edit2, DocumentText } from "iconsax-reactjs";
+import { Edit2, CardPos } from "iconsax-reactjs";
 import EditFinancialInfoModal from "./EditFinancialInfoModal";
 
 const financialData = {
   shaba: "IR۸۲۰۵۴۰۱۰۲۶۸۰۰۲۰۸۱۷۹۰۹۰۰۲",
-  cardNumber: "۶۰۳۷ .... .... ۱۸۲۴",
+  cardNumber: "۶۰۳۷ **** **** ۱۸۲۴",
 };
 
 export default function FinancialInfoCard() {
@@ -18,7 +18,9 @@ export default function FinancialInfoCard() {
     setFinancialInfo((prev) => ({
       ...prev,
       ...data,
-      cardNumber: data.cardNumber ? `${data.cardNumber.substring(0, 4)} .... .... ${data.cardNumber.substring(data.cardNumber.length - 4)}` : prev.cardNumber,
+      cardNumber: data.cardNumber
+        ? `${data.cardNumber.substring(0, 4)} **** **** ${data.cardNumber.substring(data.cardNumber.length - 4)}`
+        : prev.cardNumber,
     }));
   };
 
@@ -31,7 +33,7 @@ export default function FinancialInfoCard() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
-            <DocumentText size={24} className="text-primary-600 dark:text-primary-400" variant="Bold" />
+            <CardPos size={24} className="text-primary-600 dark:text-primary-400" variant="Bold" />
           </div>
           <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white">اطلاعات مالی</h3>
         </div>
@@ -75,4 +77,3 @@ export default function FinancialInfoCard() {
     </div>
   );
 }
-

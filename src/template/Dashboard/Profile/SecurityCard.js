@@ -2,12 +2,12 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Edit2, Lock } from "iconsax-reactjs";
+import { Edit2, Lock, Devices } from "iconsax-reactjs";
 import EditSecurityModal from "./EditSecurityModal";
 import ConnectedDevicesModal from "./ConnectedDevicesModal";
 
 const securityData = {
-  password: "*******",
+  password: "******",
   twoFactorAuth: "active",
   twoFactorAuthText: "فعال",
   activeDevices: 1,
@@ -79,6 +79,7 @@ export default function SecurityCard() {
             className="text-sm md:text-base font-medium text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 p-0 h-auto"
           >
             {securityInfo.activeDevicesText}
+            <Devices size={16} className="mr-2" />
           </Button>
         </div>
 
@@ -106,4 +107,3 @@ export default function SecurityCard() {
     </div>
   );
 }
-

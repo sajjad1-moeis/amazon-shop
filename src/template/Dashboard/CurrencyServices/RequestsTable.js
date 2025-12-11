@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export default function RequestsTable({ requests }) {
@@ -78,7 +78,7 @@ export default function RequestsTable({ requests }) {
                   index === requests.length - 1 && "last:border-b-0"
                 )}
               >
-                <TableCell className="text-sm text-gray-900 dark:text-white py-4 px-4">
+                <TableCell className="text-sm text-gray-900 dark:text-white py-4 px-4 font-medium">
                   {request.id}
                 </TableCell>
                 <TableCell className="text-sm text-gray-900 dark:text-white py-4 px-4">
@@ -104,4 +104,3 @@ export default function RequestsTable({ requests }) {
     </div>
   );
 }
-

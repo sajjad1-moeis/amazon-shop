@@ -3,7 +3,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Paperclip, Send2, UserSquare } from "iconsax-reactjs";
+import { Headphone, Paperclip, Send2, UserSquare } from "iconsax-reactjs";
 import { cn } from "@/lib/utils";
 
 export default function TicketChat({ ticketData, messagesList, message, setMessage, handleSendMessage }) {
@@ -29,6 +29,8 @@ export default function TicketChat({ ticketData, messagesList, message, setMessa
         {messagesList.map((msg, index) => {
           const showDate = index === 0 || messagesList[index - 1].date !== msg.date;
 
+          const isUser = msg.sender === "user";
+
           return (
             <div key={msg.id}>
               {showDate && msg.date && (
@@ -40,20 +42,24 @@ export default function TicketChat({ ticketData, messagesList, message, setMessa
               <div className={cn("flex gap-3 flex-row")}>
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-900 dark:text-white">{msg.senderName}</span>
+                    <span
+                      className={cn(
+                        "text-sm font-medium  dark:text-white flex items-center gap-2",
+                        isUser ? "text-gray-400" : "text-primary-400"
+                      )}
+                    >
+                      {isUser || <Headphone variant="Bold" />}
+                      {msg.senderName}
+                    </span>
                   </div>
-                  {msg.supportName && (
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
-                      پاسخ داده شده توسط : {msg.supportName}
-                    </p>
-                  )}
-                  <div class="flex">
+
+                  <div class="flex-center gap-2">
                     <p
                       className={cn(
-                        " rounded-lg p-4 text-sm text-gray-700 dark:text-gray-300",
-                        msg.sender === "user"
-                          ? "bg-primary-50 dark:bg-primary-900/20 text-right"
-                          : "bg-gray-50 dark:bg-gray-700/50 text-right"
+                        " rounded-lg p-3 text-sm text-gray-700 dark:text-gray-300",
+                        isUser
+                          ? "bg-gray-100 dark:bg-gray-700/50 text-right"
+                          : "bg-[#A9B5FB4D] dark:bg-primary-900/20 text-right"
                       )}
                     >
                       {msg.text}

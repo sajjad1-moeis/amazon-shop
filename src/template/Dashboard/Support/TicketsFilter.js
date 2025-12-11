@@ -16,7 +16,7 @@ export default function TicketsFilter({ filters, onFiltersChange }) {
   return (
     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
       {/* Sort By */}
-      <div className="flex-1 md:flex-initial min-w-[200px] md:min-w-[300px] relative">
+      <div className="flex-1 md:flex-initial min-w-[200px] md:min-w-[500px] relative">
         <SearchNormal1 size={20} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
         <Input
           type="text"

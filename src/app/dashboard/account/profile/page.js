@@ -13,9 +13,16 @@ export default function ProfilePage() {
 
       {/* Bottom Section: Profile Cards */}
       <div className="space-y-6">
+        {/* Basic Information - First */}
         <BasicInfoCard />
-        <FinancialInfoCard />
-        <SecurityCard />
+
+        {/* Security & Financial - Side by Side */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <SecurityCard />
+          <FinancialInfoCard />
+        </div>
+
+        {/* Notification Settings - Last */}
         <NotificationSettingsCard />
       </div>
     </DashboardLayout>

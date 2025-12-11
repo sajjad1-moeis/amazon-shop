@@ -42,8 +42,8 @@ export default function CurrencyServicesList() {
         description="مدیریت درخواستها و ثبت خدمات ارزی"
         actionButton={
           <Link href="/dashboard/currency-services/new-request">
-            <Button className="bg-yellow-500 hover:bg-yellow-600 text-white">
-              <Add size={20} className="ml-2" />
+            <Button className="bg-yellow-500 hover:bg-yellow-600 text-white gap-2">
+              <Add size={20} />
               ثبت درخواست جدید
             </Button>
           </Link>
@@ -60,9 +60,7 @@ export default function CurrencyServicesList() {
         className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 md:p-6"
         style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
       >
-        <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-6">
-          تاریخچه درخواست‌ها
-        </h2>
+        <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-6">تاریخچه درخواست‌ها</h2>
 
         {/* Filters */}
         <div className="mb-6">
@@ -75,4 +73,3 @@ export default function CurrencyServicesList() {
     </>
   );
 }
-

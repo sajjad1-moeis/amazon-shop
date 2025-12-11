@@ -11,63 +11,69 @@ export default function TransactionsFilter({ filters, onFiltersChange }) {
   };
 
   return (
-    <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
+    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
       {/* Search */}
-      <div className="flex-1 md:flex-initial min-w-[200px] md:min-w-[300px]">
+      <div>
         <div className="relative">
           <SearchNormal1 size={20} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <Input
             type="text"
-            value={filters.searchQuery}
+            value={filters.searchQuery || ""}
             onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
             placeholder="جستجو بر اساس عنوان یا شماره تیکت..."
-            className="pr-10 pl-4"
+            className="pr-10"
             dir="rtl"
           />
         </div>
       </div>
 
-      {/* Date Range */}
-      <Select value={filters.dateRange} onValueChange={(value) => handleFilterChange("dateRange", value)}>
-        <SelectTrigger className="w-[160px]" dir="rtl">
-          <SelectValue placeholder="بازه تاریخ" />
-        </SelectTrigger>
-        <SelectContent dir="rtl">
-          <SelectItem value="">همه تاریخ‌ها</SelectItem>
-          <SelectItem value="today">امروز</SelectItem>
-          <SelectItem value="week">این هفته</SelectItem>
-          <SelectItem value="month">این ماه</SelectItem>
-          <SelectItem value="year">امسال</SelectItem>
-          <SelectItem value="custom">انتخاب بازه</SelectItem>
-        </SelectContent>
-      </Select>
+      <div class="flex gap-2">
+        {/* Date Range */}
+        <Select
+          value={filters.dateRange || undefined}
+          onValueChange={(value) => handleFilterChange("dateRange", value)}
+        >
+          <SelectTrigger className="w-full md:w-32" dir="rtl">
+            <SelectValue placeholder="بازه تاریخ" />
+          </SelectTrigger>
+          <SelectContent dir="rtl">
+            <SelectItem value="all">همه</SelectItem>
+            <SelectItem value="today">امروز</SelectItem>
+            <SelectItem value="week">این هفته</SelectItem>
+            <SelectItem value="month">این ماه</SelectItem>
+            <SelectItem value="year">امسال</SelectItem>
+          </SelectContent>
+        </Select>
 
-      {/* Status */}
-      <Select value={filters.status} onValueChange={(value) => handleFilterChange("status", value)}>
-        <SelectTrigger className="w-[140px]" dir="rtl">
-          <SelectValue placeholder="وضعیت" />
-        </SelectTrigger>
-        <SelectContent dir="rtl">
-          <SelectItem value="">همه وضعیت‌ها</SelectItem>
-          <SelectItem value="reviewing">در حال بررسی</SelectItem>
-          <SelectItem value="completed">تکمیل شده</SelectItem>
-          <SelectItem value="failed">ناموفق</SelectItem>
-        </SelectContent>
-      </Select>
+        {/* Status */}
+        <Select value={filters.status || undefined} onValueChange={(value) => handleFilterChange("status", value)}>
+          <SelectTrigger className="w-full md:w-[140px]" dir="rtl">
+            <SelectValue placeholder="وضعیت" />
+          </SelectTrigger>
+          <SelectContent dir="rtl">
+            <SelectItem value="all">همه</SelectItem>
+            <SelectItem value="reviewing">در حال بررسی</SelectItem>
+            <SelectItem value="answered">پاسخ داده شده</SelectItem>
+            <SelectItem value="completed">تکمیل شده</SelectItem>
+          </SelectContent>
+        </Select>
 
-      {/* Transaction Type */}
-      <Select value={filters.transactionType} onValueChange={(value) => handleFilterChange("transactionType", value)}>
-        <SelectTrigger className="w-[160px]" dir="rtl">
-          <SelectValue placeholder="نوع تراکنش" />
-        </SelectTrigger>
-        <SelectContent dir="rtl">
-          <SelectItem value="">همه انواع</SelectItem>
-          <SelectItem value="charge">شارژ کیف پول</SelectItem>
-          <SelectItem value="withdrawal">برداشت</SelectItem>
-          <SelectItem value="payment">پرداخت</SelectItem>
-          <SelectItem value="refund">بازگشت وجه</SelectItem>
-        </SelectContent>
-      </Select>
+        {/* Transaction Type */}
+        <Select
+          value={filters.transactionType || undefined}
+          onValueChange={(value) => handleFilterChange("transactionType", value)}
+        >
+          <SelectTrigger className="w-full md:w-32" dir="rtl">
+            <SelectValue placeholder="نوع تراکنش" />
+          </SelectTrigger>
+          <SelectContent dir="rtl">
+            <SelectItem value="all">همه</SelectItem>
+            <SelectItem value="charge">شارژ کیف پول</SelectItem>
+            <SelectItem value="withdraw">برداشت</SelectItem>
+            <SelectItem value="payment">پرداخت</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
     </div>
   );
 }

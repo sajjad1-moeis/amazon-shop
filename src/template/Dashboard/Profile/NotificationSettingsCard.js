@@ -14,7 +14,7 @@ const notificationData = {
 const getNotificationTypesText = (types) => {
   const labels = {
     orders: "سفارش ها",
-    tickets: "تیکت ها",
+    tickets: "تیکت و پشتیبانی",
     wallet: "کیف پول و تراکنش ها",
     currency: "خدمات ارزی",
   };
@@ -100,4 +100,3 @@ export default function NotificationSettingsCard() {
     </div>
   );
 }
-

@@ -105,17 +105,19 @@ export default function DashboardSidebar({ isMobileOpen, setIsMobileOpen }) {
           isMobileOpen ? "translate-x-0" : "translate-x-full md:translate-x-0"
         )}
       >
-        {/* Wallet Card */}
-        <div className="bg-[#DCE1FC] p-2 rounded-xl mb-3 border-b-2 border-primary-200">
-          <div className="flex justify-between items-center text-[#3F51B5] pb-2">
-            <div className="flex gap-2 items-center">
-              <Wallet size={20} />
-              <span className="text-sm">موجودی کیف‌پول</span>
+        <Link href={"/dashboard/wallet"}>
+          {/* Wallet Card */}
+          <div className="bg-[#DCE1FC] p-2 rounded-xl mb-3 border-b-2 border-primary-200">
+            <div className="flex justify-between items-center text-[#3F51B5] pb-2">
+              <div className="flex gap-2 items-center">
+                <Wallet size={20} />
+                <span className="text-sm">موجودی کیف‌پول</span>
+              </div>
+              <ArrowLeft2 size={18} />
             </div>
-            <ArrowLeft2 size={18} />
+            <div className="bg-[#B6BCDF66] p-2 rounded-lg font-medium">۲,۵۰۰,۰۰۰ تومان</div>
           </div>
-          <div className="bg-[#B6BCDF66] p-2 rounded-lg font-medium">۲,۵۰۰,۰۰۰ تومان</div>
-        </div>
+        </Link>
 
         {/* Score Card */}
         <div className="bg-[#FFF1D8] p-2 rounded-xl mb-6 border-b-2 border-[#EEA82699]">
@@ -159,12 +161,14 @@ export default function DashboardSidebar({ isMobileOpen, setIsMobileOpen }) {
                 <button
                   onClick={() => toggleExpand(item.id)}
                   className={cn(
-                    "flex w-full items-center gap-3 px-3 py-2.5 rounded-lg transition-all",
+                    "flex w-full items-center gap-3 px-3 py-2.5 rounded-lg transition-all justify-between",
                     Active ? "text-[#3F51B5] font-medium" : "text-gray-700 hover:bg-gray-50"
                   )}
                 >
-                  <Icon size={22} variant={Active ? "Bold" : "Outline"} color={Active ? "#3F51B5" : "#555"} />
-                  <span className="flex-1">{item.label}</span>
+                  <div class="flex gap-2">
+                    <Icon size={22} variant={Active ? "Bold" : "Outline"} color={Active ? "#3F51B5" : "#555"} />
+                    <span className="flex-1">{item.label}</span>
+                  </div>
 
                   <ArrowDown2
                     size={16}

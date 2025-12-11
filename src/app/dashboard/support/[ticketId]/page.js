@@ -4,6 +4,9 @@ import React, { useState } from "react";
 import TicketSidebar from "@/template/Dashboard/TicketDetail/TicketSidebar";
 import TicketChat from "@/template/Dashboard/TicketDetail/TicketChat";
 import DashboardLayout from "@/layout/DashboardLayout";
+import PageHeader from "@/template/Dashboard/Common/PageHeader";
+import { Button } from "@/components/ui/button";
+import { Add } from "iconsax-reactjs";
 
 const ticketData = {
   id: "۴۵۲۳۱",
@@ -74,13 +77,13 @@ export default function TicketDetail({ ticketId }) {
     switch (ticketData.status) {
       case "reviewing":
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
             در حال بررسی
           </span>
         );
       case "answered":
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
             پاسخ داده شده
           </span>
         );
@@ -103,19 +106,25 @@ export default function TicketDetail({ ticketId }) {
   };
 
   return (
-    <DashboardLayout className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-      <div className="lg:col-span-3">
-        <TicketSidebar ticketData={ticketData} getStatusBadge={getStatusBadge} getPriorityText={getPriorityText} />
-      </div>
-
-      <div className="lg:col-span-9">
-        <TicketChat
-          ticketData={ticketData}
-          messagesList={messagesList}
-          message={message}
-          setMessage={setMessage}
-          handleSendMessage={handleSendMessage}
-        />
+    <DashboardLayout>
+      {/* Top Section: Header and Create Ticket Button */}
+      <PageHeader title="تیکت و پشتیبانی">
+        {" "}
+        <Button className="bg-yellow-500 hover:bg-yellow-600 text-primary-800">بستن تیکت</Button>
+      </PageHeader>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+        <div className="lg:col-span-2">
+          <TicketChat
+            ticketData={ticketData}
+            messagesList={messagesList}
+            message={message}
+            setMessage={setMessage}
+            handleSendMessage={handleSendMessage}
+          />
+        </div>
+        <div>
+          <TicketSidebar ticketData={ticketData} getStatusBadge={getStatusBadge} getPriorityText={getPriorityText} />
+        </div>
       </div>
     </DashboardLayout>
   );

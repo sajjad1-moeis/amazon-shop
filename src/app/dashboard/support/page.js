@@ -27,9 +27,20 @@ function Page() {
       today.getDate()
     ).padStart(2, "0")}`;
 
+    const getCategoryLabel = (category) => {
+      const categories = {
+        financial: "مالی",
+        logistics: "لجستیک",
+        technical: "فنی",
+        general: "عمومی",
+      };
+      return categories[category] || category;
+    };
+
     const ticket = {
       id: ticketId,
-      subject: newTicket.subject,
+      title: newTicket.title,
+      category: getCategoryLabel(newTicket.category),
       priority: newTicket.priority,
       status: "pending",
       date: persianDate,

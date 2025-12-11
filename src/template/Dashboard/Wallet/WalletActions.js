@@ -12,21 +12,19 @@ export default function WalletActions() {
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row gap-4">
-        <Button
-          onClick={() => setIsRechargeOpen(true)}
-          className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white h-12"
-        >
-          <Add size={20} className="ml-2" />
-          شارژ کیف پول
-        </Button>
+      <div className="flex flex-col sm:flex-row gap-3">
         <Button
           onClick={() => setIsWithdrawOpen(true)}
-          variant="outline"
-          className="flex-1 border-primary-500 text-primary-600 hover:bg-primary-50 dark:border-primary-400 dark:text-primary-400 dark:hover:bg-primary-900/20 h-12"
+          variant="ghost"
+          className="border-gray-300  bg-gray-200 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 h-10 font-medium"
         >
-          <Minus size={20} className="ml-2" />
           برداشت از کیف پول
+        </Button>
+        <Button
+          onClick={() => setIsRechargeOpen(true)}
+          className="text-primary-800 px-8 bg-yellow-400 hover:bg-yellow-600  h-10 font-medium"
+        >
+          شارژ کیف پول
         </Button>
       </div>
 
@@ -35,4 +33,3 @@ export default function WalletActions() {
     </>
   );
 }
-

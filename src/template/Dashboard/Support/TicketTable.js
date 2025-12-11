@@ -18,21 +18,21 @@ export default function TicketTable({ tickets, onDelete }) {
     switch (priority) {
       case "high":
         return (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 bg-red-100 w-max py-1 px-2 rounded">
             <div className="w-3 h-3 rounded-full bg-red-500"></div>
             <span className="text-sm text-gray-700 dark:text-gray-300">بالا</span>
           </div>
         );
       case "medium":
         return (
-          <div className="flex items-center gap-2 bg-yellow-100 p-2 w-max">
+          <div className="flex items-center gap-2 bg-yellow-100 px-2 py-1 w-max rounded">
             <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
             <span className="text-sm text-gray-700 dark:text-gray-300">متوسط</span>
           </div>
         );
       case "low":
         return (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 w-max bg-green-100 px-2 py-1  rounded">
             <div className="w-3 h-3 rounded-full bg-green-500"></div>
             <span className="text-sm text-gray-700 dark:text-gray-300">پایین</span>
           </div>

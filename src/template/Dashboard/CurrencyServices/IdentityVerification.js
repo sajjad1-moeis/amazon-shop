@@ -35,7 +35,7 @@ export default function IdentityVerification() {
       </div>
 
       {/* Verification Fields */}
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* National ID */}
         <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
           <div className="flex items-center gap-3">
