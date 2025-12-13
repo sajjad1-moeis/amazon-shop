@@ -13,7 +13,7 @@ const initialNotifications = [
     id: 1,
     type: "order",
     title: "سفارش شما ارسال شد",
-    description: "سفارش ۴۵۲۱۹-۸ امروز تحویل پست داده شد.",
+    description: "سفارش #۴۵۲۱۹-۸ امروز تحویل پست داده شد",
     time: "۱۰ دقیقه پیش",
     date: "۱۴۰۳/۱۰/۲۴",
     isPinned: true,
@@ -49,7 +49,7 @@ const initialNotifications = [
     id: 4,
     type: "order",
     title: "سفارش شما ارسال شد",
-    description: "سفارش ۴۵۲۱۹-۸ امروز تحویل پست داده شد.",
+    description: "سفارش #۴۵۲۱۹-۸ امروز تحویل پست داده شد",
     time: "۱۰ دقیقه پیش",
     date: "۱۴۰۳/۱۰/۲۴",
     isPinned: false,
@@ -89,46 +89,52 @@ export default function NotificationsList() {
   const handlePinToggle = (notificationId) => {
     setNotifications((prev) => {
       const updated = prev.map((n) => (n.id === notificationId ? { ...n, isPinned: !n.isPinned } : n));
-      // Sort: pinned first, then by id
+      // Sort: pinned first, then by id (newest first)
       return updated.sort((a, b) => {
         if (a.isPinned && !b.isPinned) return -1;
         if (!a.isPinned && b.isPinned) return 1;
         return 0;
       });
     });
-    toast.success("وضعیت پین تغییر کرد");
   };
 
   return (
-    <>
-      {/* Top Section: Header */}
-      <PageHeader
-        title="اعلانها"
-        description="تمام اعلان های مربوط به سفارشها، تیکت ها، کیف پول و فعالیتهای حساب شما در این بخش نمایش داده میشوند."
-      />
-
-      {/* Action Buttons Section */}
-      {notifications.length > 0 && (
-        <div
-          className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 md:p-6 mb-6"
-          style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
-        >
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Button
-              variant="outline"
-              onClick={handleDeleteAll}
-              className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-900/20 border-red-500 dark:border-red-400"
-            >
-              <Trash size={18} />
-              حذف همه اعلانها
-            </Button>
-            <Button variant="outline" onClick={handleMarkAllAsRead} className="gap-2">
-              <TickCircle size={18} />
-              علامت گذاری همه به عنوان خوانده شده
-            </Button>
+    <div dir="rtl">
+      {/* Header Section: Title and Action Buttons */}
+      <div className="mb-6">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+          {/* Title */}
+          <div>
+            <h1 className="text-2xl font-bold text-primary-700 dark:text-white mb-2">اعلانها</h1>
+            <p className="text-sm md:text-base text-gray-500 dark:text-gray-400">
+              تمام اعلان های مربوط به سفارشها، تیکت ها، کیف پول و فعالیتهای حساب شما در این بخش نمایش داده میشوند.
+            </p>
           </div>
+
+          {/* Action Buttons */}
+          {notifications.length > 0 && (
+            <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
+              <Button
+                variant="outline"
+                onClick={handleDeleteAll}
+                className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-900/20 border-red-500 dark:border-red-400"
+              >
+                <Trash size={18} />
+                حذف همه اعلانها
+              </Button>
+              <Button variant="outline" onClick={handleMarkAllAsRead} className="gap-2">
+                <TickCircle size={18} />
+                علامت گذاری همه به عنوان خوانده شده
+              </Button>
+            </div>
+          )}
         </div>
-      )}
+
+        {/* Section Header */}
+        {notifications.length > 0 && (
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">لیست اعلانها</h2>
+        )}
+      </div>
 
       {/* Filters Section */}
       {notifications.length > 0 && (
@@ -160,6 +166,6 @@ export default function NotificationsList() {
           ))}
         </div>
       )}
-    </>
+    </div>
   );
 }

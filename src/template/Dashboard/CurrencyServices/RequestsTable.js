@@ -10,25 +10,25 @@ export default function RequestsTable({ requests }) {
     switch (status) {
       case "reviewing":
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+          <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
             در حال بررسی
           </span>
         );
       case "successful":
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+          <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
             موفق
           </span>
         );
       case "failed":
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
+          <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
             ناموفق
           </span>
         );
       case "pending":
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
+          <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
             در انتظار
           </span>
         );
@@ -81,16 +81,12 @@ export default function RequestsTable({ requests }) {
                 <TableCell className="text-sm text-gray-900 dark:text-white py-4 px-4 font-medium">
                   {request.id}
                 </TableCell>
-                <TableCell className="text-sm text-gray-900 dark:text-white py-4 px-4">
-                  {request.serviceType}
-                </TableCell>
+                <TableCell className="text-sm text-gray-900 dark:text-white py-4 px-4">{request.serviceType}</TableCell>
                 <TableCell className="text-sm font-medium text-gray-900 dark:text-white py-4 px-4">
                   {request.amount}
                 </TableCell>
                 <TableCell className="py-4 px-4">{getStatusBadge(request.status)}</TableCell>
-                <TableCell className="text-sm text-gray-600 dark:text-gray-400 py-4 px-4">
-                  {request.date}
-                </TableCell>
+                <TableCell className="text-sm text-gray-600 dark:text-gray-400 py-4 px-4">{request.date}</TableCell>
                 <TableCell className="py-4 px-4">
                   <Button variant="outline" size="sm" className="gap-2">
                     مشاهده جزئیات

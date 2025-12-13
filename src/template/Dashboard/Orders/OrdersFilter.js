@@ -29,37 +29,20 @@ export default function OrdersFilter({ filters, onFiltersChange }) {
         />
         <Input
           type="text"
-          placeholder="جستجو بر اساس شماره سفارش..."
+          placeholder="جستجو بر اساس شماره سفارش یا نام محصول..."
           value={filters.searchQuery || ""}
           onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
           className="pr-10"
         />
       </div>
 
-      {/* Status Filter */}
+      {/* Time Range Filter */}
       <Select
-        value={filters.status || undefined}
-        onValueChange={(value) => handleFilterChange("status", value)}
+        value={filters.timeRange || undefined}
+        onValueChange={(value) => handleFilterChange("timeRange", value)}
       >
-        <SelectTrigger className="w-full md:w-48">
-          <SelectValue placeholder="وضعیت سفارش" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">همه</SelectItem>
-          <SelectItem value="processing">در حال پردازش</SelectItem>
-          <SelectItem value="shipped">ارسال شده</SelectItem>
-          <SelectItem value="delivered">تحویل داده شده</SelectItem>
-          <SelectItem value="cancelled">لغو شده</SelectItem>
-        </SelectContent>
-      </Select>
-
-      {/* Date Range Filter */}
-      <Select
-        value={filters.dateRange || undefined}
-        onValueChange={(value) => handleFilterChange("dateRange", value)}
-      >
-        <SelectTrigger className="w-full md:w-48">
-          <SelectValue placeholder="بازه تاریخ" />
+        <SelectTrigger className="w-full md:w-[160px]">
+          <SelectValue placeholder="بازه زمانی" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">همه</SelectItem>
@@ -70,22 +53,40 @@ export default function OrdersFilter({ filters, onFiltersChange }) {
         </SelectContent>
       </Select>
 
-      {/* Sort By Filter */}
+      {/* Status Filter */}
       <Select
-        value={filters.sortBy || undefined}
-        onValueChange={(value) => handleFilterChange("sortBy", value)}
+        value={filters.status || undefined}
+        onValueChange={(value) => handleFilterChange("status", value)}
       >
-        <SelectTrigger className="w-full md:w-48">
-          <SelectValue placeholder="مرتب‌سازی" />
+        <SelectTrigger className="w-full md:w-[160px]">
+          <SelectValue placeholder="وضعیت" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="newest">جدیدترین</SelectItem>
-          <SelectItem value="oldest">قدیمی‌ترین</SelectItem>
-          <SelectItem value="amount-high">بیشترین مبلغ</SelectItem>
-          <SelectItem value="amount-low">کمترین مبلغ</SelectItem>
+          <SelectItem value="all">همه</SelectItem>
+          <SelectItem value="processing">در حال پردازش</SelectItem>
+          <SelectItem value="to-dubai">در مسیر دبی</SelectItem>
+          <SelectItem value="to-iran">در مسیر ایران</SelectItem>
+          <SelectItem value="clearance">ترخیص</SelectItem>
+          <SelectItem value="delivered">تحویل شده</SelectItem>
+          <SelectItem value="returned">مرجوعی</SelectItem>
+        </SelectContent>
+      </Select>
+
+      {/* Payment Status Filter */}
+      <Select
+        value={filters.paymentStatus || undefined}
+        onValueChange={(value) => handleFilterChange("paymentStatus", value)}
+      >
+        <SelectTrigger className="w-full md:w-[160px]">
+          <SelectValue placeholder="وضعیت پرداخت" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">همه</SelectItem>
+          <SelectItem value="full">پرداخت کامل</SelectItem>
+          <SelectItem value="partial">پرداخت جزئی</SelectItem>
+          <SelectItem value="pending">در انتظار پرداخت</SelectItem>
         </SelectContent>
       </Select>
     </div>
   );
 }
-

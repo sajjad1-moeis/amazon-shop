@@ -1,72 +1,98 @@
 "use client";
 
 import React from "react";
-import { Button } from "@/components/ui/button";
 import { Edit2, Trash, Location } from "iconsax-reactjs";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
-export default function AddressCard({ address, onEdit, onDelete, onSetDefault }) {
+/**
+ * AddressCard
+ * - dir="rtl" برای نمایش سمت راست -> چپ (مثل عکس)
+ * - actions (edit/delete) در سمت چپ
+ * - اگر isDefault باشد: badge بالا سمت چپ و حذف دکمه "انتخاب به عنوان پیش‌فرض"
+ */
+export default function AddressCard({ address, onEdit, onDelete, onSetDefault, showBottomBorder = true }) {
   return (
     <div
-      className={cn(
-        "bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 md:p-6 relative",
-        address.isDefault && "ring-2 ring-primary-500"
-      )}
-      style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
+      dir="rtl"
+      className={`bg-gray-50 p-3 border border-gray-100 rounded-xl overflow-hidden ${
+        showBottomBorder ? "border-b border-gray-200" : ""
+      }`}
     >
-      {/* Default Badge */}
-      {address.isDefault && (
-        <div className="absolute top-4 left-4 bg-primary-500 text-white text-xs font-bold px-2 py-1 rounded">
-          پیش‌فرض
+      <div className="flex-between">
+        {/* Default Badge - سمت چپ */}
+
+        {/* MAIN INFO - سمت راست */}
+        <div className="flex items-center justify-between">
+          <h4 className=" text-primary-500">{address.name}</h4>
         </div>
-      )}
 
-      {/* Address Title */}
-      <div className="flex items-center gap-2 mb-4">
-        <Location size={20} className="text-primary-600 dark:text-primary-400" />
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white">{address.title}</h3>
+        <div className="flex-center gap-2">
+          <span className="text-xs text-gray-500">شماره تماس:</span>
+          <span className="text-sm text-gray-700">{address.mobile || address.phone}</span>
+        </div>
+
+        <div className="flex-center gap-2">
+          <span className="text-xs text-gray-500">استان/شهر:</span>
+          <span className="text-sm text-gray-700">
+            {address.province && address.city
+              ? `${address.province} / ${address.city}`
+              : address.city || address.province}
+          </span>
+        </div>
+
+        <div className="flex-center gap-2">
+          <span className="text-xs text-gray-500">کدپستی:</span>
+          <span className="text-sm text-gray-700">{address.postalCode}</span>
+        </div>
+        <div>
+          {address.isDefault && (
+            <button
+              className="text-xs font-medium px-3 py-1 rounded-md border border-primary-400 text-[#1E429F] bg-primary-100"
+              disabled
+            >
+              آدرس پیش فرض
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Address Details */}
-      <div className="space-y-2 mb-4">
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          <span className="font-medium">نام گیرنده:</span> {address.name}
-        </p>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          <span className="font-medium">شماره تماس:</span> {address.phone}
-        </p>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          <span className="font-medium">آدرس:</span> {address.address}
-        </p>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          <span className="font-medium">کد پستی:</span> {address.postalCode}
-        </p>
-      </div>
-
-      {/* Actions */}
-      <div className="flex items-center gap-2 pt-4 border-t border-gray-200 dark:border-gray-700">
-        {!address.isDefault && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onSetDefault(address.id)}
-            className="flex-1 border-primary-500 text-primary-600 hover:bg-primary-50 dark:border-primary-400 dark:text-primary-400 dark:hover:bg-primary-900/20"
+      <div className="flex-between mt-4 pt-4 border-t border-gray-200">
+        {/* ACTIONS - سمت چپ */}
+        <div className="flex items-center gap-2">
+          <Location size={16} className="text-gray-400" />
+          <span className="text-gray-600">{address.address}</span>
+        </div>
+        <div className="flex items-center gap-3 min-w-[56px]">
+          {/* SET DEFAULT BUTTON - فقط اگر پیش‌فرض نیست */}
+          {!address.isDefault && (
+            <div>
+              <Button
+                variant="gray"
+                onClick={() => onSetDefault(address.id)}
+                className="text-sm text-primary-600 bg-gray-200 px-3 py-1 rounded-md"
+              >
+                انتخاب به عنوان پیش‌فرض
+              </Button>
+            </div>
+          )}
+          <button
+            onClick={() => onDelete(address.id)}
+            className="p-1 rounded-md hover:bg-red-50"
+            aria-label="حذف"
+            title="حذف"
           >
-            تنظیم به عنوان پیش‌فرض
-          </Button>
-        )}
-        <Button variant="outline" size="sm" onClick={() => onEdit(address)} className="gap-2">
-          <Edit2 size={16} />
-          ویرایش
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => onDelete(address.id)}
-          className="border-red-500 text-red-600 hover:bg-red-50 dark:border-red-400 dark:text-red-400 dark:hover:bg-red-900/20"
-        >
-          <Trash size={16} />
-        </Button>
+            <Trash size={20} className="text-red-500" />
+          </button>
+
+          <button
+            onClick={() => onEdit(address.id)}
+            className="p-1 rounded-md hover:bg-gray-50"
+            aria-label="ویرایش"
+            title="ویرایش"
+          >
+            <Edit2 size={20} className="text-[#3D63F2]" />
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -58,7 +58,7 @@ export default function CurrencyPaymentForm({ removeDesc }) {
   const selectedCurrencyData = currencies.find((c) => c.value === form.watch("currency")) || currencies[0];
 
   return (
-    <div className="w-full  rounded-2xl shadow-lg px-4 pb-4" dir="rtl">
+    <div className="w-full  rounded-2xl  px-4 pb-4" dir="rtl">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Top Row: Services and Amount */}
@@ -131,7 +131,7 @@ export default function CurrencyPaymentForm({ removeDesc }) {
                       <FormItem>
                         <FormControl>
                           <Select onValueChange={(value) => field.onChange(value)} value={field.value}>
-                            <SelectTrigger className="h-12 border-none outline-none  dark:bg-transparent  border-2 border-gray-200 dark:border-gray-700 rounded-xl text-right">
+                            <SelectTrigger className="h-12  border-none outline-none  bg-transparent  border-2 border-gray-200 dark:border-gray-700 rounded-xl text-right">
                               <SelectValue>
                                 <div className="flex items-center gap-2 justify-end">
                                   <span>{selectedCurrencyData.flag}</span>
@@ -192,7 +192,7 @@ export default function CurrencyPaymentForm({ removeDesc }) {
           </div>
           <Button
             type="submit"
-            className="w-full  bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-600 text-gray-900 px-8 py-2 md:py-6 md:text-lg rounded-xl"
+            className="w-full  bg-yellow-400 hover:bg-yellow-700 dark:bg-yellow-700 dark:hover:bg-yellow-600 text-gray-900 px-8 py-2 md:py-6 md:text-lg rounded-xl"
           >
             پرداخت
           </Button>

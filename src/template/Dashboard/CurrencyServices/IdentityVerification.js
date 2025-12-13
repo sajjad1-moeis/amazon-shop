@@ -21,25 +21,41 @@ const verificationData = {
 
 export default function IdentityVerification() {
   return (
-    <div
-      className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 md:p-6 mb-6"
-      style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
-    >
-      <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-6">احراز هویت</h3>
+    <div className="bg-white border-2 border-gray-300 dark:bg-gray-800 rounded-2xl p-3 mt-8">
+      <div className="flex justify-between">
+        <h3 className="text-lg md:text-xl text-gray-900 dark:text-white mb-6">احراز هویت</h3>
 
-      {/* Complete Verification Button */}
-      <div className="mb-6">
-        <Button className="bg-[#1e3a5f] dark:bg-[#1a2f4a] hover:bg-[#2a4a6f] text-white w-full md:w-auto">
-          تکمیل احراز هویت
-        </Button>
+        {/* Complete Verification Button */}
+        <div className="mb-6">
+          <Button className="bg-[#1e3a5f] dark:bg-[#1a2f4a] hover:bg-[#2a4a6f] text-white w-full md:w-auto">
+            تکمیل احراز هویت
+          </Button>
+        </div>
       </div>
 
       {/* Verification Fields */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* National ID */}
-        <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-600 dark:text-gray-400">{verificationData.nationalId.label}</span>
+        <div
+          className={`flex items-center gap-3 p-4 rounded-lg ${
+            verificationData.nationalId.status === "done"
+              ? "border-2 border-green-500 bg-green-50 dark:bg-green-900/20"
+              : "border border-gray-200 dark:border-gray-700"
+          }`}
+        >
+          {verificationData.nationalId.status === "done" && (
+            <TickCircle size={24} className="text-green-500 shrink-0" variant="Bold" />
+          )}
+          <div className="flex items-center gap-3 flex-1">
+            <span
+              className={`text-sm ${
+                verificationData.nationalId.status === "done"
+                  ? "text-green-700 dark:text-green-300 font-medium"
+                  : "text-gray-600 dark:text-gray-400"
+              }`}
+            >
+              {verificationData.nationalId.label}
+            </span>
             {verificationData.nationalId.status === "not-done" && (
               <div className="flex items-center gap-2">
                 <span className="text-sm text-blue-600 dark:text-blue-400">
@@ -48,22 +64,45 @@ export default function IdentityVerification() {
                 <CloseCircle size={20} className="text-red-500" variant="Bold" />
               </div>
             )}
+            {verificationData.nationalId.status === "done" && verificationData.nationalId.value && (
+              <span className="text-sm font-medium text-green-700 dark:text-green-300">
+                {verificationData.nationalId.value}
+              </span>
+            )}
           </div>
         </div>
 
         {/* Mobile Number */}
-        <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-600 dark:text-gray-400">
+        <div
+          className={`flex items-center gap-3 p-4 rounded-lg ${
+            verificationData.mobileNumber.status === "done"
+              ? "border-2 border-green-500 bg-green-50 dark:bg-green-900/20"
+              : "border border-gray-200 dark:border-gray-700"
+          }`}
+        >
+          {verificationData.mobileNumber.status === "done" && (
+            <TickCircle size={24} className="text-green-500 shrink-0" variant="Bold" />
+          )}
+          <div className="flex items-center gap-3 flex-1">
+            <span
+              className={`text-sm ${
+                verificationData.mobileNumber.status === "done"
+                  ? "text-green-700 dark:text-green-300 font-medium"
+                  : "text-gray-600 dark:text-gray-400"
+              }`}
+            >
               {verificationData.mobileNumber.label}
             </span>
-            <span className="text-sm font-medium text-gray-900 dark:text-white">
+            <span
+              className={`text-sm font-medium ${
+                verificationData.mobileNumber.status === "done"
+                  ? "text-green-700 dark:text-green-300"
+                  : "text-gray-900 dark:text-white"
+              }`}
+            >
               {verificationData.mobileNumber.value}
             </span>
           </div>
-          {verificationData.mobileNumber.status === "done" && (
-            <TickCircle size={20} className="text-green-500" variant="Bold" />
-          )}
         </div>
       </div>
     </div>

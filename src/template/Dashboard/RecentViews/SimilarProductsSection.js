@@ -7,7 +7,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Star, ArrowLeft, ArrowRight, Eye } from "lucide-react";
+import { Star1, ArrowLeft2, ArrowRight2, Eye } from "iconsax-reactjs";
 import { cn } from "@/lib/utils";
 
 const similarProducts = [
@@ -77,7 +77,7 @@ export default function SimilarProductsSection() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className="flex items-center gap-1">
-                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        <Star1 size={16} className="text-yellow-400" variant="Bold" />
                         <span className="text-sm font-medium text-gray-900 dark:text-white">{product.rating}</span>
                       </div>
                       <span className="text-xs text-gray-500 dark:text-gray-400">({product.reviews})</span>
@@ -103,7 +103,7 @@ export default function SimilarProductsSection() {
                     size="sm"
                     className="w-full gap-2 border-blue-500 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20"
                   >
-                    <Eye className="h-4 w-4" />
+                    <Eye size={16} />
                     مشاهده جزئیات
                   </Button>
                 </div>
@@ -115,15 +115,15 @@ export default function SimilarProductsSection() {
         {/* Navigation Buttons */}
         <button
           type="button"
-          className="similar-products next-slide text-gray-600 p-2 absolute top-1/2 -translate-y-1/2 right-0 md:-right-5 z-50 bg-white dark:bg-gray-800 rounded-full shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          className="similar-products next-slide text-blue-600 dark:text-blue-400 p-3 absolute top-1/2 -translate-y-1/2 right-0 md:-right-6 z-50 bg-white dark:bg-gray-800 rounded-full shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
         >
-          <ArrowRight size={20} />
+          <ArrowRight2 size={20} variant="Bold" />
         </button>
         <button
           type="button"
-          className="similar-products prev-slide text-gray-600 p-2 absolute top-1/2 -translate-y-1/2 left-0 md:-left-5 z-50 bg-white dark:bg-gray-800 rounded-full shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          className="similar-products prev-slide text-blue-600 dark:text-blue-400 p-3 absolute top-1/2 -translate-y-1/2 left-0 md:-left-6 z-50 bg-white dark:bg-gray-800 rounded-full shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
         >
-          <ArrowLeft size={20} />
+          <ArrowLeft2 size={20} variant="Bold" />
         </button>
       </div>
     </div>

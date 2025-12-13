@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
-import { Search, Bell, User, Menu } from "lucide-react";
+import { Search, Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import Image from "next/image";
 import Link from "next/link";
-import { SearchNormal1 } from "iconsax-reactjs";
+import { Notification, SearchNormal1, User } from "iconsax-reactjs";
 
 export default function DashboardHeader({ onMenuClick }) {
   const { user } = useAuth();
@@ -57,14 +57,16 @@ export default function DashboardHeader({ onMenuClick }) {
         <div className="flex items-center gap-2 sm:gap-3 md:gap-4 flex-shrink-0">
           {/* User Name & Icons - Hidden on mobile */}
           <div className="hidden sm:flex items-center gap-1.5 md:gap-2 text-white">
+            <Link href={"/dashboard/notifications"}>
+              <Notification className="h-4 w-4 md:h-5 md:w-5" />
+            </Link>
             <User className="h-4 w-4 md:h-5 md:w-5" />
-            <Bell className="h-4 w-4 md:h-5 md:w-5" />
             <span className="text-xs md:text-sm lg:text-base font-medium hidden md:inline">{userName}</span>
           </div>
 
           {/* Mobile: Only Icons */}
           <div className="sm:hidden flex items-center gap-2 text-white">
-            <Bell className="h-5 w-5" />
+            <Notification className="h-5 w-5" />
             <User className="h-5 w-5" />
           </div>
         </div>

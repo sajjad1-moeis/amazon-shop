@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { DocumentDownload, Eye } from "iconsax-reactjs";
 
-export default function InvoicesTable({ invoices }) {
+export default function InvoicesTable({ invoices, onDownload, onView }) {
   const getStatusBadge = (status) => {
     switch (status) {
       case "paid":
@@ -24,11 +24,6 @@ export default function InvoicesTable({ invoices }) {
       default:
         return null;
     }
-  };
-
-  const handleDownload = (invoiceId) => {
-    // In real app, this would download the invoice PDF
-    console.log("Downloading invoice:", invoiceId);
   };
 
   return (
@@ -80,17 +75,27 @@ export default function InvoicesTable({ invoices }) {
                 </TableCell>
                 <TableCell className="text-sm text-gray-600 dark:text-gray-400 py-4 px-4">{invoice.date}</TableCell>
                 <TableCell className="text-sm font-medium text-gray-900 dark:text-white py-4 px-4">
-                  {invoice.amount}
+                  {invoice.amount} تومان
                 </TableCell>
                 <TableCell className="py-4 px-4">{getStatusBadge(invoice.status)}</TableCell>
                 <TableCell className="py-4 px-4">
                   <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" onClick={() => handleDownload(invoice.id)} className="gap-2">
-                      <DocumentDownload className="h-4 w-4" />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onDownload?.(invoice.id)}
+                      className="gap-2 border-blue-600 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                    >
+                      <DocumentDownload size={16} />
                       دانلود
                     </Button>
-                    <Button variant="outline" size="sm" className="gap-2">
-                      <Eye className="h-4 w-4" />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onView?.(invoice.id)}
+                      className="gap-2 border-gray-300 dark:border-gray-600"
+                    >
+                      <Eye size={16} />
                       مشاهده
                     </Button>
                   </div>

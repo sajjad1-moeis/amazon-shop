@@ -18,16 +18,12 @@ export default function AddressesPage() {
 
   return (
     <DashboardLayout>
-      <PageHeader
-        title="آدرس های من"
-        description="مدیریت آدرسهای ثبت شده برای ارسال سفارش ها"
-        actionButton={
-          <Button onClick={handleAddClick} className="bg-yellow-500 hover:bg-yellow-600 text-white">
-            <Add size={20} className="ml-2" />
-            افزودن آدرس
-          </Button>
-        }
-      />
+      <PageHeader title="آدرس های من" description="مدیریت آدرسهای ثبت شده برای ارسال سفارش ها">
+        <Button onClick={handleAddClick} className="bg-yellow-500 hover:bg-yellow-600 text-gray-800">
+          افزودن آدرس
+          <Add size={20} />
+        </Button>
+      </PageHeader>
       <AddressesList />
     </DashboardLayout>
   );

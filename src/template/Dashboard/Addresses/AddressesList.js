@@ -13,12 +13,21 @@ import { mockAddresses } from "@/data";
 
 export default function AddressesList({ isModalOpen, setIsModalOpen, editingAddress, setEditingAddress }) {
   const { addresses, addAddress, updateAddress, deleteAddress, setDefaultAddress } = useAddresses(mockAddresses);
+  
+  // اگر props پاس داده نشده باشد، state را خودمان مدیریت می‌کنیم
+  const [internalIsModalOpen, setInternalIsModalOpen] = useState(false);
+  const [internalEditingAddress, setInternalEditingAddress] = useState(null);
+  
+  const modalOpen = isModalOpen !== undefined ? isModalOpen : internalIsModalOpen;
+  const setModalOpen = setIsModalOpen || setInternalIsModalOpen;
+  const editing = editingAddress !== undefined ? editingAddress : internalEditingAddress;
+  const setEditing = setEditingAddress || setInternalEditingAddress;
 
   const handleEditClick = (addressId) => {
     const address = addresses.find((a) => a.id === addressId);
     if (address) {
-      setEditingAddress(address);
-      setIsModalOpen(true);
+      setEditing(address);
+      setModalOpen(true);
     }
   };
 
@@ -57,13 +66,13 @@ export default function AddressesList({ isModalOpen, setIsModalOpen, editingAddr
       toast.success("آدرس با موفقیت اضافه شد");
     }
 
-    setIsModalOpen(false);
-    setEditingAddress(null);
+    setModalOpen(false);
+    setEditing(null);
   };
 
   const handleCloseDialog = () => {
-    setIsModalOpen(false);
-    setEditingAddress(null);
+    setModalOpen(false);
+    setEditing(null);
   };
 
   return (
@@ -91,9 +100,9 @@ export default function AddressesList({ isModalOpen, setIsModalOpen, editingAddr
 
       {/* Address Modal */}
       <AddressModal
-        isOpen={isModalOpen}
+        isOpen={modalOpen}
         onClose={handleCloseDialog}
-        defaultValues={editingAddress ? parseAddressData(editingAddress) : null}
+        defaultValues={editing ? parseAddressData(editing) : null}
         onSubmit={handleSaveAddress}
       />
     </>

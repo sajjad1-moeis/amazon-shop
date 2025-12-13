@@ -71,39 +71,24 @@ export default function RecentViewsList() {
   };
 
   return (
-    <>
-      {/* Top Section: Header */}
-      <PageHeader title="بازدیدهای اخیر" description="محصولاتی که اخیراً مشاهده کرده‌اید" />
-
-      {/* Filters and Actions Section */}
-      {products.length > 0 && (
-        <div
-          className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 md:p-6 mb-6"
-          style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
-        >
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600 dark:text-gray-400">
-                تعداد بازدیدها: <span className="font-semibold text-gray-900 dark:text-white">{products.length}</span>
-              </span>
-            </div>
-            <Button
-              variant="outline"
-              onClick={handleClearAll}
-              className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-900/20"
-            >
-              <Trash className="h-4 w-4" />
-              حذف همه بازدیدها
-            </Button>
-          </div>
-          <RecentViewsFilter filters={filters} onFiltersChange={setFilters} />
+    <div dir="rtl">
+      {/* Top Section: Header with Count */}
+      <div className="flex items-center justify-between mb-6">
+        <PageHeader title="بازدیدهای اخیر" description="محصولاتی که اخیراً مشاهده کرده‌اید" />
+        <div className="text-sm text-gray-600 dark:text-gray-400">
+          تعداد بازدیدها: <span className="font-semibold text-gray-900 dark:text-white">{products.length}</span>
         </div>
-      )}
+      </div>
+
+      {/* Product List Header */}
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white">لیست محصولات</h2>
+      </div>
 
       {/* Products Grid */}
       {products.length === 0 ? (
         <div
-          className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-8 text-center"
+          className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-8 text-center mb-6"
           style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
         >
           <p className="text-gray-500 dark:text-gray-400">هیچ بازدید اخیری وجود ندارد</p>
@@ -118,6 +103,6 @@ export default function RecentViewsList() {
 
       {/* Similar Products Section */}
       <SimilarProductsSection />
-    </>
+    </div>
   );
 }

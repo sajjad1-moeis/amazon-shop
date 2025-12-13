@@ -3,22 +3,18 @@
 import React from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, DocumentText } from "iconsax-reactjs";
+import { ShoppingCart, DocumentText, Trash } from "iconsax-reactjs";
 import { cn } from "@/lib/utils";
 
 export default function RecentViewCard({ product, onDelete }) {
   return (
     <div
-      className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-lg transition-shadow overflow-hidden relative"
+      className={cn(
+        "bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-lg transition-shadow overflow-hidden relative",
+        !product.inStock && "border-2 border-red-500"
+      )}
       style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
     >
-      {/* Out of Stock Badge */}
-      {!product.inStock && (
-        <div className="absolute top-2 left-2 z-10 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
-          ناموجود
-        </div>
-      )}
-
       {/* Product Image */}
       <div className="relative w-full h-48 bg-gray-100 dark:bg-gray-700">
         <Image
@@ -28,6 +24,22 @@ export default function RecentViewCard({ product, onDelete }) {
           className="object-cover"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
         />
+
+        {/* Delete Button - Top Left */}
+        <button
+          onClick={onDelete}
+          className="absolute top-2 left-2 z-10 bg-white/90 hover:bg-white rounded-full p-2 shadow-md transition-colors"
+          title="حذف"
+        >
+          <Trash size={18} className="text-red-500" variant="Bold" />
+        </button>
+
+        {/* Out of Stock Badge - Over Image */}
+        {!product.inStock && (
+          <div className="absolute top-2 right-2 z-10 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+            ناموجود
+          </div>
+        )}
       </div>
 
       <div className="p-4">
@@ -37,9 +49,12 @@ export default function RecentViewCard({ product, onDelete }) {
         </h4>
 
         {/* Price */}
-        <p className="text-lg font-bold text-gray-900 dark:text-white mb-3">
-          {product.price} تومان
-        </p>
+        <div className="mb-3">
+          <p className="text-lg font-bold text-gray-900 dark:text-white">
+            {product.price}
+          </p>
+          <p className="text-xs text-gray-600 dark:text-gray-400">قیمت فعلی (تومان)</p>
+        </div>
 
         {/* Last Viewed */}
         <div className="mb-2">
@@ -72,10 +87,10 @@ export default function RecentViewCard({ product, onDelete }) {
           <Button
             variant="outline"
             size="sm"
-            className="p-2"
+            className="p-2 border-gray-300 dark:border-gray-600"
             title="مقایسه"
           >
-            <DocumentText className="h-4 w-4" />
+            <DocumentText size={18} className="text-gray-600 dark:text-gray-400" />
           </Button>
         </div>
       </div>
