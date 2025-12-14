@@ -1202,3 +1202,73 @@ export const invoiceDetailData = {
     },
   ],
 };
+
+export const initialNotifications = [
+  {
+    id: 1,
+    type: "order",
+    title: "سفارش شما ارسال شد",
+    description: "سفارش #۴۵۲۱۹-۸ امروز تحویل پست داده شد",
+    time: "۱۰ دقیقه پیش",
+    date: "۱۴۰۳/۱۰/۲۴",
+    isPinned: true,
+    isRead: false,
+    actionUrl: "/dashboard/orders/45219",
+    actionText: "مشاهده سفارش",
+  },
+  {
+    id: 2,
+    type: "ticket",
+    title: "پاسخ جدید در تیکت",
+    description: "کارشناس پشتیبانی به پیام شما پاسخ داده است",
+    time: "۱۰ دقیقه پیش",
+    date: "۱۴۰۳/۱۰/۲۴",
+    isPinned: false,
+    isRead: false,
+    actionUrl: "/dashboard/support/45231",
+    actionText: "مشاهده تیکت",
+  },
+  {
+    id: 3,
+    type: "ticket",
+    title: "پاسخ جدید در تیکت",
+    description: "کارشناس پشتیبانی به پیام شما پاسخ داده است",
+    time: "۱۰ دقیقه پیش",
+    date: "۱۴۰۳/۱۰/۲۴",
+    isPinned: false,
+    isRead: false,
+    actionUrl: "/dashboard/support/45232",
+    actionText: "مشاهده تیکت",
+  },
+  {
+    id: 4,
+    type: "order",
+    title: "سفارش شما ارسال شد",
+    description: "سفارش #۴۵۲۱۹-۸ امروز تحویل پست داده شد",
+    time: "۱۰ دقیقه پیش",
+    date: "۱۴۰۳/۱۰/۲۴",
+    isPinned: false,
+    isRead: false,
+    actionUrl: "/dashboard/orders/45220",
+    actionText: "مشاهده سفارش",
+  },
+];
+
+export const invitedFriends = [
+  {
+    id: 1,
+    name: "علی رضایی",
+    membershipDate: "۱۴۰۳/۱۰/۱۵",
+    registrationStatus: "تکمیل نشده",
+    firstPurchaseStatus: "انجام شده",
+    reward: "۲۵۰ امتیاز",
+  },
+  {
+    id: 2,
+    name: "لیلا محمدی",
+    membershipDate: "۱۴۰۳/۱۰/۲۰",
+    registrationStatus: "تکمیل شده",
+    firstPurchaseStatus: "انجام شده",
+    reward: "۵۰۰ امتیاز",
+  },
+];

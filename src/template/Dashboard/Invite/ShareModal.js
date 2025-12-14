@@ -1,12 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Copy, ArrowDown2 } from "iconsax-reactjs";
 import { toast } from "sonner";
@@ -37,12 +32,12 @@ export default function ShareModal({ isOpen, onClose, referralCode, referralLink
     // Create a canvas from QR code image
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-    
+
     img.onload = () => {
       canvas.width = img.width;
       canvas.height = img.height;
       ctx.drawImage(img, 0, 0);
-      
+
       canvas.toBlob((blob) => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -55,7 +50,7 @@ export default function ShareModal({ isOpen, onClose, referralCode, referralLink
         toast.success("کد QR دانلود شد");
       });
     };
-    
+
     // Trigger load if already loaded
     if (img.complete) {
       img.onload();
@@ -99,37 +94,21 @@ export default function ShareModal({ isOpen, onClose, referralCode, referralLink
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md p-0 overflow-hidden bg-gray-800 border-0">
-        <div className="bg-white rounded-2xl m-4 p-6">
+      <DialogContent className="max-w-md p-0 overflow-hidden  border-0">
+        <div className="bg-white rounded-2xl m-4">
           <DialogHeader className="text-center mb-6">
-            <DialogTitle className="text-xl font-bold text-gray-900">
-              اشتراک گذاری کد دعوت
-            </DialogTitle>
+            <DialogTitle className="text-xl font-normal text-primary-700 text-center">اشتراک گذاری کد دعوت</DialogTitle>
           </DialogHeader>
 
           {/* QR Code */}
           <div className="flex justify-center mb-6">
             <div className="bg-white p-4 rounded-lg">
-              <img
-                ref={qrCodeRef}
-                src={qrCodeUrl}
-                alt="QR Code"
-                className="w-64 h-64"
-                crossOrigin="anonymous"
-              />
+              <img ref={qrCodeRef} src={qrCodeUrl} alt="QR Code" className="w-64 h-64" crossOrigin="anonymous" />
             </div>
           </div>
 
           {/* Action Buttons */}
           <div className="flex gap-3 mb-6">
-            <Button
-              onClick={handleCopyLink}
-              variant="outline"
-              className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300 gap-2 rounded-lg"
-            >
-              <Copy size={18} />
-              کپی لینک
-            </Button>
             <Button
               onClick={handleDownloadQR}
               variant="outline"
@@ -137,6 +116,14 @@ export default function ShareModal({ isOpen, onClose, referralCode, referralLink
             >
               <ArrowDown2 size={18} />
               دانلود کد QR
+            </Button>
+            <Button
+              onClick={handleCopyLink}
+              variant="outline"
+              className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300 gap-2 rounded-lg"
+            >
+              <Copy size={18} />
+              کپی لینک
             </Button>
           </div>
 
@@ -196,4 +183,3 @@ export default function ShareModal({ isOpen, onClose, referralCode, referralLink
     </Dialog>
   );
 }
-

@@ -1,12 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -16,7 +11,7 @@ export default function RewardConditionsModal({ isOpen, onClose }) {
       <DialogContent className="max-w-2xl p-0 overflow-hidden bg-transparent border-0">
         <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8">
           <DialogHeader className="mb-6">
-            <DialogTitle className="text-2xl font-bold text-blue-600 dark:text-blue-400 text-right">
+            <DialogTitle className="text-2xl font-bold text-primary-700 dark:text-blue-400 text-center">
               چطور از دعوت دوستان امتیاز بگیرم؟
             </DialogTitle>
           </DialogHeader>
@@ -48,12 +43,13 @@ export default function RewardConditionsModal({ isOpen, onClose }) {
             </div>
 
             {/* Conclusion */}
-            <p className="text-gray-700 dark:text-gray-300 text-right leading-relaxed">
-              هرچه دوستان بیشتری دعوت کنید، امتیاز بیشتری جمع می‌کنید و می‌توانید از این امتیازها برای تخفیف، خرید یا مزایای ویژه استفاده کنید.
+            <p className="text-primary-400 dark:text-gray-300 text-right leading-relaxed">
+              هرچه دوستان بیشتری دعوت کنید، امتیاز بیشتری جمع می‌کنید و می‌توانید از این امتیازها برای تخفیف، خرید یا
+              مزایای ویژه استفاده کنید.
             </p>
 
             {/* Guide Link */}
-            <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div>
               <Button
                 variant="link"
                 className="text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300 p-0 h-auto font-medium"
@@ -71,8 +67,3 @@ export default function RewardConditionsModal({ isOpen, onClose }) {
     </Dialog>
   );
 }
-
-
-
-
-
