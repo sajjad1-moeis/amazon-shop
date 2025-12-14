@@ -87,11 +87,10 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
       <div className="mb-6">
         <Swiper
           slidesPerView={1.2}
-          spaceBetween={16}
+          spaceBetween={12}
           breakpoints={{
             640: {
               slidesPerView: 1.5,
-              spaceBetween: 20,
             },
           }}
           className="products-swiper"

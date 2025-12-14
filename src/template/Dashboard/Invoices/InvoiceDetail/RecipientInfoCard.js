@@ -1,41 +1,37 @@
 "use client";
 
 import React from "react";
-import { Location, Call } from "iconsax-reactjs";
 
 export default function RecipientInfoCard({ recipient }) {
   return (
-    <div
-      className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6"
-      style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
-    >
-      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">اطلاعات گیرنده</h3>
+    <div className="bg-white rounded-2xl border border-gray-200 p-4">
+      <h3 className="text-lg font-bold text-gray-900 mb-4">اطلاعات گیرنده</h3>
 
-      <div className="space-y-3">
-        <div>
-          <span className="text-sm text-gray-600 dark:text-gray-400">نام: </span>
-          <span className="text-sm font-medium text-gray-900 dark:text-white">{recipient.name}</span>
+      <div className="divide-y divide-gray-200">
+        {/* Name */}
+        <div className="flex justify-between items-center py-4">
+          <span className="text-sm text-gray-500">نام گیرنده:</span>
+          <span className="text-sm font-medium text-gray-900">{recipient.name}</span>
         </div>
-        <div className="flex items-center gap-2">
-          <Call size={16} className="text-gray-400" />
-          <span className="text-sm text-gray-600 dark:text-gray-400">{recipient.phone}</span>
+
+        {/* Phone */}
+        <div className="flex justify-between items-center py-4">
+          <span className="text-sm text-gray-500">شماره تماس:</span>
+          <span className="text-sm font-medium text-gray-900">{recipient.phone}</span>
         </div>
-        <div className="flex items-start gap-2 pt-2">
-          <Location size={16} className="text-gray-400 mt-1 flex-shrink-0" />
-          <div>
-            <span className="text-sm text-gray-600 dark:text-gray-400">آدرس: </span>
-            <span className="text-sm font-medium text-gray-900 dark:text-white">{recipient.address}</span>
-          </div>
+
+        {/* Address */}
+        <div className="flex justify-between items-start py-4">
+          <span className="text-sm text-gray-500">آدرس:</span>
+          <span className="text-sm font-medium text-gray-900 text-left max-w-[70%]">{recipient.address}</span>
         </div>
-        <div>
-          <span className="text-sm text-gray-600 dark:text-gray-400">نوع ارسال: </span>
-          <span className="text-sm font-medium text-gray-900 dark:text-white">{recipient.deliveryType}</span>
+
+        {/* Delivery Type */}
+        <div className="flex justify-between items-center py-4">
+          <span className="text-sm text-gray-500">نوع تحویل:</span>
+          <span className="text-sm font-medium text-gray-900">{recipient.deliveryType}</span>
         </div>
       </div>
     </div>
   );
 }
-
-
-
-

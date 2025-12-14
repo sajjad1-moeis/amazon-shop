@@ -74,20 +74,11 @@ export default function OrderDetail({ params }) {
         <TrackingCodesCard trackingCodes={order.trackingCodes} />
       </div>
 
-      {/* Support (زیر کدهای رهگیری) */}
-      <div className="mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 my-8">
+        <div class="lg:col-span-3">
+          <DeliveryAddressCard address={order.deliveryAddress} showEditButton={true} onEdit={handleEditAddress} />
+        </div>
         <SupportCard hasTicket={order.hasTicket} onCreateTicket={handleCreateTicket} />
-      </div>
-
-      {/* Payment Status and Address - کنار هم */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <PaymentStatusCard paymentStatus={order.paymentStatus} />
-        <DeliveryAddressCard address={order.deliveryAddress} showEditButton={true} onEdit={handleEditAddress} />
-      </div>
-
-      {/* Address (دومین بار - پایین) */}
-      <div className="mb-6">
-        <DeliveryAddressCard address={order.deliveryAddress} showEditButton={true} onEdit={handleEditAddress} />
       </div>
     </DashboardLayout>
   );
