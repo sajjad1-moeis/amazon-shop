@@ -8,7 +8,7 @@ export default function Timeline({ currentStep = 1, steps }) {
   };
 
   // درصد پیشرفت خط
-  const progressWidth = currentStep === 1 ? "0%" : `${((currentStep - 1) / (steps.length - 1)) * 100}%`;
+  const progressWidth = currentStep === 1 ? "10%" : `${((currentStep - 1) / (steps.length - 1)) * 100}%`;
   const isComplete = currentStep === steps?.length;
 
   return (
@@ -31,7 +31,7 @@ export default function Timeline({ currentStep = 1, steps }) {
       {/* دایره ها */}
       <div className="relative w-full">
         {steps.map(({ Icon, label, id }, index) => {
-          const isActive = currentStep > index + 1;
+          const isActive = currentStep >= index + 1;
 
           return (
             <div
@@ -48,23 +48,15 @@ export default function Timeline({ currentStep = 1, steps }) {
                   isActive ? " text-primary-600 dark:text-primary-400" : " text-gray-400"
                 }`}
               >
-                {isActive ? (
-                  <TickCircle variant="Bold" />
-                ) : (
-                  <Icon
-                    variant="Bold"
-                    className={`${
-                      currentStep == index + 1 ? "text-primary-600 dark:text-primary-300" : "text-gray-400"
-                    } w-6 h-6 `}
-                  />
-                )}
+                <Icon
+                  variant="Bold"
+                  className={`${isActive ? "text-primary-600 dark:text-primary-300" : "text-gray-400"} w-6 h-6 `}
+                />
               </div>
 
               <span
                 className={`mt-3 text-sm  ${
-                  isActive
-                    ? "text-primary-600 font-semibold dark:text-primary-400"
-                    : "text-gray-400 dark:text-[#4B5563]"
+                  isActive ? "text-primary-600  dark:text-primary-400" : "text-gray-400 dark:text-[#4B5563]"
                 }`}
               >
                 {label}

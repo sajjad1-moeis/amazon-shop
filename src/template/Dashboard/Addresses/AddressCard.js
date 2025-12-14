@@ -10,7 +10,14 @@ import { Button } from "@/components/ui/button";
  * - actions (edit/delete) در سمت چپ
  * - اگر isDefault باشد: badge بالا سمت چپ و حذف دکمه "انتخاب به عنوان پیش‌فرض"
  */
-export default function AddressCard({ address, onEdit, onDelete, onSetDefault, showBottomBorder = true }) {
+export default function AddressCard({
+  address,
+  onEdit,
+  onDelete,
+  onSetDefault,
+  showBottomBorder = true,
+  removeHandler,
+}) {
   return (
     <div
       dir="rtl"
@@ -45,14 +52,15 @@ export default function AddressCard({ address, onEdit, onDelete, onSetDefault, s
           <span className="text-sm text-gray-700">{address.postalCode}</span>
         </div>
         <div>
-          {address.isDefault && (
-            <button
-              className="text-xs font-medium px-3 py-1 rounded-md border border-primary-400 text-[#1E429F] bg-primary-100"
-              disabled
-            >
-              آدرس پیش فرض
-            </button>
-          )}
+          {removeHandler ||
+            (address.isDefault && (
+              <button
+                className="text-xs font-medium px-3 py-1 rounded-md border border-primary-400 text-[#1E429F] bg-primary-100"
+                disabled
+              >
+                آدرس پیش فرض
+              </button>
+            ))}
         </div>
       </div>
 
@@ -62,37 +70,40 @@ export default function AddressCard({ address, onEdit, onDelete, onSetDefault, s
           <Location size={16} className="text-gray-400" />
           <span className="text-gray-600">{address.address}</span>
         </div>
-        <div className="flex items-center gap-3 min-w-[56px]">
-          {/* SET DEFAULT BUTTON - فقط اگر پیش‌فرض نیست */}
-          {!address.isDefault && (
-            <div>
-              <Button
-                variant="gray"
-                onClick={() => onSetDefault(address.id)}
-                className="text-sm text-primary-600 bg-gray-200 px-3 py-1 rounded-md"
-              >
-                انتخاب به عنوان پیش‌فرض
-              </Button>
-            </div>
-          )}
-          <button
-            onClick={() => onDelete(address.id)}
-            className="p-1 rounded-md hover:bg-red-50"
-            aria-label="حذف"
-            title="حذف"
-          >
-            <Trash size={20} className="text-red-500" />
-          </button>
+        {removeHandler || (
+          <div className="flex items-center gap-3 min-w-[56px]">
+            {/* SET DEFAULT BUTTON - فقط اگر پیش‌فرض نیست */}
+            {removeHandler ||
+              (!address.isDefault && (
+                <div>
+                  <Button
+                    variant="gray"
+                    onClick={() => onSetDefault(address.id)}
+                    className="text-sm text-primary-600 bg-gray-200 px-3 py-1 rounded-md"
+                  >
+                    انتخاب به عنوان پیش‌فرض
+                  </Button>
+                </div>
+              ))}
+            <button
+              onClick={() => onDelete(address.id)}
+              className="p-1 rounded-md hover:bg-red-50"
+              aria-label="حذف"
+              title="حذف"
+            >
+              <Trash size={20} className="text-red-500" />
+            </button>
 
-          <button
-            onClick={() => onEdit(address.id)}
-            className="p-1 rounded-md hover:bg-gray-50"
-            aria-label="ویرایش"
-            title="ویرایش"
-          >
-            <Edit2 size={20} className="text-[#3D63F2]" />
-          </button>
-        </div>
+            <button
+              onClick={() => onEdit(address.id)}
+              className="p-1 rounded-md hover:bg-gray-50"
+              aria-label="ویرایش"
+              title="ویرایش"
+            >
+              <Edit2 size={20} className="text-[#3D63F2]" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

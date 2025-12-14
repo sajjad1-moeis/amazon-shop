@@ -7,7 +7,7 @@ import { Wallet } from "iconsax-reactjs";
 export default function SecondPaymentCard({ remainingAmount, onPay }) {
   return (
     <div
-      className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-md p-6"
+      className="bg-gradient-to-bl from-[#606EC0] to-[#8995D6] rounded-2xl shadow-md p-6"
       style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
     >
       <h3 className="text-xl font-bold text-white mb-2">پرداخت مرحله دوم</h3>
@@ -23,10 +23,8 @@ export default function SecondPaymentCard({ remainingAmount, onPay }) {
         پرداخت {remainingAmount.toLocaleString("fa-IR")} تومان
       </Button>
       <p className="text-white/80 text-xs mt-4 leading-relaxed">
-        لطفاً پس از مشاهده عکس/ویدیو، پرداخت مرحله دوم را انجام دهید. پس از پرداخت مرحله دوم، سفارش شما ارسال
-        میشود.
+        لطفاً پس از مشاهده عکس/ویدیو، پرداخت مرحله دوم را انجام دهید. پس از پرداخت مرحله دوم، سفارش شما ارسال میشود.
       </p>
     </div>
   );
 }
-

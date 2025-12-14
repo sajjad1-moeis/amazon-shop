@@ -61,12 +61,7 @@ export default function ProductMediaSlider({ media }) {
             >
               {item.type === "video" ? (
                 <>
-                  <Image
-                    src={item.thumbnail || item.url}
-                    alt="Video thumbnail"
-                    fill
-                    className="object-cover"
-                  />
+                  <Image src={item.thumbnail || item.url} alt="Video thumbnail" fill className="object-cover" />
                   <div className="absolute inset-0 flex items-center justify-center bg-black/20">
                     <Play size={24} className="text-white" variant="Bold" />
                   </div>
@@ -81,4 +76,3 @@ export default function ProductMediaSlider({ media }) {
     </div>
   );
 }
-

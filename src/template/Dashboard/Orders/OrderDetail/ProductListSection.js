@@ -8,12 +8,9 @@ import { Paintbucket } from "iconsax-reactjs";
 
 export default function ProductListSection({ products, title = "لیست محصولات" }) {
   return (
-    <div
-      className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 mb-6"
-      style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
-    >
-      <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6">
-        {title} {products.length}
+    <div className="mt-8">
+      <h2 className="text-xl text-gray-700 dark:text-white mb-4 flex gap-3">
+        {title} <div class="px-1 rounded bg-primary-100 text-primary-500">{products.length}</div>
       </h2>
 
       <Swiper
@@ -22,24 +19,21 @@ export default function ProductListSection({ products, title = "لیست محص�
         breakpoints={{
           640: {
             slidesPerView: 2,
-            spaceBetween: 20,
           },
           768: {
             slidesPerView: 3,
-            spaceBetween: 20,
           },
           1024: {
             slidesPerView: 4,
-            spaceBetween: 24,
           },
         }}
         className="products-list-swiper"
       >
         {products.map((product) => (
           <SwiperSlide key={product.id}>
-            <div className="bg-gray-50 dark:bg-gray-700/30 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+            <div className="bg-gray-50 dark:bg-gray-700/30 rounded-xl border border-gray-200 dark:border-gray-700">
               {/* Product Image */}
-              <div className="w-full h-48 bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden mb-4">
+              <div className="w-full h-48 bg-gray-100 dark:bg-gray-700 rounded-xl overflow-hidden mb-4">
                 {product.image ? (
                   <Image
                     src={product.image}
@@ -55,38 +49,44 @@ export default function ProductListSection({ products, title = "لیست محص�
                 )}
               </div>
 
-              {/* Product Name */}
-              <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-3 line-clamp-2 min-h-[40px]">
-                {product.name}
-              </h4>
+              <div class="p-3">
+                {/* Product Name */}
+                <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-3 line-clamp-2 min-h-[40px]">
+                  {product.name}
+                </h4>
 
-              {/* Product Details */}
-              <div className="space-y-2 text-xs text-gray-600 dark:text-gray-400">
-                {product.color && (
-                  <div className="flex items-center gap-2">
-                    <span>رنگ:</span>
-                    <div
-                      className="w-4 h-4 rounded-full border border-gray-300"
-                      style={{ backgroundColor: product.colorCode || "#FFD700" }}
-                    />
-                    <span className="font-medium text-gray-900 dark:text-white">{product.color}</span>
+                {/* Product Details */}
+                <div className="space-y-2 text-xs text-gray-600 dark:text-gray-400">
+                  {product.color && (
+                    <div className="flex-between gap-2">
+                      <span>رنگ:</span>
+                      <div class="flex-center gap-2">
+                        <div
+                          className="w-4 h-4 rounded-full border border-gray-300"
+                          style={{ backgroundColor: product.colorCode || "#FFD700" }}
+                        />
+                        <span className="font-medium text-gray-900 dark:text-white">{product.color}</span>
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex-between">
+                    <span>تعداد: </span>
+                    <span className="font-medium text-gray-900 dark:text-white">{product.quantity} عدد</span>
                   </div>
-                )}
-                <div>
-                  <span>تعداد: </span>
-                  <span className="font-medium text-gray-900 dark:text-white">{product.quantity} عدد</span>
-                </div>
-                <div>
-                  <span>قیمت واحد (ت): </span>
-                  <span className="font-medium text-gray-900 dark:text-white">
-                    {product.unitPrice.toLocaleString("fa-IR")}
-                  </span>
-                </div>
-                <div>
-                  <span>قیمت کل (ت): </span>
-                  <span className="font-medium text-gray-900 dark:text-white">
-                    {product.totalPrice.toLocaleString("fa-IR")}
-                  </span>
+                  <div class="flex gap-3">
+                    <div className="bg-gray-100 p-2 rounded-lg text-center flex-1">
+                      <p className="font-medium text-gray-900 dark:text-white mb-3">
+                        {product.unitPrice.toLocaleString("fa-IR")}
+                      </p>
+                      <p>قیمت واحد (ت): </p>
+                    </div>
+                    <div className="bg-gray-100 p-2 rounded-lg text-center flex-1">
+                      <p className="font-medium text-gray-900 dark:text-white mb-3">
+                        {product.totalPrice.toLocaleString("fa-IR")}
+                      </p>
+                      <p>قیمت کل (ت): </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -96,4 +96,3 @@ export default function ProductListSection({ products, title = "لیست محص�
     </div>
   );
 }
-

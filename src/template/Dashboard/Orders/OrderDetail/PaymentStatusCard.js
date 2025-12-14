@@ -7,46 +7,49 @@ export default function PaymentStatusCard({ paymentStatus }) {
   const { paidPercentage, paidAmount, remainingPercentage, remainingAmount } = paymentStatus;
 
   return (
-    <div
-      className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6"
-      style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
-    >
-      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">وضعیت پرداخت</h3>
-
-      {/* Progress Bar */}
-      <div className="relative w-full h-8 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-4">
-        {/* Paid Portion */}
-        <div
-          className="absolute right-0 top-0 h-full bg-gray-400 dark:bg-gray-600 transition-all duration-300"
-          style={{ width: `${paidPercentage}%` }}
-        >
-          <div className="h-full flex items-center justify-center text-white text-xs font-medium">
-            {paidPercentage}%
-          </div>
-        </div>
-        {/* Remaining Portion */}
-        <div
-          className="absolute left-0 top-0 h-full bg-purple-500 dark:bg-purple-600 transition-all duration-300"
-          style={{ width: `${remainingPercentage}%` }}
-        >
-          <div className="h-full flex items-center justify-center text-white text-xs font-medium">
-            {remainingPercentage}%
-          </div>
-        </div>
+    <div className="bg-white rounded-2xl border border-gray-200 p-3 w-full max-w-md">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="text-base font-bold text-gray-900">وضعیت پرداخت</h3>
+        <span className="text-sm text-primary-500 cursor-pointer">مشاهده جزییات</span>
       </div>
 
-      {/* Amount Details */}
+      {/* Progress */}
+      <div className="relative w-full h-2 rounded-full bg-gray-200 mb-6">
+        {/* Blue (Remaining) → RIGHT */}
+        <div
+          className="absolute right-0 top-0 h-full bg-primary-500 rounded-full"
+          style={{ width: `${remainingPercentage}%` }}
+        />
+
+        {/* Gray (Paid) → LEFT */}
+        <div
+          className="absolute left-0 top-0 h-full bg-gray-300 rounded-full"
+          style={{ width: `${paidPercentage}%` }}
+        />
+
+        {/* Right Dot (35%) */}
+        <span className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-primary-500 rounded-full" />
+
+        {/* Left Dot */}
+        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-gray-300 rounded-full" />
+      </div>
+
+      {/* Percent & Amount */}
       <div className="flex justify-between text-sm">
-        <div>
-          <span className="text-gray-600 dark:text-gray-400">پرداخت شده: </span>
-          <span className="font-medium text-gray-900 dark:text-white">{paidAmount} ت</span>
+        {/* Paid → LEFT */}
+
+        {/* Remaining → RIGHT */}
+        <div className="text-right">
+          <div className="text-primary-500 font-medium">{remainingPercentage}%</div>
+          <div className="text-primary-500 mt-1">{remainingAmount} ت</div>
         </div>
-        <div>
-          <span className="text-gray-600 dark:text-gray-400">باقی‌مانده: </span>
-          <span className="font-medium text-gray-900 dark:text-white">{remainingAmount} ت</span>
+
+        <div className="text-left">
+          <div className="text-gray-400">{paidPercentage}%</div>
+          <div className="text-gray-500 mt-1">{paidAmount} ت</div>
         </div>
       </div>
     </div>
   );
 }
-

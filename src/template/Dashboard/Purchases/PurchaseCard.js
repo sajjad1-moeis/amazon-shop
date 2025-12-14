@@ -16,21 +16,21 @@ export default function PurchaseCard({ product }) {
         <p className="text-sm text-gray-800 leading-6 mb-3 ">{product.title}</p>
 
         {/* 3 Boxes Row */}
-        <div className="flex gap-2 mb-4">
+        <div className="flex flex-wrap gap-2 mb-4">
           {/* Purchase Date */}
           {/* ID */}
-          <div className="bg-gray-50 rounded-xl p-2 text-center">
+          <div className="bg-gray-50 rounded-xl p-2 text-center flex-1">
             <div className="text-sm text-gray-900">{product.id}</div>
             <div className="text-xs text-gray-500 mt-3 mb-1">شماره</div>
           </div>
 
           {/* Amount */}
-          <div className="bg-gray-50 rounded-xl p-2 text-center">
+          <div className="bg-gray-50 rounded-xl p-2 text-center flex-1">
             <div className="text-sm text-gray-900">{product.amount}</div>
             <div className="text-xs text-gray-500 mt-3 mb-1">مبلغ (تومان)</div>
           </div>
 
-          <div className="bg-gray-50 rounded-xl p-2 text-center">
+          <div className="bg-gray-50 rounded-xl p-2 text-center flex-1">
             <div className="text-sm text-gray-900">{product.purchaseDate}</div>
             <div className="text-xs text-gray-500 mt-3 mb-1">تاریخ خرید</div>
           </div>
