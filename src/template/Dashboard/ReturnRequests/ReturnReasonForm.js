@@ -1,13 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -27,61 +21,54 @@ const returnReasonOptions = [
 
 export default function ReturnReasonForm({ formData, onFormChange }) {
   return (
-    <div
-      className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 md:p-6"
-      style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
-    >
-      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">علت مرجوعی</h3>
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-box p-4">
+      <h3 className="text-lg font-bold text-gray-700 dark:text-white mb-6">علت مرجوعی</h3>
 
       <div className="space-y-6">
         {/* Packaging Status */}
-        <div className="space-y-2">
-          <Label className="text-sm font-semibold">وضعیت بسته بندی</Label>
-          <Select
-            value={formData.packagingStatus}
-            onValueChange={(value) => onFormChange("packagingStatus", value)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="وضعیت بسته بندی را انتخاب کنید" />
-            </SelectTrigger>
-            <SelectContent>
-              {packagingStatusOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label className="text-sm ">وضعیت بسته بندی</Label>
+            <Select value={formData.packagingStatus} onValueChange={(value) => onFormChange("packagingStatus", value)}>
+              <SelectTrigger className="bg-gray-50 border border-gray-200">
+                <SelectValue placeholder="وضعیت بسته بندی را انتخاب کنید" />
+              </SelectTrigger>
+              <SelectContent>
+                {packagingStatusOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-        {/* Return Reason */}
-        <div className="space-y-2">
-          <Label className="text-sm font-semibold">علت مرجوعی</Label>
-          <Select
-            value={formData.returnReason}
-            onValueChange={(value) => onFormChange("returnReason", value)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="دلیل مرجوعی این محصول" />
-            </SelectTrigger>
-            <SelectContent>
-              {returnReasonOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          {/* Return Reason */}
+          <div className="space-y-2">
+            <Label className="text-sm ">علت مرجوعی</Label>
+            <Select value={formData.returnReason} onValueChange={(value) => onFormChange("returnReason", value)}>
+              <SelectTrigger className="bg-gray-50 border border-gray-200">
+                <SelectValue placeholder="دلیل مرجوعی این محصول" />
+              </SelectTrigger>
+              <SelectContent>
+                {returnReasonOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         {/* Description */}
         <div className="space-y-2">
-          <Label className="text-sm font-semibold">توضیحات بیشتر</Label>
+          <Label className="text-sm ">توضیحات بیشتر</Label>
           <Textarea
             value={formData.description}
+            className="bg-gray-50 border border-gray-200 min-h-[100px]"
             onChange={(e) => onFormChange("description", e.target.value)}
             placeholder="توضیحات اختیاری درباره مشکل..."
-            className="min-h-[100px]"
             dir="rtl"
           />
         </div>
@@ -89,4 +76,3 @@ export default function ReturnReasonForm({ formData, onFormChange }) {
     </div>
   );
 }
-

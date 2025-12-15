@@ -10,29 +10,13 @@ export default function ReturnsTable({ returns, onCancel }) {
   const getStatusBadge = (status) => {
     switch (status) {
       case "reviewing":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
-            در حال بررسی
-          </span>
-        );
+        return "در حال بررسی";
       case "approved":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-            تأیید شده
-          </span>
-        );
+        return "تأیید شده";
       case "rejected":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
-            رد شده
-          </span>
-        );
+        return "رد شده";
       case "completed":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-            تکمیل شده
-          </span>
-        );
+        return "تکمیل شده";
       default:
         return null;
     }
@@ -43,25 +27,17 @@ export default function ReturnsTable({ returns, onCancel }) {
       <Table>
         <TableHeader className="bg-gray-50 dark:bg-gray-700/50">
           <TableRow className="border-b border-gray-200 dark:border-gray-700">
-            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300 first:rounded-tr-lg">
+            <TableHead className="text-right py-3 px-4 text-sm text-gray-500 dark:text-gray-300 first:rounded-tr-lg">
               شماره درخواست
             </TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
-              محصول
-            </TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
-              علت مرجوعی
-            </TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
-              تاریخ ثبت
-            </TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
-              وضعیت
-            </TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
+            <TableHead className="text-right py-3 px-4 text-sm text-gray-500 dark:text-gray-300">محصول</TableHead>
+            <TableHead className="text-right py-3 px-4 text-sm text-gray-500 dark:text-gray-300">علت مرجوعی</TableHead>
+            <TableHead className="text-right py-3 px-4 text-sm text-gray-500 dark:text-gray-300">تاریخ ثبت</TableHead>
+            <TableHead className="text-right py-3 px-4 text-sm text-gray-500 dark:text-gray-300">وضعیت</TableHead>
+            <TableHead className="text-right py-3 px-4 text-sm text-gray-500 dark:text-gray-300">
               مبلغ بازگشتی (ت)
             </TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300 last:rounded-tl-lg">
+            <TableHead className="text-right py-3 px-4 text-sm text-gray-500 dark:text-gray-300 last:rounded-tl-lg">
               عملیات
             </TableHead>
           </TableRow>
@@ -82,9 +58,7 @@ export default function ReturnsTable({ returns, onCancel }) {
                   index === returns.length - 1 && "last:border-b-0"
                 )}
               >
-                <TableCell className="text-sm text-gray-900 dark:text-white py-4 px-4">
-                  {returnItem.id}
-                </TableCell>
+                <TableCell className="text-sm text-gray-900 dark:text-white py-4 px-4">{returnItem.id}</TableCell>
                 <TableCell className="py-4 px-4">
                   <div className="flex items-center gap-3">
                     <div className="relative w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden flex-shrink-0">
@@ -103,7 +77,11 @@ export default function ReturnsTable({ returns, onCancel }) {
                   {returnItem.reason}
                 </TableCell>
                 <TableCell className="text-sm text-gray-600 dark:text-gray-400 py-4 px-4">{returnItem.date}</TableCell>
-                <TableCell className="py-4 px-4">{getStatusBadge(returnItem.status)}</TableCell>
+                <TableCell className="p-0">
+                  <span className="inline-flex items-center px-1 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                    {getStatusBadge(returnItem.status)}
+                  </span>
+                </TableCell>
                 <TableCell className="text-sm text-gray-900 dark:text-white py-4 px-4">
                   {returnItem.refundAmount || "---"}
                 </TableCell>
@@ -114,17 +92,17 @@ export default function ReturnsTable({ returns, onCancel }) {
                         variant="outline"
                         size="sm"
                         onClick={() => onCancel(returnItem.id)}
-                        className="border-red-500 text-red-600 hover:bg-red-50 dark:border-red-400 dark:text-red-400 dark:hover:bg-red-900/20"
+                        className="border-primary-700 w-1/2 text-primary-700 hover:bg-primary-50 "
                       >
                         لغو درخواست
                       </Button>
                     )}
                     {returnItem.status === "approved" && (
-                      <Button variant="outline" size="sm" className="gap-2">
+                      <Button variant="ghost" size="sm" className="gap-2 w-1/2 text-white bg-primary-700">
                         مشاهده فاکتور مرجوعی
                       </Button>
                     )}
-                    <Button variant="outline" size="sm" className="gap-2">
+                    <Button variant="ghost" size="sm" className="gap-2 w-1/2 bg-gray-200">
                       مشاهده جزئیات
                     </Button>
                   </div>
@@ -137,4 +115,3 @@ export default function ReturnsTable({ returns, onCancel }) {
     </div>
   );
 }
-

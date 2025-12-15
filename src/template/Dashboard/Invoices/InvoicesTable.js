@@ -4,25 +4,31 @@ import React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { DocumentDownload, Eye } from "iconsax-reactjs";
 
-export default function InvoicesTable({ invoices, onDownload, onView }) {
+export default function InvoicesTable({ invoices }) {
   const getStatusBadge = (status) => {
     switch (status) {
       case "paid":
         return (
-          <button className="inline-flex items-center px-3 py-1.5 rounded text-xs font-medium bg-green-100 text-green-600  ">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
             پرداخت شده
-          </button>
+          </span>
         );
       case "pending":
         return (
-          <button className="inline-flex items-center px-3 py-1.5 rounded text-xs font-medium bg-yellow-100 text-yellow-600 ">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
             در انتظار پرداخت
-          </button>
+          </span>
         );
       default:
         return null;
     }
+  };
+
+  const handleDownload = (invoiceId) => {
+    // In real app, this would download the invoice PDF
+    console.log("Downloading invoice:", invoiceId);
   };
 
   return (
@@ -30,28 +36,37 @@ export default function InvoicesTable({ invoices, onDownload, onView }) {
       <Table>
         <TableHeader className="bg-gray-50 dark:bg-gray-700/50">
           <TableRow className="border-b border-gray-200 dark:border-gray-700">
-            <TableHead className="text-right py-3 px-4 text-sm text-gray-700 dark:text-gray-300">
+            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300 first:rounded-tr-lg">
               شماره فاکتور
             </TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm text-gray-700 dark:text-gray-300">شماره سفارش</TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm text-gray-700 dark:text-gray-300">نوع سفارش</TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm text-gray-700 dark:text-gray-300">مبلغ فاکتور</TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm text-gray-700 dark:text-gray-300">تاریخ صدور</TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm text-gray-700 dark:text-gray-300">وضعیت</TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm text-gray-700 dark:text-gray-300">عملیات</TableHead>
+            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
+              شماره سفارش
+            </TableHead>
+            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
+              تاریخ
+            </TableHead>
+            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
+              مبلغ
+            </TableHead>
+            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
+              وضعیت
+            </TableHead>
+            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300 last:rounded-tl-lg">
+              عملیات
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {invoices.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="text-center py-8 text-gray-500 dark:text-gray-400">
+              <TableCell colSpan={6} className="text-center py-8 text-gray-500 dark:text-gray-400">
                 فاکتوری یافت نشد
               </TableCell>
             </TableRow>
           ) : (
             invoices.map((invoice, index) => (
               <TableRow
-                key={`${invoice.id}-${index}`}
+                key={invoice.id}
                 className={cn(
                   "hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors",
                   index === invoices.length - 1 && "last:border-b-0"
@@ -63,23 +78,22 @@ export default function InvoicesTable({ invoices, onDownload, onView }) {
                 <TableCell className="text-sm text-gray-600 dark:text-gray-400 py-4 px-4">
                   {invoice.orderNumber}
                 </TableCell>
-                <TableCell className="text-sm text-gray-600 dark:text-gray-400 py-4 px-4">
-                  {invoice.orderType || "نماینده"}
-                </TableCell>
-                <TableCell className="text-sm font-medium text-gray-900 dark:text-white py-4 px-4">
-                  {invoice.amount} تومان
-                </TableCell>
                 <TableCell className="text-sm text-gray-600 dark:text-gray-400 py-4 px-4">{invoice.date}</TableCell>
+                <TableCell className="text-sm font-medium text-gray-900 dark:text-white py-4 px-4">
+                  {invoice.amount}
+                </TableCell>
                 <TableCell className="py-4 px-4">{getStatusBadge(invoice.status)}</TableCell>
                 <TableCell className="py-4 px-4">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onView?.(invoice.id)}
-                    className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300  hover:bg-gray-100 dark:hover:bg-gray-600 text-sm h-8"
-                  >
-                    مشاهده فاکتور
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" onClick={() => handleDownload(invoice.id)} className="gap-2">
+                      <DocumentDownload className="h-4 w-4" />
+                      دانلود
+                    </Button>
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <Eye className="h-4 w-4" />
+                      مشاهده
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))

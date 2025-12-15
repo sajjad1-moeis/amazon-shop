@@ -1,14 +1,25 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Add, CloseCircle, DocumentUpload, Image as ImageIcon } from "iconsax-reactjs";
-import { cn } from "@/lib/utils";
 
 export default function FileUploadSection({ images, invoice, onImagesChange, onInvoiceChange }) {
   const imageInputRef = useRef(null);
   const invoiceInputRef = useRef(null);
+  const [imageUrls, setImageUrls] = useState([]);
+
+  // Create object URLs for image previews
+  useEffect(() => {
+    const urls = images.map((file) => URL.createObjectURL(file));
+    setImageUrls(urls);
+
+    // Cleanup function to revoke object URLs
+    return () => {
+      urls.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [images]);
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -30,21 +41,18 @@ export default function FileUploadSection({ images, invoice, onImagesChange, onI
   };
 
   return (
-    <div
-      className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 md:p-6"
-      style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
-    >
-      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">مدارک و تصاویر</h3>
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-box p-4">
+      <h3 className="text-lg font-bold text-gray-700 dark:text-white mb-6">مدارک و تصاویر</h3>
 
       <div className="space-y-6">
         {/* Image/Video Upload */}
         <div className="space-y-2">
-          <Label className="text-sm font-semibold">آپلود فیلم یا تصاویر</Label>
+          <Label className="text-sm">آپلود فیلم یا تصاویر</Label>
           <div className="space-y-3">
             {/* Upload Button */}
             <div
               onClick={() => imageInputRef.current?.click()}
-              className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center cursor-pointer hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
+              className="border bg-gray-50 border-gray-200 dark:border-gray-600 rounded-lg p-5 text-center cursor-pointer hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
             >
               <Add size={32} className="mx-auto mb-2 text-gray-400" />
               <p className="text-sm text-gray-600 dark:text-gray-400">برای آپلود کلیک کنید</p>
@@ -64,9 +72,9 @@ export default function FileUploadSection({ images, invoice, onImagesChange, onI
                 {images.map((file, index) => (
                   <div key={index} className="relative group">
                     <div className="relative aspect-square bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
-                      {file.type?.startsWith("image/") ? (
+                      {file.type?.startsWith("image/") && imageUrls[index] ? (
                         <img
-                          src={URL.createObjectURL(file)}
+                          src={imageUrls[index]}
                           alt={`Upload ${index + 1}`}
                           className="w-full h-full object-cover"
                         />
@@ -92,10 +100,10 @@ export default function FileUploadSection({ images, invoice, onImagesChange, onI
 
         {/* Invoice Upload */}
         <div className="space-y-2">
-          <Label className="text-sm font-semibold">آپلود فاکتور (اختیاری)</Label>
+          <Label className="text-sm">آپلود فاکتور (اختیاری)</Label>
           <div
             onClick={() => invoiceInputRef.current?.click()}
-            className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center cursor-pointer hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
+            className="border bg-gray-50 border-gray-200 dark:border-gray-600 rounded-lg p-5 text-center cursor-pointer hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
           >
             {invoice ? (
               <div className="space-y-2">

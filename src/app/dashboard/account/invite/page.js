@@ -1,27 +1,34 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { invitedFriends } from "@/data";
 import DashboardLayout from "@/layout/DashboardLayout";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
 import InvitedFriendsTable from "@/template/Dashboard/Invite/InvitedFriendsTable";
-import ShareModal from "@/template/Dashboard/Invite/ShareModal";
-import RewardConditionsModal from "@/template/Dashboard/Invite/RewardConditionsModal";
-
+import { toast } from "sonner";
 const referralCode = "REF-۹۳";
 const referralLink = "http://example.com/r...";
 
 export default function InvitePage() {
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [isRewardConditionsModalOpen, setIsRewardConditionsModalOpen] = useState(false);
-
-  const handleShare = () => {
-    setIsShareModalOpen(true);
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "دعوت به میکرولس",
+          text: "به میکرولس بپیوندید و از تخفیف‌های ویژه بهره‌مند شوید",
+          url: referralLink,
+        });
+      } catch (err) {
+        console.log("Error sharing:", err);
+      }
+    } else {
+      navigator.clipboard.writeText(referralLink);
+      toast.success("لینک دعوت کپی شد");
+    }
   };
 
   const handleRewardConditions = () => {
-    setIsRewardConditionsModalOpen(true);
+    toast.info("در حال باز کردن شرایط دریافت پاداش...");
   };
 
   return (
@@ -77,18 +84,6 @@ export default function InvitePage() {
             </div>
           </div>
         </div>
-
-        {/* Modals */}
-        <ShareModal
-          isOpen={isShareModalOpen}
-          onClose={() => setIsShareModalOpen(false)}
-          referralCode={referralCode}
-          referralLink={referralLink}
-        />
-        <RewardConditionsModal
-          isOpen={isRewardConditionsModalOpen}
-          onClose={() => setIsRewardConditionsModalOpen(false)}
-        />
       </div>
     </DashboardLayout>
   );
