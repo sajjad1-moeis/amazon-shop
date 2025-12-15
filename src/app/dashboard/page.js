@@ -16,7 +16,7 @@ export default function DashboardPage() {
         <RecentOrders />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div class="lg:col-span-2">
+          <div className="lg:col-span-2">
             <SupportTickets />
           </div>
           <CurrencyRates />

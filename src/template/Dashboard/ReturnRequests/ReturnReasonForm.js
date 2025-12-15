@@ -26,7 +26,7 @@ export default function ReturnReasonForm({ formData, onFormChange }) {
 
       <div className="space-y-6">
         {/* Packaging Status */}
-        <div class="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label className="text-sm ">وضعیت بسته بندی</Label>
             <Select value={formData.packagingStatus} onValueChange={(value) => onFormChange("packagingStatus", value)}>

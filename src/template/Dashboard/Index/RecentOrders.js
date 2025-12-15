@@ -23,22 +23,22 @@ const orders = [
 export default function RecentOrders() {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-box p-3 mb-6">
-      <div className="flex justify-between">
-        <div className="mb-4 md:mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4 md:mb-6">
+        <div>
           <h3 className="text-lg text-gray-700 dark:text-white mb-2">سفارش های اخیر</h3>
-          <p className="text-sm  text-gray-500 dark:text-gray-400">آخرین سفارش هایی که ثبت کرده اید.</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">آخرین سفارش هایی که ثبت کرده اید.</p>
         </div>
         <Button
           variant="ghost"
-          className="text-yellow-600 dark:text-blue-400 hover:text-yellow-500 dark:hover:text-blue-300"
+          className="text-yellow-600 dark:text-blue-400 hover:text-yellow-500 dark:hover:text-blue-300 text-sm sm:text-base"
         >
           مشاهده همه سفارشها
         </Button>
       </div>
 
       {/* Desktop Table */}
-      <div className="block overflow-auto border border-gray-200 dark:border-gray-700 rounded-lg">
-        <table className="w-full">
+      <div className="block overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-lg">
+        <table className="w-full min-w-[600px]">
           <thead className="bg-gray-50 dark:bg-gray-700/50">
             <tr className="border-b border-gray-200 dark:border-gray-700">
               <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300 first:rounded-tr-lg">

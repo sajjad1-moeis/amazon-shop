@@ -12,24 +12,26 @@ export default function ComparisonCard({ comparison, onDelete }) {
       style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
         <div>
           <h3 className="text-lg font-bold text-gray-900 dark:text-white">{comparison.name}</h3>
           <p className="text-sm text-gray-500 dark:text-gray-400">ایجاد شده در: {comparison.createdAt}</p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="outline" size="sm" className="gap-2 text-xs">
             <Eye className="h-4 w-4" />
-            مشاهده
+            <span className="hidden sm:inline">مشاهده</span>
+            <span className="sm:hidden">👁</span>
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={onDelete}
-            className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+            className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 text-xs"
           >
             <Trash2 className="h-4 w-4" />
-            حذف
+            <span className="hidden sm:inline">حذف</span>
+            <span className="sm:hidden">🗑</span>
           </Button>
         </div>
       </div>

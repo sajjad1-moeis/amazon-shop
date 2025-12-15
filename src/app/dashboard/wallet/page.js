@@ -23,7 +23,7 @@ export default function WalletList() {
 
       {/* Wallet Balance Section */}
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-box p-4  mb-6 mt-6">
-        <div class="flex justify-between  mb-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
           <h3 className="text-lg  text-gray-900 dark:text-white">موجودی کیف پول</h3>
 
           {/* Action Buttons */}

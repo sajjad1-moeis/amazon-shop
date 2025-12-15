@@ -11,21 +11,21 @@ export default function ReturnRequestsFilter({ filters, onFiltersChange }) {
   };
 
   return (
-    <div className="flex flex-col md:flex-row  justify-between">
+    <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
       {/* Search Input */}
-      <div className="w-1/2 relative">
+      <div className="w-full md:w-1/2 relative">
         <SearchNormal1 size={20} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
         <Input
           type="text"
           value={filters.searchQuery || ""}
           onChange={(e) => onFiltersChange((prev) => ({ ...prev, searchQuery: e.target.value }))}
           placeholder="جستجو بر اساس شماره درخواست یا نام کالا...."
-          className="pr-10 "
+          className="pr-10"
           dir="rtl"
         />
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {/* Sort By */}
         <Select value={filters.sortBy || undefined} onValueChange={(value) => handleFilterChange("sortBy", value)}>
           <SelectTrigger className="w-fit  gap-5" dir="rtl">

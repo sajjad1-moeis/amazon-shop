@@ -22,7 +22,7 @@ export default function PaymentInfoCard({ paymentInfo }) {
     <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 p-3">
       <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">اطلاعات پرداخت</h3>
 
-      <div className="grid grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
         {/* Right Column */}
         <div>
           <Row label="مبلغ کالاها:" value={`${paymentInfo.itemsPrice.toLocaleString("fa-IR")} تومان`} />

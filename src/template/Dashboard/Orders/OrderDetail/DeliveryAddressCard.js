@@ -15,17 +15,18 @@ export default function DeliveryAddressCard({ showEditButton = false }) {
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 p-3">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg  text-gray-900 dark:text-white">آدرس تحویل</h3>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+        <h3 className="text-lg text-gray-900 dark:text-white">آدرس تحویل</h3>
         {showEditButton && (
           <Button
             onClick={() => router.push("/dashboard/account/addresses")}
             variant="ghost"
             size="sm"
-            className="text-primary-600 hover:text-primary-700 hover:bg-primary-50 dark:hover:bg-primary-900/20 gap-2"
+            className="text-primary-600 hover:text-primary-700 hover:bg-primary-50 dark:hover:bg-primary-900/20 gap-2 text-sm"
           >
-            <Location />
-            تغییر آدرس
+            <Location size={18} />
+            <span className="hidden sm:inline">تغییر آدرس</span>
+            <span className="sm:hidden">تغییر</span>
           </Button>
         )}
       </div>

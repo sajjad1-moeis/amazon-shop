@@ -40,9 +40,9 @@ export default function ProductSuggestions() {
             key={product.id}
             className="rounded-xl border overflow-hidden border-gray-200 dark:border-dark-field  dark:bg-dark-box shadow-sm hover:shadow-md transition p-0"
           >
-            <CardContent className="p-0 grid grid-cols-4 gap-4 ">
+            <CardContent className="p-0 grid grid-cols-1 sm:grid-cols-4 gap-4">
               {/* Product Image */}
-              <div className="relative aspect-square max-h-64 w-full">
+              <div className="relative aspect-square max-h-64 w-full sm:col-span-1">
                 <Image
                   src="/image/Home/product.png"
                   alt={`محصول بازدید شده شماره `}
@@ -52,12 +52,12 @@ export default function ProductSuggestions() {
               </div>
 
               {/* Product Info */}
-              <div className="space-y-3 md:col-span-3 p-3">
+              <div className="space-y-3 sm:col-span-3 p-3">
                 <h4 className="text-sm md:text-base font-semibold text-gray-900 dark:text-white line-clamp-2">
                   {product.title}
                 </h4>
 
-                <div class="flex-between">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                   {/* Rating */}
 
                   {/* Retailer */}

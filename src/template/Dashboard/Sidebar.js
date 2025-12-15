@@ -230,7 +230,7 @@ export default function DashboardSidebar({ isMobileOpen, setIsMobileOpen }) {
       >
         <div className="relative h-full overflow-y-auto">
           {/* Close Button */}
-          <div class="flex w-full justify-end">
+          <div className="flex w-full justify-end">
             <button
               onClick={() => setIsMobileOpen(false)}
               className=" z-10 bg-white p-2 hover:bg-gray-50 transition-colors"

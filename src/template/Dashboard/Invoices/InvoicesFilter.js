@@ -14,20 +14,19 @@ export default function InvoicesFilter({ filters, onFiltersChange }) {
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-4">
-      <div class="flex-between w-full">
-        {/* Search */}
-        <div className="min-w-80 relative">
-          <SearchNormal1 size={20} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-          <Input
-            type="text"
-            placeholder="جستجو بر اساس شماره فاکتور..."
-            value={filters.searchQuery || ""}
-            onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
-            className="pr-10"
-          />
-        </div>
-        <div class="flex gap-2">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      {/* Search */}
+      <div className="w-full md:min-w-80 relative flex-1 md:flex-initial">
+        <SearchNormal1 size={20} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+        <Input
+          type="text"
+          placeholder="جستجو بر اساس شماره فاکتور..."
+          value={filters.searchQuery || ""}
+          onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
+          className="pr-10"
+        />
+      </div>
+      <div className="flex flex-wrap items-center justify-center md:justify-end gap-2">
           {/* Status Filter */}
           <Select value={filters.status || undefined} onValueChange={(value) => handleFilterChange("status", value)}>
             <SelectTrigger className="gap-5 w-fit">

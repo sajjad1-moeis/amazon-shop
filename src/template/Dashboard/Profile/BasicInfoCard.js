@@ -41,28 +41,27 @@ export default function BasicInfoCard() {
       </div>
 
       {/* Main Info */}
-      <div className="flex-between gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
         {/* Avatar */}
-        <div class="flex-center gap-2">
-          <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-200 bg-gray-100 flex items-center justify-center">
+        <div className="flex items-center gap-2 sm:col-span-2 lg:col-span-1">
+          <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-200 bg-gray-100 flex items-center justify-center flex-shrink-0">
             {data.avatar ? (
               <Image src={data.avatar} alt="avatar" width={64} height={64} className="object-cover" />
             ) : (
               <User size={28} className="text-gray-400" />
             )}
           </div>
-
           {/* Fields */}
           <Row label="نام و نام خانوادگی" value={data.fullName} />
         </div>
         <Row label="شماره تماس" value={data.phone} />
         <Row label="ایمیل" value={data.email || "---"} />
         <Row label="کد ملی" value={data.nationalId} />
-        <div className=" text-sm">
-          <p className="mb-2 px-3 py-1 size-max mx-auto rounded-full bg-green-100 text-green-700 text-xs font-medium">
+        <div className="text-sm">
+          <p className="mb-2 px-3 py-1 w-max mx-auto rounded-full bg-green-100 text-green-700 text-xs font-medium">
             {data.verificationStatusText}
           </p>
-          <p className="text-gray-400">وضعیت احراز هویت</p>
+          <p className="text-gray-400 text-center">وضعیت احراز هویت</p>
         </div>
         <Row label="تاریخ عضویت" value={data.membershipDate} />
       </div>

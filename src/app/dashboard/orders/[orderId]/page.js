@@ -52,7 +52,7 @@ export default function OrderDetail({ params }) {
       <ProductListSection products={order.products} />
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 my-8">
-        <div class="lg:col-span-3">
+        <div className="lg:col-span-3">
           <DeliveryAddressCard address={order.deliveryAddress} showEditButton={true} onEdit={handleEditAddress} />
         </div>
         <PaymentStatusCard paymentStatus={order.paymentStatus} />
@@ -60,7 +60,7 @@ export default function OrderDetail({ params }) {
 
       {/* Media and Second Payment - کنار هم */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        <div class="lg:col-span-2">
+        <div className="lg:col-span-2">
           <ProductMediaSlider media={order.media} />
         </div>
         {order.needsSecondPayment && (
@@ -75,7 +75,7 @@ export default function OrderDetail({ params }) {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 my-8">
-        <div class="lg:col-span-3">
+        <div className="lg:col-span-3">
           <DeliveryAddressCard address={order.deliveryAddress} showEditButton={true} onEdit={handleEditAddress} />
         </div>
         <SupportCard hasTicket={order.hasTicket} onCreateTicket={handleCreateTicket} />

@@ -43,7 +43,7 @@ export default function ProductsTable({ products }) {
                     {product.name}
                   </TableCell>
                   <TableCell className="text-sm  dark:text-gray-400 py-4 px-4">
-                    <div class="bg-primary-100 text-[#1E429F] px-2.5 py-1 w-max rounded-md">{product.quantity} عدد</div>
+                    <div className="bg-primary-100 text-[#1E429F] px-2.5 py-1 w-max rounded-md">{product.quantity} عدد</div>
                   </TableCell>
                   <TableCell className="text-sm font-medium text-gray-900 dark:text-white py-4 px-4">
                     {product.representativePrice.toLocaleString("fa-IR")} تومان

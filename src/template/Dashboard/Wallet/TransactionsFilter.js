@@ -11,9 +11,9 @@ export default function TransactionsFilter({ filters, onFiltersChange }) {
   };
 
   return (
-    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
       {/* Search */}
-      <div>
+      <div className="w-full md:flex-1 md:max-w-md">
         <div className="relative">
           <SearchNormal1 size={20} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <Input
@@ -27,7 +27,7 @@ export default function TransactionsFilter({ filters, onFiltersChange }) {
         </div>
       </div>
 
-      <div class="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {/* Date Range */}
         <Select
           value={filters.dateRange || undefined}

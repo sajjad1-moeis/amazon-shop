@@ -14,9 +14,9 @@ export default function RequestsFilter({ filters, onFiltersChange }) {
   };
 
   return (
-    <div className="flex flex-col justify-between md:flex-row gap-4">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
       {/* Search */}
-      <div className="max-w-80 w-full relative">
+      <div className="w-full md:max-w-80 md:flex-1 relative">
         <SearchNormal1 size={20} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
         <Input
           type="text"
@@ -27,7 +27,7 @@ export default function RequestsFilter({ filters, onFiltersChange }) {
         />
       </div>
 
-      <div class="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {/* Service Type */}
         <Select
           value={filters.serviceType || undefined}

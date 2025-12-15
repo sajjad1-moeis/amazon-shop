@@ -19,7 +19,7 @@ export default function FavoritesPage() {
     <DashboardLayout>
       {/* Top Section: Header */}
       <PageHeader title="علاقه مندی ها" description="لیست محصولاتی که ذخیره کرده اید.">
-        <div class="flex gap-5">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-5">
           <p className="text-gray-500">
             تعداد محصولات: : <span className="text-yellow-600">4</span>
           </p>

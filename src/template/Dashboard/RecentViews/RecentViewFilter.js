@@ -15,7 +15,7 @@ export default function InvoicesFilter({ filters, onFiltersChange }) {
 
   return (
     <div className="flex flex-col md:flex-row gap-4">
-      <div class="flex-between w-full">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 w-full">
         {/* Search */}
         <div className="min-w-80 relative">
           <SearchNormal1 size={20} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -27,7 +27,7 @@ export default function InvoicesFilter({ filters, onFiltersChange }) {
             className="pr-10"
           />
         </div>
-        <div class="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {/* Status Filter */}
           <Select value={filters.status || undefined} onValueChange={(value) => handleFilterChange("status", value)}>
             <SelectTrigger className="gap-5 w-fit">

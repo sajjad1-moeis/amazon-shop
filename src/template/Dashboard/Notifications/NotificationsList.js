@@ -66,10 +66,10 @@ export default function NotificationsList() {
           حذف همه اعلانها
         </Button>
       </PageHeader>
-      <div class="bg-white p-4 rounded-xl">
+      <div className="bg-white p-4 rounded-xl">
         <div className="mb-6">
           {/* Section Header */}
-          <div class="flex-between  mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
             {notifications.length > 0 && <h2 className="text-lg  text-gray-700 dark:text-white">لیست اعلانها</h2>}
             <Button
               variant="ghost"

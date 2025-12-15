@@ -26,7 +26,7 @@ export default function FavoritesFilter({ filters, onFiltersChange }) {
             />
           </div>
         </div>
-        <div className="flex-between gap-3 md:gap-4">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4">
           {/* Sort By */}
           {/* Search */}
 

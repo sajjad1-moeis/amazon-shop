@@ -50,12 +50,12 @@ export default function NotificationCard({ notification, onDelete, onPinToggle }
       className={cn("group relative w-full rounded-xl border p-4 ", styles.card)}
       style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
     >
-      <div class="flex-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex items-center gap-2">
           <Icon size={18} className={styles.icon} variant="Bold" />
           <span className={styles.icon}>{notification.title}</span>
         </div>
-        <div class="flex gap-3">
+        <div className="flex items-center gap-3">
           <div className="flex items-center gap-1 text-xs text-gray-400">
             <Calendar size={14} />
             <span>{notification.time}</span>
@@ -66,7 +66,7 @@ export default function NotificationCard({ notification, onDelete, onPinToggle }
         </div>
       </div>
       {/* Right side (content) */}
-      <div className="flex-between gap-4 mt-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4">
         {/* Pin */}
 
         {/* Text content */}

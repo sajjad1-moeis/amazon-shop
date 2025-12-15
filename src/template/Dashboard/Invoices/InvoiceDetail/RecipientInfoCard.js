@@ -21,9 +21,9 @@ export default function RecipientInfoCard({ recipient }) {
         </div>
 
         {/* Address */}
-        <div className="flex justify-between items-start py-4">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 py-4">
           <span className="text-sm text-gray-500">آدرس:</span>
-          <span className="text-sm font-medium text-gray-900 text-left max-w-[70%]">{recipient.address}</span>
+          <span className="text-sm font-medium text-gray-900 text-right sm:text-left sm:max-w-[70%]">{recipient.address}</span>
         </div>
 
         {/* Delivery Type */}

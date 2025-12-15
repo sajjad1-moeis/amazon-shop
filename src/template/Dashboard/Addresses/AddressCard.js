@@ -25,33 +25,28 @@ export default function AddressCard({
         showBottomBorder ? "border-b border-gray-200" : ""
       }`}
     >
-      <div className="flex-between">
-        {/* Default Badge - سمت چپ */}
-
-        {/* MAIN INFO - سمت راست */}
-        <div className="flex items-center justify-between">
-          <h4 className=" text-primary-500">{address.name}</h4>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        {/* MAIN INFO */}
+        <div className="flex-1 space-y-2">
+          <h4 className="text-primary-500 font-medium">{address.name}</h4>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500">شماره تماس:</span>
+            <span className="text-sm text-gray-700">{address.mobile || address.phone}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500">استان/شهر:</span>
+            <span className="text-sm text-gray-700">
+              {address.province && address.city
+                ? `${address.province} / ${address.city}`
+                : address.city || address.province}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500">کدپستی:</span>
+            <span className="text-sm text-gray-700">{address.postalCode}</span>
+          </div>
         </div>
-
-        <div className="flex-center gap-2">
-          <span className="text-xs text-gray-500">شماره تماس:</span>
-          <span className="text-sm text-gray-700">{address.mobile || address.phone}</span>
-        </div>
-
-        <div className="flex-center gap-2">
-          <span className="text-xs text-gray-500">استان/شهر:</span>
-          <span className="text-sm text-gray-700">
-            {address.province && address.city
-              ? `${address.province} / ${address.city}`
-              : address.city || address.province}
-          </span>
-        </div>
-
-        <div className="flex-center gap-2">
-          <span className="text-xs text-gray-500">کدپستی:</span>
-          <span className="text-sm text-gray-700">{address.postalCode}</span>
-        </div>
-        <div>
+        <div className="flex-shrink-0">
           {removeHandler ||
             (address.isDefault && (
               <button
@@ -64,7 +59,7 @@ export default function AddressCard({
         </div>
       </div>
 
-      <div className="flex-between mt-4 pt-4 border-t border-gray-200">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-4 pt-4 border-t border-gray-200">
         {/* ACTIONS - سمت چپ */}
         <div className="flex items-center gap-2">
           <Location size={16} className="text-gray-400" />

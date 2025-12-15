@@ -31,14 +31,14 @@ export default function SupportTickets() {
       className="bg-white dark:bg-gray-800 rounded-2xl shadow-box p-3 mb-6"
       style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
     >
-      <div className="flex justify-between mb-4 md:mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4 md:mb-6">
         <div>
           <h3 className="text-lg font-bold text-gray-700 dark:text-white mb-2">آخرین تیکتهای پشتیبانی</h3>
           <p className="text-sm text-gray-500 dark:text-gray-400">وضعیت آخرین درخواستهای شما</p>
         </div>
         <Button
           variant="ghost"
-          className="text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 text-sm p-0 "
+          className="text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 text-sm p-0"
         >
           مشاهده همه تیکت ها
         </Button>

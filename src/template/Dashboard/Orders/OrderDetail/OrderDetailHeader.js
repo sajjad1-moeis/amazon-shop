@@ -45,31 +45,33 @@ export default function OrderDetailHeader({ order, onDownloadInvoice, onCancelOr
   return (
     <div className=" mb-6 pb-4 border-b-2 border-gray-200">
       {/* Order Information */}
-      <div className="flex-between">
-        <div className="text-2xl text-primary-700 ">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="text-xl sm:text-2xl text-primary-700">
           <span>سفارش </span>
           <span>#{order.orderNumber}</span>
         </div>
         {/* Action Buttons */}
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-2 sm:gap-3">
           <Button
             onClick={onCancelOrder}
-            className="bg-gray-200 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 gap-2"
+            className="bg-gray-200 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 gap-2 text-sm"
           >
             <CloseCircle size={18} />
-            لغو سفارش
+            <span className="hidden sm:inline">لغو سفارش</span>
+            <span className="sm:hidden">لغو</span>
           </Button>
           <Button
             onClick={onDownloadInvoice}
             variant="outline"
-            className="bg-primary-700 rounded-lg text-white hover:bg-blue-50 dark:hover:bg-blue-900/20 gap-2"
+            className="bg-primary-700 rounded-lg text-white hover:bg-blue-50 dark:hover:bg-blue-900/20 gap-2 text-sm"
           >
             <DocumentDownload size={18} />
-            دانلود فاکتور
+            <span className="hidden sm:inline">دانلود فاکتور</span>
+            <span className="sm:hidden">دانلود</span>
           </Button>
         </div>
       </div>
-      <div className="flex-between items-center gap-4 mt-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mt-4">
         <div>
           <span className="text-sm text-gray-600 dark:text-gray-400">تاریخ سفارش: </span>
           <span className="text-sm font-medium text-gray-900 dark:text-white">{order.orderDate}</span>

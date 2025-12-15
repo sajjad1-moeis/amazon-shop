@@ -14,9 +14,9 @@ export default function OrdersFilter({ filters, onFiltersChange }) {
   };
 
   return (
-    <div className="flex flex-col justify-between md:flex-row gap-4 mt-10">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-10">
       {/* Search */}
-      <div className="min-w-80 relative">
+      <div className="w-full md:min-w-80 relative flex-1 md:flex-initial">
         <SearchNormal1 size={20} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
         <Input
           type="text"
@@ -27,7 +27,7 @@ export default function OrdersFilter({ filters, onFiltersChange }) {
         />
       </div>
 
-      <div class="flex-center gap-3">
+      <div className="flex flex-wrap items-center justify-center md:justify-end gap-2 md:gap-3">
         {/* Time Range Filter */}
         <Select
           value={filters.timeRange || undefined}

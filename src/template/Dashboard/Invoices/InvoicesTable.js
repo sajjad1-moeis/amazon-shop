@@ -84,14 +84,16 @@ export default function InvoicesTable({ invoices }) {
                 </TableCell>
                 <TableCell className="py-4 px-4">{getStatusBadge(invoice.status)}</TableCell>
                 <TableCell className="py-4 px-4">
-                  <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" onClick={() => handleDownload(invoice.id)} className="gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Button variant="outline" size="sm" onClick={() => handleDownload(invoice.id)} className="gap-2 text-xs">
                       <DocumentDownload className="h-4 w-4" />
-                      دانلود
+                      <span className="hidden sm:inline">دانلود</span>
+                      <span className="sm:hidden">↓</span>
                     </Button>
-                    <Button variant="outline" size="sm" className="gap-2">
+                    <Button variant="outline" size="sm" className="gap-2 text-xs">
                       <Eye className="h-4 w-4" />
-                      مشاهده
+                      <span className="hidden sm:inline">مشاهده</span>
+                      <span className="sm:hidden">👁</span>
                     </Button>
                   </div>
                 </TableCell>

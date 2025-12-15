@@ -36,12 +36,12 @@ export default function RecentViewCard({ product, onDelete }) {
         )}
       </div>
 
-      <div class=" p-3">
+      <div className="p-3">
         {/* Title */}
-        <p className="text-sm text-gray-800 leading-6 mb-3 ">{product.title}</p>
+        <p className="text-sm text-gray-800 leading-6 mb-3">{product.title}</p>
 
         {/* Price */}
-        <div className="mb-3 flex-between">
+        <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <p className="text-xs text-gray-500 dark:text-gray-400">قیمت فعلی (تومان)</p>
           <p className="text-sm  text-gray-700 dark:text-white">{product.price}</p>
         </div>

@@ -54,7 +54,7 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
           filteredOrders.map((order) => (
             <div key={order.id} className="border rounded-xl p-4  bg-gray-50  border-gray-300 dark:bg-gray-800">
               {/* Order Header */}
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
                 <div>
                   <span className="text-sm text-gray-600 dark:text-gray-400">شماره سفارش : </span>
                   <span className="text-sm font-semibold text-gray-900 dark:text-white">#{order.id}</span>

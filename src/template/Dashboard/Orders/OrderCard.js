@@ -54,7 +54,7 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-box p-4">
       {/* Order Summary - بالا با border */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
         <div>
           <span className="text-sm text-gray-600 dark:text-gray-400">شماره سفارش: </span>
           <span className="text-sm font-medium text-gray-900 dark:text-white">{order.orderNumber}</span>
@@ -99,7 +99,7 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
             <SwiperSlide key={product.id} className="flex flex-col">
               <div className="p-3 rounded-lg bg-gray-100 dark:bg-gray-700/30">
                 {/* Product Image */}
-                <div class="flex gap-3 flex-grow">
+                <div className="flex gap-3 flex-grow">
                   <div className="flex-shrink-0">
                     <div className="w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
                       {product.image ? (
@@ -124,14 +124,14 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
                   </div>
                 </div>
 
-                <div className="flex  gap-1 text-xs text-gray-600 dark:text-gray-400">
-                  <div className="bg-gray-200 flex-1  rounded-lg p-2">
+                <div className="flex flex-col sm:flex-row gap-2 text-xs text-gray-600 dark:text-gray-400">
+                  <div className="bg-gray-200 flex-1 rounded-lg p-2">
                     قیمت کالا (تومان):{" "}
                     <span className="font-medium text-gray-900 dark:text-white">
                       {product.price.toLocaleString("fa-IR")}
                     </span>
                   </div>
-                  <div className="bg-gray-200 flex gap-5 rounded-lg p-2">
+                  <div className="bg-gray-200 flex rounded-lg p-2">
                     تعداد: <span className="font-medium text-gray-900 dark:text-white">{product.quantity} عدد</span>
                   </div>
                 </div>

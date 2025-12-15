@@ -7,6 +7,7 @@ import InvoicesFilter from "@/template/Dashboard/Invoices/InvoicesFilter";
 import InvoicesTable from "@/template/Dashboard/Invoices/InvoicesTable";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 
 export default function InvoicesPage() {
   const router = useRouter();
@@ -76,7 +77,7 @@ export default function InvoicesPage() {
 
         {/* Invoices Table Section */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-box p-4 mt-8">
-          <div class="flex-between  mb-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
             <h2 className="text-lg md:text-xl text-primary-700 dark:text-white">لیست فاکتورها</h2>
             <p className="text-gray-500">
               تعداد کل فاکتور‌ها: <span className="text-yellow-600">3 </span>

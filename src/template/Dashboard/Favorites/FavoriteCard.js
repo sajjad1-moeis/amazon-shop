@@ -7,14 +7,14 @@ import { Button } from "@/components/ui/button";
 export default function FavoriteCard({ product }) {
   return (
     <div
-      className="w-full bg-white rounded-2xl p-4 flex items-center justify-between gap-4 shadow-sm"
+      className="w-full bg-white rounded-2xl p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 shadow-sm"
       style={{
         boxShadow: "0px 1px 6px 0px #0000000F",
         direction: "rtl",
       }}
     >
       {/* Product Image */}
-      <div className="w-36 h-28 relative flex-shrink-0 rounded-xl overflow-hidden">
+      <div className="w-full md:w-36 h-48 md:h-28 relative flex-shrink-0 rounded-xl overflow-hidden">
         <Image src={product.image} alt={product.title} fill className="object-cover" />
       </div>
 
@@ -24,7 +24,7 @@ export default function FavoriteCard({ product }) {
         <h3 className="text-[15px] font-bold text-gray-900 leading-6">{product.title}</h3>
 
         {/* Brand Section */}
-        <div className="flex items-center justify-between w-full">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 w-full">
           {/* Brand Logo */}
           <div className="w-20 h-6 relative">
             <Image src={product.brandLogo} alt="brand logo" fill className="object-contain" />
@@ -36,7 +36,7 @@ export default function FavoriteCard({ product }) {
         </div>
 
         {/* Three Gray Boxes Row */}
-        <div className="w-full flex items-center justify-between gap-3">
+        <div className="w-full flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           {/* Box 1 */}
           <div className="flex-1 bg-gray-100 px-3 py-2 rounded-xl flex justify-between items-center">
             <span className="text-gray-600 text-sm">قیمت فعلی</span>
@@ -57,7 +57,7 @@ export default function FavoriteCard({ product }) {
         </div>
       </div>
       {/* Left Buttons */}
-      <div className="flex flex-col gap-2 w-32 flex-shrink-0">
+      <div className="flex flex-row md:flex-col gap-2 w-full md:w-32 flex-shrink-0">
         <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-medium text-sm py-2 rounded-lg">
           مشاهده محصول
         </Button>

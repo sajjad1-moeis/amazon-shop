@@ -14,16 +14,16 @@ export default function OrderProgressSection({ productsProgress }) {
         {productsProgress.map((product, index) => (
           <div key={product.id}>
             {/* Product Header */}
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-base  text-gray-800 dark:text-white">{product.name}</h3>
-              <div className="flex items-center gap-5 text-sm text-gray-600 dark:text-gray-400">
-                <div className="text-xs flex-center gap-1 bg-gray-100 border border-gray-200 dark:bg-gray-700 p-0.5 rounded-md">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+              <h3 className="text-base text-gray-800 dark:text-white">{product.name}</h3>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 text-sm text-gray-600 dark:text-gray-400">
+                <div className="flex items-center justify-center gap-1 bg-gray-100 border border-gray-200 dark:bg-gray-700 p-0.5 rounded-md text-xs">
                   <div className="bg-green-600 p-0.5 text-white rounded-lg">
                     <Truck size={20} />
                   </div>
                   {product.totalDays}
                 </div>
-                <div class="flex">
+                <div>
                   <span className="text-gray-500">
                     تخمین تحویل : <span className="text-primary-400">{product.deliveryEstimate}</span>
                   </span>

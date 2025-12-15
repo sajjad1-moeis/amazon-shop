@@ -10,7 +10,7 @@ export default function ProductListSection({ products, title = "لیست محص�
   return (
     <div className="mt-8">
       <h2 className="text-xl text-gray-700 dark:text-white mb-4 flex gap-3">
-        {title} <div class="px-1 rounded bg-primary-100 text-primary-500">{products.length}</div>
+        {title} <div className="px-1 rounded bg-primary-100 text-primary-500">{products.length}</div>
       </h2>
 
       <Swiper
@@ -49,7 +49,7 @@ export default function ProductListSection({ products, title = "لیست محص�
                 )}
               </div>
 
-              <div class="p-3">
+              <div className="p-3">
                 {/* Product Name */}
                 <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-3 line-clamp-2 min-h-[40px]">
                   {product.name}
@@ -58,9 +58,9 @@ export default function ProductListSection({ products, title = "لیست محص�
                 {/* Product Details */}
                 <div className="space-y-2 text-xs text-gray-600 dark:text-gray-400">
                   {product.color && (
-                    <div className="flex-between gap-2">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                       <span>رنگ:</span>
-                      <div class="flex-center gap-2">
+                      <div className="flex items-center justify-center gap-2">
                         <div
                           className="w-4 h-4 rounded-full border border-gray-300"
                           style={{ backgroundColor: product.colorCode || "#FFD700" }}
@@ -69,11 +69,11 @@ export default function ProductListSection({ products, title = "لیست محص�
                       </div>
                     </div>
                   )}
-                  <div className="flex-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                     <span>تعداد: </span>
                     <span className="font-medium text-gray-900 dark:text-white">{product.quantity} عدد</span>
                   </div>
-                  <div class="flex gap-3">
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                     <div className="bg-gray-100 p-2 rounded-lg text-center flex-1">
                       <p className="font-medium text-gray-900 dark:text-white mb-3">
                         {product.unitPrice.toLocaleString("fa-IR")}

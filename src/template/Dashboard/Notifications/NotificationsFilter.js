@@ -14,9 +14,9 @@ export default function NotificationsFilter({ filters, onFiltersChange }) {
   };
 
   return (
-    <div className="flex justify-between flex-col md:flex-row gap-4">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
       {/* Search */}
-      <div className="relative flex gap-2 border rounded-lg p-1">
+      <div className="relative flex flex-col sm:flex-row gap-2 border rounded-lg p-1 w-full md:w-auto">
         <SearchNormal1 size={20} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
         <Input
           type="text"
@@ -42,7 +42,7 @@ export default function NotificationsFilter({ filters, onFiltersChange }) {
         </Select>
       </div>
 
-      <div class="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {/* Time Range Filter */}
         <Select
           value={filters.timeRange || undefined}

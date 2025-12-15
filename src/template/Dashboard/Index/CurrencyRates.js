@@ -44,7 +44,7 @@ export default function CurrencyRates() {
           >
             <div className="flex items-center gap-3">
               <span className="text-2xl md:text-3xl">{currency.flag}</span>
-              <div class="">
+              <div>
                 <p className="text-xs text-gray-500 dark:text-white">
                   {currency.name} ({currency.code})
                 </p>
