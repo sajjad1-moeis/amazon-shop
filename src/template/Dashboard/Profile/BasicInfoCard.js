@@ -21,7 +21,7 @@ export default function BasicInfoCard() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="bg-white rounded-2xl shadow-box px-6 py-5">
+    <div className="bg-white rounded-2xl shadow-box p-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3 text-[#292D32CC]">
@@ -62,7 +62,7 @@ export default function BasicInfoCard() {
           <p className="mb-2 px-3 py-1 size-max mx-auto rounded-full bg-green-100 text-green-700 text-xs font-medium">
             {data.verificationStatusText}
           </p>
-          <p className="text-gray-500">وضعیت احراز هویت</p>
+          <p className="text-gray-400">وضعیت احراز هویت</p>
         </div>
         <Row label="تاریخ عضویت" value={data.membershipDate} />
       </div>
@@ -79,11 +79,11 @@ export default function BasicInfoCard() {
 }
 
 /* ---------- Small Component ---------- */
-function Row({ label, value, mono }) {
+export function Row({ label, value, mono }) {
   return (
     <div className=" justify-between text-sm">
-      <p className={`mb-2 text-gray-900 font-medium ${mono ? "font-mono" : ""}`}>{value}</p>
-      <p className="text-gray-500">{label}</p>
+      <p className={`mb-2 text-gray-600 font-medium ${mono ? "font-mono" : ""}`}>{value}</p>
+      <p className="text-gray-400">{label}</p>
     </div>
   );
 }

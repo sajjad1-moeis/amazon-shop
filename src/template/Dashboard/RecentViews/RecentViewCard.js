@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, DocumentText, Trash } from "iconsax-reactjs";
+import { ShoppingCart, DocumentText, Trash, Maximize } from "iconsax-reactjs";
 import { cn } from "@/lib/utils";
 
 export default function RecentViewCard({ product, onDelete }) {
@@ -11,7 +11,7 @@ export default function RecentViewCard({ product, onDelete }) {
     <div
       className={cn(
         "bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-lg transition-shadow overflow-hidden relative",
-        !product.inStock && "border-2 border-red-500"
+        !product.inStock && "border-2 border-red-300"
       )}
       style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
     >
@@ -25,16 +25,10 @@ export default function RecentViewCard({ product, onDelete }) {
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
         />
 
-        {/* Delete Button - Top Left */}
-        <button
-          onClick={onDelete}
-          className="absolute top-2 left-2 z-10 bg-white/90 hover:bg-white rounded-full p-2 shadow-md transition-colors"
-          title="حذف"
-        >
-          <Trash size={18} className="text-red-500" variant="Bold" />
+        <button onClick={onDelete} className="absolute top-4 left-4 z-10 " title="حذف">
+          <Trash size={28} className="text-red-500" />
         </button>
 
-        {/* Out of Stock Badge - Over Image */}
         {!product.inStock && (
           <div className="absolute top-2 right-2 z-10 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
             ناموجود
@@ -42,55 +36,45 @@ export default function RecentViewCard({ product, onDelete }) {
         )}
       </div>
 
-      <div className="p-4">
-        {/* Product Title */}
-        <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 line-clamp-2 min-h-[2.5rem]">
-          {product.title}
-        </h4>
+      <div class=" p-3">
+        {/* Title */}
+        <p className="text-sm text-gray-800 leading-6 mb-3 ">{product.title}</p>
 
         {/* Price */}
-        <div className="mb-3">
-          <p className="text-lg font-bold text-gray-900 dark:text-white">
-            {product.price}
-          </p>
-          <p className="text-xs text-gray-600 dark:text-gray-400">قیمت فعلی (تومان)</p>
+        <div className="mb-3 flex-between">
+          <p className="text-xs text-gray-500 dark:text-gray-400">قیمت فعلی (تومان)</p>
+          <p className="text-sm  text-gray-700 dark:text-white">{product.price}</p>
         </div>
 
-        {/* Last Viewed */}
-        <div className="mb-2">
-          <span className="text-xs text-gray-600 dark:text-gray-400">آخرین بازدید </span>
-          <span className="text-xs font-medium text-gray-900 dark:text-white">{product.lastViewed}</span>
-        </div>
+        {/* 3 Boxes Row */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          {/* Purchase Date */}
 
-        {/* View Count */}
-        <div className="mb-4">
-          <span className="text-xs text-gray-600 dark:text-gray-400">تعداد بازدید </span>
-          <span className="text-xs font-medium text-gray-900 dark:text-white">{product.viewCount} مرتبه</span>
+          {/* Amount */}
+          <div className="text-xs bg-gray-50 rounded-xl p-2 text-center flex-1">
+            <div className=" text-gray-900">{product.viewCount} مرتبه</div>
+            <div className=" text-gray-500 mt-3 mb-1">تعداد بازدید</div>
+          </div>
+
+          <div className="text-xs bg-gray-50 rounded-xl p-2 text-center flex-1">
+            <div className=" text-gray-900">{product.lastViewed}</div>
+            <div className=" text-gray-500 mt-3 mb-1">آخرین بازدید</div>
+          </div>
         </div>
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className={cn(
-              "flex-1 gap-2",
-              product.inStock
-                ? "bg-yellow-500 hover:bg-yellow-600 text-white border-yellow-500"
-                : "bg-gray-200 text-gray-500 cursor-not-allowed"
-            )}
-            disabled={!product.inStock}
-          >
-            <ShoppingCart className="h-4 w-4" />
-            افزودن به سبد خرید
+          <Button variant="outline" size="sm" className="p-2 bg-gray-200" title="مقایسه">
+            <Maximize size={18} className="text-[#292D32] dark:text-gray-400" />
           </Button>
           <Button
             variant="outline"
             size="sm"
-            className="p-2 border-gray-300 dark:border-gray-600"
-            title="مقایسه"
+            className={cn("flex-1 gap-2", "bg-yellow-400 hover:bg-yellow-500 text-primary-800 border-yellow-500")}
+            disabled={!product.inStock}
           >
-            <DocumentText size={18} className="text-gray-600 dark:text-gray-400" />
+            <ShoppingCart className="h-4 w-4" />
+            افزودن به سبد خرید
           </Button>
         </div>
       </div>

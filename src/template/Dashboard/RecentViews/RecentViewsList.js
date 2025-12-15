@@ -2,11 +2,11 @@
 
 import React, { useState } from "react";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
-import RecentViewsFilter from "./RecentViewsFilter";
 import RecentViewCard from "./RecentViewCard";
 import SimilarProductsSection from "./SimilarProductsSection";
 import { Button } from "@/components/ui/button";
 import { Trash } from "iconsax-reactjs";
+import RecentViewFilter from "./RecentViewFilter";
 
 const initialProducts = [
   {
@@ -73,16 +73,22 @@ export default function RecentViewsList() {
   return (
     <div dir="rtl">
       {/* Top Section: Header with Count */}
-      <div className="flex items-center justify-between mb-6">
-        <PageHeader title="بازدیدهای اخیر" description="محصولاتی که اخیراً مشاهده کرده‌اید" />
-        <div className="text-sm text-gray-600 dark:text-gray-400">
-          تعداد بازدیدها: <span className="font-semibold text-gray-900 dark:text-white">{products.length}</span>
-        </div>
-      </div>
+
+      <PageHeader title="بازدیدهای اخیر" description="محصولاتی که اخیراً مشاهده کرده‌اید">
+        <Button variant="ghost" className="bg-gray-200 text-red-600">
+          <Trash />
+          حذف همه بازدید‌ها
+        </Button>
+      </PageHeader>
+
+      <RecentViewFilter filters={filters} onFiltersChange={() => {}} />
 
       {/* Product List Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white">لیست محصولات</h2>
+      <div className="flex items-center justify-between my-8">
+        <h2 className="text-lg md:text-xl font-bold text-primary-700 dark:text-white">لیست محصولات</h2>
+        <div className="text-sm text-gray-500 dark:text-gray-400">
+          تعداد بازدیدها: <span className="font-semibold text-yellow-600 dark:text-white">{products.length}</span>
+        </div>
       </div>
 
       {/* Products Grid */}
@@ -94,7 +100,7 @@ export default function RecentViewsList() {
           <p className="text-gray-500 dark:text-gray-400">هیچ بازدید اخیری وجود ندارد</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4  mb-6">
           {products.map((product) => (
             <RecentViewCard key={product.id} product={product} onDelete={() => handleDelete(product.id)} />
           ))}

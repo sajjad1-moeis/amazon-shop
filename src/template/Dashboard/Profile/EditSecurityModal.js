@@ -102,7 +102,7 @@ export default function EditSecurityModal({ isOpen, onClose, onSave }) {
     <Dialog open={isOpen} onOpenChange={handleClose} dir="rtl">
       <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto" dir="rtl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">ویرایش امنیت حساب</DialogTitle>
+          <DialogTitle className="text-2xl">ویرایش امنیت حساب</DialogTitle>
           <DialogDescription className="text-sm text-gray-600 dark:text-gray-400">
             رمز عبور و تنظیمات امنیتی خود را تغییر دهید
           </DialogDescription>
@@ -121,7 +121,7 @@ export default function EditSecurityModal({ isOpen, onClose, onSave }) {
                 value={formData.currentPassword}
                 onChange={(e) => handleChange("currentPassword", e.target.value)}
                 placeholder="رمز عبور فعلی خود را وارد کنید ..."
-                className={cn("pr-10", errors.currentPassword ? "border-red-500" : "")}
+                className={cn(errors.currentPassword ? "border-red-500" : "")}
                 dir="rtl"
               />
               <button
@@ -147,7 +147,7 @@ export default function EditSecurityModal({ isOpen, onClose, onSave }) {
                 value={formData.newPassword}
                 onChange={(e) => handleChange("newPassword", e.target.value)}
                 placeholder="رمز عبور جدید را وارد کنید ..."
-                className={cn("pr-10", errors.newPassword ? "border-red-500" : "")}
+                className={cn(errors.newPassword ? "border-red-500" : "")}
                 dir="rtl"
               />
               <button
@@ -173,7 +173,7 @@ export default function EditSecurityModal({ isOpen, onClose, onSave }) {
                 value={formData.confirmPassword}
                 onChange={(e) => handleChange("confirmPassword", e.target.value)}
                 placeholder="تکرار رمز عبور جدید را وارد کنید ..."
-                className={cn("pr-10", errors.confirmPassword ? "border-red-500" : "")}
+                className={cn(errors.confirmPassword ? "border-red-500" : "")}
                 dir="rtl"
               />
               <button
@@ -193,7 +193,7 @@ export default function EditSecurityModal({ isOpen, onClose, onSave }) {
             onToggle={(enabled) => handleChange("twoFactorEnabled", enabled)}
           />
 
-          <DialogFooter className="flex gap-3 sm:gap-0">
+          <DialogFooter className="flex gap-3 ">
             <Button type="button" variant="outline" onClick={handleClose} className="flex-1 sm:flex-initial">
               لغو
             </Button>

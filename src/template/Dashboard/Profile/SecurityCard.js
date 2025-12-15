@@ -2,9 +2,10 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Edit2, Lock, Devices } from "iconsax-reactjs";
+import { Edit2, Lock, Devices, Profile, Lock1 } from "iconsax-reactjs";
 import EditSecurityModal from "./EditSecurityModal";
 import ConnectedDevicesModal from "./ConnectedDevicesModal";
+import { Row } from "./BasicInfoCard";
 
 const securityData = {
   password: "******",
@@ -28,23 +29,18 @@ export default function SecurityCard() {
   };
 
   return (
-    <div
-      className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 md:p-6"
-      style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
-    >
-      {/* Card Header */}
+    <div className="bg-white rounded-2xl shadow-box p-4">
+      {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
-            <Lock size={24} className="text-primary-600 dark:text-primary-400" variant="Bold" />
-          </div>
-          <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white">امنیت حساب</h3>
+        <div className="flex items-center gap-3 text-[#292D32CC]">
+          <Lock1 size={28} variant="Bold" />
+          <span className=" text-xl">امنیت حساب</span>
         </div>
         <Button
           variant="outline"
           size="sm"
+          className="gap-2 px-3 border-2 text-primary-700 rounded-lg border-primary-700"
           onClick={() => setIsModalOpen(true)}
-          className="gap-2"
         >
           <Edit2 size={16} />
           ویرایش
@@ -52,58 +48,26 @@ export default function SecurityCard() {
       </div>
 
       {/* Card Content */}
-      <div className="space-y-4">
-        {/* Password */}
-        <div className="flex items-center justify-between py-2">
-          <p className="text-sm text-gray-600 dark:text-gray-400">رمز عبور</p>
-          <p className="text-sm md:text-base font-medium text-gray-900 dark:text-white font-mono">
-            {securityInfo.password}
-          </p>
-        </div>
-
-        {/* Two-Factor Authentication */}
-        <div className="flex items-center justify-between py-2">
-          <p className="text-sm text-gray-600 dark:text-gray-400">تأیید دو مرحله ای</p>
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-            {securityInfo.twoFactorAuthText}
-          </span>
-        </div>
-
-        {/* Active Devices */}
-        <div className="flex items-center justify-between py-2">
-          <p className="text-sm text-gray-600 dark:text-gray-400">تعداد دستگاه های فعال</p>
-          <Button
-            variant="link"
-            size="sm"
+      <div className="flex-between gap-5">
+        <Row label="رمز عبور" value={securityInfo.password} />
+        <Row label="تأیید دو مرحله ای" value={securityInfo.twoFactorAuthText} />
+        <div className=" py-2">
+          <span
             onClick={() => setIsDevicesModalOpen(true)}
-            className="text-sm md:text-base font-medium text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 p-0 h-auto"
+            className="text-sm md:text-base font-medium text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 p-0 h-auto"
           >
-            {securityInfo.activeDevicesText}
-            <Devices size={16} className="mr-2" />
-          </Button>
+            {securityInfo.activeDevices} دستگاه متصل
+          </span>
+          <p className="text-sm text-gray-400 mt-2">تعداد دستگاه‌های فعال</p>
         </div>
-
-        {/* Last Password Change */}
-        <div className="flex items-center justify-between py-2">
-          <p className="text-sm text-gray-600 dark:text-gray-400">آخرین تغییر رمز</p>
-          <p className="text-sm md:text-base font-medium text-gray-900 dark:text-white">
-            {securityInfo.lastPasswordChange}
-          </p>
-        </div>
+        <Row label={"آخرین تغییر رمز"} value={securityInfo.lastPasswordChange} />
       </div>
 
       {/* Edit Modal */}
-      <EditSecurityModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleSave}
-      />
+      <EditSecurityModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={handleSave} />
 
       {/* Connected Devices Modal */}
-      <ConnectedDevicesModal
-        isOpen={isDevicesModalOpen}
-        onClose={() => setIsDevicesModalOpen(false)}
-      />
+      <ConnectedDevicesModal isOpen={isDevicesModalOpen} onClose={() => setIsDevicesModalOpen(false)} />
     </div>
   );
 }
