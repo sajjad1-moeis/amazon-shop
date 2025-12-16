@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import TableActions from "../../TableActions";
 
-export default function BlogCategoriesTable({ categories }) {
+export default function BlogCategoriesTable({ categories, onEdit, onDelete }) {
   if (categories.length === 0) {
     return <div className="p-8 text-center text-gray-400">دسته‌بندی‌ای یافت نشد</div>;
   }
@@ -28,12 +28,23 @@ export default function BlogCategoriesTable({ categories }) {
             <TableCell className="text-gray-300">{category.slug}</TableCell>
             <TableCell className="text-gray-300">{category.postsCount}</TableCell>
             <TableCell>
-              <Badge variant={category.isActive ? "default" : "secondary"}>
+              <Badge
+                variant="outline"
+                className={
+                  category.isActive
+                    ? "bg-green-500/20 text-green-400 border-green-500/30"
+                    : "bg-gray-500/20 text-gray-400 border-gray-500/30"
+                }
+              >
                 {category.isActive ? "فعال" : "غیرفعال"}
               </Badge>
             </TableCell>
             <TableCell>
-              <TableActions showView={false} />
+              <TableActions
+                onEdit={() => onEdit(category.id)}
+                onDelete={() => onDelete(category.id)}
+                showView={false}
+              />
             </TableCell>
           </TableRow>
         ))}
@@ -41,5 +52,3 @@ export default function BlogCategoriesTable({ categories }) {
     </Table>
   );
 }
-
-

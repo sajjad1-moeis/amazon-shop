@@ -5,10 +5,33 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import TableActions from "../../TableActions";
 
-export default function BlogTable({ posts }) {
+export default function BlogTable({ posts, onEdit, onDelete }) {
   if (posts.length === 0) {
     return <div className="p-8 text-center text-gray-400">پستی یافت نشد</div>;
   }
+
+  const getStatusBadge = (status) => {
+    const statusMap = {
+      published: {
+        label: "منتشر شده",
+        className: "bg-green-500/20 text-green-400 border-green-500/30",
+      },
+      draft: {
+        label: "پیش‌نویس",
+        className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
+      },
+      archived: {
+        label: "بایگانی",
+        className: "bg-gray-500/20 text-gray-400 border-gray-500/30",
+      },
+    };
+    const statusInfo = statusMap[status] || statusMap.draft;
+    return (
+      <Badge variant="outline" className={statusInfo.className}>
+        {statusInfo.label}
+      </Badge>
+    );
+  };
 
   return (
     <Table>
@@ -30,14 +53,14 @@ export default function BlogTable({ posts }) {
             <TableCell className="text-gray-300">{post.category}</TableCell>
             <TableCell className="text-gray-300">{post.author}</TableCell>
             <TableCell className="text-gray-300">{post.views}</TableCell>
-            <TableCell>
-              <Badge variant={post.status === "published" ? "default" : "secondary"}>
-                {post.status === "published" ? "منتشر شده" : "پیش‌نویس"}
-              </Badge>
-            </TableCell>
+            <TableCell>{getStatusBadge(post.status)}</TableCell>
             <TableCell className="text-gray-300">{post.date}</TableCell>
             <TableCell>
-              <TableActions />
+              <TableActions
+                onEdit={() => onEdit(post.id)}
+                onDelete={() => onDelete(post.id)}
+                showView={false}
+              />
             </TableCell>
           </TableRow>
         ))}
@@ -45,5 +68,3 @@ export default function BlogTable({ posts }) {
     </Table>
   );
 }
-
-

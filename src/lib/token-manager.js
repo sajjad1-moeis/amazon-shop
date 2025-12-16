@@ -1,106 +1,43 @@
-// Token Manager - مدیریت توکن‌ها در localStorage
+const TOKEN_COOKIE_NAME = "accessToken";
 
-const ACCESS_TOKEN_KEY = "accessToken";
-const REFRESH_TOKEN_KEY = "refreshToken";
-const USER_KEY = "user";
-
-// ذخیره توکن‌ها
-export const saveTokens = (accessToken, refreshToken) => {
-  if (typeof window !== "undefined") {
-    localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
-    localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
-  }
+const setCookie = (name, value, days = 365) => {
+  if (typeof document === "undefined") return;
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
 };
 
-// دریافت توکن‌ها
-export const getTokens = () => {
-  if (typeof window !== "undefined") {
-    const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
-    const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
-    return { accessToken, refreshToken };
-  }
-  return { accessToken: null, refreshToken: null };
-};
-
-// حذف توکن‌ها
-export const removeTokens = () => {
-  if (typeof window !== "undefined") {
-    localStorage.removeItem(ACCESS_TOKEN_KEY);
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
-  }
-};
-
-// دریافت Access Token
-export const getAccessToken = () => {
-  if (typeof window !== "undefined") {
-    return localStorage.getItem(ACCESS_TOKEN_KEY);
+const getCookie = (name) => {
+  if (typeof document === "undefined") return null;
+  const nameEQ = name + "=";
+  const ca = document.cookie.split(";");
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === " ") c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
   }
   return null;
 };
 
-// دریافت Refresh Token
-export const getRefreshToken = () => {
-  if (typeof window !== "undefined") {
-    return localStorage.getItem(REFRESH_TOKEN_KEY);
-  }
-  return null;
+const deleteCookie = (name) => {
+  if (typeof document === "undefined") return;
+  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
 };
 
-// ذخیره اطلاعات کاربر
-export const saveUser = (user) => {
-  if (typeof window !== "undefined") {
-    localStorage.setItem(USER_KEY, JSON.stringify(user));
+export const saveToken = (token) => {
+  if (token) {
+    setCookie(TOKEN_COOKIE_NAME, token);
   }
 };
 
-// دریافت اطلاعات کاربر
-export const getUser = () => {
-  if (typeof window !== "undefined") {
-    const userStr = localStorage.getItem(USER_KEY);
-    if (userStr) {
-      try {
-        return JSON.parse(userStr);
-      } catch {
-        return null;
-      }
-    }
-  }
-  return null;
+export const getToken = () => {
+  return getCookie(TOKEN_COOKIE_NAME);
 };
 
-// بررسی اینکه کاربر لاگین است
+export const removeToken = () => {
+  deleteCookie(TOKEN_COOKIE_NAME);
+};
+
 export const isAuthenticated = () => {
-  const tokens = getTokens();
-  return !!(tokens.accessToken && tokens.refreshToken);
+  return !!getToken();
 };
-
-// بررسی انقضای Access Token
-export const isAccessTokenExpired = () => {
-  const token = getAccessToken();
-  if (!token) return true;
-
-  try {
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    const exp = payload.exp * 1000; // تبدیل به میلی‌ثانیه
-    return Date.now() >= exp;
-  } catch {
-    return true;
-  }
-};
-
-// بررسی انقضای Refresh Token
-export const isRefreshTokenExpired = () => {
-  const token = getRefreshToken();
-  if (!token) return true;
-
-  try {
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    const exp = payload.exp * 1000; // تبدیل به میلی‌ثانیه
-    return Date.now() >= exp;
-  } catch {
-    return true;
-  }
-};
-
-

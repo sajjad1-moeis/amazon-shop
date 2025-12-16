@@ -166,6 +166,8 @@ export const ADMIN_SIDEBAR_ITEMS = [
       { name: "پست جدید", href: "/admin/blog/create" },
       { name: "لیست پست‌ها", href: "/admin/blog/list" },
       { name: "دسته‌بندی‌ها", href: "/admin/blog/categories" },
+      { name: "نظرات", href: "/admin/blog/comments" },
+      { name: "تگ‌ها", href: "/admin/blog/tags" },
     ],
   },
   {
