@@ -1,48 +1,56 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 import PageHeader from "@/template/Admin/PageHeader";
 import PaymentsTable from "@/template/Admin/payments/PaymentsTable";
-
-const mockPayments = [
-  {
-    id: 1,
-    transactionId: "TXN-001",
-    orderNumber: "ORD-2024-001",
-    amount: 45000000,
-    status: "success",
-    method: "کارت بانکی",
-    date: "1403/09/20",
-  },
-  {
-    id: 2,
-    transactionId: "TXN-002",
-    orderNumber: "ORD-2024-002",
-    amount: 32000000,
-    status: "success",
-    method: "آنلاین",
-    date: "1403/09/20",
-  },
-  {
-    id: 3,
-    transactionId: "TXN-003",
-    orderNumber: "ORD-2024-003",
-    amount: 8500000,
-    status: "failed",
-    method: "کارت بانکی",
-    date: "1403/09/19",
-  },
-];
+import AdminPagination from "@/components/ui/AdminPagination";
+import { Spinner } from "@/components/ui/spinner";
+import { paymentService } from "@/services/payment/paymentService";
 
 export default function PaymentsPage() {
-  const [payments] = useState(mockPayments);
+  const searchParams = useSearchParams();
+  const statusParam = searchParams.get("status");
+  const [payments, setPayments] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize] = useState(20);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const filteredPayments = payments.filter(
-    (payment) =>
-      payment.transactionId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      payment.orderNumber.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const fetchPayments = async () => {
+    try {
+      setLoading(true);
+      const status = statusParam === "success" ? 1 : statusParam === "failed" ? 2 : undefined;
+      const response = await paymentService.getPaginated({
+        pageNumber,
+        pageSize,
+        status,
+        searchTerm: searchTerm || undefined,
+      });
+
+      if (response.success && response.data) {
+        setPayments(response.data.payments || response.data || []);
+        setTotalPages(response.data.totalPages || 1);
+      }
+    } catch (error) {
+      toast.error(error.message || "خطا در دریافت پرداخت‌ها");
+      console.error("Error fetching payments:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (searchTerm) {
+      setPageNumber(1);
+    }
+  }, [searchTerm]);
+
+  useEffect(() => {
+    fetchPayments();
+  }, [pageNumber, searchTerm, statusParam]);
 
   return (
     <div className="space-y-6">
@@ -54,7 +62,22 @@ export default function PaymentsPage() {
           onSearchChange={setSearchTerm}
         />
 
-        <PaymentsTable payments={filteredPayments} />
+        {loading ? (
+          <div className="p-8 text-center text-gray-400">
+            <Spinner size="lg" />
+          </div>
+        ) : (
+          <>
+            <PaymentsTable payments={payments} />
+            <div className="mt-6 pt-6 border-t border-gray-700">
+              <AdminPagination
+                currentPage={pageNumber}
+                totalPages={totalPages}
+                onPageChange={setPageNumber}
+              />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

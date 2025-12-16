@@ -1,24 +1,54 @@
 "use client";
 
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState, useEffect } from "react";
+import { Add } from "iconsax-reactjs";
+import { toast } from "sonner";
+import PageHeader from "@/template/Admin/PageHeader";
+import ShippingZonesTable from "@/template/Admin/shipping/zones/ShippingZonesTable";
+import { Spinner } from "@/components/ui/spinner";
+import { shippingService } from "@/services/shipping/shippingService";
 
 export default function ShippingZonesPage() {
+  const [zones, setZones] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchZones = async () => {
+    try {
+      setLoading(true);
+      const response = await shippingService.getZones();
+
+      if (response.success && response.data) {
+        setZones(response.data || []);
+      }
+    } catch (error) {
+      toast.error(error.message || "خطا در دریافت مناطق ارسال");
+      console.error("Error fetching zones:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchZones();
+  }, []);
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">مناطق ارسال</h1>
-        <p className="text-gray-400">مدیریت مناطق ارسال</p>
-      </div>
+      <div className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-6">
+        <PageHeader
+          title="مناطق ارسال"
+          buttonText="منطقه جدید"
+          buttonIcon={<Add size={20} className="ml-2" />}
+        />
 
-      <Card className="bg-gray-800 border-gray-700">
-        <CardHeader>
-          <CardTitle className="text-white">مناطق فعال</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-gray-400">این بخش در حال توسعه است</p>
-        </CardContent>
-      </Card>
+        {loading ? (
+          <div className="p-8 text-center text-gray-400">
+            <Spinner size="lg" />
+          </div>
+        ) : (
+          <ShippingZonesTable zones={zones} />
+        )}
+      </div>
     </div>
   );
 }

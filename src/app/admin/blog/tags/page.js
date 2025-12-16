@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import PageHeader from "@/template/Admin/PageHeader";
 import BlogTagsTable from "@/template/Admin/blog/tags/BlogTagsTable";
 import AdminPagination from "@/components/ui/AdminPagination";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import { blogTagService } from "@/services/blog/blogTagService";
 
 export default function BlogTagsPage() {
@@ -16,6 +17,9 @@ export default function BlogTagsPage() {
   const [loading, setLoading] = useState(true);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize] = useState(20);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedTagId, setSelectedTagId] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const fetchTags = async () => {
     try {
@@ -47,17 +51,27 @@ export default function BlogTagsPage() {
     router.push(`/admin/blog/tags/edit/${tagId}`);
   };
 
-  const handleDelete = async (tagId) => {
-    if (!confirm("آیا از حذف این تگ اطمینان دارید؟")) return;
+  const handleDelete = (tagId) => {
+    setSelectedTagId(tagId);
+    setDeleteDialogOpen(true);
+  };
 
+  const handleDeleteConfirm = async () => {
+    if (!selectedTagId) return;
+
+    setDeleteLoading(true);
     try {
-      const response = await blogTagService.delete(tagId);
+      const response = await blogTagService.delete(selectedTagId);
       if (response.success) {
         toast.success("تگ با موفقیت حذف شد");
+        setDeleteDialogOpen(false);
+        setSelectedTagId(null);
         fetchTags();
       }
     } catch (error) {
       toast.error(error.message || "خطا در حذف تگ");
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -86,7 +100,15 @@ export default function BlogTagsPage() {
           </>
         )}
       </div>
+
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="حذف تگ"
+        description="آیا از حذف این تگ اطمینان دارید؟ این عمل غیرقابل بازگشت است."
+        onConfirm={handleDeleteConfirm}
+        loading={deleteLoading}
+      />
     </div>
   );
 }
-

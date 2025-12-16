@@ -1,72 +1,55 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 import PageHeaderWithSearch from "@/template/Admin/PageHeaderWithSearch";
 import OrdersTable from "@/template/Admin/orders/OrdersTable";
-
-// داده‌های تستی
-const mockOrders = [
-  {
-    id: 1,
-    orderNumber: "ORD-2024-001",
-    customerName: "علی محمدی",
-    totalAmount: 45000000,
-    status: "processing",
-    date: "1403/09/20",
-    itemsCount: 2,
-    paymentStatus: "paid",
-  },
-  {
-    id: 2,
-    orderNumber: "ORD-2024-002",
-    customerName: "مریم احمدی",
-    totalAmount: 32000000,
-    status: "shipped",
-    date: "1403/09/20",
-    itemsCount: 1,
-    paymentStatus: "paid",
-  },
-  {
-    id: 3,
-    orderNumber: "ORD-2024-003",
-    customerName: "حسین رضایی",
-    totalAmount: 8500000,
-    status: "delivered",
-    date: "1403/09/19",
-    itemsCount: 1,
-    paymentStatus: "paid",
-  },
-  {
-    id: 4,
-    orderNumber: "ORD-2024-004",
-    customerName: "فاطمه کریمی",
-    totalAmount: 12000000,
-    status: "pending",
-    date: "1403/09/19",
-    itemsCount: 1,
-    paymentStatus: "pending",
-  },
-  {
-    id: 5,
-    orderNumber: "ORD-2024-005",
-    customerName: "محمد صادقی",
-    totalAmount: 55000000,
-    status: "processing",
-    date: "1403/09/19",
-    itemsCount: 3,
-    paymentStatus: "paid",
-  },
-];
+import AdminPagination from "@/components/ui/AdminPagination";
+import { Spinner } from "@/components/ui/spinner";
+import { orderService } from "@/services/order/orderService";
 
 export default function OrdersPage() {
-  const [orders] = useState(mockOrders);
+  const searchParams = useSearchParams();
+  const statusParam = searchParams.get("status");
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize] = useState(20);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const filteredOrders = orders.filter(
-    (order) =>
-      order.orderNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.customerName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      const response = await orderService.getPaginated({
+        pageNumber,
+        pageSize,
+        status: statusParam || undefined,
+        searchTerm: searchTerm || undefined,
+      });
+
+      if (response.success && response.data) {
+        setOrders(response.data.orders || response.data || []);
+        setTotalPages(response.data.totalPages || 1);
+      }
+    } catch (error) {
+      toast.error(error.message || "خطا در دریافت سفارشات");
+      console.error("Error fetching orders:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (searchTerm) {
+      setPageNumber(1);
+    }
+  }, [searchTerm]);
+
+  useEffect(() => {
+    fetchOrders();
+  }, [pageNumber, searchTerm, statusParam]);
 
   return (
     <div className="space-y-6">
@@ -77,7 +60,22 @@ export default function OrdersPage() {
           onSearchChange={setSearchTerm}
         />
 
-        <OrdersTable orders={filteredOrders} />
+        {loading ? (
+          <div className="p-8 text-center text-gray-400">
+            <Spinner size="lg" />
+          </div>
+        ) : (
+          <>
+            <OrdersTable orders={orders} />
+            <div className="mt-6 pt-6 border-t border-gray-700">
+              <AdminPagination
+                currentPage={pageNumber}
+                totalPages={totalPages}
+                onPageChange={setPageNumber}
+              />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

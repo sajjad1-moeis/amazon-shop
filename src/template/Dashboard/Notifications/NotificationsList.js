@@ -8,6 +8,7 @@ import { Trash, TickCircle } from "iconsax-reactjs";
 import { toast } from "sonner";
 import { initialNotifications } from "@/data";
 import PageHeader from "../Common/PageHeader";
+import ConfirmDialog from "@/components/ConfirmDialog";
 
 export default function NotificationsList() {
   const [notifications, setNotifications] = useState(initialNotifications);
@@ -18,6 +19,7 @@ export default function NotificationsList() {
     allCategories: "",
     searchQuery: "",
   });
+  const [deleteAllDialogOpen, setDeleteAllDialogOpen] = useState(false);
 
   const handleDelete = (notificationId) => {
     setNotifications(notifications.filter((n) => n.id !== notificationId));
@@ -25,10 +27,13 @@ export default function NotificationsList() {
   };
 
   const handleDeleteAll = () => {
-    if (confirm("آیا از حذف همه اعلان‌ها اطمینان دارید؟")) {
-      setNotifications([]);
-      toast.success("همه اعلان‌ها حذف شدند");
-    }
+    setDeleteAllDialogOpen(true);
+  };
+
+  const handleDeleteAllConfirm = () => {
+    setNotifications([]);
+    setDeleteAllDialogOpen(false);
+    toast.success("همه اعلان‌ها حذف شدند");
   };
 
   const handleMarkAllAsRead = () => {
@@ -104,6 +109,14 @@ export default function NotificationsList() {
           </div>
         )}
       </div>
+
+      <ConfirmDialog
+        open={deleteAllDialogOpen}
+        onOpenChange={setDeleteAllDialogOpen}
+        title="حذف همه اعلان‌ها"
+        description="آیا از حذف همه اعلان‌ها اطمینان دارید؟ این عمل غیرقابل بازگشت است."
+        onConfirm={handleDeleteAllConfirm}
+      />
     </div>
   );
 }

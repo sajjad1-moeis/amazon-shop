@@ -7,20 +7,34 @@ import { Badge } from "@/components/ui/badge";
 import { MessageText } from "iconsax-reactjs";
 import TableActions from "../TableActions";
 
-export default function TicketsTable({ tickets }) {
-  const getPriorityBadge = (priority) => {
-    const colors = {
-      high: "destructive",
-      medium: "outline",
-      low: "secondary",
-    };
-    const labels = {
-      high: "بالا",
-      medium: "متوسط",
-      low: "پایین",
-    };
-    return <Badge variant={colors[priority]}>{labels[priority]}</Badge>;
+const getPriorityBadge = (priority) => {
+  const priorityMap = {
+    1: { label: "پایین", className: "bg-gray-500/20 text-gray-400 border-gray-500/30" },
+    2: { label: "متوسط", className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" },
+    3: { label: "بالا", className: "bg-red-500/20 text-red-400 border-red-500/30" },
   };
+  const priorityInfo = priorityMap[priority] || priorityMap[2];
+  return (
+    <Badge variant="outline" className={priorityInfo.className}>
+      {priorityInfo.label}
+    </Badge>
+  );
+};
+
+const getTicketStatusBadge = (status) => {
+  const statusMap = {
+    1: { label: "باز", className: "bg-green-500/20 text-green-400 border-green-500/30" },
+    2: { label: "بسته", className: "bg-gray-500/20 text-gray-400 border-gray-500/30" },
+  };
+  const statusInfo = statusMap[status] || statusMap[1];
+  return (
+    <Badge variant="outline" className={statusInfo.className}>
+      {statusInfo.label}
+    </Badge>
+  );
+};
+
+export default function TicketsTable({ tickets }) {
 
   if (tickets.length === 0) {
     return <div className="p-8 text-center text-gray-400">تیکتی یافت نشد</div>;
@@ -43,17 +57,21 @@ export default function TicketsTable({ tickets }) {
       <TableBody>
         {tickets.map((ticket) => (
           <TableRow key={ticket.id} className="border-gray-700 hover:bg-gray-700/50">
-            <TableCell className="text-white font-medium">{ticket.ticketNumber}</TableCell>
-            <TableCell className="text-gray-300">{ticket.customerName}</TableCell>
-            <TableCell className="text-gray-300">{ticket.subject}</TableCell>
-            <TableCell>{getPriorityBadge(ticket.priority)}</TableCell>
-            <TableCell>
-              <Badge variant={ticket.status === "open" ? "default" : "secondary"}>
-                {ticket.status === "open" ? "باز" : "بسته"}
-              </Badge>
+            <TableCell className="text-white font-medium">
+              {ticket.ticketNumber || ticket.number || `TKT-${ticket.id}`}
             </TableCell>
-            <TableCell className="text-gray-300">{ticket.messagesCount}</TableCell>
-            <TableCell className="text-gray-300">{ticket.lastUpdate}</TableCell>
+            <TableCell className="text-gray-300">
+              {ticket.customerName || ticket.userFullName || ticket.userName || "-"}
+            </TableCell>
+            <TableCell className="text-gray-300">{ticket.subject || ticket.title || "-"}</TableCell>
+            <TableCell>{getPriorityBadge(ticket.priority)}</TableCell>
+            <TableCell>{getTicketStatusBadge(ticket.status)}</TableCell>
+            <TableCell className="text-gray-300">{ticket.messagesCount || ticket.messageCount || 0}</TableCell>
+            <TableCell className="text-gray-300">
+              {ticket.updatedAt
+                ? new Date(ticket.updatedAt).toLocaleDateString("fa-IR")
+                : ticket.lastUpdate || "-"}
+            </TableCell>
             <TableCell>
               <TableActions
                 showDelete={false}

@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import PageHeader from "@/template/Admin/PageHeader";
 import BlogCategoriesTable from "@/template/Admin/blog/categories/BlogCategoriesTable";
 import AdminPagination from "@/components/ui/AdminPagination";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import { blogCategoryService } from "@/services/blog/blogCategoryService";
 
 export default function BlogCategoriesPage() {
@@ -16,6 +17,9 @@ export default function BlogCategoriesPage() {
   const [loading, setLoading] = useState(true);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize] = useState(20);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const fetchCategories = async () => {
     try {
@@ -54,17 +58,27 @@ export default function BlogCategoriesPage() {
     router.push(`/admin/blog/categories/edit/${categoryId}`);
   };
 
-  const handleDelete = async (categoryId) => {
-    if (!confirm("آیا از حذف این دسته‌بندی اطمینان دارید؟")) return;
+  const handleDelete = (categoryId) => {
+    setSelectedCategoryId(categoryId);
+    setDeleteDialogOpen(true);
+  };
 
+  const handleDeleteConfirm = async () => {
+    if (!selectedCategoryId) return;
+
+    setDeleteLoading(true);
     try {
-      const response = await blogCategoryService.delete(categoryId);
+      const response = await blogCategoryService.delete(selectedCategoryId);
       if (response.success) {
         toast.success("دسته‌بندی با موفقیت حذف شد");
+        setDeleteDialogOpen(false);
+        setSelectedCategoryId(null);
         fetchCategories();
       }
     } catch (error) {
       toast.error(error.message || "خطا در حذف دسته‌بندی");
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -82,11 +96,7 @@ export default function BlogCategoriesPage() {
           <div className="p-8 text-center text-gray-400">در حال بارگذاری...</div>
         ) : (
           <>
-            <BlogCategoriesTable
-              categories={displayedCategories}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
+            <BlogCategoriesTable categories={displayedCategories} onEdit={handleEdit} onDelete={handleDelete} />
             <div className="mt-6 pt-6 border-t border-gray-700">
               <AdminPagination
                 currentPage={pageNumber}
@@ -97,6 +107,15 @@ export default function BlogCategoriesPage() {
           </>
         )}
       </div>
+
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="حذف دسته‌بندی"
+        description="آیا از حذف این دسته‌بندی اطمینان دارید؟ این عمل غیرقابل بازگشت است."
+        onConfirm={handleDeleteConfirm}
+        loading={deleteLoading}
+      />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import PageHeaderWithSearch from "@/template/Admin/PageHeaderWithSearch";
 import BlogCommentsTable from "@/template/Admin/blog/comments/BlogCommentsTable";
 import AdminPagination from "@/components/ui/AdminPagination";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import { blogCommentService } from "@/services/blog/blogCommentService";
 
 export default function BlogCommentsPage() {
@@ -17,6 +18,9 @@ export default function BlogCommentsPage() {
   const [statusFilter, setStatusFilter] = useState("1");
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize] = useState(20);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedCommentId, setSelectedCommentId] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const fetchComments = async () => {
     try {
@@ -87,17 +91,27 @@ export default function BlogCommentsPage() {
     }
   };
 
-  const handleDelete = async (commentId) => {
-    if (!confirm("آیا از حذف این نظر اطمینان دارید؟")) return;
+  const handleDelete = (commentId) => {
+    setSelectedCommentId(commentId);
+    setDeleteDialogOpen(true);
+  };
 
+  const handleDeleteConfirm = async () => {
+    if (!selectedCommentId) return;
+
+    setDeleteLoading(true);
     try {
-      const response = await blogCommentService.softDelete(commentId);
+      const response = await blogCommentService.softDelete(selectedCommentId);
       if (response.success) {
         toast.success("نظر با موفقیت حذف شد");
+        setDeleteDialogOpen(false);
+        setSelectedCommentId(null);
         fetchComments();
       }
     } catch (error) {
       toast.error(error.message || "خطا در حذف نظر");
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -153,6 +167,15 @@ export default function BlogCommentsPage() {
           </>
         )}
       </div>
+
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="حذف نظر"
+        description="آیا از حذف این نظر اطمینان دارید؟ این عمل غیرقابل بازگشت است."
+        onConfirm={handleDeleteConfirm}
+        loading={deleteLoading}
+      />
     </div>
   );
 }

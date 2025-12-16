@@ -53,6 +53,16 @@ export default function ReportsPage() {
             </CardContent>
           </Card>
         </Link>
+        <Link href="/admin/reports/rate-limits">
+          <Card className="bg-gray-800 border-gray-700 hover:bg-gray-700/50 cursor-pointer transition-colors">
+            <CardHeader>
+              <CardTitle className="text-white">گزارشات Rate Limit</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-400">گزارشات محدودیت درخواست‌ها</p>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
     </div>
   );

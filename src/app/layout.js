@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
       <body dir="rtl">
         <AuthProvider>
           <main className="overflow-hidden max-md:pb-20 dark:bg-dark-bg">{children}</main>
-          <Toaster dir="rtl" position="top-right" />
+          <Toaster dir="rtl" position="top-right" richColors />
         </AuthProvider>
       </body>
     </html>

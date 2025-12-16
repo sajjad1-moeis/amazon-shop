@@ -1,82 +1,59 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 import SearchBarTopTable from "@/template/Admin/SearchBarTopTable";
 import UsersTable from "@/template/Admin/users/UsersTable";
 import UsersFilters from "@/template/Admin/users/UsersFilters";
-
-// داده‌های تستی
-
-const mockUsers = [
-  {
-    id: 1,
-    firstName: "علی",
-    lastName: "محمدی",
-    email: "ali@example.com",
-    phone: "09123456789",
-    ordersCount: 12,
-    totalSpent: 125000000,
-    isActive: true,
-    registrationDate: "1403/08/01",
-    isVip: true,
-  },
-  {
-    id: 2,
-    firstName: "مریم",
-    lastName: "احمدی",
-    email: "maryam@example.com",
-    phone: "09123456790",
-    ordersCount: 8,
-    totalSpent: 85000000,
-    isActive: true,
-    registrationDate: "1403/08/05",
-    isVip: false,
-  },
-  {
-    id: 3,
-    firstName: "حسین",
-    lastName: "رضایی",
-    email: "hossein@example.com",
-    phone: "09123456791",
-    ordersCount: 5,
-    totalSpent: 45000000,
-    isActive: false,
-    registrationDate: "1403/08/10",
-    isVip: false,
-  },
-  {
-    id: 4,
-    firstName: "فاطمه",
-    lastName: "کریمی",
-    email: "fateme@example.com",
-    phone: "09123456792",
-    ordersCount: 15,
-    totalSpent: 180000000,
-    isActive: true,
-    registrationDate: "1403/07/20",
-    isVip: true,
-  },
-];
+import AdminPagination from "@/components/ui/AdminPagination";
+import { Spinner } from "@/components/ui/spinner";
+import { userService } from "@/services/user/userService";
 
 export default function UsersPage() {
-  const [users] = useState(mockUsers);
+  const searchParams = useSearchParams();
+  const statusParam = searchParams.get("status");
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState("all");
+  const [filterStatus, setFilterStatus] = useState(statusParam || "all");
   const [filterVIP, setFilterVIP] = useState("all");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize] = useState(20);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const filteredUsers = users.filter((user) => {
-    const matchesSearch =
-      user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus =
-      filterStatus === "all" ||
-      (filterStatus === "active" && user.isActive) ||
-      (filterStatus === "inactive" && !user.isActive);
-    const matchesVIP =
-      filterVIP === "all" || (filterVIP === "vip" && user.isVip) || (filterVIP === "normal" && !user.isVip);
-    return matchesSearch && matchesStatus && matchesVIP;
-  });
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const response = await userService.getPaginated({
+        pageNumber,
+        pageSize,
+        isActive: filterStatus === "all" ? undefined : filterStatus === "active",
+        isVip: filterVIP === "all" ? undefined : filterVIP === "vip",
+        searchTerm: searchTerm || undefined,
+      });
+
+      if (response.success && response.data) {
+        setUsers(response.data.users || response.data || []);
+        setTotalPages(response.data.totalPages || 1);
+      }
+    } catch (error) {
+      toast.error(error.message || "خطا در دریافت کاربران");
+      console.error("Error fetching users:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (searchTerm) {
+      setPageNumber(1);
+    }
+  }, [searchTerm]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [pageNumber, filterStatus, filterVIP, searchTerm]);
 
   return (
     <div className="space-y-6">
@@ -98,7 +75,22 @@ export default function UsersPage() {
           </SearchBarTopTable>
         </div>
 
-        <UsersTable users={filteredUsers} />
+        {loading ? (
+          <div className="p-8 text-center text-gray-400">
+            <Spinner size="lg" />
+          </div>
+        ) : (
+          <>
+            <UsersTable users={users} />
+            <div className="mt-6 pt-6 border-t border-gray-700">
+              <AdminPagination
+                currentPage={pageNumber}
+                totalPages={totalPages}
+                onPageChange={setPageNumber}
+              />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

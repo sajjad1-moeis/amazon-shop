@@ -17,6 +17,8 @@ import {
   Star,
   MessageQuestion,
   Notification,
+  RotateRight,
+  MoneyRecive,
 } from "iconsax-reactjs";
 
 export const ADMIN_SIDEBAR_ITEMS = [
@@ -55,6 +57,13 @@ export const ADMIN_SIDEBAR_ITEMS = [
       { name: "سفارشات تحویل شده", href: "/admin/orders/delivered" },
       { name: "سفارشات لغو شده", href: "/admin/orders/cancelled" },
     ],
+  },
+  {
+    name: "درخواست‌های مرجوعی",
+    icon: RotateRight,
+    color: "#EC4899",
+    href: "/admin/return-requests",
+    key: "return-request",
   },
   {
     name: "کاربران",
@@ -176,6 +185,13 @@ export const ADMIN_SIDEBAR_ITEMS = [
     color: "#EF4444",
     href: "/admin/notifications",
     key: "notification",
+  },
+  {
+    name: "خدمات ارزی",
+    icon: MoneyRecive,
+    color: "#10b981",
+    href: "/admin/currency-services",
+    key: "currency-service",
   },
   {
     name: "تنظیمات",

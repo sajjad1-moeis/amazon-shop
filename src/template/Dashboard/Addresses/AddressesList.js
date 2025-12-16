@@ -10,6 +10,7 @@ import { useAddresses } from "@/utils/func/use-address";
 import { formatAddress, formatFullName, parseAddressData } from "@/utils/func/address-utlis";
 import { toast } from "sonner";
 import { mockAddresses } from "@/data";
+import ConfirmDialog from "@/components/ConfirmDialog";
 
 export default function AddressesList({ isModalOpen, setIsModalOpen, editingAddress, setEditingAddress }) {
   const { addresses, addAddress, updateAddress, deleteAddress, setDefaultAddress } = useAddresses(mockAddresses);
@@ -17,6 +18,8 @@ export default function AddressesList({ isModalOpen, setIsModalOpen, editingAddr
   // اگر props پاس داده نشده باشد، state را خودمان مدیریت می‌کنیم
   const [internalIsModalOpen, setInternalIsModalOpen] = useState(false);
   const [internalEditingAddress, setInternalEditingAddress] = useState(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
   
   const modalOpen = isModalOpen !== undefined ? isModalOpen : internalIsModalOpen;
   const setModalOpen = setIsModalOpen || setInternalIsModalOpen;
@@ -33,16 +36,24 @@ export default function AddressesList({ isModalOpen, setIsModalOpen, editingAddr
 
   const handleDeleteClick = (addressId) => {
     if (addresses.length <= 1) {
-      toast.error("حداقل باید یک آدرس وجود داشته باشد", { richColors: true });
+      toast.error("حداقل باید یک آدرس وجود داشته باشد");
       return;
     }
 
-    if (window.confirm("آیا از حذف این آدرس اطمینان دارید؟")) {
-      try {
-        deleteAddress(addressId);
-      } catch (error) {
-        toast.error(error.message);
-      }
+    setSelectedAddressId(addressId);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (!selectedAddressId) return;
+
+    try {
+      deleteAddress(selectedAddressId);
+      setDeleteDialogOpen(false);
+      setSelectedAddressId(null);
+      toast.success("آدرس با موفقیت حذف شد");
+    } catch (error) {
+      toast.error(error.message);
     }
   };
 
@@ -104,6 +115,14 @@ export default function AddressesList({ isModalOpen, setIsModalOpen, editingAddr
         onClose={handleCloseDialog}
         defaultValues={editing ? parseAddressData(editing) : null}
         onSubmit={handleSaveAddress}
+      />
+
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="حذف آدرس"
+        description="آیا از حذف این آدرس اطمینان دارید؟ این عمل غیرقابل بازگشت است."
+        onConfirm={handleDeleteConfirm}
       />
     </>
   );

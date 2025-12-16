@@ -1,63 +1,56 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 import PageHeaderWithSearch from "@/template/Admin/PageHeaderWithSearch";
 import TicketsTable from "@/template/Admin/tickets/TicketsTable";
-
-// داده‌های تستی
-const mockTickets = [
-  {
-    id: 1,
-    ticketNumber: "TKT-001",
-    customerName: "علی محمدی",
-    subject: "مشکل در ارسال سفارش",
-    status: "open",
-    priority: "high",
-    lastUpdate: "1403/09/20",
-    messagesCount: 5,
-  },
-  {
-    id: 2,
-    ticketNumber: "TKT-002",
-    customerName: "مریم احمدی",
-    subject: "سوال درباره محصول",
-    status: "open",
-    priority: "medium",
-    lastUpdate: "1403/09/20",
-    messagesCount: 3,
-  },
-  {
-    id: 3,
-    ticketNumber: "TKT-003",
-    customerName: "حسین رضایی",
-    subject: "درخواست بازگشت وجه",
-    status: "closed",
-    priority: "high",
-    lastUpdate: "1403/09/19",
-    messagesCount: 8,
-  },
-  {
-    id: 4,
-    ticketNumber: "TKT-004",
-    customerName: "فاطمه کریمی",
-    subject: "مشکل در پرداخت",
-    status: "open",
-    priority: "low",
-    lastUpdate: "1403/09/19",
-    messagesCount: 2,
-  },
-];
+import AdminPagination from "@/components/ui/AdminPagination";
+import { Spinner } from "@/components/ui/spinner";
+import { ticketService } from "@/services/ticket/ticketService";
 
 export default function TicketsPage() {
-  const [tickets] = useState(mockTickets);
+  const searchParams = useSearchParams();
+  const statusParam = searchParams.get("status");
+  const [tickets, setTickets] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize] = useState(20);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const filteredTickets = tickets.filter(
-    (ticket) =>
-      ticket.ticketNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ticket.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ticket.subject.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const fetchTickets = async () => {
+    try {
+      setLoading(true);
+      const status = statusParam === "open" ? 1 : statusParam === "closed" ? 2 : undefined;
+      const response = await ticketService.getPaginated({
+        pageNumber,
+        pageSize,
+        status,
+        searchTerm: searchTerm || undefined,
+      });
+
+      if (response.success && response.data) {
+        setTickets(response.data.tickets || response.data || []);
+        setTotalPages(response.data.totalPages || 1);
+      }
+    } catch (error) {
+      toast.error(error.message || "خطا در دریافت تیکت‌ها");
+      console.error("Error fetching tickets:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (searchTerm) {
+      setPageNumber(1);
+    }
+  }, [searchTerm]);
+
+  useEffect(() => {
+    fetchTickets();
+  }, [pageNumber, searchTerm, statusParam]);
 
   return (
     <div className="space-y-6">
@@ -68,7 +61,22 @@ export default function TicketsPage() {
           onSearchChange={setSearchTerm}
         />
 
-        <TicketsTable tickets={filteredTickets} />
+        {loading ? (
+          <div className="p-8 text-center text-gray-400">
+            <Spinner size="lg" />
+          </div>
+        ) : (
+          <>
+            <TicketsTable tickets={tickets} />
+            <div className="mt-6 pt-6 border-t border-gray-700">
+              <AdminPagination
+                currentPage={pageNumber}
+                totalPages={totalPages}
+                onPageChange={setPageNumber}
+              />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

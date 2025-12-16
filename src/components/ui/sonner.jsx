@@ -18,6 +18,7 @@ const Toaster = ({
     <Sonner
       theme={theme}
       className="toaster group"
+      richColors
       icons={{
         success: <CircleCheck className="h-4 w-4" />,
         info: <Info className="h-4 w-4" />,

@@ -1,18 +1,36 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Add } from "iconsax-reactjs";
+import { toast } from "sonner";
 import PageHeader from "@/template/Admin/PageHeader";
 import ShippingMethodsTable from "@/template/Admin/shipping/methods/ShippingMethodsTable";
-
-const mockMethods = [
-  { id: 1, name: "پست پیشتاز", price: 50000, estimatedDays: 3, isActive: true },
-  { id: 2, name: "پست معمولی", price: 30000, estimatedDays: 7, isActive: true },
-  { id: 3, name: "پیک موتوری", price: 20000, estimatedDays: 1, isActive: false },
-];
+import { Spinner } from "@/components/ui/spinner";
+import { shippingService } from "@/services/shipping/shippingService";
 
 export default function ShippingMethodsPage() {
-  const [methods] = useState(mockMethods);
+  const [methods, setMethods] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchMethods = async () => {
+    try {
+      setLoading(true);
+      const response = await shippingService.getMethods();
+
+      if (response.success && response.data) {
+        setMethods(response.data || []);
+      }
+    } catch (error) {
+      toast.error(error.message || "خطا در دریافت روش‌های ارسال");
+      console.error("Error fetching shipping methods:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMethods();
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -23,7 +41,13 @@ export default function ShippingMethodsPage() {
           buttonIcon={<Add size={20} className="ml-2" />}
         />
 
-        <ShippingMethodsTable methods={methods} />
+        {loading ? (
+          <div className="p-8 text-center text-gray-400">
+            <Spinner size="lg" />
+          </div>
+        ) : (
+          <ShippingMethodsTable methods={methods} />
+        )}
       </div>
     </div>
   );

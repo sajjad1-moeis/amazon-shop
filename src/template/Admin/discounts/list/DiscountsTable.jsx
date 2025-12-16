@@ -5,6 +5,20 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import TableActions from "../../TableActions";
 
+const getStatusBadge = (status) => {
+  const statusMap = {
+    1: { label: "فعال", className: "bg-green-500/20 text-green-400 border-green-500/30" },
+    2: { label: "غیرفعال", className: "bg-gray-500/20 text-gray-400 border-gray-500/30" },
+    3: { label: "منقضی شده", className: "bg-red-500/20 text-red-400 border-red-500/30" },
+  };
+  const statusInfo = statusMap[status] || statusMap[2];
+  return (
+    <Badge variant="outline" className={statusInfo.className}>
+      {statusInfo.label}
+    </Badge>
+  );
+};
+
 export default function DiscountsTable({ discounts }) {
   if (discounts.length === 0) {
     return <div className="p-8 text-center text-gray-400">کوپنی یافت نشد</div>;
@@ -28,20 +42,22 @@ export default function DiscountsTable({ discounts }) {
           <TableRow key={discount.id} className="border-gray-700 hover:bg-gray-700/50">
             <TableCell className="text-white font-medium">{discount.code}</TableCell>
             <TableCell className="text-gray-300">
-              {discount.type === "percentage" ? "درصدی" : "مقدار ثابت"}
+              {discount.type === 1 ? "درصدی" : discount.type === 2 ? "مقدار ثابت" : "-"}
             </TableCell>
             <TableCell className="text-gray-300">
-              {discount.type === "percentage" ? `${discount.value}%` : `${discount.value.toLocaleString()} تومان`}
+              {discount.type === 1
+                ? `${discount.value}%`
+                : discount.type === 2
+                  ? `${discount.value?.toLocaleString() || 0} تومان`
+                  : "-"}
             </TableCell>
-            <TableCell className="text-gray-300">{discount.minPurchase.toLocaleString()} تومان</TableCell>
             <TableCell className="text-gray-300">
-              {discount.used} / {discount.usageLimit}
+              {discount.minPurchase ? `${discount.minPurchase.toLocaleString()} تومان` : "-"}
             </TableCell>
-            <TableCell>
-              <Badge variant={discount.status === "active" ? "default" : "secondary"}>
-                {discount.status === "active" ? "فعال" : "منقضی شده"}
-              </Badge>
+            <TableCell className="text-gray-300">
+              {discount.usedCount || 0} / {discount.usageLimit || 0}
             </TableCell>
+            <TableCell>{getStatusBadge(discount.status)}</TableCell>
             <TableCell>
               <TableActions showView={false} />
             </TableCell>

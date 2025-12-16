@@ -1,60 +1,52 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Add } from "iconsax-reactjs";
+import { toast } from "sonner";
 import PageHeader from "@/template/Admin/PageHeader";
 import DiscountsTable from "@/template/Admin/discounts/list/DiscountsTable";
-
-// داده‌های تستی
-const mockDiscounts = [
-  {
-    id: 1,
-    code: "WELCOME20",
-    type: "percentage",
-    value: 20,
-    minPurchase: 100000,
-    maxDiscount: 500000,
-    usageLimit: 100,
-    used: 45,
-    status: "active",
-    startDate: "1403/09/01",
-    endDate: "1403/12/29",
-  },
-  {
-    id: 2,
-    code: "SUMMER50",
-    type: "fixed",
-    value: 50000,
-    minPurchase: 200000,
-    maxDiscount: null,
-    usageLimit: 50,
-    used: 12,
-    status: "active",
-    startDate: "1403/09/15",
-    endDate: "1403/10/15",
-  },
-  {
-    id: 3,
-    code: "VIP100",
-    type: "percentage",
-    value: 10,
-    minPurchase: 500000,
-    maxDiscount: 100000,
-    usageLimit: 200,
-    used: 200,
-    status: "expired",
-    startDate: "1403/08/01",
-    endDate: "1403/08/31",
-  },
-];
+import AdminPagination from "@/components/ui/AdminPagination";
+import { Spinner } from "@/components/ui/spinner";
+import { discountService } from "@/services/discount/discountService";
 
 export default function DiscountsListPage() {
-  const [discounts] = useState(mockDiscounts);
+  const [discounts, setDiscounts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize] = useState(20);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const filteredDiscounts = discounts.filter((discount) =>
-    discount.code.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const fetchDiscounts = async () => {
+    try {
+      setLoading(true);
+      const response = await discountService.getDiscountCodesPaginated({
+        pageNumber,
+        pageSize,
+        searchTerm: searchTerm || undefined,
+      });
+
+      if (response.success && response.data) {
+        setDiscounts(response.data.discounts || []);
+        setTotalPages(response.data.totalPages || 1);
+      }
+    } catch (error) {
+      toast.error(error.message || "خطا در دریافت کوپن‌ها");
+      console.error("Error fetching discounts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (searchTerm) {
+      setPageNumber(1);
+    }
+  }, [searchTerm]);
+
+  useEffect(() => {
+    fetchDiscounts();
+  }, [pageNumber, searchTerm]);
 
   return (
     <div className="space-y-6">
@@ -69,7 +61,22 @@ export default function DiscountsListPage() {
           onSearchChange={setSearchTerm}
         />
 
-        <DiscountsTable discounts={filteredDiscounts} />
+        {loading ? (
+          <div className="p-8 text-center text-gray-400">
+            <Spinner size="lg" />
+          </div>
+        ) : (
+          <>
+            <DiscountsTable discounts={discounts} />
+            <div className="mt-6 pt-6 border-t border-gray-700">
+              <AdminPagination
+                currentPage={pageNumber}
+                totalPages={totalPages}
+                onPageChange={setPageNumber}
+              />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

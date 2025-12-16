@@ -1,24 +1,65 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { toast } from "sonner";
 import PageHeader from "@/template/Admin/PageHeader";
 import LogsTable from "@/template/Admin/security/logs/LogsTable";
-
-const mockLogs = [
-  { id: 1, action: "ورود به سیستم", user: "مدیر", ip: "192.168.1.1", date: "1403/09/20 10:30", status: "success" },
-  { id: 2, action: "ویرایش محصول", user: "مدیر", ip: "192.168.1.1", date: "1403/09/20 11:15", status: "success" },
-  { id: 3, action: "تلاش ورود ناموفق", user: "نامشخص", ip: "192.168.1.100", date: "1403/09/20 12:00", status: "failed" },
-];
+import AdminPagination from "@/components/ui/AdminPagination";
+import { Spinner } from "@/components/ui/spinner";
+import { securityService } from "@/services/security/securityService";
 
 export default function SecurityLogsPage() {
-  const [logs] = useState(mockLogs);
+  const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize] = useState(20);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const fetchLogs = async () => {
+    try {
+      setLoading(true);
+      const response = await securityService.getLogs({
+        pageNumber,
+        pageSize,
+      });
+
+      if (response.success && response.data) {
+        setLogs(response.data.logs || response.data || []);
+        setTotalPages(response.data.totalPages || 1);
+      }
+    } catch (error) {
+      toast.error(error.message || "خطا در دریافت لاگ‌ها");
+      console.error("Error fetching logs:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLogs();
+  }, [pageNumber]);
 
   return (
     <div className="space-y-6">
       <div className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-6">
         <PageHeader title="لاگ‌های سیستم" />
 
-        <LogsTable logs={logs} />
+        {loading ? (
+          <div className="p-8 text-center text-gray-400">
+            <Spinner size="lg" />
+          </div>
+        ) : (
+          <>
+            <LogsTable logs={logs} />
+            <div className="mt-6 pt-6 border-t border-gray-700">
+              <AdminPagination
+                currentPage={pageNumber}
+                totalPages={totalPages}
+                onPageChange={setPageNumber}
+              />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
