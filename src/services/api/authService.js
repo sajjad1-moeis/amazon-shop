@@ -36,9 +36,13 @@ export const authService = {
     return client.post("Auth/GetUserByToken", { json: { token } }).json();
   },
 
-
   logoutFromAllDevices: async () => {
     const client = getAuthenticatedClient();
     return client.post("Auth/LogoutFromAllDevices").json();
+  },
+
+  refreshToken: async (token) => {
+    const client = getPublicClient();
+    return client.post("Auth/RefreshToken", { json: { token } }).json();
   },
 };

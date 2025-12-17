@@ -71,12 +71,6 @@ export const ADMIN_SIDEBAR_ITEMS = [
     color: "#8B5CF6",
     href: "/admin/users",
     key: "user",
-    children: [
-      { name: "همه کاربران", href: "/admin/users" },
-      { name: "کاربران فعال", href: "/admin/users/active" },
-      { name: "کاربران غیرفعال", href: "/admin/users/inactive" },
-      { name: "کاربران VIP", href: "/admin/users/vip" },
-    ],
   },
   {
     name: "تخفیف‌ها و کوپن‌ها",
@@ -112,6 +106,18 @@ export const ADMIN_SIDEBAR_ITEMS = [
       { name: "همه تیکت‌ها", href: "/admin/tickets" },
       { name: "تیکت‌های باز", href: "/admin/tickets/open" },
       { name: "تیکت‌های بسته", href: "/admin/tickets/closed" },
+    ],
+  },
+  {
+    name: "ارتباط با ما",
+    icon: MessageText,
+    color: "#06B6D4",
+    href: "/admin/contact-us",
+    key: "contact-us",
+    children: [
+      { name: "همه درخواست‌ها", href: "/admin/contact-us" },
+      { name: "خوانده نشده", href: "/admin/contact-us?filter=unread" },
+      { name: "خوانده شده", href: "/admin/contact-us?filter=read" },
     ],
   },
   {

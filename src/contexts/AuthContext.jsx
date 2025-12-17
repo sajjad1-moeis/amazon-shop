@@ -1,8 +1,9 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useRef } from "react";
 import { authAPI } from "@/lib/api-client";
 import { saveToken, getToken, removeToken, isAuthenticated } from "@/lib/token-manager";
+import { isTokenExpired, isTokenExpiringSoon } from "@/utils/jwtUtils";
 import { toast } from "sonner";
 
 const AuthContext = createContext(null);
@@ -18,6 +19,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const tokenCheckInterval = useRef(null);
 
   useEffect(() => {
     const initAuth = async () => {
@@ -48,6 +50,22 @@ export const AuthProvider = ({ children }) => {
     };
 
     initAuth();
+
+    tokenCheckInterval.current = setInterval(() => {
+      const token = getToken();
+      if (token && (isTokenExpired(token) || isTokenExpiringSoon(token))) {
+        authAPI.refreshToken(token).catch(() => {
+          removeToken();
+          setUser(null);
+        });
+      }
+    }, 60000);
+
+    return () => {
+      if (tokenCheckInterval.current) {
+        clearInterval(tokenCheckInterval.current);
+      }
+    };
   }, []);
 
   const login = async (phoneNumber, password) => {
@@ -60,18 +78,24 @@ export const AuthProvider = ({ children }) => {
 
       if (response.success && response.data) {
         let token = null;
+        let refreshToken = null;
+
         if (response.data.tokens?.accessToken) {
           token = response.data.tokens.accessToken;
+          refreshToken = response.data.tokens.refreshToken;
         } else if (response.data.tokens?.token) {
           token = response.data.tokens.token;
+          refreshToken = response.data.tokens.refreshToken;
         } else if (response.data.accessToken) {
           token = response.data.accessToken;
+          refreshToken = response.data.refreshToken;
         } else if (response.data.token) {
           token = response.data.token;
+          refreshToken = response.data.refreshToken;
         }
 
         if (token) {
-          saveToken(token);
+          saveToken(token, refreshToken);
         }
 
         if (response.data.user) {
@@ -124,18 +148,24 @@ export const AuthProvider = ({ children }) => {
 
       if (response.success && response.data) {
         let token = null;
+        let refreshToken = null;
+
         if (response.data.tokens?.accessToken) {
           token = response.data.tokens.accessToken;
+          refreshToken = response.data.tokens.refreshToken;
         } else if (response.data.tokens?.token) {
           token = response.data.tokens.token;
+          refreshToken = response.data.tokens.refreshToken;
         } else if (response.data.accessToken) {
           token = response.data.accessToken;
+          refreshToken = response.data.refreshToken;
         } else if (response.data.token) {
           token = response.data.token;
+          refreshToken = response.data.refreshToken;
         }
 
         if (token) {
-          saveToken(token);
+          saveToken(token, refreshToken);
         }
 
         if (response.data.user) {
@@ -185,18 +215,24 @@ export const AuthProvider = ({ children }) => {
 
       if (response.success && response.data) {
         let token = null;
+        let refreshToken = null;
+
         if (response.data.tokens?.accessToken) {
           token = response.data.tokens.accessToken;
+          refreshToken = response.data.tokens.refreshToken;
         } else if (response.data.tokens?.token) {
           token = response.data.tokens.token;
+          refreshToken = response.data.tokens.refreshToken;
         } else if (response.data.accessToken) {
           token = response.data.accessToken;
+          refreshToken = response.data.refreshToken;
         } else if (response.data.token) {
           token = response.data.token;
+          refreshToken = response.data.refreshToken;
         }
 
         if (token) {
-          saveToken(token);
+          saveToken(token, refreshToken);
         }
 
         if (response.data.user) {
@@ -246,8 +282,7 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         try {
           await authAPI.logoutFromAllDevices();
-        } catch (error) {
-        }
+        } catch (error) {}
       }
       removeToken();
       setUser(null);

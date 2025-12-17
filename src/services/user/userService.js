@@ -1,5 +1,15 @@
 import { getAuthenticatedClient } from "../api/client";
 
+const buildQueryString = (params) => {
+  const searchParams = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      searchParams.append(key, value.toString());
+    }
+  });
+  return searchParams.toString();
+};
+
 export const userService = {
   getAllUsers: async () => {
     const client = getAuthenticatedClient();
@@ -63,10 +73,8 @@ export const userService = {
 
   checkUserExists: async (email, phone) => {
     const client = getAuthenticatedClient();
-    const searchParams = new URLSearchParams();
-    if (email) searchParams.append("email", email);
-    if (phone) searchParams.append("phone", phone);
-    return client.get(`Users/CheckUserExists?${searchParams.toString()}`).json();
+    const params = buildQueryString({ email, phone });
+    return client.get(`Users/CheckUserExists?${params}`).json();
   },
 
   banUser: async (id) => {
@@ -90,4 +98,51 @@ export const userService = {
     const client = getAuthenticatedClient();
     return client.delete(`Users/DeleteProfileImage?id=${id}`).json();
   },
+
+  getUsersWithFilters: async (filters = {}) => {
+    const client = getAuthenticatedClient();
+    const params = {
+      pageNumber: filters.pageNumber,
+      pageSize: filters.pageSize,
+      searchTerm: filters.searchTerm,
+      roleName: filters.roleName,
+      isActive: filters.isActive !== undefined && filters.isActive !== null ? filters.isActive : undefined,
+      isBanned: filters.isBanned !== undefined && filters.isBanned !== null ? filters.isBanned : undefined,
+      createdFrom: filters.createdFrom,
+      createdTo: filters.createdTo,
+      sortBy: filters.sortBy,
+      sortDescending:
+        filters.sortDescending !== undefined && filters.sortDescending !== null ? filters.sortDescending : undefined,
+    };
+    const queryString = buildQueryString(params);
+    const url = queryString ? `Users/GetUsersWithFilters?${queryString}` : "Users/GetUsersWithFilters";
+    return client.get(url).json();
+  },
+
+  getUserDetailForAdmin: async (id) => {
+    const client = getAuthenticatedClient();
+    return client.get(`Users/GetUserDetailForAdmin?id=${id}`).json();
+  },
+
+  adminUpdateUser: async (id, userData) => {
+    const client = getAuthenticatedClient();
+    return client.put(`Users/AdminUpdateUser?id=${id}`, { json: userData }).json();
+  },
+
+  adminChangePassword: async (id, passwordData) => {
+    const client = getAuthenticatedClient();
+    return client.post(`Users/AdminChangePassword?id=${id}`, { json: passwordData }).json();
+  },
+
+  chargeUserWallet: async (id, walletData) => {
+    const client = getAuthenticatedClient();
+    return client.post(`Users/ChargeUserWallet?id=${id}`, { json: walletData }).json();
+  },
+
+  deductUserWallet: async (id, walletData) => {
+    const client = getAuthenticatedClient();
+    return client.post(`Users/DeductUserWallet?id=${id}`, { json: walletData }).json();
+  },
 };
+
+export default userService;

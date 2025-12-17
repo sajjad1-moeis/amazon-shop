@@ -4,11 +4,36 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Star, Share2, ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { shoppingCartService } from "@/services/shoppingCart/shoppingCartService";
+import { toast } from "sonner";
 
-export default function ProductDetailPage() {
+export default function ProductDetailPage({ params }) {
   const [selectedColor, setSelectedColor] = useState("navy");
   const [selectedDelivery, setSelectedDelivery] = useState("express");
   const [selectedImage, setSelectedImage] = useState(0);
+  const [addingToCart, setAddingToCart] = useState(false);
+  const productId = params?.productId;
+
+  const handleAddToCart = async () => {
+    if (!productId) {
+      toast.error("شناسه محصول یافت نشد");
+      return;
+    }
+
+    try {
+      setAddingToCart(true);
+      await shoppingCartService.addItem({
+        productId,
+        quantity: 1,
+      });
+      toast.success("محصول به سبد خرید اضافه شد");
+    } catch (error) {
+      toast.error(error.message || "خطا در افزودن به سبد خرید");
+      console.error("Error adding to cart:", error);
+    } finally {
+      setAddingToCart(false);
+    }
+  };
 
   const productImages = [
     "/api/placeholder/600/600",
@@ -273,8 +298,12 @@ export default function ProductDetailPage() {
 
             {/* Action Buttons */}
             <div className="space-y-2">
-              <Button className="w-full h-12 bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-600 text-gray-900 font-bold rounded-lg">
-                افزودن به سبد خرید
+              <Button
+                className="w-full h-12 bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-600 text-gray-900 font-bold rounded-lg"
+                onClick={handleAddToCart}
+                disabled={addingToCart}
+              >
+                {addingToCart ? "در حال افزودن..." : "افزودن به سبد خرید"}
               </Button>
               <Button
                 variant="outline"

@@ -3,6 +3,5 @@
 import { redirect } from "next/navigation";
 
 export default function InactiveUsersPage() {
-  redirect("/admin/users?status=inactive");
+  redirect("/admin/users?status=banned");
 }
-

@@ -1,8 +1,33 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { shoppingCartService } from "@/services/shoppingCart/shoppingCartService";
+import { toast } from "sonner";
+import { useState } from "react";
 
-export default function PurchaseSection({ selectedDelivery, setSelectedDelivery }) {
+export default function PurchaseSection({ selectedDelivery, setSelectedDelivery, productId, quantity = 1 }) {
+  const [loading, setLoading] = useState(false);
+
+  const handleAddToCart = async () => {
+    if (!productId) {
+      toast.error("شناسه محصول یافت نشد");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await shoppingCartService.addItem({
+        productId,
+        quantity,
+      });
+      toast.success("محصول به سبد خرید اضافه شد");
+    } catch (error) {
+      toast.error(error.message || "خطا در افزودن به سبد خرید");
+      console.error("Error adding to cart:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className=" space-y-4">
       {/* Delivery Options */}
@@ -73,8 +98,12 @@ export default function PurchaseSection({ selectedDelivery, setSelectedDelivery 
 
       {/* Action Buttons */}
       <div className="space-y-2">
-        <Button className="w-full h-12 bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-600 text-gray-900 font-bold rounded-lg">
-          افزودن به سبد خرید
+        <Button
+          className="w-full h-12 bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-600 text-gray-900 font-bold rounded-lg"
+          onClick={handleAddToCart}
+          disabled={loading}
+        >
+          {loading ? "در حال افزودن..." : "افزودن به سبد خرید"}
         </Button>
         <Button
           variant="outline"

@@ -1,4 +1,5 @@
 const TOKEN_COOKIE_NAME = "accessToken";
+const REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
 
 const setCookie = (name, value, days = 365) => {
   if (typeof document === "undefined") return;
@@ -24,9 +25,12 @@ const deleteCookie = (name) => {
   document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
 };
 
-export const saveToken = (token) => {
+export const saveToken = (token, refreshToken = null) => {
   if (token) {
     setCookie(TOKEN_COOKIE_NAME, token);
+  }
+  if (refreshToken) {
+    setCookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken);
   }
 };
 
@@ -34,8 +38,13 @@ export const getToken = () => {
   return getCookie(TOKEN_COOKIE_NAME);
 };
 
+export const getRefreshToken = () => {
+  return getCookie(REFRESH_TOKEN_COOKIE_NAME);
+};
+
 export const removeToken = () => {
   deleteCookie(TOKEN_COOKIE_NAME);
+  deleteCookie(REFRESH_TOKEN_COOKIE_NAME);
 };
 
 export const isAuthenticated = () => {
