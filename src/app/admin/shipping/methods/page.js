@@ -34,12 +34,8 @@ export default function ShippingMethodsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-6">
-        <PageHeader
-          title="روش‌های ارسال"
-          buttonText="روش جدید"
-          buttonIcon={<Add size={20} className="ml-2" />}
-        />
+      <div className="">
+        <PageHeader title="روش‌های ارسال" buttonText="روش جدید" buttonIcon={<Add size={20} className="ml-2" />} />
 
         {loading ? (
           <div className="p-8 text-center text-gray-400">

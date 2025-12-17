@@ -16,12 +16,8 @@ export default function AdminsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-6">
-        <PageHeader
-          title="کاربران ادمین"
-          buttonText="ادمین جدید"
-          buttonIcon={<Add size={20} className="ml-2" />}
-        />
+      <div className="">
+        <PageHeader title="کاربران ادمین" buttonText="ادمین جدید" buttonIcon={<Add size={20} className="ml-2" />} />
 
         <AdminsTable admins={admins} />
       </div>

@@ -40,9 +40,4 @@ export const authService = {
     const client = getAuthenticatedClient();
     return client.post("Auth/LogoutFromAllDevices").json();
   },
-
-  refreshToken: async (token) => {
-    const client = getPublicClient();
-    return client.post("Auth/RefreshToken", { json: { token } }).json();
-  },
 };

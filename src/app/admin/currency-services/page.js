@@ -83,12 +83,8 @@ export default function CurrencyServicesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-6">
-        <PageHeaderWithSearch
-          title="خدمات ارزی"
-          searchPlaceholder="جستجو نام خدمت"
-          onSearchChange={setSearchTerm}
-        />
+      <div className="">
+        <PageHeaderWithSearch title="خدمات ارزی" searchPlaceholder="جستجو نام خدمت" onSearchChange={setSearchTerm} />
 
         {loading ? (
           <div className="p-8 text-center text-gray-400">
@@ -97,12 +93,8 @@ export default function CurrencyServicesPage() {
         ) : (
           <>
             <CurrencyServicesTable services={services} onEdit={handleEdit} onDelete={handleDelete} />
-            <div className="mt-6 pt-6 border-t border-gray-700">
-              <AdminPagination
-                currentPage={pageNumber}
-                totalPages={totalPages}
-                onPageChange={setPageNumber}
-              />
+            <div className="pt-4 border-t border-gray-700">
+              <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
             </div>
           </>
         )}
@@ -119,4 +111,3 @@ export default function CurrencyServicesPage() {
     </div>
   );
 }
-

@@ -15,40 +15,27 @@ export default function UsersPage() {
   const searchParams = useSearchParams();
   const roleParam = searchParams.get("role");
   const statusParam = searchParams.get("status");
+  const pageParam = searchParams.get("page");
 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterRole, setFilterRole] = useState(roleParam || "all");
-  const [filterStatus, setFilterStatus] = useState(statusParam || "all");
-  const [pageNumber, setPageNumber] = useState(1);
+  const [pageNumber, setPageNumber] = useState(pageParam ? parseInt(pageParam) : 1);
   const [pageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
 
-  const updateURL = (params) => {
-    const newParams = new URLSearchParams(searchParams.toString());
-    Object.entries(params).forEach(([key, value]) => {
-      if (value === "all" || !value) {
-        newParams.delete(key);
-      } else {
-        newParams.set(key, value);
-      }
-    });
-    router.push(`/admin/users?${newParams.toString()}`);
-  };
+  const filterRole = roleParam || "all";
+  const filterStatus = statusParam || "all";
 
-  const handleRoleChange = (value) => {
-    setFilterRole(value);
-    setPageNumber(1);
-    updateURL({ role: value, status: filterStatus });
-  };
-
-  const handleStatusChange = (value) => {
-    setFilterStatus(value);
-    setPageNumber(1);
-    updateURL({ role: filterRole, status: value });
-  };
+  useEffect(() => {
+    const page = searchParams.get("page");
+    if (page) {
+      setPageNumber(parseInt(page));
+    } else {
+      setPageNumber(1);
+    }
+  }, [searchParams]);
 
   const fetchUsers = useCallback(async () => {
     try {
@@ -77,15 +64,17 @@ export default function UsersPage() {
     }
   }, [pageNumber, pageSize, searchTerm, filterStatus, filterRole]);
 
-  useEffect(() => {
-    const role = searchParams.get("role");
-    const status = searchParams.get("status");
-    if (role) setFilterRole(role);
-    if (status) setFilterStatus(status);
-  }, [searchParams]);
+  const handlePageChange = (newPage) => {
+    setPageNumber(newPage);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", newPage.toString());
+    router.push(`/admin/users?${params.toString()}`);
+  };
 
   useEffect(() => {
-    if (searchTerm) setPageNumber(1);
+    if (searchTerm) {
+      setPageNumber(1);
+    }
   }, [searchTerm]);
 
   useEffect(() => {
@@ -94,14 +83,9 @@ export default function UsersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-6">
+      <div className="">
         <PageHeaderWithSearch title="لیست کاربران" searchPlaceholder="جستجو نام" onSearchChange={setSearchTerm}>
-          <UsersFilters
-            filterRole={filterRole}
-            onRoleChange={handleRoleChange}
-            filterStatus={filterStatus}
-            onStatusChange={handleStatusChange}
-          />
+          <UsersFilters />
         </PageHeaderWithSearch>
 
         {loading ? (
@@ -111,8 +95,8 @@ export default function UsersPage() {
         ) : (
           <>
             <UsersTable users={users} />
-            <div className="mt-6 pt-6 border-t border-gray-700">
-              <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
+            <div className="pt-4 border-t border-gray-700">
+              <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={handlePageChange} />
             </div>
           </>
         )}

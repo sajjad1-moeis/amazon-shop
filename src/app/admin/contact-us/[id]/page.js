@@ -90,7 +90,7 @@ export default function ContactUsDetailPage() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-6">
+      <div className="">
         <ContactDetailHeader
           isRead={contact.isRead}
           onMarkAsRead={handleMarkAsRead}
@@ -117,3 +117,4 @@ export default function ContactUsDetailPage() {
     </div>
   );
 }
+

@@ -1,29 +1,44 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import React, { useState, useEffect, useCallback } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import PageHeaderWithSearch from "@/template/Admin/PageHeaderWithSearch";
 import TicketsTable from "@/template/Admin/tickets/TicketsTable";
+import TicketsFilters from "@/template/Admin/tickets/TicketsFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
-import { ticketService } from "@/services/ticket/ticketService";
+import { adminTicketService } from "@/services/ticket/adminTicketService";
 
 export default function TicketsPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const statusParam = searchParams.get("status");
+  const pageParam = searchParams.get("page");
+
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [pageNumber, setPageNumber] = useState(1);
+  const [pageNumber, setPageNumber] = useState(pageParam ? parseInt(pageParam) : 1);
   const [pageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
 
-  const fetchTickets = async () => {
+  const status = statusParam === "open" ? 1 : statusParam === "closed" ? 2 : undefined;
+
+  useEffect(() => {
+    const page = searchParams.get("page");
+    if (page) {
+      setPageNumber(parseInt(page));
+    } else {
+      setPageNumber(1);
+    }
+  }, [searchParams]);
+
+  const fetchTickets = useCallback(async () => {
     try {
       setLoading(true);
-      const status = statusParam === "open" ? 1 : statusParam === "closed" ? 2 : undefined;
-      const response = await ticketService.getPaginated({
+      const response = await adminTicketService.getPaginated({
         pageNumber,
         pageSize,
         status,
@@ -33,6 +48,7 @@ export default function TicketsPage() {
       if (response.success && response.data) {
         setTickets(response.data.tickets || response.data || []);
         setTotalPages(response.data.totalPages || 1);
+        setTotalCount(response.data.totalCount || 0);
       }
     } catch (error) {
       toast.error(error.message || "خطا در دریافت تیکت‌ها");
@@ -40,6 +56,17 @@ export default function TicketsPage() {
     } finally {
       setLoading(false);
     }
+  }, [pageNumber, pageSize, status, searchTerm]);
+
+  const handleView = (ticketId) => {
+    router.push(`/admin/tickets/${ticketId}`);
+  };
+
+  const handlePageChange = (newPage) => {
+    setPageNumber(newPage);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", newPage.toString());
+    router.push(`/admin/tickets?${params.toString()}`);
   };
 
   useEffect(() => {
@@ -50,16 +77,14 @@ export default function TicketsPage() {
 
   useEffect(() => {
     fetchTickets();
-  }, [pageNumber, searchTerm, statusParam]);
+  }, [fetchTickets]);
 
   return (
     <div className="space-y-6">
-      <div className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-6">
-        <PageHeaderWithSearch
-          title="تیکت ها"
-          searchPlaceholder="جستجو نام"
-          onSearchChange={setSearchTerm}
-        />
+      <div className="">
+        <PageHeaderWithSearch title="تیکت ها" searchPlaceholder="جستجو نام" onSearchChange={setSearchTerm}>
+          <TicketsFilters />
+        </PageHeaderWithSearch>
 
         {loading ? (
           <div className="p-8 text-center text-gray-400">
@@ -67,13 +92,9 @@ export default function TicketsPage() {
           </div>
         ) : (
           <>
-            <TicketsTable tickets={tickets} />
-            <div className="mt-6 pt-6 border-t border-gray-700">
-              <AdminPagination
-                currentPage={pageNumber}
-                totalPages={totalPages}
-                onPageChange={setPageNumber}
-              />
+            <TicketsTable tickets={tickets} onView={handleView} />
+            <div className="pt-4 border-t border-gray-700">
+              <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={handlePageChange} />
             </div>
           </>
         )}
@@ -81,4 +102,3 @@ export default function TicketsPage() {
     </div>
   );
 }
-

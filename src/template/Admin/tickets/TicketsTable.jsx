@@ -34,8 +34,7 @@ const getTicketStatusBadge = (status) => {
   );
 };
 
-export default function TicketsTable({ tickets }) {
-
+export default function TicketsTable({ tickets, onView }) {
   if (tickets.length === 0) {
     return <div className="p-8 text-center text-gray-400">تیکتی یافت نشد</div>;
   }
@@ -68,19 +67,10 @@ export default function TicketsTable({ tickets }) {
             <TableCell>{getTicketStatusBadge(ticket.status)}</TableCell>
             <TableCell className="text-gray-300">{ticket.messagesCount || ticket.messageCount || 0}</TableCell>
             <TableCell className="text-gray-300">
-              {ticket.updatedAt
-                ? new Date(ticket.updatedAt).toLocaleDateString("fa-IR")
-                : ticket.lastUpdate || "-"}
+              {ticket.updatedAt ? new Date(ticket.updatedAt).toLocaleDateString("fa-IR") : ticket.lastUpdate || "-"}
             </TableCell>
             <TableCell>
-              <TableActions
-                showDelete={false}
-                customActions={
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-green-400 hover:bg-green-400/20">
-                    <MessageText size={18} />
-                  </Button>
-                }
-              />
+              <TableActions onView={() => onView(ticket.id)} showEdit={false} showDelete={false} />
             </TableCell>
           </TableRow>
         ))}
@@ -88,5 +78,3 @@ export default function TicketsTable({ tickets }) {
     </Table>
   );
 }
-
-

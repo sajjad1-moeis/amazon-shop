@@ -9,7 +9,6 @@ export const authAPI = {
   resendOtp: authService.resendOtp,
   getUserByToken: authService.getUserByToken,
   logoutFromAllDevices: authService.logoutFromAllDevices,
-  refreshToken: authService.refreshToken,
 };
 
 export default authService;

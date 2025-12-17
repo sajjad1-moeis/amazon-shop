@@ -34,7 +34,7 @@ export default memo(function SearchBarTopTable({ title, onInput, placeholder, in
 
   return (
     <form onSubmit={submitHandler} className={inputContainerClass || "flex gap-2 flex-row-reverse"}>
-      <div className="relative bg-gray-800 bg-opacity-50 border border-gray-700 rounded-lg h-[43px]">
+      <div className="relative  bg-gray-800 bg-opacity-50 border border-gray-700 rounded-lg h-[43px]">
         <input
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}

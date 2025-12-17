@@ -102,11 +102,6 @@ export const ADMIN_SIDEBAR_ITEMS = [
     color: "#3B82F6",
     href: "/admin/tickets",
     key: "ticket",
-    children: [
-      { name: "همه تیکت‌ها", href: "/admin/tickets" },
-      { name: "تیکت‌های باز", href: "/admin/tickets/open" },
-      { name: "تیکت‌های بسته", href: "/admin/tickets/closed" },
-    ],
   },
   {
     name: "ارتباط با ما",
@@ -114,11 +109,6 @@ export const ADMIN_SIDEBAR_ITEMS = [
     color: "#06B6D4",
     href: "/admin/contact-us",
     key: "contact-us",
-    children: [
-      { name: "همه درخواست‌ها", href: "/admin/contact-us" },
-      { name: "خوانده نشده", href: "/admin/contact-us?filter=unread" },
-      { name: "خوانده شده", href: "/admin/contact-us?filter=read" },
-    ],
   },
   {
     name: "ارسال و حمل و نقل",

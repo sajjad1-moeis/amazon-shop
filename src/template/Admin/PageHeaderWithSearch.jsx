@@ -7,7 +7,7 @@ export default function PageHeaderWithSearch({
   title,
   searchPlaceholder,
   onSearchChange,
-  inputContainerClass = "flex",
+  inputContainerClass,
   children,
 }) {
   return (
@@ -23,5 +23,3 @@ export default function PageHeaderWithSearch({
     </div>
   );
 }
-
-

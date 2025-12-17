@@ -85,9 +85,7 @@ export default function NotificationsPage() {
                         </div>
                         <p className="text-gray-400 text-sm">{notif.message || notif.content || notif.body || "-"}</p>
                         <p className="text-gray-500 text-xs mt-2">
-                          {notif.createdAt
-                            ? new Date(notif.createdAt).toLocaleDateString("fa-IR")
-                            : notif.date || "-"}
+                          {notif.createdAt ? new Date(notif.createdAt).toLocaleDateString("fa-IR") : notif.date || "-"}
                         </p>
                       </div>
                       {!notif.isRead && (
@@ -104,12 +102,8 @@ export default function NotificationsPage() {
                   </div>
                 ))}
               </div>
-              <div className="mt-6 pt-6 border-t border-gray-700">
-                <AdminPagination
-                  currentPage={pageNumber}
-                  totalPages={totalPages}
-                  onPageChange={setPageNumber}
-                />
+              <div className="pt-4 border-t border-gray-700">
+                <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
               </div>
             </>
           )}
@@ -118,4 +112,3 @@ export default function NotificationsPage() {
     </div>
   );
 }
-

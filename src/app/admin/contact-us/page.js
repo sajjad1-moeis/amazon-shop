@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import ContactUsTable from "@/template/Admin/contactUs/ContactUsTable";
-import FilterButtons from "@/template/Admin/contactUs/FilterButtons";
+import ContactUsFilters from "@/template/Admin/contactUs/ContactUsFilters";
 import ContactStats from "@/template/Admin/contactUs/ContactStats";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
@@ -14,17 +14,26 @@ export default function ContactUsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const filterParam = searchParams.get("filter");
+  const pageParam = searchParams.get("page");
 
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [pageNumber, setPageNumber] = useState(1);
+  const [pageNumber, setPageNumber] = useState(pageParam ? parseInt(pageParam) : 1);
   const [pageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const [isReadFilter, setIsReadFilter] = useState(
-    filterParam === "unread" ? false : filterParam === "read" ? true : null
-  );
   const [markAsReadLoading, setMarkAsReadLoading] = useState({});
+
+  const isReadFilter = filterParam === "unread" ? false : filterParam === "read" ? true : null;
+
+  useEffect(() => {
+    const page = searchParams.get("page");
+    if (page) {
+      setPageNumber(parseInt(page));
+    } else {
+      setPageNumber(1);
+    }
+  }, [searchParams]);
 
   const fetchContacts = async () => {
     try {
@@ -50,10 +59,6 @@ export default function ContactUsPage() {
     }
   };
 
-  useEffect(() => {
-    fetchContacts();
-  }, [pageNumber, isReadFilter]);
-
   const handleView = (contactId) => {
     router.push(`/admin/contact-us/${contactId}`);
   };
@@ -76,20 +81,23 @@ export default function ContactUsPage() {
     }
   };
 
-  const handleFilterChange = (filter) => {
-    setIsReadFilter(filter);
-    setPageNumber(1);
-    const newUrl =
-      filter === null ? "/admin/contact-us" : `/admin/contact-us?filter=${filter === false ? "unread" : "read"}`;
-    router.push(newUrl);
+  const handlePageChange = (newPage) => {
+    setPageNumber(newPage);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", newPage.toString());
+    router.push(`/admin/contact-us?${params.toString()}`);
   };
+
+  useEffect(() => {
+    fetchContacts();
+  }, [pageNumber, pageSize, isReadFilter]);
 
   return (
     <div className="space-y-6">
-      <div className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+      <div className="">
+        <div className="mb-5 flex items-center justify-between max-md:flex-col max-md:items-start max-md:gap-4">
           <h1 className="text-xl text-gray-100">درخواست‌های ارتباط با ما</h1>
-          <FilterButtons currentFilter={isReadFilter} onFilterChange={handleFilterChange} />
+          <ContactUsFilters />
         </div>
 
         {loading ? (
@@ -105,8 +113,8 @@ export default function ContactUsPage() {
               onMarkAsRead={handleMarkAsRead}
               markAsReadLoading={markAsReadLoading}
             />
-            <div className="mt-6 pt-6 border-t border-gray-700">
-              <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
+            <div className="pt-4 border-t border-gray-700">
+              <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={handlePageChange} />
             </div>
           </>
         )}
@@ -114,3 +122,4 @@ export default function ContactUsPage() {
     </div>
   );
 }
+

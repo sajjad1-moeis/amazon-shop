@@ -53,9 +53,7 @@ export default function AdminPagination({ currentPage = 1, totalPages = 1, onPag
               e.preventDefault();
               handlePageChange(currentPage - 1);
             }}
-            className={`text-white hover:bg-gray-700 ${
-              currentPage === 1 ? "pointer-events-none opacity-50" : ""
-            }`}
+            className={`text-white hover:bg-gray-700 ${currentPage === 1 ? "pointer-events-none opacity-50" : ""}`}
           />
         </PaginationItem>
         {getPageNumbers().map((pageNum) => (
@@ -69,7 +67,7 @@ export default function AdminPagination({ currentPage = 1, totalPages = 1, onPag
               isActive={pageNum === currentPage}
               className={`${
                 pageNum === currentPage
-                  ? "bg-green-500 hover:bg-green-600 text-white"
+                  ? "bg-primary-500 hover:bg-primary-600 text-white border-0 rounded-none"
                   : "text-white hover:bg-gray-700"
               }`}
             >

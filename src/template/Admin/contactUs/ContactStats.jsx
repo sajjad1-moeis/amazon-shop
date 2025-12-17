@@ -9,3 +9,6 @@ export default function ContactStats({ totalCount, currentPage, totalPages }) {
     </div>
   );
 }
+
+
+

@@ -88,7 +88,7 @@ export default function ProductsListPage() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-6">
+      <div className="">
         <div className="mb-5 flex items-center justify-between max-md:flex-col max-md:items-start max-md:gap-4">
           <h1 className="text-xl text-gray-100">لیست محصولات</h1>
           <SearchBarTopTable
@@ -112,12 +112,8 @@ export default function ProductsListPage() {
         ) : (
           <>
             <ProductsTable products={products} onEdit={handleEdit} onDelete={handleDeleteClick} />
-            <div className="mt-6 pt-6 border-t border-gray-700">
-              <AdminPagination
-                currentPage={pageNumber}
-                totalPages={totalPages}
-                onPageChange={setPageNumber}
-              />
+            <div className="pt-4 border-t border-gray-700">
+              <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
             </div>
           </>
         )}

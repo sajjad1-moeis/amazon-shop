@@ -124,7 +124,7 @@ export default function BlogCommentsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-6">
+      <div className="">
         <div className="mb-5 flex items-center justify-between max-md:flex-col max-md:items-start max-md:gap-4">
           <h1 className="text-xl text-gray-100">مدیریت نظرات بلاگ</h1>
           <div className="flex items-center gap-3">
@@ -139,11 +139,7 @@ export default function BlogCommentsPage() {
                 </option>
               ))}
             </select>
-            <PageHeaderWithSearch
-              title=""
-              searchPlaceholder="جستجو..."
-              onSearchChange={setSearchTerm}
-            />
+            <PageHeaderWithSearch title="" searchPlaceholder="جستجو..." onSearchChange={setSearchTerm} />
           </div>
         </div>
 
@@ -157,7 +153,7 @@ export default function BlogCommentsPage() {
               onReject={handleReject}
               onDelete={handleDelete}
             />
-            <div className="mt-6 pt-6 border-t border-gray-700">
+            <div className="pt-4 border-t border-gray-700">
               <AdminPagination
                 currentPage={pageNumber}
                 totalPages={Math.ceil(allComments.length / pageSize) || 1}
@@ -179,4 +175,3 @@ export default function BlogCommentsPage() {
     </div>
   );
 }
-

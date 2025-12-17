@@ -1,8 +1,3 @@
-/**
- * فرمت کردن تاریخ به فرمت فارسی
- * @param {string} dateString - تاریخ به صورت string
- * @returns {string} تاریخ فرمت شده
- */
 export const formatDate = (dateString) => {
   if (!dateString) return "-";
   try {
@@ -17,4 +12,6 @@ export const formatDate = (dateString) => {
     return dateString;
   }
 };
+
+
 

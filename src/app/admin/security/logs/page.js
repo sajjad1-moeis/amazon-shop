@@ -41,7 +41,7 @@ export default function SecurityLogsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-6">
+      <div className="">
         <PageHeader title="لاگ‌های سیستم" />
 
         {loading ? (
@@ -51,12 +51,8 @@ export default function SecurityLogsPage() {
         ) : (
           <>
             <LogsTable logs={logs} />
-            <div className="mt-6 pt-6 border-t border-gray-700">
-              <AdminPagination
-                currentPage={pageNumber}
-                totalPages={totalPages}
-                onPageChange={setPageNumber}
-              />
+            <div className="pt-4 border-t border-gray-700">
+              <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
             </div>
           </>
         )}
@@ -64,4 +60,3 @@ export default function SecurityLogsPage() {
     </div>
   );
 }
-

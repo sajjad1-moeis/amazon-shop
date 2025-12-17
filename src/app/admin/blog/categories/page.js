@@ -84,7 +84,7 @@ export default function BlogCategoriesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-6">
+      <div className="">
         <PageHeader
           title="دسته‌بندی‌های وبلاگ"
           buttonText="دسته‌بندی جدید"
@@ -97,7 +97,7 @@ export default function BlogCategoriesPage() {
         ) : (
           <>
             <BlogCategoriesTable categories={displayedCategories} onEdit={handleEdit} onDelete={handleDelete} />
-            <div className="mt-6 pt-6 border-t border-gray-700">
+            <div className="pt-4 border-t border-gray-700">
               <AdminPagination
                 currentPage={pageNumber}
                 totalPages={Math.ceil(categories.length / pageSize) || 1}

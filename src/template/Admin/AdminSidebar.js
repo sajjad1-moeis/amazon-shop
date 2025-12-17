@@ -106,7 +106,7 @@ export const SideBarContent = () => {
 
 export default function AdminSidebar() {
   return (
-    <div className="relative max-lg:hidden w-64">
+    <div className="relative max-lg:hidden">
       <SideBarContent />
     </div>
   );
