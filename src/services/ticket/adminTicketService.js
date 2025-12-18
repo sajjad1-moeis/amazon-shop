@@ -1,6 +1,7 @@
 import { getAuthenticatedClient } from "../api/client";
 
 export const adminTicketService = {
+  // لیست ساده تیکت‌ها (در صورت نیاز به استفاده از GET قدیمی)
   getAll: async () => {
     const client = getAuthenticatedClient();
     return client.get("AdminTicket/GetAll").json();
@@ -11,6 +12,13 @@ export const adminTicketService = {
     return client.get(`AdminTicket/GetById?id=${id}`).json();
   },
 
+  // جستجوی پیشرفته مطابق داکیومنت (POST /api/AdminTicket/Search)
+  searchTickets: async (filters = {}) => {
+    const client = getAuthenticatedClient();
+    return client.post("AdminTicket/Search", { json: filters }).json();
+  },
+
+  // نسخه قبلی صفحه‌بندی (در صورت نیاز برای سازگاری)
   getPaginated: async (params = {}) => {
     const {
       pageNumber = 1,
@@ -22,6 +30,8 @@ export const adminTicketService = {
       searchTerm,
       startDate,
       endDate,
+      sortBy,
+      sortColumn,
     } = params;
 
     const searchParams = new URLSearchParams({
@@ -36,6 +46,8 @@ export const adminTicketService = {
     if (searchTerm) searchParams.append("searchTerm", searchTerm);
     if (startDate) searchParams.append("startDate", startDate);
     if (endDate) searchParams.append("endDate", endDate);
+    if (sortBy) searchParams.append("sortBy", sortBy);
+    if (sortColumn) searchParams.append("sortColumn", sortColumn);
 
     const client = getAuthenticatedClient();
     return client.get(`AdminTicket/GetPaginated?${searchParams.toString()}`).json();
@@ -71,26 +83,34 @@ export const adminTicketService = {
     return client.put(`AdminTicket/Update?id=${id}`, { json: data }).json();
   },
 
-  updateStatus: async (id, status) => {
+  // تغییر وضعیت مطابق داکیومنت (PUT /api/AdminTicket/{ticketId}/ChangeStatus)
+  changeStatus: async (ticketId, status, notes) => {
     const client = getAuthenticatedClient();
-    return client.put(`AdminTicket/UpdateStatus?id=${id}&status=${status}`).json();
+    const searchParams = new URLSearchParams({ status: status.toString() });
+    if (notes) searchParams.append("notes", notes);
+    return client.put(`AdminTicket/${ticketId}/ChangeStatus?${searchParams.toString()}`).json();
   },
 
-  updatePriority: async (id, priority) => {
+  // تغییر اولویت مطابق داکیومنت (PUT /api/AdminTicket/{ticketId}/ChangePriority)
+  changePriority: async (ticketId, priority) => {
     const client = getAuthenticatedClient();
-    return client.put(`AdminTicket/UpdatePriority?id=${id}&priority=${priority}`).json();
+    const searchParams = new URLSearchParams({ priority: priority.toString() });
+    return client.put(`AdminTicket/${ticketId}/ChangePriority?${searchParams.toString()}`).json();
   },
 
-  assignTicket: async (id, userId) => {
+  // اختصاص تیکت مطابق داکیومنت (POST /api/AdminTicket/{ticketId}/Assign)
+  assignTicket: async (ticketId, assignedToUserId) => {
     const client = getAuthenticatedClient();
-    return client.post(`AdminTicket/AssignTicket?id=${id}&userId=${userId}`).json();
+    return client.post(`AdminTicket/${ticketId}/Assign`, { json: { assignedToUserId } }).json();
   },
 
-  unassignTicket: async (id) => {
+  // حذف اختصاص (در صورت وجود اندپوینت Unassign قدیمی، نگه می‌داریم)
+  unassignTicket: async (ticketId) => {
     const client = getAuthenticatedClient();
-    return client.post(`AdminTicket/UnassignTicket?id=${id}`).json();
+    return client.post(`AdminTicket/UnassignTicket?id=${ticketId}`).json();
   },
 
+  // نگه داشتن متدهای close/reopen برای سازگاری، هرچند داکیومنت از ChangeStatus استفاده می‌کند
   closeTicket: async (id, reason) => {
     const client = getAuthenticatedClient();
     const searchParams = new URLSearchParams({ id: id.toString() });
@@ -103,11 +123,22 @@ export const adminTicketService = {
     return client.post(`AdminTicket/ReopenTicket?id=${id}`).json();
   },
 
+  // افزودن پیام از طرف پشتیبان (POST /api/AdminTicket/{ticketId}/AddMessage)
+  addMessage: async (ticketId, { message, isInternal = false, attachmentUrl }) => {
+    const client = getAuthenticatedClient();
+    return client
+      .post(`AdminTicket/${ticketId}/AddMessage`, {
+        json: { message, isInternal, attachmentUrl },
+      })
+      .json();
+  },
+
+  // افزودن پیام از طرف ادمین (برای سازگاری با کد موجود)
   addAdminMessage: async (ticketId, message, isInternal = false) => {
     const client = getAuthenticatedClient();
     return client
-      .post(`AdminTicket/AddAdminMessage?ticketId=${ticketId}&isInternal=${isInternal}`, {
-        json: { message },
+      .post(`AdminTicket/${ticketId}/AddMessage`, {
+        json: { message, isInternal },
       })
       .json();
   },
@@ -117,9 +148,9 @@ export const adminTicketService = {
     return client.get(`AdminTicket/GetMessages?ticketId=${ticketId}`).json();
   },
 
-  getTicketWithMessages: async (id) => {
+  getTicketWithMessages: async (ticketId) => {
     const client = getAuthenticatedClient();
-    return client.get(`AdminTicket/GetTicketWithMessages?id=${id}`).json();
+    return client.get(`AdminTicket/GetTicketWithMessages?ticketId=${ticketId}`).json();
   },
 
   delete: async (id) => {
@@ -152,7 +183,7 @@ export const adminTicketService = {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("ticketId", ticketId.toString());
-    return client.post(`AdminTicket/UploadFile?ticketId=${ticketId}`, { body: formData }).json();
+    return client.post(`AdminTicket/UploadTicketFile?ticketId=${ticketId}`, { body: formData }).json();
   },
 
   deleteFile: async (fileId) => {
@@ -175,6 +206,3 @@ export const adminTicketService = {
     return client.get(`AdminTicket/ExportToExcel?${searchParams.toString()}`).blob();
   },
 };
-
-
-

@@ -7,7 +7,7 @@ export const ticketCategoryService = {
   },
 
   getActive: async () => {
-    const client = getPublicClient();
+    const client = getAuthenticatedClient();
     return client.get("TicketCategory/GetActive").json();
   },
 
@@ -46,8 +46,3 @@ export const ticketCategoryService = {
     return client.get(`TicketCategory/GetTicketCount?categoryId=${categoryId}`).json();
   },
 };
-
-
-
-
-

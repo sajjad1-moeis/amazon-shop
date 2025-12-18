@@ -1,80 +1,105 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
 import TicketSidebar from "@/template/Dashboard/TicketDetail/TicketSidebar";
 import TicketChat from "@/template/Dashboard/TicketDetail/TicketChat";
 import DashboardLayout from "@/layout/DashboardLayout";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
 import { Button } from "@/components/ui/button";
-import { Add } from "iconsax-reactjs";
+import { Spinner } from "@/components/ui/spinner";
+import { ticketService } from "@/services/ticket/ticketService";
+import { toast } from "sonner";
+import { formatDate } from "@/utils/dateFormatter";
 
-const ticketData = {
-  id: "۴۵۲۳۱",
-  title: "مشکل در پرداخت سفارش",
-  createdAt: "۱۴۰۳/۱۰/۰۹",
-  lastUpdate: "۱۴۰۳/۱۰/۱۰",
-  status: "reviewing",
-  priority: "high",
-  category: "مالی",
-  files: ["file1.pdf", "file2.jpg"],
-};
+export default function TicketDetail() {
+  const params = useParams();
+  const router = useRouter();
+  const ticketId = params?.ticketId;
 
-const messages = [
-  {
-    id: 1,
-    sender: "user",
-    senderName: "شما",
-    time: "09:45",
-    date: "۱۴۰۳/۱۰/۱۰",
-    text: "در هنگام پرداخت به درگاه منتقل شدم اما مبلغ از حسابم کم شده و سفارش ثبت نشده است",
-  },
-  {
-    id: 2,
-    sender: "support",
-    senderName: "پشتیبانی",
-    supportName: "علی پشتیبانی",
-    time: "09:45",
-    text: "کاربر عزیز تراکنش شما در سیستم بانک ناموفق ثبت شده لطفا یکبار دیگر شماره سفارش را ارسال کنید تا بررسی انجام شود",
-  },
-  {
-    id: 3,
-    sender: "user",
-    senderName: "شما",
-    time: "09:45",
-    text: "شماره تراکنش: ۸۹۳۳۲۲۱۱",
-  },
-  {
-    id: 4,
-    sender: "support",
-    senderName: "پشتیبانی",
-    supportName: "علی پشتیبانی",
-    time: "09:45",
-    text: "تشکر. وضعیت به بانک اعلام شد. نتیجه طی ۲۴ ساعت اطلاع رسانی می شود",
-  },
-];
-
-export default function TicketDetail({ ticketId }) {
+  const [ticket, setTicket] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
-  const [messagesList, setMessagesList] = useState(messages);
+  const [sendingMessage, setSendingMessage] = useState(false);
 
-  const handleSendMessage = (e) => {
+  useEffect(() => {
+    if (ticketId) {
+      fetchTicket();
+    }
+  }, [ticketId]);
+
+  const fetchTicket = async () => {
+    try {
+      setLoading(true);
+      const response = await ticketService.getTicketWithMessages(ticketId);
+
+      if (response.success && response.data) {
+        const ticketData = response.data;
+        setTicket({
+          id: ticketData.id,
+          ticketNumber: ticketData.ticketNumber || `TKT-${ticketData.id}`,
+          title: ticketData.subject || ticketData.title || "-",
+          createdAt: formatDate(ticketData.createdAt),
+          lastUpdate: formatDate(ticketData.updatedAt || ticketData.createdAt),
+          status: ticketData.status === 1 ? "reviewing" : ticketData.status === 2 ? "closed" : "pending",
+          priority: ticketData.priority === 3 ? "high" : ticketData.priority === 2 ? "medium" : "low",
+          category: ticketData.categoryName || ticketData.category || "-",
+          files: ticketData.files || [],
+        });
+
+        const formattedMessages = (ticketData.messages || []).map((msg) => ({
+          id: msg.id,
+          sender: msg.isFromAdmin || msg.sender === "admin" ? "support" : "user",
+          senderName: msg.isFromAdmin || msg.sender === "admin" ? "پشتیبانی" : "شما",
+          supportName: msg.isFromAdmin || msg.sender === "admin" ? msg.adminName || "پشتیبانی" : undefined,
+          time: formatDate(msg.createdAt || msg.time),
+          date: formatDate(msg.createdAt || msg.time),
+          text: msg.message || msg.text || "-",
+        }));
+
+        setMessages(formattedMessages);
+      } else {
+        toast.error(response.message || "خطا در دریافت تیکت");
+        router.push("/dashboard/support");
+      }
+    } catch (error) {
+      toast.error(error.message || "خطا در دریافت تیکت");
+      console.error("Error fetching ticket:", error);
+      router.push("/dashboard/support");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!message.trim()) return;
+    if (!message.trim()) {
+      toast.error("لطفاً پیام را وارد کنید");
+      return;
+    }
 
-    const newMessage = {
-      id: messagesList.length + 1,
-      sender: "user",
-      senderName: "شما",
-      time: new Date().toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" }),
-      text: message,
-    };
-
-    setMessagesList([...messagesList, newMessage]);
-    setMessage("");
+    setSendingMessage(true);
+    try {
+      const response = await ticketService.addMessage(ticketId, message.trim());
+      if (response.success) {
+        toast.success("پیام با موفقیت ارسال شد");
+        setMessage("");
+        fetchTicket();
+      } else {
+        toast.error(response.message || "خطا در ارسال پیام");
+      }
+    } catch (error) {
+      toast.error(error.message || "خطا در ارسال پیام");
+      console.error("Error sending message:", error);
+    } finally {
+      setSendingMessage(false);
+    }
   };
 
   const getStatusBadge = () => {
-    switch (ticketData.status) {
+    if (!ticket) return null;
+    switch (ticket.status) {
       case "reviewing":
         return (
           <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
@@ -87,13 +112,20 @@ export default function TicketDetail({ ticketId }) {
             پاسخ داده شده
           </span>
         );
+      case "closed":
+        return (
+          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+            بسته شده
+          </span>
+        );
       default:
         return null;
     }
   };
 
   const getPriorityText = () => {
-    switch (ticketData.priority) {
+    if (!ticket) return null;
+    switch (ticket.priority) {
       case "high":
         return <span className="text-red-600 dark:text-red-400 font-medium">بالا</span>;
       case "medium":
@@ -105,6 +137,29 @@ export default function TicketDetail({ ticketId }) {
     }
   };
 
+  if (loading) {
+    return (
+      <DashboardLayout>
+        <div className="flex justify-center items-center min-h-[400px]">
+          <Spinner size="lg" />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (!ticket) {
+    return (
+      <DashboardLayout>
+        <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+          <p>تیکت یافت نشد</p>
+          <Button onClick={() => router.push("/dashboard/support")} className="mt-4">
+            بازگشت به لیست
+          </Button>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
   return (
     <DashboardLayout>
       {/* Top Section: Header and Create Ticket Button */}
@@ -115,15 +170,16 @@ export default function TicketDetail({ ticketId }) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
         <div className="lg:col-span-2">
           <TicketChat
-            ticketData={ticketData}
-            messagesList={messagesList}
+            ticketData={ticket}
+            messagesList={messages}
             message={message}
             setMessage={setMessage}
             handleSendMessage={handleSendMessage}
+            sendingMessage={sendingMessage}
           />
         </div>
         <div>
-          <TicketSidebar ticketData={ticketData} getStatusBadge={getStatusBadge} getPriorityText={getPriorityText} />
+          <TicketSidebar ticketData={ticket} getStatusBadge={getStatusBadge} getPriorityText={getPriorityText} />
         </div>
       </div>
     </DashboardLayout>

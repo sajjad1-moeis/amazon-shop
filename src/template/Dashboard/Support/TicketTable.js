@@ -16,23 +16,23 @@ export default function TicketTable({ tickets, onDelete }) {
 
   const getPriorityBadge = (priority) => {
     switch (priority) {
-      case "high":
+      case 3:
         return (
           <div className="flex items-center gap-2 bg-red-100 w-max py-1 px-2 rounded">
             <div className="w-3 h-3 rounded-full bg-red-500"></div>
             <span className="text-sm text-gray-700 dark:text-gray-300">بالا</span>
           </div>
         );
-      case "medium":
+      case 2:
         return (
           <div className="flex items-center gap-2 bg-yellow-100 px-2 py-1 w-max rounded">
             <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
             <span className="text-sm text-gray-700 dark:text-gray-300">متوسط</span>
           </div>
         );
-      case "low":
+      case 1:
         return (
-          <div className="flex items-center gap-2 w-max bg-green-100 px-2 py-1  rounded">
+          <div className="flex items-center gap-2 w-max bg-green-100 px-2 py-1 rounded">
             <div className="w-3 h-3 rounded-full bg-green-500"></div>
             <span className="text-sm text-gray-700 dark:text-gray-300">پایین</span>
           </div>
@@ -44,28 +44,22 @@ export default function TicketTable({ tickets, onDelete }) {
 
   const getStatusBadge = (status) => {
     switch (status) {
-      case "reviewing":
+      case 1:
         return (
           <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
             در حال بررسی
           </span>
         );
-      case "answered":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-            پاسخ داده شده
-          </span>
-        );
-      case "pending":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
-            در انتظار
-          </span>
-        );
-      case "closed":
+      case 2:
         return (
           <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
             بسته شده
+          </span>
+        );
+      case 0:
+        return (
+          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
+            در انتظار
           </span>
         );
       default:
@@ -104,10 +98,18 @@ export default function TicketTable({ tickets, onDelete }) {
                     index === tickets.length - 1 && "last:border-b-0"
                   )}
                 >
-                  <TableCell className="text-sm text-gray-900 dark:text-white">{ticket.id}</TableCell>
-                  <TableCell className="text-sm text-gray-900 dark:text-white">{ticket.title}</TableCell>
-                  <TableCell className="text-sm text-gray-600 dark:text-gray-400">{ticket.date}</TableCell>
-                  <TableCell className="text-sm text-gray-700 dark:text-gray-300">{ticket.category}</TableCell>
+                  <TableCell className="text-sm text-gray-900 dark:text-white">
+                    {ticket.ticketNumber || `TKT-${ticket.id}`}
+                  </TableCell>
+                  <TableCell className="text-sm text-gray-900 dark:text-white">
+                    {ticket.subject || "-"}
+                  </TableCell>
+                  <TableCell className="text-sm text-gray-600 dark:text-gray-400">
+                    {ticket.createdAt ? new Date(ticket.createdAt).toLocaleDateString("fa-IR") : "-"}
+                  </TableCell>
+                  <TableCell className="text-sm text-gray-700 dark:text-gray-300">
+                    {ticket.categoryName || "-"}
+                  </TableCell>
                   <TableCell>{getPriorityBadge(ticket.priority)}</TableCell>
                   <TableCell>{getStatusBadge(ticket.status)}</TableCell>
                   <TableCell>

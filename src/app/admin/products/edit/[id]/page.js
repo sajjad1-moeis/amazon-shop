@@ -11,49 +11,104 @@ import { ArrowRight } from "iconsax-reactjs";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import { toast } from "sonner";
-
-// داده‌های تستی - در آینده از API می‌آید
-const mockProduct = {
-  id: 1,
-  name: "لپ تاپ Dell XPS 15",
-  category: "لپ تاپ",
-  brand: "Dell",
-  price: 45000000,
-  stock: 15,
-  description: "لپ تاپ قدرتمند با پردازنده Intel Core i7",
-  status: "active",
-};
+import { productService } from "@/services/product/productService";
+import { productCategoryService } from "@/services/product/productCategoryService";
+import { productBrandService } from "@/services/product/productBrandService";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function EditProductPage() {
   const router = useRouter();
   const params = useParams();
+  const productId = params?.id;
   const [loading, setLoading] = useState(false);
+  const [loadingProduct, setLoadingProduct] = useState(true);
+  const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [loadingFilters, setLoadingFilters] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
-    category: "",
-    brand: "",
+    englishName: "",
+    categoryId: "",
+    brandId: "",
     price: "",
+    discountPrice: "",
     stock: "",
+    shortDescription: "",
     description: "",
-    status: "active",
+    status: 1,
+    isActive: true,
+    inStock: true,
   });
 
   useEffect(() => {
-    // شبیه‌سازی دریافت داده از API
-    setFormData({
-      name: mockProduct.name,
-      category: mockProduct.category,
-      brand: mockProduct.brand,
-      price: mockProduct.price.toString(),
-      stock: mockProduct.stock.toString(),
-      description: mockProduct.description,
-      status: mockProduct.status,
-    });
-  }, []);
+    if (productId) {
+      fetchFilters();
+      fetchProduct();
+    }
+  }, [productId]);
+
+  const fetchFilters = async () => {
+    try {
+      setLoadingFilters(true);
+      const [categoriesRes, brandsRes] = await Promise.all([
+        productCategoryService.getAll(),
+        productBrandService.getAll(),
+      ]);
+
+      if (categoriesRes.success && categoriesRes.data) {
+        setCategories(categoriesRes.data || []);
+      }
+      if (brandsRes.success && brandsRes.data) {
+        setBrands(brandsRes.data || []);
+      }
+    } catch (error) {
+      toast.error("خطا در دریافت فیلترها");
+      console.error("Error fetching filters:", error);
+    } finally {
+      setLoadingFilters(false);
+    }
+  };
+
+  const fetchProduct = async () => {
+    try {
+      setLoadingProduct(true);
+      const response = await productService.getById(productId);
+
+      if (response.success && response.data) {
+        const product = response.data;
+        setFormData({
+          name: product.name || "",
+          englishName: product.englishName || "",
+          categoryId: product.categoryId ? product.categoryId.toString() : "",
+          brandId: product.brandId ? product.brandId.toString() : "",
+          price: product.price ? product.price.toString() : "",
+          discountPrice: product.discountPrice ? product.discountPrice.toString() : "",
+          stock: product.stock ? product.stock.toString() : "",
+          shortDescription: product.shortDescription || "",
+          description: product.description || "",
+          status: product.status || 1,
+          isActive: product.isActive !== undefined ? product.isActive : true,
+          inStock: product.inStock !== undefined ? product.inStock : true,
+        });
+      } else {
+        toast.error(response.message || "خطا در دریافت محصول");
+        router.push("/admin/products/list");
+      }
+    } catch (error) {
+      toast.error(error.message || "خطا در دریافت محصول");
+      console.error("Error fetching product:", error);
+      router.push("/admin/products/list");
+    } finally {
+      setLoadingProduct(false);
+    }
+  };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handleSelectChange = (name, value) => {
@@ -64,20 +119,52 @@ export default function EditProductPage() {
     e.preventDefault();
     setLoading(true);
 
-    // اعتبارسنجی
-    if (!formData.name || !formData.category || !formData.brand || !formData.price || !formData.stock) {
+    if (!formData.name || !formData.categoryId || !formData.brandId || !formData.price || !formData.stock) {
       toast.error("لطفاً تمام فیلدهای الزامی را پر کنید");
       setLoading(false);
       return;
     }
 
-    // شبیه‌سازی API call
-    setTimeout(() => {
-      toast.success("محصول با موفقیت ویرایش شد");
-      router.push("/admin/products/list");
+    try {
+      const payload = {
+        id: parseInt(productId),
+        name: formData.name,
+        englishName: formData.englishName || undefined,
+        categoryId: parseInt(formData.categoryId),
+        brandId: parseInt(formData.brandId),
+        price: parseFloat(formData.price),
+        discountPrice: formData.discountPrice ? parseFloat(formData.discountPrice) : undefined,
+        stock: parseInt(formData.stock),
+        shortDescription: formData.shortDescription || undefined,
+        description: formData.description || undefined,
+        status: parseInt(formData.status),
+        isActive: formData.isActive,
+        inStock: formData.inStock,
+      };
+
+      const response = await productService.update(productId, payload);
+
+      if (response.success) {
+        toast.success("محصول با موفقیت ویرایش شد");
+        router.push("/admin/products/list");
+      } else {
+        toast.error(response.message || "خطا در ویرایش محصول");
+      }
+    } catch (error) {
+      toast.error(error.message || "خطا در ویرایش محصول");
+      console.error("Error updating product:", error);
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
+
+  if (loadingProduct || loadingFilters) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -117,37 +204,53 @@ export default function EditProductPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="category" className="text-gray-300">
+                <Label htmlFor="englishName" className="text-gray-300">
+                  نام انگلیسی
+                </Label>
+                <Input
+                  id="englishName"
+                  name="englishName"
+                  value={formData.englishName}
+                  onChange={handleChange}
+                  placeholder="Example: Dell XPS 15 Laptop"
+                  className="bg-gray-700 border-gray-600 text-white"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="categoryId" className="text-gray-300">
                   دسته‌بندی <span className="text-red-500">*</span>
                 </Label>
-                <Select value={formData.category} onValueChange={(value) => handleSelectChange("category", value)}>
+                <Select value={formData.categoryId} onValueChange={(value) => handleSelectChange("categoryId", value)}>
                   <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
                     <SelectValue placeholder="انتخاب دسته‌بندی" />
                   </SelectTrigger>
                   <SelectContent className="bg-gray-800 border-gray-700">
-                    <SelectItem value="لپ تاپ">لپ تاپ</SelectItem>
-                    <SelectItem value="موبایل">موبایل</SelectItem>
-                    <SelectItem value="هدفون">هدفون</SelectItem>
-                    <SelectItem value="ساعت">ساعت</SelectItem>
-                    <SelectItem value="تبلت">تبلت</SelectItem>
-                    <SelectItem value="سایر">سایر</SelectItem>
+                    {categories.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id.toString()}>
+                        {cat.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="brand" className="text-gray-300">
+                <Label htmlFor="brandId" className="text-gray-300">
                   برند <span className="text-red-500">*</span>
                 </Label>
-                <Input
-                  id="brand"
-                  name="brand"
-                  value={formData.brand}
-                  onChange={handleChange}
-                  placeholder="مثال: Dell"
-                  className="bg-gray-700 border-gray-600 text-white"
-                  required
-                />
+                <Select value={formData.brandId} onValueChange={(value) => handleSelectChange("brandId", value)}>
+                  <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                    <SelectValue placeholder="انتخاب برند" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-800 border-gray-700">
+                    {brands.map((brand) => (
+                      <SelectItem key={brand.id} value={brand.id.toString()}>
+                        {brand.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">
@@ -163,6 +266,25 @@ export default function EditProductPage() {
                   placeholder="45000000"
                   className="bg-gray-700 border-gray-600 text-white"
                   required
+                  min="0"
+                  step="1000"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="discountPrice" className="text-gray-300">
+                  قیمت تخفیف (تومان)
+                </Label>
+                <Input
+                  id="discountPrice"
+                  name="discountPrice"
+                  type="number"
+                  value={formData.discountPrice}
+                  onChange={handleChange}
+                  placeholder="40000000"
+                  className="bg-gray-700 border-gray-600 text-white"
+                  min="0"
+                  step="1000"
                 />
               </div>
 
@@ -179,6 +301,7 @@ export default function EditProductPage() {
                   placeholder="15"
                   className="bg-gray-700 border-gray-600 text-white"
                   required
+                  min="0"
                 />
               </div>
 
@@ -186,21 +309,40 @@ export default function EditProductPage() {
                 <Label htmlFor="status" className="text-gray-300">
                   وضعیت
                 </Label>
-                <Select value={formData.status} onValueChange={(value) => handleSelectChange("status", value)}>
+                <Select
+                  value={formData.status.toString()}
+                  onValueChange={(value) => handleSelectChange("status", value)}
+                >
                   <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-gray-800 border-gray-700">
-                    <SelectItem value="active">فعال</SelectItem>
-                    <SelectItem value="out_of_stock">ناموجود</SelectItem>
+                    <SelectItem value="1">فعال</SelectItem>
+                    <SelectItem value="2">غیرفعال</SelectItem>
+                    <SelectItem value="3">ناموجود</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="shortDescription" className="text-gray-300">
+                معرفی کوتاه
+              </Label>
+              <Textarea
+                id="shortDescription"
+                name="shortDescription"
+                value={formData.shortDescription}
+                onChange={handleChange}
+                placeholder="معرفی کوتاه محصول..."
+                className="bg-gray-700 border-gray-600 text-white min-h-[80px]"
+                rows={3}
+              />
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="description" className="text-gray-300">
-                توضیحات
+                توضیحات کامل
               </Label>
               <Textarea
                 id="description"
@@ -229,4 +371,3 @@ export default function EditProductPage() {
     </div>
   );
 }
-

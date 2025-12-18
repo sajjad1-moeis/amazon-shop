@@ -728,24 +728,6 @@ export const navigationItems = [
   },
 ];
 
-export const initialTickets = [
-  {
-    id: "۴۵۲۳۱",
-    title: "مشکل در پرداخت سفارش",
-    date: "۱۴۰۳/۱۰/۰۹",
-    category: "مالی",
-    priority: "high",
-    status: "reviewing",
-  },
-  {
-    id: "۱۲۳۴۵",
-    title: "تاخیر در ارسال محصول",
-    date: "۱۴۰۳/۱۰/۰۹",
-    category: "لجستیک",
-    priority: "medium",
-    status: "answered",
-  },
-];
 
 export const mockAddresses = [
   {

@@ -78,3 +78,5 @@ export default function UserDetailHeader({ user, editMode, onEdit, onCancel, onC
     </div>
   );
 }
+
+

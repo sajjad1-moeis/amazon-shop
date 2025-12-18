@@ -41,3 +41,5 @@ export default function UserInfoCard({ icon: Icon, label, value, isLink = false,
 
   return content;
 }
+
+

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Headphone, Paperclip, Send2, UserSquare } from "iconsax-reactjs";
 import { cn } from "@/lib/utils";
 
-export default function TicketChat({ ticketData, messagesList, message, setMessage, handleSendMessage }) {
+export default function TicketChat({ ticketData, messagesList, message, setMessage, handleSendMessage, sendingMessage = false }) {
   return (
     <div
       className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 md:p-6"
@@ -91,9 +91,9 @@ export default function TicketChat({ ticketData, messagesList, message, setMessa
             <Paperclip size={20} />
           </button>
         </div>
-        <Button type="submit" className="bg-primary-600 hover:bg-primary-700 text-white px-6">
+        <Button type="submit" disabled={sendingMessage || !message.trim()} className="bg-primary-600 hover:bg-primary-700 text-white px-6">
           <Send2 size={20} />
-          ارسال پیام
+          {sendingMessage ? "در حال ارسال..." : "ارسال پیام"}
         </Button>
       </form>
     </div>

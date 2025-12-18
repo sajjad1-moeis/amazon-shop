@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
-import { adminTicketService } from "@/services/ticket/adminTicketService";
+import { ticketService } from "@/services/ticket/ticketService";
 import { formatDate } from "@/utils/dateFormatter";
 import { User, Calendar, MessageText, TickCircle, CloseCircle } from "iconsax-reactjs";
 
@@ -31,7 +31,7 @@ export default function TicketDetailPage() {
   const fetchTicket = async () => {
     try {
       setLoading(true);
-      const response = await adminTicketService.getTicketWithMessages(ticketId);
+      const response = await ticketService.getTicketWithMessages(ticketId);
       if (response.success && response.data) {
         setTicket(response.data);
         setMessages(response.data.messages || []);
@@ -56,7 +56,7 @@ export default function TicketDetailPage() {
 
     setSendingMessage(true);
     try {
-      const response = await adminTicketService.addAdminMessage(ticketId, messageText.trim(), false);
+      const response = await ticketService.addMessage(ticketId, messageText.trim());
       if (response.success) {
         toast.success("پیام با موفقیت ارسال شد");
         setMessageText("");
@@ -77,7 +77,7 @@ export default function TicketDetailPage() {
 
     setUpdating(true);
     try {
-      const response = await adminTicketService.closeTicket(ticketId);
+      const response = await ticketService.update(ticketId, { status: 2 });
       if (response.success) {
         toast.success("تیکت با موفقیت بسته شد");
         fetchTicket();
@@ -95,7 +95,7 @@ export default function TicketDetailPage() {
   const handleReopenTicket = async () => {
     setUpdating(true);
     try {
-      const response = await adminTicketService.reopenTicket(ticketId);
+      const response = await ticketService.update(ticketId, { status: 1 });
       if (response.success) {
         toast.success("تیکت با موفقیت باز شد");
         fetchTicket();
@@ -279,4 +279,3 @@ export default function TicketDetailPage() {
     </div>
   );
 }
-

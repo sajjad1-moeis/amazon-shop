@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect, useCallback } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import SearchBarTopTable from "@/template/Admin/SearchBarTopTable";
+import PageHeaderWithSearch from "@/template/Admin/PageHeaderWithSearch";
 import ProductsTable from "@/template/Admin/products/list/ProductsTable";
 import ProductsFilters from "@/template/Admin/products/list/ProductsFilters";
 import DeleteProductDialog from "@/template/Admin/products/list/DeleteProductDialog";
@@ -13,32 +13,59 @@ import { productService } from "@/services/product/productService";
 
 export default function ProductsListPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams.get("category");
+  const statusParam = searchParams.get("status");
+  const brandParam = searchParams.get("brand");
+  const searchParam = searchParams.get("search");
+  const pageParam = searchParams.get("page");
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterCategory, setFilterCategory] = useState("all");
-  const [filterStatus, setFilterStatus] = useState("all");
-  const [pageNumber, setPageNumber] = useState(1);
+  const [searchTerm, setSearchTerm] = useState(searchParam || "");
+  const [pageNumber, setPageNumber] = useState(pageParam ? parseInt(pageParam) : 1);
   const [pageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  const fetchProducts = async () => {
+  const filterCategory = categoryParam || "all";
+  const filterStatus = statusParam || "all";
+  const filterBrand = brandParam || "all";
+
+  useEffect(() => {
+    const page = searchParams.get("page");
+    if (page) {
+      setPageNumber(parseInt(page));
+    } else {
+      setPageNumber(1);
+    }
+    const search = searchParams.get("search");
+    if (search !== null) {
+      setSearchTerm(search);
+    }
+  }, [searchParams]);
+
+  const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
       const response = await productService.getPaginated({
         pageNumber,
         pageSize,
         categoryId: filterCategory !== "all" ? filterCategory : undefined,
-        status: filterStatus !== "all" ? filterStatus : undefined,
+        brandId: filterBrand !== "all" ? filterBrand : undefined,
+        status: filterStatus !== "all" ? parseInt(filterStatus) : undefined,
         searchTerm: searchTerm || undefined,
       });
 
       if (response.success && response.data) {
         setProducts(response.data.products || response.data || []);
         setTotalPages(response.data.totalPages || 1);
+        setTotalCount(response.data.totalCount || 0);
+      } else {
+        toast.error(response.message || "خطا در دریافت محصولات");
       }
     } catch (error) {
       toast.error(error.message || "خطا در دریافت محصولات");
@@ -46,7 +73,7 @@ export default function ProductsListPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [pageNumber, pageSize, filterCategory, filterBrand, filterStatus, searchTerm]);
 
   useEffect(() => {
     if (searchTerm) {
@@ -56,10 +83,14 @@ export default function ProductsListPage() {
 
   useEffect(() => {
     fetchProducts();
-  }, [pageNumber, filterCategory, filterStatus, searchTerm]);
+  }, [fetchProducts]);
 
   const handleEdit = (productId) => {
     router.push(`/admin/products/edit/${productId}`);
+  };
+
+  const handleView = (productId) => {
+    router.push(`/product/${productId}`);
   };
 
   const handleDeleteClick = (product) => {
@@ -78,32 +109,47 @@ export default function ProductsListPage() {
         setDeleteDialogOpen(false);
         setSelectedProduct(null);
         fetchProducts();
+      } else {
+        toast.error(response.message || "خطا در حذف محصول");
       }
     } catch (error) {
       toast.error(error.message || "خطا در حذف محصول");
+      console.error("Error deleting product:", error);
     } finally {
       setDeleteLoading(false);
     }
   };
 
+  const handlePageChange = (newPage) => {
+    setPageNumber(newPage);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", newPage.toString());
+    router.push(`/admin/products/list?${params.toString()}`);
+  };
+
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
+    const params = new URLSearchParams(searchParams.toString());
+    if (value) {
+      params.set("search", value);
+    } else {
+      params.delete("search");
+    }
+    params.delete("page");
+    router.push(`/admin/products/list?${params.toString()}`);
+  };
+
   return (
     <div className="space-y-6">
       <div className="">
-        <div className="mb-5 flex items-center justify-between max-md:flex-col max-md:items-start max-md:gap-4">
-          <h1 className="text-xl text-gray-100">لیست محصولات</h1>
-          <SearchBarTopTable
-            placeholder="جستجو ..."
-            onInput={(value) => setSearchTerm(value)}
-            inputContainerClass="flex flex-row-reverse gap-2"
-          >
-            <ProductsFilters
-              filterCategory={filterCategory}
-              setFilterCategory={setFilterCategory}
-              filterStatus={filterStatus}
-              setFilterStatus={setFilterStatus}
-            />
-          </SearchBarTopTable>
-        </div>
+        <PageHeaderWithSearch
+          title="لیست محصولات"
+          searchPlaceholder="جستجو محصول..."
+          onSearchChange={handleSearchChange}
+          searchValue={searchTerm}
+        >
+          <ProductsFilters />
+        </PageHeaderWithSearch>
 
         {loading ? (
           <div className="p-8 text-center text-gray-400">
@@ -111,9 +157,9 @@ export default function ProductsListPage() {
           </div>
         ) : (
           <>
-            <ProductsTable products={products} onEdit={handleEdit} onDelete={handleDeleteClick} />
+            <ProductsTable products={products} onEdit={handleEdit} onDelete={handleDeleteClick} onView={handleView} />
             <div className="pt-4 border-t border-gray-700">
-              <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
+              <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={handlePageChange} />
             </div>
           </>
         )}

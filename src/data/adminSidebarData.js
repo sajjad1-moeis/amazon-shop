@@ -102,6 +102,10 @@ export const ADMIN_SIDEBAR_ITEMS = [
     color: "#3B82F6",
     href: "/admin/tickets",
     key: "ticket",
+    children: [
+      { name: "لیست تیکت‌ها", href: "/admin/tickets" },
+      { name: "دسته‌بندی‌های تیکت", href: "/admin/tickets/categories" },
+    ],
   },
   {
     name: "ارتباط با ما",

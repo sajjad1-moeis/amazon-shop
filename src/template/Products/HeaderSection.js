@@ -1,6 +1,9 @@
+"use client";
+
 import SwitchButton from "@/components/SwitchButton";
 import { Button } from "@/components/ui/button";
-import { ArrowDown2, Candle, Element3, RowVertical, Sort } from "iconsax-reactjs";
+import { Input } from "@/components/ui/input";
+import { ArrowDown2, Candle, Element3, RowVertical, Sort, Search } from "iconsax-reactjs";
 import React from "react";
 
 const VIEW_MODES = [
@@ -8,20 +11,36 @@ const VIEW_MODES = [
   { id: "list", icon: RowVertical },
 ];
 
-function HeaderSection({ viewMode, setViewMode }) {
+function HeaderSection({ viewMode, setViewMode, onSearch, searchValue = "", totalCount = 0 }) {
+  const handleSearchChange = (e) => {
+    if (onSearch) {
+      onSearch(e.target.value);
+    }
+  };
+
   return (
     <div className="max-lg:px-4 lg:container mt-4">
       <div className="flex-between">
-        {/* LEFT */}
         <div className="flex-between gap-1">
-          <p className="text-gray-600 dark:text-[#7B7F86]">نتیجه جستجو موبایل :</p>
-          <p className="text-yellow-700 dark:text-yellow-600">24 محصول</p>
+          <p className="text-gray-600 dark:text-[#7B7F86">نتیجه جستجو:</p>
+          <p className="text-yellow-700 dark:text-yellow-600">{totalCount} محصول</p>
         </div>
 
-        {/* RIGHT */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
+          {onSearch && (
+            <div className="relative max-md:hidden">
+              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                type="text"
+                placeholder="جستجو محصول..."
+                value={searchValue}
+                onChange={handleSearchChange}
+                className="pr-10 bg-gray-100 dark:bg-dark-field border-gray-300 dark:border-[#7B7F86] rounded-lg"
+              />
+            </div>
+          )}
+
           <div className="flex-between gap-2 max-md:hidden">
-            {/* SORT BUTTON */}
             <Button
               variant="ghost"
               className="max-lg:hidden bg-gray-100 border dark:border-[#7B7F86] dark:text-dark-text dark:bg-dark-field border-gray-300 rounded-lg flex-between text-gray-500"
@@ -31,7 +50,6 @@ function HeaderSection({ viewMode, setViewMode }) {
               <ArrowDown2 size={18} />
             </Button>
 
-            {/* DYNAMIC VIEW MODE BUTTONS */}
             {VIEW_MODES.map(({ id, icon: Icon }) => (
               <button
                 key={id}

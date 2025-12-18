@@ -1,17 +1,20 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { initialTickets } from "@/data";
 import DashboardLayout from "@/layout/DashboardLayout";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
 import CreateTicketModal from "@/template/Dashboard/Support/CreateTicketModal";
 import TicketsFilter from "@/template/Dashboard/Support/TicketsFilter";
 import TicketTable from "@/template/Dashboard/Support/TicketTable";
+import { Spinner } from "@/components/ui/spinner";
 import { Add } from "iconsax-reactjs";
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { ticketService } from "@/services/ticket/ticketService";
+import { toast } from "sonner";
 
 function Page() {
-  const [tickets, setTickets] = useState(initialTickets);
+  const [tickets, setTickets] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filters, setFilters] = useState({
     sortBy: "",
@@ -20,39 +23,97 @@ function Page() {
     searchQuery: "",
   });
 
-  const handleAddTicket = (newTicket) => {
-    const ticketId = `${Math.floor(Math.random() * 90000) + 10000}`;
-    const today = new Date();
-    const persianDate = `${today.getFullYear()}/${String(today.getMonth() + 1).padStart(2, "0")}/${String(
-      today.getDate()
-    ).padStart(2, "0")}`;
+  const fetchTickets = useCallback(async () => {
+    try {
+      setLoading(true);
 
-    const getCategoryLabel = (category) => {
-      const categories = {
-        financial: "مالی",
-        logistics: "لجستیک",
-        technical: "فنی",
-        general: "عمومی",
+      const params = {
+        pageNumber: 1,
+        pageSize: 100,
       };
-      return categories[category] || category;
-    };
 
-    const ticket = {
-      id: ticketId,
-      title: newTicket.title,
-      category: getCategoryLabel(newTicket.category),
-      priority: newTicket.priority,
-      status: "pending",
-      date: persianDate,
-      lastUpdate: persianDate,
-    };
+      if (filters.status && filters.status !== "all") {
+        params.status = filters.status === "open" ? 1 : 2;
+      }
 
-    setTickets([ticket, ...tickets]);
+      if (filters.priority && filters.priority !== "all") {
+        const priorityMap = { high: 3, medium: 2, low: 1 };
+        params.priority = priorityMap[filters.priority];
+      }
+
+      if (filters.searchQuery) {
+        params.searchTerm = filters.searchQuery;
+      }
+
+      if (filters.sortBy && filters.sortBy !== "all") {
+        params.sortBy = filters.sortBy === "newest" ? "desc" : "asc";
+        params.sortColumn = "createdAt";
+      }
+
+      const response = await ticketService.getPaginated(params);
+
+      if (response.success && response.data) {
+        setTickets(response.data.tickets || response.data || []);
+      } else {
+        toast.error(response.message || "خطا در دریافت تیکت‌ها");
+      }
+    } catch (error) {
+      toast.error(error.message || "خطا در دریافت تیکت‌ها");
+      console.error("Error fetching tickets:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [filters]);
+
+  useEffect(() => {
+    fetchTickets();
+  }, [fetchTickets]);
+
+  const handleAddTicket = async (newTicket) => {
+    try {
+      const priorityMap = { high: 3, medium: 2, low: 1 };
+      const ticketData = {
+        subject: newTicket.title?.trim() || "",
+        categoryId: parseInt(newTicket.category, 10),
+        priority: priorityMap[newTicket.priority] || 2,
+        message: newTicket.description?.trim() || "",
+      };
+
+      if (!ticketData.subject || !ticketData.categoryId || !ticketData.priority || !ticketData.message) {
+        toast.error("لطفاً تمام فیلدهای الزامی را پر کنید");
+        return;
+      }
+
+      const response = await ticketService.create(ticketData);
+
+      if (response && response.success) {
+        toast.success("تیکت با موفقیت ایجاد شد");
+        setIsModalOpen(false);
+        fetchTickets();
+      } else {
+        toast.error(response?.message || "خطا در ایجاد تیکت");
+      }
+    } catch (error) {
+      const errorMessage = error?.response?.data?.message || error?.message || "خطا در ایجاد تیکت";
+      toast.error(errorMessage);
+      console.error("Error creating ticket:", error);
+    }
   };
 
-  const handleDeleteTicket = (ticketId) => {
-    if (confirm("آیا از حذف این تیکت اطمینان دارید؟")) {
-      setTickets(tickets.filter((t) => t.id !== ticketId));
+  const handleDeleteTicket = async (ticketId) => {
+    if (!confirm("آیا از حذف این تیکت اطمینان دارید؟")) return;
+
+    try {
+      const response = await ticketService.softDelete(ticketId);
+      if (response.success) {
+        toast.success("تیکت با موفقیت حذف شد");
+        fetchTickets();
+      } else {
+        toast.error(response.message || "خطا در حذف تیکت");
+      }
+    } catch (error) {
+      toast.error(error.message || "خطا در حذف تیکت");
+      console.error("Error deleting ticket:", error);
     }
   };
 
@@ -76,7 +137,13 @@ function Page() {
         {/* Tickets Table Section */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-box p-3 mt-8">
           <h2 className="text-lg  text-gray-900 dark:text-white mb-6">لیست تیکت های ثبت شده</h2>
-          <TicketTable tickets={tickets} onDelete={handleDeleteTicket} />
+          {loading ? (
+            <div className="flex justify-center items-center py-8">
+              <Spinner size="lg" />
+            </div>
+          ) : (
+            <TicketTable tickets={tickets} onDelete={handleDeleteTicket} />
+          )}
         </div>
 
         {/* Create Ticket Modal */}

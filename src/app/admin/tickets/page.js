@@ -8,7 +8,7 @@ import TicketsTable from "@/template/Admin/tickets/TicketsTable";
 import TicketsFilters from "@/template/Admin/tickets/TicketsFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
-import { adminTicketService } from "@/services/ticket/adminTicketService";
+import { ticketService } from "@/services/ticket/ticketService";
 
 export default function TicketsPage() {
   const router = useRouter();
@@ -38,7 +38,7 @@ export default function TicketsPage() {
   const fetchTickets = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await adminTicketService.getPaginated({
+      const response = await ticketService.getPaginated({
         pageNumber,
         pageSize,
         status,
@@ -49,6 +49,8 @@ export default function TicketsPage() {
         setTickets(response.data.tickets || response.data || []);
         setTotalPages(response.data.totalPages || 1);
         setTotalCount(response.data.totalCount || 0);
+      } else {
+        toast.error(response.message || "خطا در دریافت تیکت‌ها");
       }
     } catch (error) {
       toast.error(error.message || "خطا در دریافت تیکت‌ها");

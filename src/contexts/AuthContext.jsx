@@ -25,9 +25,8 @@ export const AuthProvider = ({ children }) => {
         const token = getToken();
         if (token) {
           const response = await authAPI.getUserByToken(token);
-          console.log(response);
           if (response.success && response.data) {
-            setUser(response.data);
+            setUser(response.data.user || response.data);
           } else {
             removeToken();
             setUser(null);

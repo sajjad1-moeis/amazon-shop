@@ -22,22 +22,18 @@ export const ticketService = {
   },
 
   getPaginated: async (params = {}) => {
-    const {
-      pageNumber = 1,
-      pageSize = 20,
-      status,
-      priority,
-      searchTerm,
-    } = params;
+    const { pageNumber = 1, pageSize = 20, status, priority, searchTerm, sortBy, sortColumn } = params;
 
     const searchParams = new URLSearchParams({
       pageNumber: pageNumber.toString(),
       pageSize: pageSize.toString(),
     });
 
-    if (status) searchParams.append("status", status.toString());
-    if (priority) searchParams.append("priority", priority.toString());
+    if (status !== undefined && status !== null) searchParams.append("status", status.toString());
+    if (priority !== undefined && priority !== null) searchParams.append("priority", priority.toString());
     if (searchTerm) searchParams.append("searchTerm", searchTerm);
+    if (sortBy) searchParams.append("sortBy", sortBy);
+    if (sortColumn) searchParams.append("sortColumn", sortColumn);
 
     const client = getAuthenticatedClient();
     return client.get(`Ticket/GetPaginated?${searchParams.toString()}`).json();
