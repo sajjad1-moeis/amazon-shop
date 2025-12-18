@@ -11,6 +11,7 @@ import { Add } from "iconsax-reactjs";
 import React, { useState, useEffect, useCallback } from "react";
 import { ticketService } from "@/services/ticket/ticketService";
 import { toast } from "sonner";
+import { formatDate } from "@/utils/dateFormatter";
 
 function Page() {
   const [tickets, setTickets] = useState([]);
@@ -26,14 +27,13 @@ function Page() {
   const fetchTickets = useCallback(async () => {
     try {
       setLoading(true);
-
       const params = {
         pageNumber: 1,
         pageSize: 100,
       };
 
       if (filters.status && filters.status !== "all") {
-        params.status = filters.status === "open" ? 1 : 2;
+        params.status = filters.status === "open" ? 1 : filters.status === "closed" ? 2 : undefined;
       }
 
       if (filters.priority && filters.priority !== "all") {
@@ -45,6 +45,7 @@ function Page() {
         params.searchTerm = filters.searchQuery;
       }
 
+      // ارسال sortBy به سرور
       if (filters.sortBy && filters.sortBy !== "all") {
         params.sortBy = filters.sortBy === "newest" ? "desc" : "asc";
         params.sortColumn = "createdAt";
@@ -53,7 +54,18 @@ function Page() {
       const response = await ticketService.getPaginated(params);
 
       if (response.success && response.data) {
-        setTickets(response.data.tickets || response.data || []);
+        const formattedTickets = (response.data.tickets || response.data || []).map((ticket) => ({
+          id: ticket.id,
+          ticketNumber: ticket.ticketNumber || `TKT-${ticket.id}`,
+          title: ticket.subject || ticket.title || "-",
+          date: formatDate(ticket.createdAt),
+          category: ticket.categoryName || ticket.category || "-",
+          priority: ticket.priority === 3 ? "high" : ticket.priority === 2 ? "medium" : "low",
+          status: ticket.status === 1 ? "reviewing" : ticket.status === 2 ? "closed" : "pending",
+          createdAt: ticket.createdAt,
+        }));
+
+        setTickets(formattedTickets);
       } else {
         toast.error(response.message || "خطا در دریافت تیکت‌ها");
       }
@@ -72,30 +84,22 @@ function Page() {
   const handleAddTicket = async (newTicket) => {
     try {
       const priorityMap = { high: 3, medium: 2, low: 1 };
-      const ticketData = {
-        subject: newTicket.title?.trim() || "",
-        categoryId: parseInt(newTicket.category, 10),
+      const response = await ticketService.create({
+        subject: newTicket.title,
+        categoryId: newTicket.category,
         priority: priorityMap[newTicket.priority] || 2,
-        message: newTicket.description?.trim() || "",
-      };
+        message: newTicket.description,
+      });
 
-      if (!ticketData.subject || !ticketData.categoryId || !ticketData.priority || !ticketData.message) {
-        toast.error("لطفاً تمام فیلدهای الزامی را پر کنید");
-        return;
-      }
-
-      const response = await ticketService.create(ticketData);
-
-      if (response && response.success) {
+      if (response.success) {
         toast.success("تیکت با موفقیت ایجاد شد");
         setIsModalOpen(false);
         fetchTickets();
       } else {
-        toast.error(response?.message || "خطا در ایجاد تیکت");
+        toast.error(response.message || "خطا در ایجاد تیکت");
       }
     } catch (error) {
-      const errorMessage = error?.response?.data?.message || error?.message || "خطا در ایجاد تیکت";
-      toast.error(errorMessage);
+      toast.error(error.message || "خطا در ایجاد تیکت");
       console.error("Error creating ticket:", error);
     }
   };

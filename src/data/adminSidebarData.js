@@ -213,9 +213,9 @@ export const ADMIN_SIDEBAR_ITEMS = [
     href: "/admin/security",
     key: "security",
     children: [
+      { name: "مدیریت نقش‌ها", href: "/admin/roles" },
+      { name: "اضافه کردن نقش", href: "/admin/roles/create" },
       { name: "لاگ‌های سیستم", href: "/admin/security/logs" },
-      { name: "دسترسی‌ها", href: "/admin/security/permissions" },
-      { name: "کاربران ادمین", href: "/admin/security/admins" },
     ],
   },
 ];

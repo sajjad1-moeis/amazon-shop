@@ -21,6 +21,11 @@ export const ticketService = {
     return client.get(`Ticket/GetByUserId?userId=${userId}`).json();
   },
 
+  getMyTickets: async () => {
+    const client = getAuthenticatedClient();
+    return client.get("Ticket/GetMyTicket").json();
+  },
+
   getPaginated: async (params = {}) => {
     const { pageNumber = 1, pageSize = 20, status, priority, searchTerm, sortBy, sortColumn } = params;
 
@@ -98,7 +103,16 @@ export const ticketService = {
     const client = getAuthenticatedClient();
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("ticketId", ticketId.toString());
-    return client.post(`Ticket/UploadTicketFile?ticketId=${ticketId}`, { body: formData }).json();
+    // formData.append("ticketId", ticketId.toString());
+    return client
+      .extend({
+        retry: {
+          limit: 0, // غیرفعال کردن retry برای آپلود فایل
+        },
+      })
+      .post(`Ticket/UploadTicketFile?ticketId=${ticketId}`, {
+        body: formData,
+      })
+      .json();
   },
 };

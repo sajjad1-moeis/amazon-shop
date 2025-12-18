@@ -21,6 +21,7 @@ import { DocumentUpload } from "iconsax-reactjs";
 import { ticketService } from "@/services/ticket/ticketService";
 import { ticketCategoryService } from "@/services/ticket/ticketCategoryService";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 const formSchema = z.object({
   title: z.string().min(3, "عنوان تیکت باید حداقل 3 کاراکتر باشد"),
@@ -41,7 +42,7 @@ export default function CreateTicketModal({ isOpen, onClose, onSubmit }) {
   const [categories, setCategories] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const { user } = useAuth();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -89,28 +90,28 @@ export default function CreateTicketModal({ isOpen, onClose, onSubmit }) {
         subject: data.title.trim(),
         categoryId: parseInt(data.category, 10),
         priority: PRIORITY_MAP[data.priority],
-        message: data.description.trim(),
+        description: data.description.trim(),
+        userId: user?.id,
       };
 
       const response = await ticketService.create(ticketData);
 
-      if (response?.success) {
-        if (data.file && response.data?.id) {
+      if (response?.success && response.data?.id) {
+        let fileUploadSuccess = true;
+
+        if (data.file) {
           try {
             await ticketService.uploadTicketFile(response.data.id, data.file);
           } catch (fileError) {
+            fileUploadSuccess = false;
             toast.warning("تیکت ایجاد شد اما فایل آپلود نشد");
           }
         }
 
         toast.success("تیکت با موفقیت ایجاد شد");
-        onSubmit?.({
-          ...data,
-          ticketId: response.data?.id,
-          ticketNumber: response.data?.ticketNumber,
-        });
         form.reset();
         onClose();
+        onSubmit?.();
       } else {
         toast.error(response?.message || "خطا در ایجاد تیکت");
       }
