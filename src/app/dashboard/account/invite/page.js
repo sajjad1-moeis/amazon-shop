@@ -1,7 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { invitedFriends } from "@/data";
+// Mock data - should be replaced with API call
+const invitedFriends = [];
 import DashboardLayout from "@/layout/DashboardLayout";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
 import InvitedFriendsTable from "@/template/Dashboard/Invite/InvitedFriendsTable";

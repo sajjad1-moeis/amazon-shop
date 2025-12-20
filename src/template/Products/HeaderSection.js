@@ -3,7 +3,7 @@
 import SwitchButton from "@/components/SwitchButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowDown2, Candle, Element3, RowVertical, Sort, Search } from "iconsax-reactjs";
+import { ArrowDown2, Candle, Element3, RowVertical, Sort, SearchNormal1 } from "iconsax-reactjs";
 import React from "react";
 
 const VIEW_MODES = [
@@ -29,7 +29,7 @@ function HeaderSection({ viewMode, setViewMode, onSearch, searchValue = "", tota
         <div className="flex gap-2 items-center">
           {onSearch && (
             <div className="relative max-md:hidden">
-              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <SearchNormal1 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
                 type="text"
                 placeholder="جستجو محصول..."

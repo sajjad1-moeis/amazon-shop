@@ -69,7 +69,6 @@ export default function InvoicesFilter({ filters, onFiltersChange }) {
             </SelectContent>
           </Select>
         </div>
-      </div>
     </div>
   );
 }
