@@ -27,15 +27,8 @@ function Notfound() {
           </Link>
         </div>
       </div>
-      <div className="relative w-full max-h-screen">
-        <Image
-          src="/image/404.png"
-          alt="صفحه یافت نشد - خطای 404"
-          width={1920}
-          height={1080}
-          className="max-h-screen w-full object-cover"
-          priority
-        />
+      <div className="relative w-full ">
+        <Image src="/image/404.png" alt="صفحه یافت نشد - خطای 404" fill className=" w-full object-cover" />
       </div>
     </div>
   );

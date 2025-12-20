@@ -1,10 +1,8 @@
-"use client";
 import DashboardLayout from "@/layout/DashboardLayout";
+import React from "react";
 
-export default function TestPage() {
-  return (
-    <DashboardLayout>
-      <div>Hello</div>
-    </DashboardLayout>
-  );
+function Page() {
+  return <DashboardLayout>asd</DashboardLayout>;
 }
+
+export default Page;
