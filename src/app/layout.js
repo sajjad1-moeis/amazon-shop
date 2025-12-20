@@ -4,13 +4,6 @@ import localFont from "next/font/local";
 import "../styles/globals.css";
 import { Toaster } from "sonner";
 
-const iranSans = localFont({
-  src: "../public/fonts/IRANSansWeb(FaNum)_Medium.ttf",
-  variable: "--font-iran-sans",
-  display: "swap",
-  preload: true,
-});
-
 export const metadata = {
   title: "میکروالس | خرید مطمئن از آمازون",
   description:
@@ -19,7 +12,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="fa" suppressHydrationWarning className={iranSans.variable}>
+    <html lang="fa" suppressHydrationWarning>
       <body dir="rtl" className="font-sans">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <AuthProvider>

@@ -6,9 +6,10 @@ import NotificationCard from "./NotificationCard";
 import { Button } from "@/components/ui/button";
 import { Trash, TickCircle } from "iconsax-reactjs";
 import { toast } from "sonner";
+import PageHeader from "../Common/PageHeader";
+
 // Mock data - should be replaced with API call
 const initialNotifications = [];
-import PageHeader from "../Common/PageHeader";
 import ConfirmDialog from "@/components/ConfirmDialog";
 
 export default function NotificationsList() {

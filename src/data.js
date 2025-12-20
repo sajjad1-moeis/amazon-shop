@@ -1,12 +1,10 @@
 import {
   Bag,
   BitcoinConvert,
-  Box,
   BoxTick,
   Buildings2,
   Calendar,
   CardPos,
-  CardTick,
   CardTick1,
   ConvertCard,
   DollarCircle,
