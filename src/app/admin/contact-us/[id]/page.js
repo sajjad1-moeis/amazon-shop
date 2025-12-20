@@ -11,6 +11,7 @@ import ContactDetailHeader from "@/template/Admin/contactUs/ContactDetailHeader"
 import ContactInfoCard from "@/template/Admin/contactUs/ContactInfoCard";
 import MessageSection from "@/template/Admin/contactUs/MessageSection";
 import { User, Calendar, TickCircle, EmojiNormal } from "iconsax-reactjs";
+import { FORM_STYLES } from "@/template/Admin/formStyles";
 
 export default function ContactUsDetailPage() {
   const router = useRouter();
@@ -81,7 +82,7 @@ export default function ContactUsDetailPage() {
     return (
       <div className="text-center text-gray-400 py-8">
         <p>درخواست یافت نشد</p>
-        <Button onClick={() => router.push("/admin/contact-us")} className="mt-4">
+        <Button className={FORM_STYLES.button} onClick={() => router.push("/admin/contact-us")} className="mt-4">
           بازگشت به لیست
         </Button>
       </div>
@@ -117,6 +118,3 @@ export default function ContactUsDetailPage() {
     </div>
   );
 }
-
-
-

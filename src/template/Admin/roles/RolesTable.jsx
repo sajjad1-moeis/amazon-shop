@@ -4,7 +4,7 @@ import React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { EyeSlash, Eye } from "iconsax-reactjs";
+import { EyeSlash, Eye, CloseCircle, TickCircle } from "iconsax-reactjs";
 import TableActions from "../TableActions";
 import { formatDate } from "@/utils/dateFormatter";
 
@@ -57,13 +57,11 @@ export default function RolesTable({ roles, onEdit, onDelete, onToggleActive, on
                   size="icon"
                   onClick={() => onToggleActive(role)}
                   className={`h-8 w-8 ${
-                    role.isActive !== false
-                      ? "text-orange-400 hover:bg-orange-400/20"
-                      : "text-blue-400 hover:bg-blue-400/20"
+                    role.isActive !== false ? "text-red-500 hover:bg-red-400/20" : "text-blue-400 hover:bg-blue-400/20"
                   }`}
                   title={role.isActive !== false ? "غیرفعال کردن" : "فعال کردن"}
                 >
-                  {role.isActive !== false ? <EyeSlash size={18} /> : <Eye size={18} />}
+                  {role.isActive !== false ? <CloseCircle /> : <TickCircle />}
                 </Button>
               </div>
             </TableCell>
@@ -73,4 +71,3 @@ export default function RolesTable({ roles, onEdit, onDelete, onToggleActive, on
     </Table>
   );
 }
-

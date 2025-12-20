@@ -56,7 +56,7 @@ export default function BottomNavigation() {
               href={item.href}
               ref={(el) => (itemRefs.current[item.id] = el)}
               className={cn(
-                "relative flex flex-col items-center justify-center gap-1.5 flex-1 py-2 transition-all duration-300 z-10",
+                "relative flex flex-col text-center items-center justify-center gap-1.5 flex-1 py-2 transition-all duration-300 z-10",
                 isActive && "text-blue-600"
               )}
             >

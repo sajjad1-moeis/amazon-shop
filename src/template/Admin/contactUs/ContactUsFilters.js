@@ -33,7 +33,7 @@ export default function ContactUsFilters() {
 
   return (
     <Select value={filterValue} onValueChange={handleFilterChange}>
-      <SelectTrigger className="bg-gray-700 border-gray-600 text-white h-[43px] w-[160px]">
+      <SelectTrigger className="bg-gray-700 border-gray-600 text-white w-fit gap-5 h-auto">
         <SelectValue placeholder="وضعیت" />
       </SelectTrigger>
       <SelectContent className="bg-gray-800 border-gray-700">
@@ -46,8 +46,3 @@ export default function ContactUsFilters() {
     </Select>
   );
 }
-
-
-
-
-

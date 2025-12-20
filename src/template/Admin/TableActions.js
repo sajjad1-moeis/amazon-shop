@@ -16,17 +16,17 @@ export default function TableActions({
   return (
     <div className="flex items-center gap-2">
       {showView && (
-        <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-400 hover:bg-blue-400/20" onClick={onView}>
+        <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-500 hover:bg-blue-500/20" onClick={onView}>
           <Eye size={18} />
         </Button>
       )}
       {showEdit && (
-        <Button variant="ghost" size="icon" className="h-8 w-8 text-green-400 hover:bg-green-400/20" onClick={onEdit}>
+        <Button variant="ghost" size="icon" className="h-8 w-8 text-green-500 hover:bg-green-500/20" onClick={onEdit}>
           <Edit size={18} />
         </Button>
       )}
       {showDelete && (
-        <Button variant="ghost" size="icon" className="h-8 w-8 text-red-400 hover:bg-red-400/20" onClick={onDelete}>
+        <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:bg-red-500/20" onClick={onDelete}>
           <Trash size={18} />
         </Button>
       )}
@@ -34,4 +34,3 @@ export default function TableActions({
     </div>
   );
 }
-

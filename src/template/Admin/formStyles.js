@@ -11,5 +11,6 @@ export const FORM_STYLES = {
   label: "text-gray-300",
   card: "bg-gray-800 border border-gray-700 shadow-lg rounded-xl",
   cardTitle: "text-white text-xl",
+  button:
+    "bg-gray-800 bg-opacity-50 border hover:bg-gray-900 hover:text-white border-gray-700 shadow-lg rounded-lg p-3 text-white",
 };
-

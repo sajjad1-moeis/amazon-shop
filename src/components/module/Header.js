@@ -76,7 +76,7 @@ function Header() {
             <div className="bg-white dark:bg-[#8989893D] w-full rounded-l-lg p-1 flex-between">
               <input
                 type="text"
-                className="px-2 outline-none placeholder:max-md:text-xs bg-transparent"
+                className="px-2 outline-none placeholder:max-md:text-xs bg-transparent max-sm:max-w-40"
                 placeholder="جستجو در امارت و آمریکا"
               />
               <button className="bg-yellow-500 hover:bg-yellow-600 text-primary-800 gap-2 flex-between rounded-lg p-2 md:px-3 py-2">

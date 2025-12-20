@@ -4,6 +4,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { TickCircle, CloseCircle } from "iconsax-reactjs";
+import { FORM_STYLES } from "../../formStyles";
 
 const getStatusBadge = (status) => {
   const statusMap = {
@@ -59,11 +60,10 @@ export default function TicketDetailHeader({ ticket, updating, onCloseTicket, on
             {updating ? "در حال پردازش..." : "باز کردن تیکت"}
           </Button>
         )}
-        <Button variant="outline" onClick={onBack}>
+        <Button variant="outline" onClick={onBack} className={FORM_STYLES.button}>
           بازگشت به لیست
         </Button>
       </div>
     </div>
   );
 }
-

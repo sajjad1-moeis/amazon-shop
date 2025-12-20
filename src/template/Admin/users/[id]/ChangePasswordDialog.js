@@ -99,18 +99,13 @@ export default function ChangePasswordDialog({ open, onOpenChange, onSubmit }) {
               />
             </div>
           </div>
-          <DialogFooter>
-            <Button
-              type="button"
-              className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-3"
-              onClick={handleClose}
-              disabled={loading}
-            >
+          <DialogFooter className={"gap-2 p-0"}>
+            <Button type="button" className={FORM_STYLES.button} onClick={handleClose} disabled={loading}>
               انصراف
             </Button>
             <Button
               type="submit"
-              className="bg-blue-600  border border-primary-700 shadow-lg rounded-xl p-3 mr-2"
+              className="bg-blue-600  border border-primary-700 shadow-lg rounded-lg p-3"
               disabled={loading || !formData.newPassword || formData.newPassword.length < 6}
             >
               {loading ? "در حال تغییر..." : "تغییر رمز"}

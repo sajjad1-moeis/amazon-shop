@@ -171,10 +171,6 @@ export default function RolesPage() {
           }}
         >
           <RolesFilters filters={filters} onFilterChange={setFilters} />
-          <Button onClick={() => router.push("/admin/roles/create")} className="bg-blue-600 hover:bg-blue-700">
-            <Add size={20} className="ml-2" />
-            نقش جدید
-          </Button>
         </PageHeaderWithSearch>
 
         {loading ? (

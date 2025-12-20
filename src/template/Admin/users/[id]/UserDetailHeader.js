@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, ArrowRight, Edit, Key } from "iconsax-reactjs";
+import { FORM_STYLES } from "../../formStyles";
 
 export default function UserDetailHeader({ user, editMode, onEdit, onCancel, onChangePassword }) {
   const router = useRouter();
@@ -42,33 +43,21 @@ export default function UserDetailHeader({ user, editMode, onEdit, onCancel, onC
 
       <div className="flex flex-wrap gap-2">
         {editMode ? (
-          <Button
-            className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-3"
-            onClick={onCancel}
-          >
+          <Button className={FORM_STYLES.button} onClick={onCancel}>
             انصراف
             <ArrowLeft size={18} />
           </Button>
         ) : (
           <>
-            <Button
-              onClick={onEdit}
-              className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-3"
-            >
+            <Button onClick={onEdit} className={FORM_STYLES.button}>
               <Edit size={18} className="ml-2" />
               ویرایش
             </Button>
-            <Button
-              onClick={onChangePassword}
-              className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-3"
-            >
+            <Button onClick={onChangePassword} className={FORM_STYLES.button}>
               <Key size={18} className="ml-2" />
               تغییر رمز
             </Button>
-            <Button
-              className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-3"
-              onClick={() => router.push("/admin/users")}
-            >
+            <Button className={FORM_STYLES.button} onClick={() => router.push("/admin/users")}>
               بازگشت به لیست
               <ArrowLeft size={18} />
             </Button>
@@ -78,5 +67,3 @@ export default function UserDetailHeader({ user, editMode, onEdit, onCancel, onC
     </div>
   );
 }
-
-

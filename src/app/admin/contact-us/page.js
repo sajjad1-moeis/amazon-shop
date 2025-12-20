@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import ContactUsTable from "@/template/Admin/contactUs/ContactUsTable";
@@ -22,6 +22,7 @@ export default function ContactUsPage() {
   const [pageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+  const [unreadCount, setUnreadCount] = useState(0);
   const [markAsReadLoading, setMarkAsReadLoading] = useState({});
 
   const isReadFilter = filterParam === "unread" ? false : filterParam === "read" ? true : null;
@@ -59,6 +60,17 @@ export default function ContactUsPage() {
     }
   };
 
+  const fetchUnreadCount = async () => {
+    try {
+      const response = await contactService.getUnreadCount();
+      if (response.success && response.data !== null && response.data !== undefined) {
+        setUnreadCount(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching unread count:", error);
+    }
+  };
+
   const handleView = (contactId) => {
     router.push(`/admin/contact-us/${contactId}`);
   };
@@ -69,7 +81,8 @@ export default function ContactUsPage() {
       const response = await contactService.markAsRead(contactId);
       if (response.success) {
         toast.success("درخواست به عنوان خوانده شده علامت‌گذاری شد");
-        fetchContacts();
+        await fetchContacts();
+        await fetchUnreadCount();
       } else {
         toast.error(response.message || "خطا در علامت‌گذاری");
       }
@@ -90,6 +103,8 @@ export default function ContactUsPage() {
 
   useEffect(() => {
     fetchContacts();
+    fetchUnreadCount();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber, pageSize, isReadFilter]);
 
   return (
@@ -106,7 +121,12 @@ export default function ContactUsPage() {
           </div>
         ) : (
           <>
-            <ContactStats totalCount={totalCount} currentPage={pageNumber} totalPages={totalPages} />
+            <ContactStats
+              totalCount={totalCount}
+              currentPage={pageNumber}
+              totalPages={totalPages}
+              unreadCount={unreadCount}
+            />
             <ContactUsTable
               contacts={contacts}
               onView={handleView}

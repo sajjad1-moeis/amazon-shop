@@ -18,7 +18,7 @@ export default function TopBar() {
           <div className="flex items-center gap-1 lg:gap-3 ">
             <Link href={"/categories"} className="max-xl:hidden">
               <div className="flex items-center gap-3">
-                <Button variant="gray" className="flex items-center gap-2 rounded-xl px-3 py-1">
+                <Button variant="gray" className="flex items-center md:gap-2 gap-0 rounded-xl px-3 py-1">
                   <MenuIcon size={18} variant="Bulk" />
                   <span className="text-sm">دسته بندی</span>
                   <ArrowDown2 size={18} />
@@ -28,7 +28,7 @@ export default function TopBar() {
             <Button
               variant="gray"
               size="sm"
-              className="relative rounded-xl px-3 py-1 flex items-center gap-2 max-md:hidden"
+              className="relative rounded-xl px-3 py-1 flex items-center md:gap-2 max-md:hidden"
             >
               <BitcoinConvert size={16} variant="Bulk" />
               <span className="text-sm">خدمات ارزی</span>
@@ -40,7 +40,7 @@ export default function TopBar() {
               <Button
                 variant="gray"
                 size="sm"
-                className="rounded-xl px-3 py-1 max-md:flex-col-reverse max-md:h-full flex items-center gap-2 "
+                className="rounded-xl px-3 py-1  max-md:flex-col-reverse max-md:h-full flex items-center md:gap-2 gap-0 "
               >
                 <span className="text-sm ">ایبی</span>
                 <Image src="/image/Header/ebay.png" width={50} height={50} alt="ebay" />
@@ -50,7 +50,7 @@ export default function TopBar() {
               <Button
                 variant="gray"
                 size="sm"
-                className="rounded-xl px-3 py-1 max-md:flex-col-reverse max-md:h-full flex items-center gap-2"
+                className="rounded-xl px-3 py-1 max-md:flex-col-reverse max-md:h-full flex items-center md:gap-2 gap-0"
               >
                 <span className="text-sm">علی اکسپرس</span>
                 <Image src="/image/Header/aliEx.png" width={83} height={20} alt="aliEx" />
@@ -61,7 +61,7 @@ export default function TopBar() {
               <Button
                 variant="gray"
                 size="sm"
-                className="rounded-xl px-3 py-1 max-md:flex-col-reverse max-md:h-full flex items-center gap-2"
+                className="rounded-xl px-3 py-1 max-md:flex-col-reverse max-md:h-full flex items-center md:gap-2 gap-0"
               >
                 <span className="text-sm">شین</span>
                 <Image src="/image/Header/Shein.png" alt="Shein" width={83} height={20} />

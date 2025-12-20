@@ -48,7 +48,7 @@ export default function UsersFilters() {
   return (
     <div className="flex gap-2">
       <Select value={filterRole} onValueChange={handleRoleChange}>
-        <SelectTrigger className="bg-gray-700 border-gray-600 text-white h-[43px] w-[140px]">
+        <SelectTrigger className="bg-gray-700 border-gray-600 text-white h-[43px] w-fit gap-5">
           <SelectValue placeholder="نقش" />
         </SelectTrigger>
         <SelectContent className="bg-gray-800 border-gray-700">
@@ -61,7 +61,7 @@ export default function UsersFilters() {
       </Select>
 
       <Select value={filterStatus} onValueChange={handleStatusChange}>
-        <SelectTrigger className="bg-gray-700 border-gray-600 text-white h-[43px] w-[160px]">
+        <SelectTrigger className="bg-gray-700 border-gray-600 text-white h-[43px] w-fit gap-5">
           <SelectValue placeholder="وضعیت" />
         </SelectTrigger>
         <SelectContent className="bg-gray-800 border-gray-700">

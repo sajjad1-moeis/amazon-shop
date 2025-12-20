@@ -6,11 +6,11 @@ import AdminTopBar from "@/template/Admin/AdminTopBar";
 
 export default function AdminLayout({ children }) {
   return (
-    <div className="lg:grid grid-cols-4 xl:grid-cols-6 min-h-screen bg-gray-900 text-gray-100">
+    <div className="lg:grid grid-cols-4 xl:grid-cols-5 min-h-screen bg-gray-900 text-gray-100">
       {/* Sidebar for larger screens */}
       <AdminSidebar />
 
-      <div className="flex-1 flex flex-col lg:col-span-3 xl:col-span-5  ">
+      <div className="flex-1 flex flex-col lg:col-span-3 xl:col-span-4  ">
         {/* TopBar for all screens, includes mobile drawer trigger */}
         <AdminTopBar />
 

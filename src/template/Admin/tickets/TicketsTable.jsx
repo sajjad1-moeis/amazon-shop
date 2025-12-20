@@ -43,14 +43,14 @@ export default function TicketsTable({ tickets, onView }) {
     <Table>
       <TableHeader>
         <TableRow className="border-gray-700 hover:bg-gray-700/50">
-          <TableHead className="text-gray-300">شماره تیکت</TableHead>
-          <TableHead className="text-gray-300">مشتری</TableHead>
-          <TableHead className="text-gray-300">موضوع</TableHead>
-          <TableHead className="text-gray-300">اولویت</TableHead>
-          <TableHead className="text-gray-300">وضعیت</TableHead>
-          <TableHead className="text-gray-300">تعداد پیام‌ها</TableHead>
-          <TableHead className="text-gray-300">آخرین بروزرسانی</TableHead>
-          <TableHead className="text-gray-300">عملیات</TableHead>
+          <TableHead className="text-gray-300 whitespace-nowrap">شماره تیکت</TableHead>
+          <TableHead className="text-gray-300 whitespace-nowrap">مشتری</TableHead>
+          <TableHead className="text-gray-300 whitespace-nowrap">موضوع</TableHead>
+          <TableHead className="text-gray-300 whitespace-nowrap">اولویت</TableHead>
+          <TableHead className="text-gray-300 whitespace-nowrap">وضعیت</TableHead>
+          <TableHead className="text-gray-300 whitespace-nowrap">تعداد پیام‌ها</TableHead>
+          <TableHead className="text-gray-300 whitespace-nowrap">آخرین بروزرسانی</TableHead>
+          <TableHead className="text-gray-300 whitespace-nowrap">عملیات</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

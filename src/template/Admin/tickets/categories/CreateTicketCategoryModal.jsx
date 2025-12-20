@@ -103,7 +103,9 @@ export default function CreateTicketCategoryModal({ isOpen, onClose, onSuccess, 
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md bg-gray-800 border-gray-700" dir="rtl">
         <DialogHeader>
-          <DialogTitle className="text-white">{editingCategory ? "ویرایش دسته‌بندی" : "ایجاد دسته‌بندی جدید"}</DialogTitle>
+          <DialogTitle className="text-white">
+            {editingCategory ? "ویرایش دسته‌بندی" : "ایجاد دسته‌بندی جدید"}
+          </DialogTitle>
           <DialogDescription className="text-gray-400">
             {editingCategory ? "اطلاعات دسته‌بندی را ویرایش کنید" : "اطلاعات دسته‌بندی جدید را وارد کنید"}
           </DialogDescription>
@@ -152,20 +154,20 @@ export default function CreateTicketCategoryModal({ isOpen, onClose, onSuccess, 
             </Label>
           </div>
 
-          <DialogFooter>
+          <DialogFooter className={"gap-2"}>
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
               disabled={submitting}
-              className="text-white border-gray-600 hover:bg-gray-700"
+              className={FORM_STYLES.button}
             >
               لغو
             </Button>
             <Button
               type="submit"
               disabled={submitting}
-              className="bg-green-500 hover:bg-green-600 text-white"
+              className="bg-green-500 rounded-lg hover:bg-green-600 text-white"
             >
               {submitting ? "در حال ذخیره..." : editingCategory ? "به‌روزرسانی" : "ایجاد"}
             </Button>
@@ -175,4 +177,3 @@ export default function CreateTicketCategoryModal({ isOpen, onClose, onSuccess, 
     </Dialog>
   );
 }
-

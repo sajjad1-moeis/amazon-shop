@@ -30,6 +30,57 @@ export const ADMIN_SIDEBAR_ITEMS = [
     key: "dashboard",
   },
   {
+    name: "کاربران",
+    icon: People,
+    color: "#8B5CF6",
+    href: "/admin/users",
+    key: "user",
+  },
+  {
+    name: "تیکت‌ها و پشتیبانی",
+    icon: MessageQuestion,
+    color: "#3B82F6",
+    href: "/admin/tickets",
+    key: "ticket",
+    children: [
+      { name: "لیست تیکت‌ها", href: "/admin/tickets" },
+      { name: "دسته‌بندی‌های تیکت", href: "/admin/tickets/categories" },
+    ],
+  },
+  {
+    name: "ارتباط با ما",
+    icon: MessageText,
+    color: "#06B6D4",
+    href: "/admin/contact-us",
+    key: "contact-us",
+  },
+  {
+    name: "وبلاگ و محتوا",
+    icon: DocumentText,
+    color: "#3B82F6",
+    href: "/admin/blog",
+    key: "blog",
+    children: [
+      { name: "پست جدید", href: "/admin/blog/create" },
+      { name: "لیست پست‌ها", href: "/admin/blog/list" },
+      { name: "دسته‌بندی‌ها", href: "/admin/blog/categories" },
+      { name: "نظرات", href: "/admin/blog/comments" },
+      { name: "تگ‌ها", href: "/admin/blog/tags" },
+    ],
+  },
+  {
+    name: "امنیت",
+    icon: Lock,
+    color: "#EF4444",
+    href: "/admin/security",
+    key: "security",
+    children: [
+      { name: "مدیریت نقش‌ها", href: "/admin/roles" },
+      { name: "اضافه کردن نقش", href: "/admin/roles/create" },
+      { name: "لاگ‌های سیستم", href: "/admin/security/logs" },
+    ],
+  },
+  {
     name: "محصولات",
     icon: ShoppingBag,
     color: "#10b981",
@@ -65,13 +116,7 @@ export const ADMIN_SIDEBAR_ITEMS = [
     href: "/admin/return-requests",
     key: "return-request",
   },
-  {
-    name: "کاربران",
-    icon: People,
-    color: "#8B5CF6",
-    href: "/admin/users",
-    key: "user",
-  },
+
   {
     name: "تخفیف‌ها و کوپن‌ها",
     icon: TicketDiscount,
@@ -96,24 +141,7 @@ export const ADMIN_SIDEBAR_ITEMS = [
       { name: "نظرات تایید شده", href: "/admin/reviews/approved" },
     ],
   },
-  {
-    name: "تیکت‌ها و پشتیبانی",
-    icon: MessageQuestion,
-    color: "#3B82F6",
-    href: "/admin/tickets",
-    key: "ticket",
-    children: [
-      { name: "لیست تیکت‌ها", href: "/admin/tickets" },
-      { name: "دسته‌بندی‌های تیکت", href: "/admin/tickets/categories" },
-    ],
-  },
-  {
-    name: "ارتباط با ما",
-    icon: MessageText,
-    color: "#06B6D4",
-    href: "/admin/contact-us",
-    key: "contact-us",
-  },
+
   {
     name: "ارسال و حمل و نقل",
     icon: Truck,
@@ -165,20 +193,7 @@ export const ADMIN_SIDEBAR_ITEMS = [
       { name: "گزارش موجودی", href: "/admin/inventory/reports" },
     ],
   },
-  {
-    name: "وبلاگ و محتوا",
-    icon: DocumentText,
-    color: "#3B82F6",
-    href: "/admin/blog",
-    key: "blog",
-    children: [
-      { name: "پست جدید", href: "/admin/blog/create" },
-      { name: "لیست پست‌ها", href: "/admin/blog/list" },
-      { name: "دسته‌بندی‌ها", href: "/admin/blog/categories" },
-      { name: "نظرات", href: "/admin/blog/comments" },
-      { name: "تگ‌ها", href: "/admin/blog/tags" },
-    ],
-  },
+
   {
     name: "اعلان‌ها",
     icon: Notification,
@@ -204,18 +219,6 @@ export const ADMIN_SIDEBAR_ITEMS = [
       { name: "تنظیمات پرداخت", href: "/admin/settings/payment" },
       { name: "تنظیمات ارسال", href: "/admin/settings/shipping" },
       { name: "تنظیمات ایمیل", href: "/admin/settings/email" },
-    ],
-  },
-  {
-    name: "امنیت",
-    icon: Lock,
-    color: "#EF4444",
-    href: "/admin/security",
-    key: "security",
-    children: [
-      { name: "مدیریت نقش‌ها", href: "/admin/roles" },
-      { name: "اضافه کردن نقش", href: "/admin/roles/create" },
-      { name: "لاگ‌های سیستم", href: "/admin/security/logs" },
     ],
   },
 ];

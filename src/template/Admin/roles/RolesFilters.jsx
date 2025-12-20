@@ -45,12 +45,8 @@ export default function RolesFilters({ onFilterChange, filters }) {
 
   return (
     <div className="flex gap-2">
-      <Select
-        value={filters.roleName || "all"}
-        onValueChange={handleRoleChange}
-        disabled={loadingRoles}
-      >
-        <SelectTrigger className="bg-gray-700 border-gray-600 text-white h-[43px] w-[160px]">
+      <Select value={filters.roleName || "all"} onValueChange={handleRoleChange} disabled={loadingRoles}>
+        <SelectTrigger className="bg-gray-700 border-gray-600 text-white w-fit gap-5 h-auto">
           <SelectValue placeholder="نقش" />
         </SelectTrigger>
         <SelectContent className="bg-gray-800 border-gray-700">
@@ -63,8 +59,11 @@ export default function RolesFilters({ onFilterChange, filters }) {
         </SelectContent>
       </Select>
 
-      <Select value={filters.isActive === null ? "all" : filters.isActive ? "active" : "inactive"} onValueChange={handleStatusChange}>
-        <SelectTrigger className="bg-gray-700 border-gray-600 text-white h-[43px] w-[160px]">
+      <Select
+        value={filters.isActive === null ? "all" : filters.isActive ? "active" : "inactive"}
+        onValueChange={handleStatusChange}
+      >
+        <SelectTrigger className="bg-gray-700 border-gray-600 text-white w-fit gap-5 h-auto">
           <SelectValue placeholder="وضعیت" />
         </SelectTrigger>
         <SelectContent className="bg-gray-800 border-gray-700">
@@ -78,4 +77,3 @@ export default function RolesFilters({ onFilterChange, filters }) {
     </div>
   );
 }
-

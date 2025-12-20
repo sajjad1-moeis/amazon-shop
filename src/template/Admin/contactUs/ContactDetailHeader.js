@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { TickCircle } from "iconsax-reactjs";
+import { FORM_STYLES } from "../formStyles";
 
 export default function ContactDetailHeader({ isRead, onMarkAsRead, markAsReadLoading }) {
   const router = useRouter();
@@ -33,16 +34,10 @@ export default function ContactDetailHeader({ isRead, onMarkAsRead, markAsReadLo
             {markAsReadLoading ? "در حال پردازش..." : "علامت‌گذاری به عنوان خوانده شده"}
           </Button>
         )}
-        <Button variant="outline" onClick={() => router.push("/admin/contact-us")}>
+        <Button className={FORM_STYLES.button} variant="outline" onClick={() => router.push("/admin/contact-us")}>
           بازگشت به لیست
         </Button>
       </div>
     </div>
   );
 }
-
-
-
-
-
-

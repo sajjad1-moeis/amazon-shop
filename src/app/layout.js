@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <AuthProvider>
             <main className="overflow-hidden max-md:pb-20 dark:bg-dark-bg">{children}</main>
-            <Toaster dir="rtl" position="top-right" richColors />
+            <Toaster dir="rtl" position="top-right" richColors className={iranSans.variable} />
           </AuthProvider>
         </ThemeProvider>
       </body>

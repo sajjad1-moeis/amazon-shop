@@ -21,13 +21,13 @@ export default function Footer() {
       className="w-full bg-white dark:bg-[#101010] text-gray-700 dark:text-white border-t border-neutral-100 dark:border-gray-800"
       dir="rtl"
     >
-      <div className="px-6 lg:container">
+      <div className="px-4 lg:container">
         {/* --- Recent Visits --- */}
         <section className="pt-8">
           <RecentVisits />
 
           {/* --- Feature Icons row --- */}
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 py-6 gap-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 py-6 gap-y-4 max-md:gap-x-2">
             <FeatureItem icon={<CardPos size={22} />} title="پرداخت امن ریالی" />
             <FeatureItem icon={<Bag2 size={22} />} title="خرید مستقیم از آمازون" />
             <FeatureItem icon={<Truck size={22} />} title="ارسال مطمئن به ایران" />
@@ -74,7 +74,7 @@ export default function Footer() {
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="sm:flex items-center gap-3">
               <label className="text-sm px-3 py-2 rounded-lg text-gray-400 dark:text-gray-300">خبرنامه</label>
               <div className="flex items-center gap-3 bg-gray-50 dark:bg-dark-field border border-gray-200 dark:border-gray-700 rounded-lg p-1">
                 <input

@@ -7,8 +7,8 @@ export default function AmazonSection() {
     <div className="w-full bg-white  dark:bg-dark-bg">
       {/* Hero Section */}
 
-      <div className="relative w-full h-40 sm:h-60 md:h-[400px] lg:h-[550px] xl:h-[700px]">
-        <Image src="/image/Home/amazonBg.png" alt="banner" fill priority sizes="100vw" className="sm:object-cover" />
+      <div className="relative w-full h-48 sm:h-60 md:h-[400px] lg:h-[550px] xl:h-[700px]">
+        <Image src="/image/Home/amazonBg.png" alt="banner" fill priority sizes="100vw" className="object-cover" />
       </div>
       {/* Product Slider Box */}
       <div className="w-full container -mt-[10%] relative">
