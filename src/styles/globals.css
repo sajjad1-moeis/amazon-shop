@@ -75,14 +75,6 @@
   }
 }
 
-@font-face {
-  font-family: iranSans;
-  src: url(/fonts/IRANSansWeb\(FaNum\)_Medium.ttf);
-}
-
-* {
-  font-family: iranSans;
-}
 
 .swiper {
   width: 100%;

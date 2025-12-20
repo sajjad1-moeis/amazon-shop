@@ -1,26 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 import { Button } from "./ui/button";
 import { Moon, Sun } from "lucide-react";
 
 export default function SwitchButton() {
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+  const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-
-    const root = window.document.documentElement;
-
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-
-    localStorage.setItem("theme", theme);
-  }, [theme]);
+  }, []);
 
   if (!mounted) {
     return (
@@ -37,9 +28,7 @@ export default function SwitchButton() {
     <Button
       variant="ghost"
       onClick={toggleTheme}
-      className="flex items-center gap-2 rounded-xl px-3 py-1 
-                 text-white dark:text-white hover:bg-white/10 
-                 dark:hover:bg-white/10 transition-colors"
+      className="flex items-center gap-2 rounded-xl px-3 py-1 text-white dark:text-white hover:bg-white/10 dark:hover:bg-white/10 transition-colors"
     >
       {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
       <span className="text-sm">{theme === "dark" ? "روشن" : "تاریک"}</span>

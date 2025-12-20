@@ -1,7 +1,10 @@
 "use client";
+
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { BitcoinConvert, BoxTick, Home, Profile, ShoppingCart } from "iconsax-reactjs";
+import Link from "next/link";
 
 const navigationItems = [
   { id: "home", label: "خانه", icon: Home, href: "/" },
@@ -11,11 +14,20 @@ const navigationItems = [
   { id: "currency", label: "خدمات ارزی", icon: BitcoinConvert, href: "/currency" },
 ];
 
-export default function BottomNavigation({ activeItem = "home" }) {
-  const [activeId, setActiveId] = useState(activeItem);
+export default function BottomNavigation() {
+  const pathname = usePathname();
   const [offset, setOffset] = useState({ left: 0, width: 0 });
-  // ساختن ref برای هر دکمه
   const itemRefs = useRef({});
+
+  // پیدا کردن آیتم فعال بر اساس pathname
+  const activeItem = navigationItems.find((item) => {
+    if (item.href === "/") {
+      return pathname === "/";
+    }
+    return pathname.startsWith(item.href);
+  });
+
+  const activeId = activeItem?.id || "home";
 
   useEffect(() => {
     // هنگام لود صفحه، دکمه Active را پیدا کن
@@ -24,10 +36,10 @@ export default function BottomNavigation({ activeItem = "home" }) {
       const rect = activeBtn.getBoundingClientRect();
       setOffset({ left: rect.left, width: rect.width });
     }
-  }, [activeId]);
+  }, [activeId, pathname]);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-dark-header z-50 md:hidden ">
+    <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-dark-header z-50 md:hidden">
       <div
         className="absolute top-0 transition-all duration-300 ease-out z-[99999] h-1 bg-[#386BF6]"
         style={{ left: offset.left + "px", width: offset.width }}
@@ -39,14 +51,10 @@ export default function BottomNavigation({ activeItem = "home" }) {
           const isActive = item.id === activeId;
 
           return (
-            <button
+            <Link
               key={item.id}
+              href={item.href}
               ref={(el) => (itemRefs.current[item.id] = el)}
-              onClick={(e) => {
-                const rect = e.currentTarget.getBoundingClientRect();
-                setOffset({ ofsset: rect.left, width: rect.width });
-                setActiveId(item.id);
-              }}
               className={cn(
                 "relative flex flex-col items-center justify-center gap-1.5 flex-1 py-2 transition-all duration-300 z-10",
                 isActive && "text-blue-600"
@@ -65,7 +73,7 @@ export default function BottomNavigation({ activeItem = "home" }) {
               >
                 {item.label}
               </span>
-            </button>
+            </Link>
           );
         })}
       </div>
