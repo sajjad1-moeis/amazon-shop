@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { ticketCategoryService } from "@/services/ticket/ticketCategoryService";
 import { toast } from "sonner";
+import { FORM_STYLES } from "../../formStyles";
 
 export default function CreateTicketCategoryModal({ isOpen, onClose, onSuccess, editingCategory }) {
   const [formData, setFormData] = useState({
@@ -110,7 +111,7 @@ export default function CreateTicketCategoryModal({ isOpen, onClose, onSuccess, 
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name" className="text-gray-300">
+            <Label htmlFor="name" className={FORM_STYLES.label}>
               نام دسته‌بندی *
             </Label>
             <Input
@@ -118,16 +119,14 @@ export default function CreateTicketCategoryModal({ isOpen, onClose, onSuccess, 
               value={formData.name}
               onChange={(e) => handleChange("name", e.target.value)}
               placeholder="مثال: پشتیبانی فنی"
-              className={`bg-gray-800 bg-opacity-50 border-gray-700 text-white ${
-                errors.name ? "border-red-500" : ""
-              }`}
+              className={`${FORM_STYLES.input} ${errors.name ? "border-red-500" : ""}`}
               dir="rtl"
             />
             {errors.name && <p className="text-xs text-red-400">{errors.name}</p>}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description" className="text-gray-300">
+            <Label htmlFor="description" className={FORM_STYLES.label}>
               توضیحات
             </Label>
             <Input
@@ -135,7 +134,7 @@ export default function CreateTicketCategoryModal({ isOpen, onClose, onSuccess, 
               value={formData.description}
               onChange={(e) => handleChange("description", e.target.value)}
               placeholder="توضیحات اختیاری"
-              className="bg-gray-800 bg-opacity-50 border-gray-700 text-white"
+              className={FORM_STYLES.input}
               dir="rtl"
             />
           </div>
@@ -148,7 +147,7 @@ export default function CreateTicketCategoryModal({ isOpen, onClose, onSuccess, 
               onChange={(e) => handleChange("isActive", e.target.checked)}
               className="w-4 h-4 text-green-500 rounded focus:ring-green-500 bg-gray-700 border-gray-600"
             />
-            <Label htmlFor="isActive" className="text-gray-300 cursor-pointer">
+            <Label htmlFor="isActive" className={`${FORM_STYLES.label} cursor-pointer`}>
               فعال
             </Label>
           </div>

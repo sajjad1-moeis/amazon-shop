@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import FormSection from "./FormSection";
 import TagsSection from "./TagsSection";
 import ImageUploadSection from "./ImageUploadSection";
-import { FORM_SECTIONS, FORM_STYLES } from "@/config/blogFormConfig";
+import { FORM_SECTIONS, FORM_STYLES } from "./blogFormConfig";
 
 export default function BlogForm({
   formData,

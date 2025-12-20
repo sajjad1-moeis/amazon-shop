@@ -13,7 +13,7 @@ function BtnShowLoginModal() {
 
   const handleClick = () => {
     if (isAuthenticated) {
-      router.push("/dashboard");
+      router.push("/admin");
     } else {
       setOpen(!open);
     }

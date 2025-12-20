@@ -1,204 +1,131 @@
 "use client";
-
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
+import { PERSONAL_FIELDS } from "@/data";
+import { FORM_STYLES } from "../../formStyles";
+import { cn } from "@/lib/utils";
+
+const DEFAULT_VALUES = {
+  email: "",
+  phoneNumber: "",
+  firstName: "",
+  lastName: "",
+  profileImage: "",
+  isActive: true,
+  isEmailVerified: false,
+  isPhoneVerified: false,
+};
+
+const SWITCH_FIELDS = [
+  { name: "isActive", label: "وضعیت فعال" },
+  { name: "isEmailVerified", label: "ایمیل تایید شده" },
+  { name: "isPhoneVerified", label: "شماره تلفن تایید شده" },
+];
 
 export default function EditUserForm({ user, onSubmit, onCancel }) {
-  const [formData, setFormData] = useState({
-    email: "",
-    phoneNumber: "",
-    firstName: "",
-    lastName: "",
-    profileImage: "",
-    isActive: true,
-    isEmailVerified: false,
-    isPhoneVerified: false,
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    defaultValues: DEFAULT_VALUES,
   });
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user) {
-      setFormData({
-        email: user.email || "",
-        phoneNumber: user.phoneNumber || "",
-        firstName: user.firstName || "",
-        lastName: user.lastName || "",
-        profileImage: user.profileImage || "",
-        isActive: user.isActive !== undefined ? user.isActive : true,
-        isEmailVerified: user.isEmailVerified !== undefined ? user.isEmailVerified : false,
-        isPhoneVerified: user.isPhoneVerified !== undefined ? user.isPhoneVerified : false,
-      });
-    }
-  }, [user]);
+    if (!user) return;
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+    reset({
+      ...DEFAULT_VALUES,
+      ...user,
+    });
+  }, [user, reset]);
 
-  const handleSwitchChange = (name, checked) => {
-    setFormData((prev) => ({ ...prev, [name]: checked }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    if (!formData.email || !formData.phoneNumber || !formData.firstName || !formData.lastName) {
-      toast.error("لطفاً تمام فیلدهای الزامی را پر کنید");
-      setLoading(false);
-      return;
-    }
-
+  const submitHandler = async (data) => {
     try {
-      await onSubmit(formData);
+      await onSubmit(data);
     } catch (error) {
-      console.error("Error submitting form:", error);
-    } finally {
-      setLoading(false);
+      console.error(error);
+      toast.error("خطا در ذخیره اطلاعات");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="bg-gray-700/30 rounded-lg p-6 border border-gray-600">
+    <form onSubmit={handleSubmit(submitHandler)} className="space-y-6">
+      <div className={cn("p-4", FORM_STYLES.card)}>
         <h2 className="text-xl font-bold text-white mb-6">اطلاعات شخصی</h2>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label htmlFor="firstName" className="text-gray-300">
-              نام <span className="text-red-400">*</span>
-            </Label>
-            <Input
-              id="firstName"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              className="bg-gray-800 border-gray-600 text-white"
-              required
-              maxLength={50}
-            />
-          </div>
+          {PERSONAL_FIELDS.map(({ name, label, type = "text", required, maxLength, pattern, placeholder }) => (
+            <div key={name} className="space-y-2">
+              <Label htmlFor={name} className="text-gray-300">
+                {label}
+                {required && <span className="text-red-400"> *</span>}
+              </Label>
 
-          <div className="space-y-2">
-            <Label htmlFor="lastName" className="text-gray-300">
-              نام خانوادگی <span className="text-red-400">*</span>
-            </Label>
-            <Input
-              id="lastName"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              className="bg-gray-800 border-gray-600 text-white"
-              required
-              maxLength={50}
-            />
-          </div>
+              <Input
+                id={name}
+                type={type}
+                placeholder={placeholder}
+                className={FORM_STYLES.input}
+                {...register(name, {
+                  required: required ? "این فیلد الزامی است" : false,
+                  maxLength,
+                  pattern,
+                })}
+              />
 
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-gray-300">
-              ایمیل <span className="text-red-400">*</span>
-            </Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="bg-gray-800 border-gray-600 text-white"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="phoneNumber" className="text-gray-300">
-              شماره تماس <span className="text-red-400">*</span>
-            </Label>
-            <Input
-              id="phoneNumber"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handleChange}
-              className="bg-gray-800 border-gray-600 text-white"
-              required
-              pattern="09[0-9]{9}"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="profileImage" className="text-gray-300">
-              مسیر تصویر پروفایل
-            </Label>
-            <Input
-              id="profileImage"
-              name="profileImage"
-              value={formData.profileImage}
-              onChange={handleChange}
-              className="bg-gray-800 border-gray-600 text-white"
-              placeholder="uploads/user/1/profile/image.jpg"
-            />
-          </div>
+              {errors[name] && <p className="text-red-400 text-xs">{errors[name].message}</p>}
+            </div>
+          ))}
         </div>
       </div>
 
-      <div className="bg-gray-700/30 rounded-lg p-6 border border-gray-600">
+      {/* ---------- Settings ---------- */}
+      <div className={cn("p-4", FORM_STYLES.card)}>
         <h2 className="text-xl font-bold text-white mb-6">تنظیمات</h2>
+
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="isActive" className="text-gray-300">
-              وضعیت فعال
-            </Label>
-            <Switch
-              dir="ltr"
-              id="isActive"
-              checked={formData.isActive}
-              onCheckedChange={(checked) => handleSwitchChange("isActive", checked)}
-            />
-          </div>
+          {SWITCH_FIELDS.map(({ name, label }) => (
+            <div key={name} className="flex items-center justify-between">
+              <Label htmlFor={name} className="text-gray-300">
+                {label}
+              </Label>
 
-          <div className="flex items-center justify-between">
-            <Label htmlFor="isEmailVerified" className="text-gray-300">
-              ایمیل تایید شده
-            </Label>
-            <Switch
-              dir="ltr"
-              id="isEmailVerified"
-              checked={formData.isEmailVerified}
-              onCheckedChange={(checked) => handleSwitchChange("isEmailVerified", checked)}
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <Label htmlFor="isPhoneVerified" className="text-gray-300">
-              شماره تلفن تایید شده
-            </Label>
-            <Switch
-              dir="ltr"
-              id="isPhoneVerified"
-              checked={formData.isPhoneVerified}
-              onCheckedChange={(checked) => handleSwitchChange("isPhoneVerified", checked)}
-            />
-          </div>
+              <Switch
+                dir="ltr"
+                id={name}
+                checked={watch(name)}
+                onCheckedChange={(checked) => setValue(name, checked)}
+                className="data-[state=checked]:bg-primary-500 dark:data-[state=checked]:bg-blue-500"
+              />
+            </div>
+          ))}
         </div>
       </div>
 
+      {/* ---------- Actions ---------- */}
       <div className="flex justify-end gap-3">
         <Button
           type="button"
-          className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-3"
           onClick={onCancel}
-          disabled={loading}
+          disabled={isSubmitting}
+          className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-3"
         >
           انصراف
         </Button>
-        <Button type="submit" disabled={loading} className="bg-blue-600 hover:bg-blue-700 rounded-xl">
-          {loading ? "در حال ذخیره..." : "ذخیره تغییرات"}
+
+        <Button type="submit" disabled={isSubmitting} className="bg-blue-600 hover:bg-blue-700 rounded-xl">
+          {isSubmitting ? "در حال ذخیره..." : "ذخیره تغییرات"}
         </Button>
       </div>
     </form>
   );
 }
-

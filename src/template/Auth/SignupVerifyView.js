@@ -26,7 +26,7 @@ export default function SignupVerifyView({ onBack, onSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!code || code.length !== 6) {
       toast.error("لطفاً کد تایید ۶ رقمی را وارد کنید");
       return;
@@ -36,12 +36,12 @@ export default function SignupVerifyView({ onBack, onSuccess }) {
       toast.error("شماره موبایل یافت نشد");
       return;
     }
-    
+
     const result = await verifyRegistrationOtp(phone, code);
     if (result.success) {
       localStorage.removeItem("signup_phone");
       onSuccess?.();
-      router.push("/dashboard");
+      router.push("/admin");
     }
   };
 
@@ -53,7 +53,9 @@ export default function SignupVerifyView({ onBack, onSuccess }) {
   return (
     <SectionContainer
       title="تایید حساب"
-      description={`کد تأییدی به شماره موبایل ${phone || "شما"} ارسال شده است. لطفاً آن را در کادر زیر وارد کنید تا حساب شما فعال شود.`}
+      description={`کد تأییدی به شماره موبایل ${
+        phone || "شما"
+      } ارسال شده است. لطفاً آن را در کادر زیر وارد کنید تا حساب شما فعال شود.`}
     >
       <form onSubmit={handleSubmit} className="space-y-4 text-xs">
         <LabeledField label="کد تایید">

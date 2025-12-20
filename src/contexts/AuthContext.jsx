@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { authAPI } from "@/lib/api-client";
 import { saveToken, getToken, removeToken, isAuthenticated } from "@/lib/token-manager";
 import { toast } from "sonner";
@@ -15,26 +15,34 @@ export const useAuth = () => {
   return context;
 };
 
+const extractToken = (data) =>
+  data?.tokens?.accessToken || data?.tokens?.token || data?.accessToken || data?.token || null;
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  /* ---------- Init Auth ---------- */
   useEffect(() => {
     const initAuth = async () => {
       try {
         const token = getToken();
-        if (token) {
-          const response = await authAPI.getUserByToken(token);
-          if (response.success && response.data) {
-            setUser(response.data.user || response.data);
-          } else {
-            removeToken();
-            setUser(null);
-          }
+        if (!token) {
+          setUser(null);
+          setLoading(false);
+          return;
+        }
+
+        const response = await authAPI.getUserByToken(token);
+
+        if (response?.success && response?.data) {
+          setUser(response.data.user || response.data);
         } else {
+          removeToken();
           setUser(null);
         }
       } catch (error) {
+        console.error("Error initializing auth:", error);
         removeToken();
         setUser(null);
       } finally {
@@ -45,6 +53,8 @@ export const AuthProvider = ({ children }) => {
     initAuth();
   }, []);
 
+  /* ---------- Auth Actions ---------- */
+
   const login = async (phoneNumber, password) => {
     try {
       setLoading(true);
@@ -53,36 +63,21 @@ export const AuthProvider = ({ children }) => {
         password,
       });
 
-      if (response.success && response.data) {
-        let token = null;
-        if (response.data.tokens?.accessToken) {
-          token = response.data.tokens.accessToken;
-        } else if (response.data.tokens?.token) {
-          token = response.data.tokens.token;
-        } else if (response.data.accessToken) {
-          token = response.data.accessToken;
-        } else if (response.data.token) {
-          token = response.data.token;
-        }
-
-        if (token) {
-          saveToken(token);
-        }
-
-        if (response.data.user) {
-          setUser(response.data.user);
-        }
-
-        toast.success(response.message || "ورود موفقیت‌آمیز");
-        return { success: true, data: response.data };
-      } else {
-        toast.error(response.message || "خطا در ورود");
-        return { success: false, message: response.message };
+      if (!response?.success || !response?.data) {
+        toast.error(response?.message || "خطا در ورود");
+        return { success: false, message: response?.message };
       }
+
+      const token = extractToken(response.data);
+      if (token) saveToken(token);
+
+      if (response.data.user) setUser(response.data.user);
+
+      toast.success(response.message || "ورود موفقیت‌آمیز");
+      return { success: true, data: response.data };
     } catch (error) {
-      const message = error.message || "خطا در ارتباط با سرور";
-      toast.error(message);
-      return { success: false, message };
+      toast.error(error?.message || "خطا در ارتباط با سرور");
+      return { success: false };
     } finally {
       setLoading(false);
     }
@@ -93,17 +88,16 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       const response = await authAPI.sendRegistrationOtp(data);
 
-      if (response.success) {
+      if (response?.success) {
         toast.success(response.message || "کد تایید ارسال شد");
-        return { success: true, message: response.message };
-      } else {
-        toast.error(response.message || "خطا در ارسال کد");
-        return { success: false, message: response.message };
+        return { success: true };
       }
+
+      toast.error(response?.message || "خطا در ارسال کد");
+      return { success: false };
     } catch (error) {
-      const message = error.message || "خطا در ارتباط با سرور";
-      toast.error(message);
-      return { success: false, message };
+      toast.error(error?.message || "خطا در ارتباط با سرور");
+      return { success: false };
     } finally {
       setLoading(false);
     }
@@ -117,36 +111,21 @@ export const AuthProvider = ({ children }) => {
         otpCode,
       });
 
-      if (response.success && response.data) {
-        let token = null;
-        if (response.data.tokens?.accessToken) {
-          token = response.data.tokens.accessToken;
-        } else if (response.data.tokens?.token) {
-          token = response.data.tokens.token;
-        } else if (response.data.accessToken) {
-          token = response.data.accessToken;
-        } else if (response.data.token) {
-          token = response.data.token;
-        }
-
-        if (token) {
-          saveToken(token);
-        }
-
-        if (response.data.user) {
-          setUser(response.data.user);
-        }
-
-        toast.success(response.message || "ثبت‌نام موفقیت‌آمیز");
-        return { success: true, data: response.data };
-      } else {
-        toast.error(response.message || "خطا در تایید کد");
-        return { success: false, message: response.message };
+      if (!response?.success || !response?.data) {
+        toast.error(response?.message || "خطا در تایید کد");
+        return { success: false };
       }
+
+      const token = extractToken(response.data);
+      if (token) saveToken(token);
+
+      if (response.data.user) setUser(response.data.user);
+
+      toast.success(response.message || "ثبت‌نام موفقیت‌آمیز");
+      return { success: true, data: response.data };
     } catch (error) {
-      const message = error.message || "خطا در ارتباط با سرور";
-      toast.error(message);
-      return { success: false, message };
+      toast.error(error?.message || "خطا در ارتباط با سرور");
+      return { success: false };
     } finally {
       setLoading(false);
     }
@@ -155,19 +134,20 @@ export const AuthProvider = ({ children }) => {
   const sendForgotPasswordOtp = async (phoneNumber) => {
     try {
       setLoading(true);
-      const response = await authAPI.sendForgotPasswordOtp({ phoneNumber });
+      const response = await authAPI.sendForgotPasswordOtp({
+        phoneNumber,
+      });
 
-      if (response.success) {
+      if (response?.success) {
         toast.success(response.message || "کد تایید ارسال شد");
-        return { success: true, message: response.message };
-      } else {
-        toast.error(response.message || "خطا در ارسال کد");
-        return { success: false, message: response.message };
+        return { success: true };
       }
+
+      toast.error(response?.message || "خطا در ارسال کد");
+      return { success: false };
     } catch (error) {
-      const message = error.message || "خطا در ارتباط با سرور";
-      toast.error(message);
-      return { success: false, message };
+      toast.error(error?.message || "خطا در ارتباط با سرور");
+      return { success: false };
     } finally {
       setLoading(false);
     }
@@ -178,36 +158,21 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       const response = await authAPI.resetPassword(data);
 
-      if (response.success && response.data) {
-        let token = null;
-        if (response.data.tokens?.accessToken) {
-          token = response.data.tokens.accessToken;
-        } else if (response.data.tokens?.token) {
-          token = response.data.tokens.token;
-        } else if (response.data.accessToken) {
-          token = response.data.accessToken;
-        } else if (response.data.token) {
-          token = response.data.token;
-        }
-
-        if (token) {
-          saveToken(token);
-        }
-
-        if (response.data.user) {
-          setUser(response.data.user);
-        }
-
-        toast.success(response.message || "رمز عبور با موفقیت تغییر کرد");
-        return { success: true, data: response.data };
-      } else {
-        toast.error(response.message || "خطا در تغییر رمز عبور");
-        return { success: false, message: response.message };
+      if (!response?.success || !response?.data) {
+        toast.error(response?.message || "خطا در تغییر رمز عبور");
+        return { success: false };
       }
+
+      const token = extractToken(response.data);
+      if (token) saveToken(token);
+
+      if (response.data.user) setUser(response.data.user);
+
+      toast.success(response.message || "رمز عبور با موفقیت تغییر کرد");
+      return { success: true, data: response.data };
     } catch (error) {
-      const message = error.message || "خطا در ارتباط با سرور";
-      toast.error(message);
-      return { success: false, message };
+      toast.error(error?.message || "خطا در ارتباط با سرور");
+      return { success: false };
     } finally {
       setLoading(false);
     }
@@ -216,19 +181,21 @@ export const AuthProvider = ({ children }) => {
   const resendOtp = async (phoneNumber, otpType) => {
     try {
       setLoading(true);
-      const response = await authAPI.resendOtp({ phoneNumber, otpType });
+      const response = await authAPI.resendOtp({
+        phoneNumber,
+        otpType,
+      });
 
-      if (response.success) {
+      if (response?.success) {
         toast.success(response.message || "کد تایید جدید ارسال شد");
-        return { success: true, message: response.message };
-      } else {
-        toast.error(response.message || "خطا در ارسال مجدد کد");
-        return { success: false, message: response.message };
+        return { success: true };
       }
+
+      toast.error(response?.message || "خطا در ارسال مجدد کد");
+      return { success: false };
     } catch (error) {
-      const message = error.message || "خطا در ارتباط با سرور";
-      toast.error(message);
-      return { success: false, message };
+      toast.error(error?.message || "خطا در ارتباط با سرور");
+      return { success: false };
     } finally {
       setLoading(false);
     }
@@ -238,35 +205,48 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       const token = getToken();
-      if (token) await authAPI.logoutFromAllDevices();
+      if (token) {
+        try {
+          await authAPI.logoutFromAllDevices();
+        } catch (error) {
+          console.error("Error logging out from all devices:", error);
+          // Continue with logout even if API call fails
+        }
+      }
 
       toast.success("با موفقیت خارج شدید");
       return { success: true };
+    } catch (error) {
+      console.error("Error during logout:", error);
+      toast.error("خطا در خروج از سیستم");
+      return { success: false };
     } finally {
-      setLoading(false);
       removeToken();
       setUser(null);
-      return { success: true };
+      setLoading(false);
     }
   };
 
-  const getAuthToken = () => {
-    return getToken();
-  };
+  const getAuthToken = () => getToken();
 
-  const value = {
-    user,
-    loading,
-    isAuthenticated: isAuthenticated() && user !== null,
-    login,
-    sendRegistrationOtp,
-    verifyRegistrationOtp,
-    sendForgotPasswordOtp,
-    resetPassword,
-    resendOtp,
-    logout,
-    getAuthToken,
-  };
+  /* ---------- Context Value ---------- */
+
+  const value = useMemo(
+    () => ({
+      user,
+      loading,
+      isAuthenticated: isAuthenticated() && user !== null,
+      login,
+      sendRegistrationOtp,
+      verifyRegistrationOtp,
+      sendForgotPasswordOtp,
+      resetPassword,
+      resendOtp,
+      logout,
+      getAuthToken,
+    }),
+    [user, loading]
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

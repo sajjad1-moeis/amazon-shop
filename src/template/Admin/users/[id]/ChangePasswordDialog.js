@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { FORM_STYLES } from "../../formStyles";
+import { cn } from "@/lib/utils";
 
 export default function ChangePasswordDialog({ open, onOpenChange, onSubmit }) {
   const [formData, setFormData] = useState({
@@ -54,9 +56,9 @@ export default function ChangePasswordDialog({ open, onOpenChange, onSubmit }) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="bg-gray-800 border-gray-700 text-white">
+      <DialogContent className={cn("text-white", FORM_STYLES.card)}>
         <DialogHeader>
-          <DialogTitle>تغییر رمز عبور کاربر</DialogTitle>
+          <DialogTitle className="mb-2 font-thin">تغییر رمز عبور کاربر</DialogTitle>
           <DialogDescription className="text-gray-400">
             پس از تغییر رمز، تمام توکن‌های کاربر لغو می‌شوند و باید دوباره وارد شود.
           </DialogDescription>
@@ -73,7 +75,7 @@ export default function ChangePasswordDialog({ open, onOpenChange, onSubmit }) {
                 type="password"
                 value={formData.newPassword}
                 onChange={handleChange}
-                className="bg-gray-700 border-gray-600 text-white"
+                className={FORM_STYLES.input}
                 required
                 minLength={6}
                 maxLength={100}
@@ -90,7 +92,7 @@ export default function ChangePasswordDialog({ open, onOpenChange, onSubmit }) {
                 name="reason"
                 value={formData.reason}
                 onChange={handleChange}
-                className="bg-gray-700 border-gray-600 text-white"
+                className={FORM_STYLES.input}
                 maxLength={500}
                 rows={3}
                 placeholder="مثال: فراموشی رمز عبور"
@@ -119,5 +121,3 @@ export default function ChangePasswordDialog({ open, onOpenChange, onSubmit }) {
     </Dialog>
   );
 }
-
-

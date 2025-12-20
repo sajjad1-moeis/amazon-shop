@@ -6,13 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-
-const FORM_STYLES = {
-  input: "bg-gray-800 border border-gray-700 text-white placeholder:text-gray-500 focus-visible:ring-gray-600",
-  label: "text-gray-300",
-  card: "bg-gray-800 border border-gray-700 shadow-lg rounded-xl",
-  cardTitle: "text-white text-xl",
-};
+import { FORM_STYLES } from "../formStyles";
 
 export default function RoleForm({ formData, errors, loading, onChange, onSubmit, isEdit = false }) {
   return (

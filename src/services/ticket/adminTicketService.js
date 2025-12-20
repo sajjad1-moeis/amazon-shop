@@ -145,7 +145,7 @@ export const adminTicketService = {
 
   getMessages: async (ticketId) => {
     const client = getAuthenticatedClient();
-    return client.get(`AdminTicket/GetMessages?ticketId=${ticketId}`).json();
+    return client.get(`AdminTicket/${ticketId}/GetMessages`).json();
   },
 
   getTicketWithMessages: async (ticketId) => {

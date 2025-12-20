@@ -8,8 +8,6 @@ import {
   CardPos,
   CardTick,
   CardTick1,
-  Category,
-  Category2,
   ConvertCard,
   DollarCircle,
   Element4,
@@ -728,7 +726,6 @@ export const navigationItems = [
   },
 ];
 
-
 export const mockAddresses = [
   {
     id: 1,
@@ -1271,5 +1268,40 @@ export const mockOrders = [
         price: "۳۵,۰۰۰,۰۰۰",
       },
     ],
+  },
+];
+
+export const PERSONAL_FIELDS = [
+  {
+    name: "firstName",
+    label: "نام",
+    required: true,
+    maxLength: 50,
+  },
+  {
+    name: "lastName",
+    label: "نام خانوادگی",
+    required: true,
+    maxLength: 50,
+  },
+  {
+    name: "email",
+    label: "ایمیل",
+    type: "email",
+    required: true,
+  },
+  {
+    name: "phoneNumber",
+    label: "شماره تماس",
+    required: true,
+    pattern: {
+      value: /^09[0-9]{9}$/,
+      message: "شماره تماس معتبر نیست",
+    },
+  },
+  {
+    name: "profileImage",
+    label: "مسیر تصویر پروفایل",
+    placeholder: "uploads/user/1/profile/image.jpg",
   },
 ];

@@ -102,7 +102,7 @@ export default function UserDetailPage() {
 
   return (
     <div className="space-y-6">
-      <div className="">
+      <div>
         <UserDetailHeader
           user={user}
           editMode={editMode}
@@ -132,5 +132,3 @@ export default function UserDetailPage() {
     </div>
   );
 }
-
-

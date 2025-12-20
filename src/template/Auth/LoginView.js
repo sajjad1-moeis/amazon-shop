@@ -20,7 +20,7 @@ export default function LoginView({ onGoSignup, onGoReset, onSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // اعتبارسنجی شماره تلفن: باید با 09 شروع شود و 11 رقم باشد
     const phoneRegex = /^09\d{9}$/;
     if (!phone || !phoneRegex.test(phone)) {
@@ -36,7 +36,7 @@ export default function LoginView({ onGoSignup, onGoReset, onSuccess }) {
     const result = await login(phone, password);
     if (result.success) {
       onSuccess?.();
-      router.push("/dashboard");
+      router.push("/admin");
     }
   };
 
