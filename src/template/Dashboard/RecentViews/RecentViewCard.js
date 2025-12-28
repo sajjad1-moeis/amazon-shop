@@ -10,13 +10,13 @@ export default function RecentViewCard({ product, onDelete }) {
   return (
     <div
       className={cn(
-        "bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-lg transition-shadow overflow-hidden relative",
+        "bg-white dark:bg-dark-box rounded-2xl shadow-md hover:shadow-lg transition-shadow overflow-hidden relative",
         !product.inStock && "border-2 border-red-300"
       )}
       style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
     >
       {/* Product Image */}
-      <div className="relative w-full h-48 bg-gray-100 dark:bg-gray-700">
+      <div className="relative w-full h-48 bg-gray-100 dark:bg-dark-field">
         <Image
           src={product.image}
           alt={product.title}
@@ -42,8 +42,8 @@ export default function RecentViewCard({ product, onDelete }) {
 
         {/* Price */}
         <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <p className="text-xs text-gray-500 dark:text-gray-400">قیمت فعلی (تومان)</p>
-          <p className="text-sm  text-gray-700 dark:text-white">{product.price}</p>
+          <p className="text-xs text-gray-500 dark:text-dark-text">قیمت فعلی (تومان)</p>
+          <p className="text-sm  text-gray-700 dark:text-dark-title">{product.price}</p>
         </div>
 
         {/* 3 Boxes Row */}
@@ -65,7 +65,7 @@ export default function RecentViewCard({ product, onDelete }) {
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" className="p-2 bg-gray-200" title="مقایسه">
-            <Maximize size={18} className="text-[#292D32] dark:text-gray-400" />
+            <Maximize size={18} className="text-[#292D32] dark:text-dark-text" />
           </Button>
           <Button
             variant="outline"

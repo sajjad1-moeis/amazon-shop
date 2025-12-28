@@ -37,13 +37,13 @@ export default function WithdrawModal({ isOpen, onClose }) {
     <Dialog open={isOpen} onOpenChange={onClose} dir="rtl">
       <DialogContent className="max-w-md" dir="rtl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">برداشت از کیف پول</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-dark-title">برداشت از کیف پول</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Withdrawal Amount */}
           <div className="space-y-2">
-            <Label htmlFor="amount" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <Label htmlFor="amount" className="text-sm font-medium text-gray-700 dark:text-dark-text">
               مبلغ برداشت
             </Label>
             <Input
@@ -59,7 +59,7 @@ export default function WithdrawModal({ isOpen, onClose }) {
 
           {/* IBAN Selection */}
           <div className="space-y-2">
-            <Label htmlFor="shaba" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <Label htmlFor="shaba" className="text-sm font-medium text-gray-700 dark:text-dark-text">
               شماره شبا
             </Label>
             <Select value={shaba} onValueChange={setShaba}>
@@ -78,7 +78,7 @@ export default function WithdrawModal({ isOpen, onClose }) {
 
           {/* Optional Description */}
           <div className="space-y-2">
-            <Label htmlFor="description" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <Label htmlFor="description" className="text-sm font-medium text-gray-700 dark:text-dark-text">
               توضیحات (اختیاری)
             </Label>
             <Textarea
@@ -104,7 +104,7 @@ export default function WithdrawModal({ isOpen, onClose }) {
               type="button"
               variant="outline"
               onClick={onClose}
-              className="border-2 border-[#1e3a5f] text-[#1e3a5f] hover:bg-gray-50 dark:hover:bg-gray-800 flex-1 sm:flex-initial"
+              className="border-2 border-[#1e3a5f] text-[#1e3a5f] hover:bg-gray-50 dark:hover:bg-dark-box flex-1 sm:flex-initial"
             >
               لغو
             </Button>

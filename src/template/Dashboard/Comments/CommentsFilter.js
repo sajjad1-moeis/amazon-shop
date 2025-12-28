@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -9,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SearchNormal1 } from "iconsax-reactjs";
 
 export default function CommentsFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
@@ -21,22 +19,7 @@ export default function CommentsFilter({ filters, onFiltersChange }) {
 
   return (
     <div className="flex flex-col md:flex-row gap-4">
-      {/* Search */}
-      <div className="flex-1 relative">
-        <SearchNormal1
-          size={20}
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-        />
-        <Input
-          type="text"
-          placeholder="جستجو در نظرات..."
-          value={filters.searchQuery || ""}
-          onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
-          className="pr-10"
-        />
-      </div>
-
-      {/* Status Filter */}
+      {/* Status Filter - Right */}
       <Select
         value={filters.status || undefined}
         onValueChange={(value) => handleFilterChange("status", value)}
@@ -46,36 +29,19 @@ export default function CommentsFilter({ filters, onFiltersChange }) {
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">همه</SelectItem>
-          <SelectItem value="approved">تایید شده</SelectItem>
-          <SelectItem value="pending">در انتظار تایید</SelectItem>
+          <SelectItem value="approved">تأیید شده</SelectItem>
+          <SelectItem value="pending">در حال بررسی</SelectItem>
           <SelectItem value="rejected">رد شده</SelectItem>
         </SelectContent>
       </Select>
 
-      {/* Date Range Filter */}
-      <Select
-        value={filters.dateRange || undefined}
-        onValueChange={(value) => handleFilterChange("dateRange", value)}
-      >
-        <SelectTrigger className="w-full md:w-48">
-          <SelectValue placeholder="بازه تاریخ" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">همه</SelectItem>
-          <SelectItem value="today">امروز</SelectItem>
-          <SelectItem value="week">این هفته</SelectItem>
-          <SelectItem value="month">این ماه</SelectItem>
-          <SelectItem value="year">امسال</SelectItem>
-        </SelectContent>
-      </Select>
-
-      {/* Sort By Filter */}
+      {/* Sort By Filter - Left */}
       <Select
         value={filters.sortBy || undefined}
         onValueChange={(value) => handleFilterChange("sortBy", value)}
       >
         <SelectTrigger className="w-full md:w-48">
-          <SelectValue placeholder="مرتب‌سازی" />
+          <SelectValue placeholder="مرتب سازی" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="newest">جدیدترین</SelectItem>

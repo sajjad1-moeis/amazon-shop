@@ -30,7 +30,7 @@ export default function ServiceTypeButtons({ selectedType, onTypeChange }) {
               "flex items-center gap-2 py-4 rounded-lg border-b-2 transition-all",
               isSelected
                 ? "bg-primary-50 border-primary-500  text-primary-600"
-                : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-gray-300"
+                : "bg-white dark:bg-dark-box text-gray-700 dark:text-dark-text border-gray-200 dark:border-dark-stroke hover:border-gray-300"
             )}
           >
             <Icon size={20} variant={isSelected ? "Bold" : "Outline"} />

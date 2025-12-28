@@ -26,13 +26,13 @@ export default function RechargeModal({ isOpen, onClose }) {
     <Dialog open={isOpen} onOpenChange={onClose} dir="rtl">
       <DialogContent className="max-w-md" dir="rtl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">شارژ کیف پول</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-dark-title">شارژ کیف پول</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Recharge Amount */}
           <div className="space-y-2">
-            <Label htmlFor="amount" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <Label htmlFor="amount" className="text-sm font-medium text-gray-700 dark:text-dark-text">
               مبلغ شارژ
             </Label>
             <Input
@@ -48,7 +48,7 @@ export default function RechargeModal({ isOpen, onClose }) {
 
           {/* Payment Method */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">روش پرداخت</Label>
+            <Label className="text-sm font-medium text-gray-700 dark:text-dark-text">روش پرداخت</Label>
             <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="space-y-3">
               {/* Online Payment */}
               <div
@@ -56,7 +56,7 @@ export default function RechargeModal({ isOpen, onClose }) {
                   "flex items-start gap-3 p-4 border-2 rounded-lg transition-colors cursor-pointer",
                   paymentMethod === "online"
                     ? "border-[#1e3a5f] bg-blue-50 dark:bg-blue-900/20"
-                    : "border-gray-200 dark:border-gray-700 hover:border-gray-300"
+                    : "border-gray-200 dark:border-dark-stroke hover:border-gray-300"
                 )}
                 onClick={() => setPaymentMethod("online")}
               >
@@ -68,14 +68,14 @@ export default function RechargeModal({ isOpen, onClose }) {
                       "mt-0.5",
                       paymentMethod === "online"
                         ? "text-[#1e3a5f] dark:text-blue-400"
-                        : "text-gray-600 dark:text-gray-400"
+                        : "text-gray-600 dark:text-dark-text"
                     )}
                   />
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                    <p className="text-sm font-medium text-gray-900 dark:text-dark-title">
                       پرداخت آنلاین با تمامی کارتها
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <p className="text-xs text-gray-500 dark:text-dark-text mt-1">
                       پرداخت با تمامی کارتهای عضو شتاب
                     </p>
                   </div>
@@ -88,7 +88,7 @@ export default function RechargeModal({ isOpen, onClose }) {
                   "flex items-start gap-3 p-4 border-2 rounded-lg transition-colors cursor-pointer",
                   paymentMethod === "bank"
                     ? "border-[#1e3a5f] bg-blue-50 dark:bg-blue-900/20"
-                    : "border-gray-200 dark:border-gray-700 hover:border-gray-300"
+                    : "border-gray-200 dark:border-dark-stroke hover:border-gray-300"
                 )}
                 onClick={() => setPaymentMethod("bank")}
               >
@@ -100,14 +100,14 @@ export default function RechargeModal({ isOpen, onClose }) {
                       "mt-0.5",
                       paymentMethod === "bank"
                         ? "text-[#1e3a5f] dark:text-blue-400"
-                        : "text-gray-600 dark:text-gray-400"
+                        : "text-gray-600 dark:text-dark-text"
                     )}
                   />
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                    <p className="text-sm font-medium text-gray-900 dark:text-dark-title">
                       واریز به حساب بانکی
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <p className="text-xs text-gray-500 dark:text-dark-text mt-1">
                       پرداخت بصورت کارت به کارت با شماره حساب
                     </p>
                   </div>
@@ -128,7 +128,7 @@ export default function RechargeModal({ isOpen, onClose }) {
               type="button"
               variant="outline"
               onClick={onClose}
-              className="border-2 border-[#1e3a5f] text-[#1e3a5f] hover:bg-gray-50 dark:hover:bg-gray-800 flex-1 sm:flex-initial"
+              className="border-2 border-[#1e3a5f] text-[#1e3a5f] hover:bg-gray-50 dark:hover:bg-dark-box flex-1 sm:flex-initial"
             >
               لغو
             </Button>

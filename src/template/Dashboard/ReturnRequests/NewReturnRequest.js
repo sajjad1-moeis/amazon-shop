@@ -140,7 +140,7 @@ export default function NewReturnRequest() {
         {/* Main Card */}
         <div>
           {/* Order Selector */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-box p-4">
+          <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4">
             <OrderFilters orders={mockOrders} selectedItem={selectedItem} onSelect={handleItemSelect} />
             <OrderProductSelector orders={mockOrders} selectedItem={selectedItem} onSelect={handleItemSelect} />
           </div>
@@ -169,14 +169,14 @@ export default function NewReturnRequest() {
                 />
                 <Label
                   htmlFor="terms"
-                  className="text-sm text-gray-700 dark:text-gray-300 cursor-pointer leading-relaxed"
+                  className="text-sm text-gray-700 dark:text-dark-text cursor-pointer leading-relaxed"
                 >
                   اطلاعات وارد شده صحیح است و <span className="text-yellow-500">شرایط مرجوعی</span> را مطالعه کرده‌ام.
                 </Label>
               </div>
 
               <div className="flex items-center justify-between gap-2 text-sm">
-                <span className="text-gray-600 dark:text-gray-400">نیاز به بررسی فوری دارید ؟</span>
+                <span className="text-gray-600 dark:text-dark-text">نیاز به بررسی فوری دارید ؟</span>
                 <Link href="/dashboard/support">
                   <Button
                     type="button"

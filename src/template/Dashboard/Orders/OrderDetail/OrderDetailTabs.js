@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 export default function OrderDetailTabs({ activeTab, onTabChange, children }) {
   return (
     <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
-      <TabsList className="grid w-full grid-cols-3 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg mb-6">
+      <TabsList className="grid w-full grid-cols-3 bg-gray-100 dark:bg-dark-field p-1 rounded-lg mb-6">
         <TabsTrigger
           value="details"
           className={cn(

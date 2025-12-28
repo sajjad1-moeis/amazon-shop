@@ -77,7 +77,7 @@ export default function NotificationsList() {
         <div className="mb-6">
           {/* Section Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-            {notifications.length > 0 && <h2 className="text-lg  text-gray-700 dark:text-white">لیست اعلانها</h2>}
+            {notifications.length > 0 && <h2 className="text-lg  text-gray-700 dark:text-dark-title">لیست اعلانها</h2>}
             <Button
               variant="ghost"
               onClick={handleMarkAllAsRead}
@@ -93,10 +93,10 @@ export default function NotificationsList() {
 
         {notifications.length === 0 ? (
           <div
-            className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-8 text-center mt-6"
+            className="bg-white dark:bg-dark-box rounded-2xl shadow-md p-8 text-center mt-6"
             style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
           >
-            <p className="text-gray-500 dark:text-gray-400">هیچ اعلانی وجود ندارد</p>
+            <p className="text-gray-500 dark:text-dark-text">هیچ اعلانی وجود ندارد</p>
           </div>
         ) : (
           <div className="space-y-4  mt-6">

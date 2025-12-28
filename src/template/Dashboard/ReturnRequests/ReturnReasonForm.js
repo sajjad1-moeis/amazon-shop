@@ -21,8 +21,8 @@ const returnReasonOptions = [
 
 export default function ReturnReasonForm({ formData, onFormChange }) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-box p-4">
-      <h3 className="text-lg font-bold text-gray-700 dark:text-white mb-6">علت مرجوعی</h3>
+    <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4">
+      <h3 className="text-lg font-bold text-gray-700 dark:text-dark-title mb-6">علت مرجوعی</h3>
 
       <div className="space-y-6">
         {/* Packaging Status */}

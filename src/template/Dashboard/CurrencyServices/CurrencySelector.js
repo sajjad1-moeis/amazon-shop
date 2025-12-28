@@ -21,7 +21,7 @@ export default function CurrencySelector({ selectedCurrency, onSelect }) {
             "p-4 border-2 rounded-lg transition-all text-center",
             selectedCurrency === currency.code
               ? "border-primary-500 bg-primary-50 dark:bg-primary-900/20"
-              : "border-gray-200 dark:border-gray-700 hover:border-primary-300"
+              : "border-gray-200 dark:border-dark-stroke hover:border-primary-300"
           )}
         >
           <div className="text-3xl mb-2">{currency.flag}</div>
@@ -30,7 +30,7 @@ export default function CurrencySelector({ selectedCurrency, onSelect }) {
               "text-sm font-medium",
               selectedCurrency === currency.code
                 ? "text-primary-600 dark:text-primary-400"
-                : "text-gray-600 dark:text-gray-400"
+                : "text-gray-600 dark:text-dark-text"
             )}
           >
             {currency.name}

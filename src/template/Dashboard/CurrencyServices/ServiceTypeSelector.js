@@ -22,7 +22,7 @@ export default function ServiceTypeSelector({ selectedType, onSelect }) {
               "p-4 border-2 rounded-lg transition-all",
               selectedType === type.id
                 ? "border-primary-500 bg-primary-50 dark:bg-primary-900/20"
-                : "border-gray-200 dark:border-gray-700 hover:border-primary-300"
+                : "border-gray-200 dark:border-dark-stroke hover:border-primary-300"
             )}
           >
             <Icon
@@ -39,7 +39,7 @@ export default function ServiceTypeSelector({ selectedType, onSelect }) {
                 "text-sm font-medium",
                 selectedType === type.id
                   ? "text-primary-600 dark:text-primary-400"
-                  : "text-gray-600 dark:text-gray-400"
+                  : "text-gray-600 dark:text-dark-text"
               )}
             >
               {type.label}

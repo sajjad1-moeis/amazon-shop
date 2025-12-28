@@ -128,7 +128,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, initialData, onSav
               تکمیل شده
             </span>
           </div>
-          <DialogDescription className="text-sm text-gray-600 dark:text-gray-400">
+          <DialogDescription className="text-sm text-gray-600 dark:text-dark-text">
             اطلاعات شخصی خود را ویرایش کنید
           </DialogDescription>
         </DialogHeader>

@@ -97,7 +97,7 @@ export default function EditNotificationModal({ isOpen, onClose, onSave }) {
       <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto" dir="rtl">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">ویرایش تنظیمات نوتیفیکیشن</DialogTitle>
-          <DialogDescription className="text-sm text-gray-600 dark:text-gray-400">
+          <DialogDescription className="text-sm text-gray-600 dark:text-dark-text">
             تنظیمات اعلان‌های خود را تغییر دهید
           </DialogDescription>
         </DialogHeader>
@@ -108,7 +108,7 @@ export default function EditNotificationModal({ isOpen, onClose, onSave }) {
             <Label className="text-sm font-semibold">نوع اعلان ها</Label>
             <div className="space-y-2">
               {["orders", "tickets", "payments", "promotions"].map((type) => (
-                <div key={type} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                <div key={type} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-field/50 rounded-lg">
                   <Label htmlFor={type} className="text-sm cursor-pointer">
                     {getNotificationTypeLabel(type)}
                   </Label>
@@ -130,7 +130,7 @@ export default function EditNotificationModal({ isOpen, onClose, onSave }) {
             <Label className="text-sm font-semibold">روش دریافت نوتیفیکیشن</Label>
             <div className="space-y-2">
               {["sms", "email", "push"].map((method) => (
-                <div key={method} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                <div key={method} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-field/50 rounded-lg">
                   <Label htmlFor={method} className="text-sm cursor-pointer">
                     {getNotificationMethodLabel(method)}
                   </Label>
@@ -148,12 +148,12 @@ export default function EditNotificationModal({ isOpen, onClose, onSave }) {
           </div>
 
           {/* Telegram Connection */}
-          <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+          <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-field/50 rounded-lg">
             <div className="flex-1">
               <Label htmlFor="telegram" className="text-sm font-semibold block mb-1">
                 اتصال به تلگرام
               </Label>
-              <p className="text-xs text-gray-600 dark:text-gray-400">
+              <p className="text-xs text-gray-600 dark:text-dark-text">
                 دریافت اعلان‌ها از طریق ربات تلگرام
               </p>
             </div>

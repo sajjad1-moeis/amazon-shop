@@ -43,8 +43,8 @@ export default function OverviewCards() {
   return (
     <div className="mb-8">
       <div className="mb-8 pb-4 border-gray-200 border-b">
-        <h2 className="text-2xl  text-primary-700 dark:text-white mb-2">داشبورد</h2>
-        <p className="text-sm  text-[#6B7280] dark:text-gray-400">وضعیت کلی حساب شما در یک نگاه</p>
+        <h2 className="text-2xl  text-primary-700 dark:text-dark-title mb-2">داشبورد</h2>
+        <p className="text-sm  text-[#6B7280] dark:text-dark-text">وضعیت کلی حساب شما در یک نگاه</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
@@ -53,7 +53,7 @@ export default function OverviewCards() {
           return (
             <div
               key={card.id}
-              className="bg-white dark:bg-gray-800 gap-3 flex items-center rounded-2xl shadow-md p-3 md:p-4 hover:shadow-md transition-shadow"
+              className="bg-white dark:bg-dark-box gap-3 flex items-center rounded-2xl shadow-md p-3 md:p-4 hover:shadow-md transition-shadow"
             >
               <div className="flex items-center justify-between">
                 <div className={cn("p-3 rounded-lg bg-primary-700")}>
@@ -61,8 +61,8 @@ export default function OverviewCards() {
                 </div>
               </div>
               <div>
-                <p className="text-xl font-bold text-primary-700 dark:text-white mb-1">{card.value}</p>
-                <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1">{card.title}</p>
+                <p className="text-xl font-bold text-primary-700 dark:text-dark-title mb-1">{card.value}</p>
+                <p className="text-xs md:text-sm text-gray-500 dark:text-dark-text mt-1">{card.title}</p>
               </div>
             </div>
           );

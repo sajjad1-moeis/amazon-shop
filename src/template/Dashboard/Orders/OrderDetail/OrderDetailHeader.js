@@ -73,27 +73,27 @@ export default function OrderDetailHeader({ order, onDownloadInvoice, onCancelOr
       </div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mt-4">
         <div>
-          <span className="text-sm text-gray-600 dark:text-gray-400">تاریخ سفارش: </span>
-          <span className="text-sm font-medium text-gray-900 dark:text-white">{order.orderDate}</span>
+          <span className="text-sm text-gray-600 dark:text-dark-text">تاریخ سفارش: </span>
+          <span className="text-sm font-medium text-gray-900 dark:text-dark-title">{order.orderDate}</span>
         </div>
         <div>
-          <span className="text-sm text-gray-600 dark:text-gray-400">تعداد محصول: </span>
-          <span className="text-sm font-medium  bg-primary-100 px-1 rounded text-primary-500 dark:text-white">
+          <span className="text-sm text-gray-600 dark:text-dark-text">تعداد محصول: </span>
+          <span className="text-sm font-medium  bg-primary-100 px-1 rounded text-primary-500 dark:text-dark-title">
             {order.itemsCount}
           </span>
         </div>
         <div>
-          <span className="text-sm text-gray-600 dark:text-gray-400">مبلغ کل: </span>
-          <span className="text-base  text-gray-900 dark:text-white">{order.totalAmount} تومان</span>
+          <span className="text-sm text-gray-600 dark:text-dark-text">مبلغ کل: </span>
+          <span className="text-base  text-gray-900 dark:text-dark-title">{order.totalAmount} تومان</span>
         </div>
 
         <div>
-          <span className="text-sm text-gray-600 dark:text-gray-400">روش پرداخت: </span>
-          <span className="text-sm font-medium text-gray-900 dark:text-white">{order.paymentMethod || "آنلاین"}</span>
+          <span className="text-sm text-gray-600 dark:text-dark-text">روش پرداخت: </span>
+          <span className="text-sm font-medium text-gray-900 dark:text-dark-title">{order.paymentMethod || "آنلاین"}</span>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600 dark:text-gray-400">وضعیت: </span>
+          <span className="text-sm text-gray-600 dark:text-dark-text">وضعیت: </span>
           {getStatusBadge(order.status)}
         </div>
       </div>

@@ -69,7 +69,7 @@ export default function EditFinancialModal({ isOpen, onClose, onSave }) {
       <DialogContent className="sm:max-w-[500px]" dir="rtl">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">ویرایش اطلاعات مالی</DialogTitle>
-          <DialogDescription className="text-sm text-gray-600 dark:text-gray-400">
+          <DialogDescription className="text-sm text-gray-600 dark:text-dark-text">
             اطلاعات حساب بانکی خود را ویرایش کنید
           </DialogDescription>
         </DialogHeader>

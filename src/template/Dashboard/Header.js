@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import Image from "next/image";
 import Link from "next/link";
 import { Notification, SearchNormal1, User } from "iconsax-reactjs";
+import SwitchButton from "@/components/SwitchButton";
 
 export default function DashboardHeader({ onMenuClick }) {
   const { user } = useAuth();
@@ -60,6 +61,8 @@ export default function DashboardHeader({ onMenuClick }) {
             <Link href={"/dashboard/notifications"}>
               <Notification className="h-4 w-4 md:h-5 md:w-5" />
             </Link>
+            <SwitchButton />
+
             <User className="h-4 w-4 md:h-5 md:w-5" />
             <span className="text-xs md:text-sm lg:text-base font-medium hidden md:inline">{userName}</span>
           </div>

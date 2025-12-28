@@ -239,10 +239,10 @@ export default function CreateTicketModal({ isOpen, onClose, onSubmit }) {
                       />
                       <label
                         htmlFor="file-upload"
-                        className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:border-primary-500 dark:hover:border-primary-400 transition-colors bg-gray-50 dark:bg-gray-700/50"
+                        className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 dark:border-dark-stroke rounded-lg cursor-pointer hover:border-primary-500 dark:hover:border-primary-400 transition-colors bg-gray-50 dark:bg-dark-field/50"
                       >
                         <DocumentUpload size={32} className="text-gray-400 mb-2" />
-                        <span className="text-sm text-gray-600 dark:text-gray-400">برای آپلود کلیک کنید</span>
+                        <span className="text-sm text-gray-600 dark:text-dark-text">برای آپلود کلیک کنید</span>
                         {field.value && (
                           <span className="mt-2 text-xs text-primary-600 dark:text-primary-400">
                             {field.value.name}

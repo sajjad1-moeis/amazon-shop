@@ -3,66 +3,104 @@
 import React from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Trash2, Eye } from "lucide-react";
+import { Trash2 } from "lucide-react";
+import { Eye } from "iconsax-reactjs";
+import { cn } from "@/lib/utils";
 
-export default function ComparisonCard({ comparison, onDelete }) {
+export default function ComparisonCard({ comparison, onDelete, onView }) {
+  const firstProduct = comparison.products?.[0];
+  const secondProduct = comparison.products?.[1];
+
   return (
     <div
-      className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 md:p-6"
+      className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4"
       style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
     >
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-        <div>
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white">{comparison.name}</h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400">ایجاد شده در: {comparison.createdAt}</p>
+      {/* Header - Category Tag and Title */}
+      <div className="mb-4">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+            {comparison.category}
+          </span>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <Button variant="outline" size="sm" className="gap-2 text-xs">
-            <Eye className="h-4 w-4" />
-            <span className="hidden sm:inline">مشاهده</span>
-            <span className="sm:hidden">👁</span>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onDelete}
-            className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 text-xs"
-          >
-            <Trash2 className="h-4 w-4" />
-            <span className="hidden sm:inline">حذف</span>
-            <span className="sm:hidden">🗑</span>
-          </Button>
+        <h3 className="text-base font-semibold text-gray-900 dark:text-dark-title">{comparison.title}</h3>
+      </div>
+
+      {/* Products Comparison - VS Layout */}
+      <div className="flex items-center justify-between gap-3 mb-4">
+        {/* First Product */}
+        {firstProduct && (
+          <div className="flex-1 flex flex-col items-center gap-2">
+            <div className="relative w-full aspect-square max-h-32 bg-gray-100 dark:bg-dark-field rounded-lg overflow-hidden">
+              <Image
+                src={firstProduct.image || "/image/Home/product.png"}
+                alt={firstProduct.title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 33vw"
+              />
+            </div>
+            <p className="text-xs text-gray-600 dark:text-dark-text text-center line-clamp-2">{firstProduct.title}</p>
+          </div>
+        )}
+
+        {/* VS Icon */}
+        <div className="flex-shrink-0">
+          <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-dark-field flex items-center justify-center">
+            <span className="text-xs font-bold text-gray-600 dark:text-dark-text">VS</span>
+          </div>
+        </div>
+
+        {/* Second Product */}
+        {secondProduct && (
+          <div className="flex-1 flex flex-col items-center gap-2">
+            <div className="relative w-full aspect-square max-h-32 bg-gray-100 dark:bg-dark-field rounded-lg overflow-hidden">
+              <Image
+                src={secondProduct.image || "/image/Home/product.png"}
+                alt={secondProduct.title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 33vw"
+              />
+            </div>
+            <p className="text-xs text-gray-600 dark:text-dark-text text-center line-clamp-2">{secondProduct.title}</p>
+          </div>
+        )}
+      </div>
+
+      {/* Info Boxes - Date and Products Count */}
+      <div className="grid grid-cols-2 gap-3 mb-4">
+        {/* Save Date */}
+        <div className="bg-gray-100 dark:bg-dark-field/50 rounded-lg p-3">
+          <div className="text-xs text-gray-600 dark:text-dark-text mb-1">تاریخ ذخیره</div>
+          <div className="text-sm font-medium text-gray-900 dark:text-dark-title">{comparison.saveDate}</div>
+        </div>
+
+        {/* Products Count */}
+        <div className="bg-gray-100 dark:bg-dark-field/50 rounded-lg p-3">
+          <div className="text-xs text-gray-600 dark:text-dark-text mb-1">تعداد محصولات</div>
+          <div className="text-sm font-medium text-gray-900 dark:text-dark-title">{comparison.productsCount} محصول</div>
         </div>
       </div>
 
-      {/* Products Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {comparison.products.map((product) => (
-          <div
-            key={product.id}
-            className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow"
-          >
-            <div className="relative w-full h-32 mb-3 bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
-              <Image
-                src={product.image}
-                alt={product.title}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
-            </div>
-            <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
-              {product.title}
-            </h4>
-            <div className="flex items-center justify-between">
-              <p className="text-base font-bold text-gray-900 dark:text-white">{product.price}</p>
-              <span className="text-xs text-gray-500 dark:text-gray-400">{product.retailer}</span>
-            </div>
-          </div>
-        ))}
+      {/* Action Buttons */}
+      <div className="flex gap-2">
+        <Button
+          onClick={() => onView?.(comparison.id)}
+          className="flex-1 bg-primary-700 hover:bg-primary-600 text-white gap-2"
+        >
+          <Eye size={18} />
+          مشاهده مقایسه
+        </Button>
+        <Button
+          variant="outline"
+          onClick={onDelete}
+          className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 border-red-300 dark:border-red-800 gap-2"
+        >
+          <Trash2 size={18} />
+          حذف
+        </Button>
       </div>
     </div>
   );
 }
-

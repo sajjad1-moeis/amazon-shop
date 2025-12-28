@@ -8,33 +8,36 @@ import CommentCard from "./CommentCard";
 const initialComments = [
   {
     id: 1,
-    productTitle: "Sony PlayStation 5 Slim - Advanced Edition Gaming Console",
+    productTitle: "Sony Play Station ۵ Slim – Advanced Edition Gaming Console",
     productImage: "/image/Home/product.png",
-    comment: "محصول عالی و با کیفیت. پیشنهاد می‌کنم.",
-    rating: 5,
-    status: "approved",
-    statusText: "تایید شده",
-    date: "۱۴۰۳/۱۰/۰۵",
+    comment: "کیفیت ساخت خیلی خوبه و دکمه ها عملکرد نرمی دارن",
+    rating: 4.5,
+    status: "pending",
+    statusText: "در حال بررسی",
+    date: "۱۴۰۳/۰۱/۲۱",
+    replies: [
+      {
+        id: 1,
+        text: "از نظر شما ممنونیم. خوشحالیم که رضایت داشتید",
+        date: "۱۴۰۳/۰۱/۲۲",
+      },
+      {
+        id: 2,
+        text: "پاسخ دوم برای تست",
+        date: "۱۴۰۳/۰۱/۲۳",
+      },
+    ],
   },
   {
     id: 2,
-    productTitle: "MacBook Pro 16 inch M3 Max",
+    productTitle: "Sony Play Station ۵ Slim – Advanced Edition Gaming Console",
     productImage: "/image/Home/product.png",
-    comment: "لپتاپ بسیار قدرتمند و سریع. راضی هستم.",
-    rating: 4,
-    status: "pending",
-    statusText: "در انتظار تایید",
-    date: "۱۴۰۳/۱۰/۰۴",
-  },
-  {
-    id: 3,
-    productTitle: "iPhone 15 Pro Max 256GB",
-    productImage: "/image/Home/product.png",
-    comment: "گوشی خوبی است اما قیمت بالایی دارد.",
-    rating: 3,
-    status: "rejected",
-    statusText: "رد شده",
-    date: "۱۴۰۳/۱۰/۰۳",
+    comment: "کیفیت ساخت خیلی خوبه و دکمه ها عملکرد نرمی دارن",
+    rating: 4.5,
+    status: "approved",
+    statusText: "تأیید شده",
+    date: "۱۴۰۳/۰۱/۲۱",
+    replies: [],
   },
 ];
 
@@ -43,8 +46,6 @@ export default function CommentsList() {
   const [filters, setFilters] = useState({
     sortBy: "",
     status: "",
-    dateRange: "",
-    searchQuery: "",
   });
 
   const handleDelete = (commentId) => {
@@ -53,38 +54,52 @@ export default function CommentsList() {
     }
   };
 
+  const handleEdit = (commentId) => {
+    // Handle edit logic
+    console.log("Edit comment:", commentId);
+  };
+
   return (
-    <>
-      {/* Top Section: Header */}
+    <div dir="rtl">
+      {/* Header Section */}
       <PageHeader
-        title="نظرات و سوالات"
-        description="مدیریت نظرات و سوالاتی که برای محصولات ثبت کرده‌اید"
+        title="نظرات من"
+        description="نظراتی که روی محصولات ثبت کرده اید و وضعیت بررسی آنها."
       />
 
-      {/* Filters Section */}
-      <div
-        className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 md:p-6 mb-6"
-        style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
-      >
-        <CommentsFilter filters={filters} onFiltersChange={setFilters} />
+      {/* Filters and Count Section */}
+      <div className="bg-white dark:bg-dark-box rounded-2xl shadow-sm p-4 mb-4">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          {/* Total Reviews Count - Left */}
+          <div className="text-sm text-gray-700 dark:text-dark-text">
+            کل نظرات : <span className="font-semibold text-yellow-600 dark:text-yellow-400">{comments.length} نظر</span>
+          </div>
+
+          {/* Filters - Right */}
+          <CommentsFilter filters={filters} onFiltersChange={setFilters} />
+        </div>
       </div>
 
       {/* Comments List */}
-      {comments.length === 0 ? (
-        <div
-          className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-8 text-center"
-          style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
-        >
-          <p className="text-gray-500 dark:text-gray-400">هیچ نظری ثبت نشده است</p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {comments.map((comment) => (
-            <CommentCard key={comment.id} comment={comment} onDelete={() => handleDelete(comment.id)} />
-          ))}
-        </div>
-      )}
-    </>
+      <div className="space-y-4">
+        {comments.length === 0 ? (
+          <div className="bg-white dark:bg-dark-box rounded-2xl shadow-sm p-8 text-center">
+            <p className="text-gray-500 dark:text-dark-text">هیچ نظری ثبت نشده است</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {comments.map((comment) => (
+              <CommentCard
+                key={comment.id}
+                comment={comment}
+                onDelete={() => handleDelete(comment.id)}
+                onEdit={() => handleEdit(comment.id)}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 

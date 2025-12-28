@@ -15,7 +15,7 @@ export default function AmountInput({ value, onChange, currency }) {
         className="mb-2"
       />
       {value && currency && (
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-gray-500 dark:text-dark-text">
           معادل: {parseInt(value) * 50000} تومان (نرخ تقریبی)
         </p>
       )}

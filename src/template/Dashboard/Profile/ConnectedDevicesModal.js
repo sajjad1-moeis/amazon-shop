@@ -79,7 +79,7 @@ export default function ConnectedDevicesModal({ isOpen, onClose }) {
       <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto" dir="rtl">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">دستگاه‌های متصل</DialogTitle>
-          <DialogDescription className="text-sm text-gray-600 dark:text-gray-400">
+          <DialogDescription className="text-sm text-gray-600 dark:text-dark-text">
             مدیریت دستگاه‌هایی که به حساب کاربری شما متصل هستند
           </DialogDescription>
         </DialogHeader>
@@ -88,14 +88,14 @@ export default function ConnectedDevicesModal({ isOpen, onClose }) {
           {/* Current Device */}
           {currentDevice && (
             <div className="space-y-3">
-              <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300">دستگاه فعلی</h4>
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50 dark:bg-gray-800/50">
+              <h4 className="text-sm font-semibold text-gray-700 dark:text-dark-text">دستگاه فعلی</h4>
+              <div className="border border-gray-200 dark:border-dark-stroke rounded-lg p-4 bg-gray-50 dark:bg-dark-box/50">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
-                    <p className="text-base font-semibold text-gray-900 dark:text-white mb-1">
+                    <p className="text-base font-semibold text-gray-900 dark:text-dark-title mb-1">
                       {currentDevice.name}
                     </p>
-                    <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                    <div className="space-y-1 text-sm text-gray-600 dark:text-dark-text">
                       <p>
                         <span className="font-medium">سیستم عامل:</span> {currentDevice.os}
                       </p>
@@ -124,19 +124,19 @@ export default function ConnectedDevicesModal({ isOpen, onClose }) {
           {/* Other Devices */}
           {otherDevices.length > 0 && (
             <div className="space-y-3">
-              <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300">سایر دستگاه‌ها</h4>
+              <h4 className="text-sm font-semibold text-gray-700 dark:text-dark-text">سایر دستگاه‌ها</h4>
               <div className="space-y-3">
                 {otherDevices.map((device) => (
                   <div
                     key={device.id}
-                    className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                    className="border border-gray-200 dark:border-dark-stroke rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-dark-box/50 transition-colors"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
-                        <p className="text-base font-semibold text-gray-900 dark:text-white mb-1">
+                        <p className="text-base font-semibold text-gray-900 dark:text-dark-title mb-1">
                           {device.name}
                         </p>
-                        <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                        <div className="space-y-1 text-sm text-gray-600 dark:text-dark-text">
                           <p>
                             <span className="font-medium">سیستم عامل:</span> {device.os}
                           </p>
@@ -172,7 +172,7 @@ export default function ConnectedDevicesModal({ isOpen, onClose }) {
 
           {/* Logout All Button */}
           {otherDevices.length > 0 && (
-            <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="pt-4 border-t border-gray-200 dark:border-dark-stroke">
               <Button
                 variant="outline"
                 onClick={handleLogoutAll}
@@ -185,7 +185,7 @@ export default function ConnectedDevicesModal({ isOpen, onClose }) {
           )}
 
           {devices.length === 0 && (
-            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+            <div className="text-center py-8 text-gray-500 dark:text-dark-text">
               هیچ دستگاهی یافت نشد
             </div>
           )}

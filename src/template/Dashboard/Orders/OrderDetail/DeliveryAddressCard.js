@@ -14,9 +14,9 @@ export default function DeliveryAddressCard({ showEditButton = false }) {
   const router = useRouter();
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 p-3">
+    <div className="bg-white dark:bg-dark-box rounded-xl border border-gray-200 p-3">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-        <h3 className="text-lg text-gray-900 dark:text-white">آدرس تحویل</h3>
+        <h3 className="text-lg text-gray-900 dark:text-dark-title">آدرس تحویل</h3>
         {showEditButton && (
           <Button
             onClick={() => router.push("/dashboard/account/addresses")}

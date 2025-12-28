@@ -21,9 +21,9 @@ const verificationData = {
 
 export default function IdentityVerification() {
   return (
-    <div className="bg-white border-2 border-gray-300 dark:bg-gray-800 rounded-2xl p-3 mt-8">
+    <div className="bg-white border-2 border-gray-300 dark:bg-dark-box rounded-2xl p-3 mt-8">
       <div className="flex justify-between">
-        <h3 className="text-lg md:text-xl text-gray-900 dark:text-white mb-6">احراز هویت</h3>
+        <h3 className="text-lg md:text-xl text-gray-900 dark:text-dark-title mb-6">احراز هویت</h3>
 
         {/* Complete Verification Button */}
         <div className="mb-6">
@@ -40,7 +40,7 @@ export default function IdentityVerification() {
           className={`flex items-center gap-3 p-4 rounded-lg ${
             verificationData.nationalId.status === "done"
               ? "border-2 border-green-500 bg-green-50 dark:bg-green-900/20"
-              : "border border-gray-200 dark:border-gray-700"
+              : "border border-gray-200 dark:border-dark-stroke"
           }`}
         >
           {verificationData.nationalId.status === "done" && (
@@ -51,7 +51,7 @@ export default function IdentityVerification() {
               className={`text-sm ${
                 verificationData.nationalId.status === "done"
                   ? "text-green-700 dark:text-green-300 font-medium"
-                  : "text-gray-600 dark:text-gray-400"
+                  : "text-gray-600 dark:text-dark-text"
               }`}
             >
               {verificationData.nationalId.label}
@@ -77,7 +77,7 @@ export default function IdentityVerification() {
           className={`flex items-center gap-3 p-4 rounded-lg ${
             verificationData.mobileNumber.status === "done"
               ? "border-2 border-green-500 bg-green-50 dark:bg-green-900/20"
-              : "border border-gray-200 dark:border-gray-700"
+              : "border border-gray-200 dark:border-dark-stroke"
           }`}
         >
           {verificationData.mobileNumber.status === "done" && (
@@ -88,7 +88,7 @@ export default function IdentityVerification() {
               className={`text-sm ${
                 verificationData.mobileNumber.status === "done"
                   ? "text-green-700 dark:text-green-300 font-medium"
-                  : "text-gray-600 dark:text-gray-400"
+                  : "text-gray-600 dark:text-dark-text"
               }`}
             >
               {verificationData.mobileNumber.label}
@@ -97,7 +97,7 @@ export default function IdentityVerification() {
               className={`text-sm font-medium ${
                 verificationData.mobileNumber.status === "done"
                   ? "text-green-700 dark:text-green-300"
-                  : "text-gray-900 dark:text-white"
+                  : "text-gray-900 dark:text-dark-title"
               }`}
             >
               {verificationData.mobileNumber.value}

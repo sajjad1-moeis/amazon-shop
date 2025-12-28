@@ -40,26 +40,26 @@ export default function OrdersTable({ orders }) {
   };
 
   return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+    <div className="border border-gray-200 dark:border-dark-stroke rounded-lg overflow-hidden">
       <Table>
-        <TableHeader className="bg-gray-50 dark:bg-gray-700/50">
-          <TableRow className="border-b border-gray-200 dark:border-gray-700">
-            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300 first:rounded-tr-lg">
+        <TableHeader className="bg-gray-50 dark:bg-dark-field/50">
+          <TableRow className="border-b border-gray-200 dark:border-dark-stroke">
+            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text first:rounded-tr-lg">
               شماره سفارش
             </TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
+            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text">
               تاریخ
             </TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
+            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text">
               تعداد آیتم
             </TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
+            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text">
               مبلغ
             </TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
+            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text">
               وضعیت
             </TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300 last:rounded-tl-lg">
+            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text last:rounded-tl-lg">
               عملیات
             </TableHead>
           </TableRow>
@@ -67,7 +67,7 @@ export default function OrdersTable({ orders }) {
         <TableBody>
           {orders.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={6} className="text-center py-8 text-gray-500 dark:text-gray-400">
+              <TableCell colSpan={6} className="text-center py-8 text-gray-500 dark:text-dark-text">
                 سفارشی یافت نشد
               </TableCell>
             </TableRow>
@@ -76,20 +76,20 @@ export default function OrdersTable({ orders }) {
               <TableRow
                 key={order.id}
                 className={cn(
-                  "hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors",
+                  "hover:bg-gray-50 dark:hover:bg-dark-field/50 transition-colors",
                   index === orders.length - 1 && "last:border-b-0"
                 )}
               >
-                <TableCell className="text-sm text-gray-900 dark:text-white py-4 px-4 font-medium">
+                <TableCell className="text-sm text-gray-900 dark:text-dark-title py-4 px-4 font-medium">
                   {order.orderNumber}
                 </TableCell>
-                <TableCell className="text-sm text-gray-600 dark:text-gray-400 py-4 px-4">
+                <TableCell className="text-sm text-gray-600 dark:text-dark-text py-4 px-4">
                   {order.date}
                 </TableCell>
-                <TableCell className="text-sm text-gray-600 dark:text-gray-400 py-4 px-4">
+                <TableCell className="text-sm text-gray-600 dark:text-dark-text py-4 px-4">
                   {order.items} آیتم
                 </TableCell>
-                <TableCell className="text-sm font-medium text-gray-900 dark:text-white py-4 px-4">
+                <TableCell className="text-sm font-medium text-gray-900 dark:text-dark-title py-4 px-4">
                   {order.amount}
                 </TableCell>
                 <TableCell className="py-4 px-4">{getStatusBadge(order.status)}</TableCell>

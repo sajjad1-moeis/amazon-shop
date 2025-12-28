@@ -36,7 +36,7 @@ export default function ProfileImageUpload({ image, onImageChange }) {
       {/* Profile Image */}
       <div className="relative">
         <div
-          className="relative w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-gray-200 dark:border-gray-700 cursor-pointer hover:border-primary-500 transition-colors"
+          className="relative w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-gray-200 dark:border-dark-stroke cursor-pointer hover:border-primary-500 transition-colors"
           onClick={handleImageClick}
         >
           {image ? (
@@ -48,8 +48,8 @@ export default function ProfileImageUpload({ image, onImageChange }) {
               sizes="128px"
             />
           ) : (
-            <div className="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-              <span className="text-gray-400 dark:text-gray-500 text-2xl">👤</span>
+            <div className="w-full h-full bg-gray-200 dark:bg-dark-field flex items-center justify-center">
+              <span className="text-gray-400 dark:text-dark-text text-2xl">👤</span>
             </div>
           )}
         </div>

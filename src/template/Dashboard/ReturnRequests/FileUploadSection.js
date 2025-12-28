@@ -41,8 +41,8 @@ export default function FileUploadSection({ images, invoice, onImagesChange, onI
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-box p-4">
-      <h3 className="text-lg font-bold text-gray-700 dark:text-white mb-6">مدارک و تصاویر</h3>
+    <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4">
+      <h3 className="text-lg font-bold text-gray-700 dark:text-dark-title mb-6">مدارک و تصاویر</h3>
 
       <div className="space-y-6">
         {/* Image/Video Upload */}
@@ -52,10 +52,10 @@ export default function FileUploadSection({ images, invoice, onImagesChange, onI
             {/* Upload Button */}
             <div
               onClick={() => imageInputRef.current?.click()}
-              className="border bg-gray-50 border-gray-200 dark:border-gray-600 rounded-lg p-5 text-center cursor-pointer hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
+              className="border bg-gray-50 border-gray-200 dark:border-dark-stroke rounded-lg p-5 text-center cursor-pointer hover:border-gray-400 dark:hover:border-dark-stroke transition-colors"
             >
               <Add size={32} className="mx-auto mb-2 text-gray-400" />
-              <p className="text-sm text-gray-600 dark:text-gray-400">برای آپلود کلیک کنید</p>
+              <p className="text-sm text-gray-600 dark:text-dark-text">برای آپلود کلیک کنید</p>
               <input
                 ref={imageInputRef}
                 type="file"
@@ -71,7 +71,7 @@ export default function FileUploadSection({ images, invoice, onImagesChange, onI
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {images.map((file, index) => (
                   <div key={index} className="relative group">
-                    <div className="relative aspect-square bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
+                    <div className="relative aspect-square bg-gray-100 dark:bg-dark-field rounded-lg overflow-hidden">
                       {file.type?.startsWith("image/") && imageUrls[index] ? (
                         <img
                           src={imageUrls[index]}
@@ -103,12 +103,12 @@ export default function FileUploadSection({ images, invoice, onImagesChange, onI
           <Label className="text-sm">آپلود فاکتور (اختیاری)</Label>
           <div
             onClick={() => invoiceInputRef.current?.click()}
-            className="border bg-gray-50 border-gray-200 dark:border-gray-600 rounded-lg p-5 text-center cursor-pointer hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
+            className="border bg-gray-50 border-gray-200 dark:border-dark-stroke rounded-lg p-5 text-center cursor-pointer hover:border-gray-400 dark:hover:border-dark-stroke transition-colors"
           >
             {invoice ? (
               <div className="space-y-2">
                 <DocumentUpload size={32} className="mx-auto mb-2 text-green-500" />
-                <p className="text-sm text-gray-900 dark:text-white font-medium">{invoice.name}</p>
+                <p className="text-sm text-gray-900 dark:text-dark-title font-medium">{invoice.name}</p>
                 <Button
                   type="button"
                   variant="outline"
@@ -125,7 +125,7 @@ export default function FileUploadSection({ images, invoice, onImagesChange, onI
             ) : (
               <>
                 <Add size={32} className="mx-auto mb-2 text-gray-400" />
-                <p className="text-sm text-gray-600 dark:text-gray-400">برای آپلود کلیک کنید</p>
+                <p className="text-sm text-gray-600 dark:text-dark-text">برای آپلود کلیک کنید</p>
               </>
             )}
             <input

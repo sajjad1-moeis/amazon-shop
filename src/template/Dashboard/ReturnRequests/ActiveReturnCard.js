@@ -54,15 +54,15 @@ export default function ActiveReturnCard({ returnData, onCancel }) {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-box p-4">
-      <h2 className="text-lg  text-gray-900 dark:text-white mb-6">وضعیت درخواستهای در حال بررسی</h2>
+    <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4">
+      <h2 className="text-lg  text-gray-900 dark:text-dark-title mb-6">وضعیت درخواستهای در حال بررسی</h2>
 
       {/* Product Card */}
-      <div className="bg-[#E5E8F566] border border-primary-200 dark:bg-gray-700/50 rounded-xl p-3 mb-6">
+      <div className="bg-[#E5E8F566] border border-primary-200 dark:bg-dark-field/50 rounded-xl p-3 mb-6">
         <div className="flex flex-col  w-full  md:gap-6">
           {/* Product Details */}
           <div className="flex gap-3">
-            <div className="relative w-full md:size-14 bg-gray-200 dark:bg-gray-600 rounded-lg overflow-hidden flex-shrink-0">
+            <div className="relative w-full md:size-14 bg-gray-200 dark:bg-dark-field rounded-lg overflow-hidden flex-shrink-0">
               <Image
                 src={returnData.product.image}
                 alt={returnData.product.name}
@@ -72,23 +72,23 @@ export default function ActiveReturnCard({ returnData, onCancel }) {
               />
             </div>
             <div className="flex-1 space-y-3">
-              <h3 className="text-base text-neutral-800 dark:text-white">{returnData.product.name}</h3>
+              <h3 className="text-base text-neutral-800 dark:text-dark-title">{returnData.product.name}</h3>
 
               <div className="flex-between text-sm w-full">
                 <div>
-                  <span className="text-gray-600 dark:text-gray-400">شماره درخواست : </span>
-                  <span className="font-medium text-gray-900 dark:text-white">{returnData.id}</span>
+                  <span className="text-gray-600 dark:text-dark-text">شماره درخواست : </span>
+                  <span className="font-medium text-gray-900 dark:text-dark-title">{returnData.id}</span>
                 </div>
                 <div>
-                  <span className="text-gray-600 dark:text-gray-400">تاریخ ثبت : </span>
-                  <span className="font-medium text-gray-900 dark:text-white">{returnData.date}</span>
+                  <span className="text-gray-600 dark:text-dark-text">تاریخ ثبت : </span>
+                  <span className="font-medium text-gray-900 dark:text-dark-title">{returnData.date}</span>
                 </div>
                 <div>
-                  <span className="text-gray-600 dark:text-gray-400">علت مرجوعی : </span>
-                  <span className="font-medium text-gray-900 dark:text-white">{returnData.reason}</span>
+                  <span className="text-gray-600 dark:text-dark-text">علت مرجوعی : </span>
+                  <span className="font-medium text-gray-900 dark:text-dark-title">{returnData.reason}</span>
                 </div>
                 <div>
-                  <span className="text-gray-600 dark:text-gray-400">وضعیت : </span>
+                  <span className="text-gray-600 dark:text-dark-text">وضعیت : </span>
                   {getStatusBadge(returnData.status)}
                 </div>
               </div>
@@ -99,9 +99,9 @@ export default function ActiveReturnCard({ returnData, onCancel }) {
         </div>
 
         {/* Timeline */}
-        <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-600">
+        <div className="mt-6 pt-6 border-t border-gray-200 dark:border-dark-stroke">
           <div className="mb-4">
-            <h4 className=" text-primary-500 dark:text-gray-300 mb-4">روند مرجوعی</h4>
+            <h4 className=" text-primary-500 dark:text-dark-text mb-4">روند مرجوعی</h4>
             <Timeline currentStep={returnData.currentStep} steps={returnSteps} />
           </div>
         </div>

@@ -20,6 +20,7 @@ import {
   ArrowDown2,
   LogoutCurve,
   CloseCircle,
+  Lock,
 } from "iconsax-reactjs";
 
 const items = [
@@ -41,10 +42,12 @@ const items = [
       { label: "سفارش‌های من", href: "/dashboard/orders" },
       { label: "فاکتورها", href: "/dashboard/invoices" },
       { label: "درخواست‌های مرجوعی", href: "/dashboard/return-requests" },
+      { label: "خرید اختصاصی از آمازون", href: "/dashboard/exclusive-amazon" },
     ],
   },
 
   { id: "favorites", label: "علاقه‌مندی‌ها", href: "/dashboard/favorites", icon: Heart },
+  { id: "price-lock", label: "قفل قیمت", href: "/dashboard/price-lock", icon: Lock },
   { id: "support", label: "تیکت و پشتیبانی", href: "/dashboard/support", icon: Headphone },
   { id: "comparisons", label: "مقایسه‌های ذخیره شده", href: "/dashboard/comparisons", icon: DocumentText },
   { id: "recent", label: "بازدیدهای اخیر", href: "/dashboard/recent-views", icon: Eye },
@@ -58,6 +61,7 @@ const items = [
       { label: "آدرس‌های من", href: "/dashboard/account/addresses" },
       { label: "نظرات و سوالات", href: "/dashboard/account/comments" },
       { label: "دعوت دوستان", href: "/dashboard/account/invite" },
+      { label: "مرکز پیامک ها", href: "/dashboard/account/messages" },
     ],
   },
 ];

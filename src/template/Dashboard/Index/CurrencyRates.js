@@ -27,10 +27,10 @@ const currencies = [
 
 export default function CurrencyRates() {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-box p-3 mb-6">
+    <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-3 mb-6">
       <div className="mb-4 md:mb-8">
-        <h3 className="text-lg text-gray-700 dark:text-white mb-1">نرخ لحظه ای ارز</h3>
-        <p className="text-sm  text-gray-600 dark:text-gray-400">به روز رسانی هر ۵ دقیقه</p>
+        <h3 className="text-lg text-gray-700 dark:text-dark-title mb-1">نرخ لحظه ای ارز</h3>
+        <p className="text-sm  text-gray-600 dark:text-dark-text">به روز رسانی هر ۵ دقیقه</p>
       </div>
 
       <div className="space-y-4">
@@ -38,17 +38,17 @@ export default function CurrencyRates() {
           <div
             key={currency.id}
             className={cn(
-              "flex items-center justify-between  border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors",
+              "flex items-center justify-between  border-gray-200 dark:border-dark-stroke hover:bg-gray-50 dark:hover:bg-dark-field/50 transition-colors",
               currencies.length == index + 1 || "border-b-2 pb-4"
             )}
           >
             <div className="flex items-center gap-3">
               <span className="text-2xl md:text-3xl">{currency.flag}</span>
               <div>
-                <p className="text-xs text-gray-500 dark:text-white">
+                <p className="text-xs text-gray-500 dark:text-dark-title">
                   {currency.name} ({currency.code})
                 </p>
-                <p className="text-lg  text-gray-800 dark:text-white mt-1">{currency.rate}</p>
+                <p className="text-lg  text-gray-800 dark:text-dark-title mt-1">{currency.rate}</p>
               </div>
             </div>
             <div className="text-left">

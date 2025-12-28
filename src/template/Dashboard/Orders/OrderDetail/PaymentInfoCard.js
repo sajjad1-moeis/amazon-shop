@@ -2,14 +2,14 @@
 
 import React from "react";
 
-const Row = ({ label, value, valueClass = "text-gray-900 dark:text-white", bold = false, border = true }) => (
+const Row = ({ label, value, valueClass = "text-gray-900 dark:text-dark-title", bold = false, border = true }) => (
   <div
     className={`flex justify-between items-center py-4 ${
-      border ? "border-b border-gray-200 dark:border-gray-700" : ""
+      border ? "border-b border-gray-200 dark:border-dark-stroke" : ""
     }`}
   >
     <span
-      className={`text-sm ${bold ? "font-bold text-gray-900 dark:text-white" : "text-gray-600 dark:text-gray-400"}`}
+      className={`text-sm ${bold ? "font-bold text-gray-900 dark:text-dark-title" : "text-gray-600 dark:text-dark-text"}`}
     >
       {label}
     </span>
@@ -19,8 +19,8 @@ const Row = ({ label, value, valueClass = "text-gray-900 dark:text-white", bold 
 
 export default function PaymentInfoCard({ paymentInfo }) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 p-3">
-      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">اطلاعات پرداخت</h3>
+    <div className="bg-white dark:bg-dark-box rounded-xl border border-gray-200 p-3">
+      <h3 className="text-lg font-bold text-gray-900 dark:text-dark-title mb-4">اطلاعات پرداخت</h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
         {/* Right Column */}

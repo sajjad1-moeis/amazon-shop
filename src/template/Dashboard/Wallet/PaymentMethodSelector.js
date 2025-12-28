@@ -22,7 +22,7 @@ export default function PaymentMethodSelector({ selectedMethod, onSelect }) {
               "p-4 border-2 rounded-lg transition-all",
               selectedMethod === method.id
                 ? "border-primary-500 bg-primary-50 dark:bg-primary-900/20"
-                : "border-gray-200 dark:border-gray-700 hover:border-primary-300"
+                : "border-gray-200 dark:border-dark-stroke hover:border-primary-300"
             )}
           >
             <Icon
@@ -37,7 +37,7 @@ export default function PaymentMethodSelector({ selectedMethod, onSelect }) {
                 "text-sm font-medium",
                 selectedMethod === method.id
                   ? "text-primary-600 dark:text-primary-400"
-                  : "text-gray-600 dark:text-gray-400"
+                  : "text-gray-600 dark:text-dark-text"
               )}
             >
               {method.label}

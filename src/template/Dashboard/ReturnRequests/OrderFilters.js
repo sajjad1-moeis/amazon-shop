@@ -53,7 +53,7 @@ export default function OrderFilters({ selectedOrder, onOrderSelect }) {
 
   return (
     <div>
-      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">انتخاب سفارش</h3>
+      <h3 className="text-lg font-bold text-gray-900 dark:text-dark-title mb-4">انتخاب سفارش</h3>
 
       {/* Info Banner */}
       <div className="bg-primary-50 w-fit text-sm text-primary-400 dark:bg-blue-900/20  rounded-lg p-2 mb-4">

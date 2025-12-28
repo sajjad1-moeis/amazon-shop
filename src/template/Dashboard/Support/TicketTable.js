@@ -20,21 +20,21 @@ export default function TicketTable({ tickets, onDelete }) {
         return (
           <div className="flex items-center gap-2 bg-red-100 w-max py-1 px-2 rounded">
             <div className="w-3 h-3 rounded-full bg-red-500"></div>
-            <span className="text-sm text-gray-700 dark:text-gray-300">بالا</span>
+            <span className="text-sm text-gray-700 dark:text-dark-text">بالا</span>
           </div>
         );
       case 2:
         return (
           <div className="flex items-center gap-2 bg-yellow-100 px-2 py-1 w-max rounded">
             <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-            <span className="text-sm text-gray-700 dark:text-gray-300">متوسط</span>
+            <span className="text-sm text-gray-700 dark:text-dark-text">متوسط</span>
           </div>
         );
       case 1:
         return (
           <div className="flex items-center gap-2 w-max bg-green-100 px-2 py-1 rounded">
             <div className="w-3 h-3 rounded-full bg-green-500"></div>
-            <span className="text-sm text-gray-700 dark:text-gray-300">پایین</span>
+            <span className="text-sm text-gray-700 dark:text-dark-text">پایین</span>
           </div>
         );
       default:
@@ -52,7 +52,7 @@ export default function TicketTable({ tickets, onDelete }) {
         );
       case 2:
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-dark-field dark:text-dark-text">
             بسته شده
           </span>
         );
@@ -69,10 +69,10 @@ export default function TicketTable({ tickets, onDelete }) {
 
   return (
     <div>
-      <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+      <div className="border border-gray-200 dark:border-dark-stroke rounded-lg overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="bg-gray-50 dark:bg-gray-700/50">
+            <TableRow className="bg-gray-50 dark:bg-dark-field/50">
               <TableHead className="text-right first:rounded-tr-lg">شماره تیکت</TableHead>
               <TableHead className="text-right">عنوان</TableHead>
               <TableHead className="text-right">تاریخ</TableHead>
@@ -85,7 +85,7 @@ export default function TicketTable({ tickets, onDelete }) {
           <TableBody>
             {tickets.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-gray-500 dark:text-gray-400">
+                <TableCell colSpan={7} className="text-center py-8 text-gray-500 dark:text-dark-text">
                   تیکتی یافت نشد
                 </TableCell>
               </TableRow>
@@ -94,20 +94,20 @@ export default function TicketTable({ tickets, onDelete }) {
                 <TableRow
                   key={ticket.id}
                   className={cn(
-                    "hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors",
+                    "hover:bg-gray-50 dark:hover:bg-dark-field/50 transition-colors",
                     index === tickets.length - 1 && "last:border-b-0"
                   )}
                 >
-                  <TableCell className="text-sm text-gray-900 dark:text-white">
+                  <TableCell className="text-sm text-gray-900 dark:text-dark-title">
                     {ticket.ticketNumber || `TKT-${ticket.id}`}
                   </TableCell>
-                  <TableCell className="text-sm text-gray-900 dark:text-white">
+                  <TableCell className="text-sm text-gray-900 dark:text-dark-title">
                     {ticket.subject || "-"}
                   </TableCell>
-                  <TableCell className="text-sm text-gray-600 dark:text-gray-400">
+                  <TableCell className="text-sm text-gray-600 dark:text-dark-text">
                     {ticket.createdAt ? new Date(ticket.createdAt).toLocaleDateString("fa-IR") : "-"}
                   </TableCell>
-                  <TableCell className="text-sm text-gray-700 dark:text-gray-300">
+                  <TableCell className="text-sm text-gray-700 dark:text-dark-text">
                     {ticket.categoryName || "-"}
                   </TableCell>
                   <TableCell>{getPriorityBadge(ticket.priority)}</TableCell>

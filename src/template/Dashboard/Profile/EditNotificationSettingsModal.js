@@ -95,7 +95,7 @@ export default function EditNotificationSettingsModal({ isOpen, onClose, initial
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto" dir="rtl">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">تنظیمات نوتیفیکیشن</DialogTitle>
-          <DialogDescription className="text-sm text-gray-600 dark:text-gray-400">
+          <DialogDescription className="text-sm text-gray-600 dark:text-dark-text">
             نوع و روش دریافت اعلان‌ها را تنظیم کنید
           </DialogDescription>
         </DialogHeader>
@@ -103,7 +103,7 @@ export default function EditNotificationSettingsModal({ isOpen, onClose, initial
         <form onSubmit={handleSubmit} className="space-y-6 py-4">
           {/* Notification Types */}
           <div className="space-y-3">
-            <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300">نوع اعلان ها</Label>
+            <Label className="text-sm font-semibold text-gray-700 dark:text-dark-text">نوع اعلان ها</Label>
             <div className="space-y-2">
               {notificationTypes.map((type) => (
                 <div key={type.id} className="flex items-center space-x-2 space-x-reverse">
@@ -114,7 +114,7 @@ export default function EditNotificationSettingsModal({ isOpen, onClose, initial
                   />
                   <Label
                     htmlFor={type.id}
-                    className="text-sm font-normal cursor-pointer text-gray-700 dark:text-gray-300"
+                    className="text-sm font-normal cursor-pointer text-gray-700 dark:text-dark-text"
                   >
                     {type.label}
                   </Label>
@@ -125,7 +125,7 @@ export default function EditNotificationSettingsModal({ isOpen, onClose, initial
 
           {/* Notification Methods */}
           <div className="space-y-3">
-            <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300">روش دریافت اعلان</Label>
+            <Label className="text-sm font-semibold text-gray-700 dark:text-dark-text">روش دریافت اعلان</Label>
             <div className="space-y-2">
               {notificationMethods.map((method) => (
                 <div key={method.id} className="flex items-center space-x-2 space-x-reverse">
@@ -136,7 +136,7 @@ export default function EditNotificationSettingsModal({ isOpen, onClose, initial
                   />
                   <Label
                     htmlFor={method.id}
-                    className="text-sm font-normal cursor-pointer text-gray-700 dark:text-gray-300 flex items-center gap-2"
+                    className="text-sm font-normal cursor-pointer text-gray-700 dark:text-dark-text flex items-center gap-2"
                   >
                     {method.label}
                     {method.id === "telegram" && !formData.telegramConnected && (
@@ -152,8 +152,8 @@ export default function EditNotificationSettingsModal({ isOpen, onClose, initial
           {formData.notificationMethods.includes("telegram") && (
             <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 space-y-3">
               <div>
-                <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300">اتصال به تلگرام</Label>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                <Label className="text-sm font-semibold text-gray-700 dark:text-dark-text">اتصال به تلگرام</Label>
+                <p className="text-xs text-gray-600 dark:text-dark-text mt-1">
                   برای دریافت اعلان ها در تلگرام باید حساب خود را به ربات ما متصل کنید.
                 </p>
               </div>

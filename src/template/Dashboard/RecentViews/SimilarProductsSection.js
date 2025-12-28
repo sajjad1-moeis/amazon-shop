@@ -34,10 +34,10 @@ const similarProducts = [
 export default function SimilarProductsSection() {
   return (
     <div
-      className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 md:p-6 relative"
+      className="bg-white dark:bg-dark-box rounded-2xl shadow-md p-4 md:p-6 relative"
       style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
     >
-      <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-6">پیشنهاد مشابه برای شما</h3>
+      <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-dark-title mb-6">پیشنهاد مشابه برای شما</h3>
 
       <div className="relative">
         <Swiper
@@ -56,9 +56,9 @@ export default function SimilarProductsSection() {
         >
           {similarProducts.map((product) => (
             <SwiperSlide key={product.id}>
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div className="border border-gray-200 dark:border-dark-stroke rounded-lg p-4 hover:shadow-md transition-shadow">
                 {/* Product Image */}
-                <div className="relative w-full h-48 bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden mb-4">
+                <div className="relative w-full h-48 bg-gray-100 dark:bg-dark-field rounded-lg overflow-hidden mb-4">
                   <Image
                     src={product.image}
                     alt={product.title}
@@ -71,16 +71,16 @@ export default function SimilarProductsSection() {
                 {/* Product Info */}
                 <div className="space-y-3">
                   {/* Title */}
-                  <h4 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2">{product.title}</h4>
+                  <h4 className="text-sm font-semibold text-gray-900 dark:text-dark-title line-clamp-2">{product.title}</h4>
 
                   {/* Rating and Retailer */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className="flex items-center gap-1">
                         <Star1 size={16} className="text-yellow-400" variant="Bold" />
-                        <span className="text-sm font-medium text-gray-900 dark:text-white">{product.rating}</span>
+                        <span className="text-sm font-medium text-gray-900 dark:text-dark-title">{product.rating}</span>
                       </div>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">({product.reviews})</span>
+                      <span className="text-xs text-gray-500 dark:text-dark-text">({product.reviews})</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Image
@@ -90,12 +90,12 @@ export default function SimilarProductsSection() {
                         height={20}
                         className="w-5 h-5 object-contain"
                       />
-                      <span className="text-xs text-gray-500 dark:text-gray-400">{product.retailer}</span>
+                      <span className="text-xs text-gray-500 dark:text-dark-text">{product.retailer}</span>
                     </div>
                   </div>
 
                   {/* Price */}
-                  <p className="text-lg font-bold text-gray-900 dark:text-white">{product.price} تومان</p>
+                  <p className="text-lg font-bold text-gray-900 dark:text-dark-title">{product.price} تومان</p>
 
                   {/* View Details Button */}
                   <Button
@@ -115,13 +115,13 @@ export default function SimilarProductsSection() {
         {/* Navigation Buttons */}
         <button
           type="button"
-          className="similar-products next-slide text-blue-600 dark:text-blue-400 p-3 absolute top-1/2 -translate-y-1/2 right-0 md:-right-6 z-50 bg-white dark:bg-gray-800 rounded-full shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          className="similar-products next-slide text-blue-600 dark:text-blue-400 p-3 absolute top-1/2 -translate-y-1/2 right-0 md:-right-6 z-50 bg-white dark:bg-dark-box rounded-full shadow-md hover:bg-gray-100 dark:hover:bg-dark-field transition-colors"
         >
           <ArrowRight2 size={20} variant="Bold" />
         </button>
         <button
           type="button"
-          className="similar-products prev-slide text-blue-600 dark:text-blue-400 p-3 absolute top-1/2 -translate-y-1/2 left-0 md:-left-6 z-50 bg-white dark:bg-gray-800 rounded-full shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          className="similar-products prev-slide text-blue-600 dark:text-blue-400 p-3 absolute top-1/2 -translate-y-1/2 left-0 md:-left-6 z-50 bg-white dark:bg-dark-box rounded-full shadow-md hover:bg-gray-100 dark:hover:bg-dark-field transition-colors"
         >
           <ArrowLeft2 size={20} variant="Bold" />
         </button>

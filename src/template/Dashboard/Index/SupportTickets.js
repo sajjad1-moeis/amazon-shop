@@ -28,13 +28,13 @@ const tickets = [
 export default function SupportTickets() {
   return (
     <div
-      className="bg-white dark:bg-gray-800 rounded-2xl shadow-box p-3 mb-6"
+      className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-3 mb-6"
       style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
     >
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4 md:mb-6">
         <div>
-          <h3 className="text-lg font-bold text-gray-700 dark:text-white mb-2">آخرین تیکتهای پشتیبانی</h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400">وضعیت آخرین درخواستهای شما</p>
+          <h3 className="text-lg font-bold text-gray-700 dark:text-dark-title mb-2">آخرین تیکتهای پشتیبانی</h3>
+          <p className="text-sm text-gray-500 dark:text-dark-text">وضعیت آخرین درخواستهای شما</p>
         </div>
         <Button
           variant="ghost"
@@ -58,16 +58,16 @@ export default function SupportTickets() {
           return (
             <div
               key={ticket.id}
-              className={cn("p-3 rounded-2xl border transition-colors bg-gray-50 border-gray-200 dark:border-gray-700")}
+              className={cn("p-3 rounded-2xl border transition-colors bg-gray-50 border-gray-200 dark:border-dark-stroke")}
             >
               {/* Status Badge */}
               <div className="flex justify-between">
                 {/* Title */}
                 <div className="">
-                  <p className="text-sm md:text-base font-medium text-gray-800 dark:text-white mb-2">{ticket.title}</p>
+                  <p className="text-sm md:text-base font-medium text-gray-800 dark:text-dark-title mb-2">{ticket.title}</p>
 
                   {/* Date */}
-                  <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mb-3">تاریخ : {ticket.date}</p>
+                  <p className="text-xs md:text-sm text-gray-600 dark:text-dark-text mb-3">تاریخ : {ticket.date}</p>
                 </div>
                 <div className="mb-3">
                   <span

@@ -47,28 +47,28 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
         className="space-y-4"
       >
         {filteredOrders.length === 0 ? (
-          <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+          <div className="text-center text-gray-500 dark:text-dark-text py-8">
             {search.trim() ? "کالایی با این جستجو یافت نشد" : "سفارشی یافت نشد"}
           </div>
         ) : (
           filteredOrders.map((order) => (
-            <div key={order.id} className="border rounded-xl p-4  bg-gray-50  border-gray-300 dark:bg-gray-800">
+            <div key={order.id} className="border rounded-xl p-4  bg-gray-50  border-gray-300 dark:bg-dark-box">
               {/* Order Header */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
                 <div>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">شماره سفارش : </span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white">#{order.id}</span>
+                  <span className="text-sm text-gray-600 dark:text-dark-text">شماره سفارش : </span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-dark-title">#{order.id}</span>
                 </div>
                 <div>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">تاریخ سفارش : </span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{order.date}</span>
+                  <span className="text-sm text-gray-600 dark:text-dark-text">تاریخ سفارش : </span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-dark-title">{order.date}</span>
                 </div>
                 <div>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">مبلغ کل : </span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{order.totalAmount} تومان</span>
+                  <span className="text-sm text-gray-600 dark:text-dark-text">مبلغ کل : </span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-dark-title">{order.totalAmount} تومان</span>
                 </div>
                 <div>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">وضعیت : </span>
+                  <span className="text-sm text-gray-600 dark:text-dark-text">وضعیت : </span>
                   <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
                     {order.statusText}
                   </span>
@@ -125,7 +125,7 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
                       );
                     })
                 ) : (
-                  <div className="col-span-2 text-center text-gray-500 dark:text-gray-400 py-4">
+                  <div className="col-span-2 text-center text-gray-500 dark:text-dark-text py-4">
                     این سفارش محصولی ندارد
                   </div>
                 )}

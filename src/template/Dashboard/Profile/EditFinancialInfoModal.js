@@ -193,7 +193,7 @@ export default function EditFinancialInfoModal({ isOpen, onClose, initialData, o
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto" dir="rtl">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">ویرایش اطلاعات مالی</DialogTitle>
-          <DialogDescription className="text-sm text-gray-600 dark:text-gray-400">
+          <DialogDescription className="text-sm text-gray-600 dark:text-dark-text">
             اطلاعات بانکی و کارت خود را مدیریت کنید
           </DialogDescription>
         </DialogHeader>
@@ -202,10 +202,10 @@ export default function EditFinancialInfoModal({ isOpen, onClose, initialData, o
           {/* Basic Financial Information */}
           <div className="space-y-4">
             <div>
-              <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
+              <h4 className="text-sm font-semibold text-gray-700 dark:text-dark-text mb-1">
                 اطلاعات مالی پایه
               </h4>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-xs text-gray-500 dark:text-dark-text">
                 برای واریز وجه، برداشت، بازگشت پول، خدمات ارزی
               </p>
             </div>
@@ -239,10 +239,10 @@ export default function EditFinancialInfoModal({ isOpen, onClose, initialData, o
           </div>
 
           {/* Bank Card Section */}
-          <div className="space-y-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="space-y-4 pt-4 border-t border-gray-200 dark:border-dark-stroke">
             <div>
-              <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">کارت بانکی</h4>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <h4 className="text-sm font-semibold text-gray-700 dark:text-dark-text mb-1">کارت بانکی</h4>
+              <p className="text-xs text-gray-500 dark:text-dark-text">
                 برای خرید، پرداخت ریالی، شارژ کیف پول
               </p>
             </div>

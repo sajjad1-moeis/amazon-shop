@@ -9,12 +9,12 @@ import { cn } from "@/lib/utils";
 export default function TicketChat({ ticketData, messagesList, message, setMessage, handleSendMessage, sendingMessage = false }) {
   return (
     <div
-      className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 md:p-6"
+      className="bg-white dark:bg-dark-box rounded-2xl shadow-md p-4 md:p-6"
       style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
     >
       {/* Title */}
       <div className="mb-6 flex-between border-b-2 border-gray-200 pb-4">
-        <h2 className="text-lg  text-gray-700 dark:text-white">تاریخچه پیام ها</h2>
+        <h2 className="text-lg  text-gray-700 dark:text-dark-title">تاریخچه پیام ها</h2>
         <div class="flex items-center gap-4 text-xs">
           <div className="text-gray-400  flex gap-2">
             <UserSquare variant="Bold" size={20} />
@@ -34,7 +34,7 @@ export default function TicketChat({ ticketData, messagesList, message, setMessa
           return (
             <div key={msg.id}>
               {showDate && msg.date && (
-                <div className="text-center text-sm text-primary-300 rounded-lg py-1 bg-[#EDEFF761] dark:text-gray-400 mb-4">
+                <div className="text-center text-sm text-primary-300 rounded-lg py-1 bg-[#EDEFF761] dark:text-dark-text mb-4">
                   {msg.date}
                 </div>
               )}
@@ -44,7 +44,7 @@ export default function TicketChat({ ticketData, messagesList, message, setMessa
                   <div className="flex items-center justify-between mb-2">
                     <span
                       className={cn(
-                        "text-sm font-medium  dark:text-white flex items-center gap-2",
+                        "text-sm font-medium  dark:text-dark-title flex items-center gap-2",
                         isUser ? "text-gray-400" : "text-primary-400"
                       )}
                     >
@@ -56,15 +56,15 @@ export default function TicketChat({ ticketData, messagesList, message, setMessa
                   <div class="flex-center gap-2">
                     <p
                       className={cn(
-                        " rounded-lg p-3 text-sm text-gray-700 dark:text-gray-300",
+                        " rounded-lg p-3 text-sm text-gray-700 dark:text-dark-text",
                         isUser
-                          ? "bg-gray-100 dark:bg-gray-700/50 text-right"
+                          ? "bg-gray-100 dark:bg-dark-field/50 text-right"
                           : "bg-[#A9B5FB4D] dark:bg-primary-900/20 text-right"
                       )}
                     >
                       {msg.text}
                     </p>
-                    <span className="text-xs text-gray-500 dark:text-gray-400">{msg.time}</span>
+                    <span className="text-xs text-gray-500 dark:text-dark-text">{msg.time}</span>
                   </div>
                 </div>
               </div>
@@ -86,7 +86,7 @@ export default function TicketChat({ ticketData, messagesList, message, setMessa
           />
           <button
             type="button"
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-dark-text"
           >
             <Paperclip size={20} />
           </button>

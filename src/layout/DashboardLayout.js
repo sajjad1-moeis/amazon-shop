@@ -8,7 +8,7 @@ export default function DashboardLayout({ children }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900" dir="rtl">
+    <div className="min-h-screen bg-gray-50 dark:bg-dark-bg" dir="rtl">
       {/* Header */}
       <DashboardHeader onMenuClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} />
 
