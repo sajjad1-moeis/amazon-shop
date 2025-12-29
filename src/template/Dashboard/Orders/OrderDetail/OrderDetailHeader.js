@@ -4,42 +4,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { DocumentDownload, CloseCircle } from "iconsax-reactjs";
 import { cn } from "@/lib/utils";
-
-const getStatusBadge = (status) => {
-  const statusConfig = {
-    "to-iran": {
-      label: "در مسیر ایران",
-      className: "bg-primary-100 text-primary-800 dark:bg-green-900/30 dark:text-green-400",
-    },
-    processing: {
-      label: "در حال پردازش",
-      className: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-    },
-    "to-dubai": {
-      label: "در مسیر دبی",
-      className: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
-    },
-    clearance: {
-      label: "ترخیص",
-      className: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
-    },
-    delivered: {
-      label: "تحویل شده",
-      className: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-    },
-    returned: {
-      label: "مرجوعی",
-      className: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
-    },
-  };
-
-  const config = statusConfig[status] || statusConfig.processing;
-  return (
-    <span className={cn("inline-flex items-center px-3 py-1 rounded-md text-xs font-medium", config.className)}>
-      {config.label}
-    </span>
-  );
-};
+import StatusBadge from "@/components/StatusBadge";
 
 export default function OrderDetailHeader({ order, onDownloadInvoice, onCancelOrder }) {
   return (
@@ -94,7 +59,7 @@ export default function OrderDetailHeader({ order, onDownloadInvoice, onCancelOr
 
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-600 dark:text-dark-text">وضعیت: </span>
-          {getStatusBadge(order.status)}
+          <StatusBadge status={order.status} customClassName="bg-primary-100 text-primary-800 dark:bg-green-900/30 dark:text-green-400" />
         </div>
       </div>
     </div>

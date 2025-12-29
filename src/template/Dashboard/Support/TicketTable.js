@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Eye, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import StatusBadge from "@/components/StatusBadge";
 
 export default function TicketTable({ tickets, onDelete }) {
   const handleDelete = (ticketId) => {
@@ -42,30 +43,7 @@ export default function TicketTable({ tickets, onDelete }) {
     }
   };
 
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case 1:
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
-            در حال بررسی
-          </span>
-        );
-      case 2:
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-dark-field text-gray-700 dark:bg-dark-field dark:text-dark-text">
-            بسته شده
-          </span>
-        );
-      case 0:
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
-            در انتظار
-          </span>
-        );
-      default:
-        return null;
-    }
-  };
+  // StatusBadge component is used instead
 
   return (
     <div>
@@ -111,7 +89,9 @@ export default function TicketTable({ tickets, onDelete }) {
                     {ticket.categoryName || "-"}
                   </TableCell>
                   <TableCell>{getPriorityBadge(ticket.priority)}</TableCell>
-                  <TableCell>{getStatusBadge(ticket.status)}</TableCell>
+                  <TableCell>
+                    <StatusBadge status={ticket.status} variant="rounded-lg" />
+                  </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Link href={`/dashboard/support/${ticket.id}`}>

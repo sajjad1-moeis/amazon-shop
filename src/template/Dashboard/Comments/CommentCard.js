@@ -6,34 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Trash, Edit, Calendar, MessageText1, Headphone } from "iconsax-reactjs";
 import Image from "next/image";
 import { Star } from "lucide-react";
+import StatusBadge from "@/components/StatusBadge";
 
 export default function CommentCard({ comment, onDelete, onEdit }) {
   const [showReplies, setShowReplies] = useState(false);
-
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case "approved":
-        return (
-          <span className="inline-flex items-center px-3 py-1.5 rounded-md text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-            تأیید شده
-          </span>
-        );
-      case "pending":
-        return (
-          <span className="inline-flex items-center px-3 py-1.5 rounded-md text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
-            در حال بررسی
-          </span>
-        );
-      case "rejected":
-        return (
-          <span className="inline-flex items-center px-3 py-1.5 rounded-md text-xs font-medium bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
-            رد شده
-          </span>
-        );
-      default:
-        return null;
-    }
-  };
 
   return (
     <div className="bg-white border border-gray-200 dark:bg-dark-box rounded-xl shadow-sm p-3 relative">
@@ -53,7 +29,9 @@ export default function CommentCard({ comment, onDelete, onEdit }) {
               مشاهده محصول
             </Link>
           </div>
-          <div>{getStatusBadge(comment.status)}</div>
+          <div>
+            <StatusBadge status={comment.status} padding="medium" />
+          </div>
         </div>
 
         {/* Review Text */}

@@ -29,7 +29,7 @@ export default function FinancialInfoCard() {
     <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3 text-[#292D32CC]">
+        <div className="flex items-center gap-3 text-gray-700">
           <Cards size={28} variant="Bold" />
           <span className=" text-xl">اطلاعات مالی</span>
         </div>

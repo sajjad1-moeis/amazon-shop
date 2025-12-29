@@ -6,13 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const shabaNumbers = [
   { id: "1", number: "IR123456789012345678901234" },
@@ -93,20 +87,17 @@ export default function WithdrawModal({ isOpen, onClose }) {
           </div>
 
           {/* Action Buttons */}
-          <DialogFooter className="flex-row-reverse gap-3 sm:justify-start">
-            <Button
-              type="submit"
-              className="bg-[#1e3a5f] hover:bg-[#2a4a6f] text-white flex-1 sm:flex-initial"
-            >
-              ثبت درخواست
-            </Button>
+          <DialogFooter className="grid grid-cols-2 gap-3 sm:justify-start">
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
-              className="border-2 border-[#1e3a5f] text-[#1e3a5f] hover:bg-gray-50 dark:hover:bg-dark-box flex-1 sm:flex-initial"
+              className="border-2 border-primary-700 text-primary-700 hover:bg-gray-50 dark:hover:bg-dark-box flex-1 sm:flex-initial"
             >
               لغو
+            </Button>
+            <Button type="submit" className="bg-primary-700 hover:bg-[#2a4a6f] text-white flex-1 sm:flex-initial">
+              ثبت درخواست
             </Button>
           </DialogFooter>
         </form>

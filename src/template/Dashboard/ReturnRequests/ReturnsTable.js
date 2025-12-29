@@ -5,22 +5,10 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import StatusBadge from "@/components/StatusBadge";
 
 export default function ReturnsTable({ returns, onCancel }) {
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case "reviewing":
-        return "در حال بررسی";
-      case "approved":
-        return "تأیید شده";
-      case "rejected":
-        return "رد شده";
-      case "completed":
-        return "تکمیل شده";
-      default:
-        return null;
-    }
-  };
+  // StatusBadge component is used instead
 
   return (
     <div className="border border-gray-200 dark:border-dark-stroke rounded-lg overflow-hidden">
@@ -78,9 +66,7 @@ export default function ReturnsTable({ returns, onCancel }) {
                 </TableCell>
                 <TableCell className="text-sm text-gray-600 dark:text-dark-text py-4 px-4">{returnItem.date}</TableCell>
                 <TableCell className="p-0">
-                  <span className="inline-flex items-center px-1 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
-                    {getStatusBadge(returnItem.status)}
-                  </span>
+                  <StatusBadge status={returnItem.status} className="px-1 py-1" />
                 </TableCell>
                 <TableCell className="text-sm text-gray-900 dark:text-dark-title py-4 px-4">
                   {returnItem.refundAmount || "---"}

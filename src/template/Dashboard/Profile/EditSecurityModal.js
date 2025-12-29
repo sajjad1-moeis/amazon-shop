@@ -1,204 +1,119 @@
 "use client";
 
 import React, { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import TwoFactorToggle from "./TwoFactorToggle";
 import { Eye, EyeSlash } from "iconsax-reactjs";
-import { toast } from "sonner";
+import TwoFactorToggle from "./TwoFactorToggle";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
-export default function EditSecurityModal({ isOpen, onClose, onSave }) {
+export default function EditSecurityModal({ isOpen, onClose }) {
   const [formData, setFormData] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
     twoFactorEnabled: true,
   });
-  const [showPasswords, setShowPasswords] = useState({
+
+  const [show, setShow] = useState({
     current: false,
     new: false,
     confirm: false,
   });
-  const [errors, setErrors] = useState({});
 
-  const handleChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }));
-    }
-  };
+  const toggle = (key) => setShow((p) => ({ ...p, [key]: !p[key] }));
 
-  const togglePasswordVisibility = (field) => {
-    setShowPasswords((prev) => ({ ...prev, [field]: !prev[field] }));
-  };
+  const handleChange = (key, value) => setFormData((p) => ({ ...p, [key]: value }));
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newErrors = {};
-
-    if (!formData.currentPassword.trim()) {
-      newErrors.currentPassword = "رمز عبور فعلی الزامی است";
-    }
-
-    if (!formData.newPassword.trim()) {
-      newErrors.newPassword = "رمز عبور جدید الزامی است";
-    } else if (formData.newPassword.length < 8) {
-      newErrors.newPassword = "رمز عبور باید حداقل ۸ کاراکتر باشد";
-    }
-
-    if (!formData.confirmPassword.trim()) {
-      newErrors.confirmPassword = "تکرار رمز عبور الزامی است";
-    } else if (formData.newPassword !== formData.confirmPassword) {
-      newErrors.confirmPassword = "رمز عبور و تکرار آن مطابقت ندارند";
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    if (onSave) {
-      onSave({
-        twoFactorEnabled: formData.twoFactorEnabled,
-        // In real app, you would send password change request to server
-      });
-    }
-
-    toast.success("تنظیمات امنیتی با موفقیت به‌روزرسانی شد");
-
-    // Reset form
-    setFormData({
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-      twoFactorEnabled: formData.twoFactorEnabled,
-    });
-    setErrors({});
-    onClose();
-  };
-
-  const handleClose = () => {
-    setFormData({
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-      twoFactorEnabled: true,
-    });
-    setErrors({});
+    toast.success("تغییرات با موفقیت ذخیره شد");
     onClose();
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose} dir="rtl">
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto" dir="rtl">
+    <Dialog open={isOpen} onOpenChange={onClose} dir="rtl">
+      <DialogContent className="max-w-[720px] rounded-2xl px-8 py-6">
         <DialogHeader>
-          <DialogTitle className="text-2xl">ویرایش امنیت حساب</DialogTitle>
-          <DialogDescription className="text-sm text-gray-600 dark:text-dark-text ">
-            رمز عبور و تنظیمات امنیتی خود را تغییر دهید
-          </DialogDescription>
+          <DialogTitle className="text-2xl font-bold text-center text-[#1e3a5f] mb-8">ویرایش امنیت حساب</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6 py-4">
-          {/* Current Password */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Current password */}
           <div className="space-y-2">
-            <Label htmlFor="currentPassword" className="text-sm font-semibold">
-              رمز فعلی
-            </Label>
+            <Label>رمز فعلی</Label>
             <div className="relative">
               <Input
-                id="currentPassword"
-                type={showPasswords.current ? "text" : "password"}
-                value={formData.currentPassword}
-                onChange={(e) => handleChange("currentPassword", e.target.value)}
+                type={show.current ? "text" : "password"}
                 placeholder="رمز عبور فعلی خود را وارد کنید ..."
-                className={cn(errors.currentPassword ? "border-red-500" : "")}
-                dir="rtl"
+                className="h-12 bg-gray-50 pr-4 pl-10"
+                onChange={(e) => handleChange("currentPassword", e.target.value)}
               />
               <button
                 type="button"
-                onClick={() => togglePasswordVisibility("current")}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-dark-text"
+                onClick={() => toggle("current")}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
               >
-                {showPasswords.current ? <EyeSlash size={20} /> : <Eye size={20} />}
+                {show.current ? <EyeSlash size={20} /> : <Eye size={20} />}
               </button>
             </div>
-            {errors.currentPassword && <p className="text-sm text-red-500">{errors.currentPassword}</p>}
           </div>
 
-          {/* New Password */}
-          <div className="space-y-2">
-            <Label htmlFor="newPassword" className="text-sm font-semibold">
-              رمز عبور جدید
-            </Label>
-            <div className="relative">
-              <Input
-                id="newPassword"
-                type={showPasswords.new ? "text" : "password"}
-                value={formData.newPassword}
-                onChange={(e) => handleChange("newPassword", e.target.value)}
-                placeholder="رمز عبور جدید را وارد کنید ..."
-                className={cn(errors.newPassword ? "border-red-500" : "")}
-                dir="rtl"
-              />
-              <button
-                type="button"
-                onClick={() => togglePasswordVisibility("new")}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-dark-text"
-              >
-                {showPasswords.new ? <EyeSlash size={20} /> : <Eye size={20} />}
-              </button>
+          {/* New + Confirm */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label>رمز عبور جدید</Label>
+              <div className="relative">
+                <Input
+                  type={show.new ? "text" : "password"}
+                  placeholder="رمز عبور جدید را وارد کنید ..."
+                  className="h-12 bg-gray-50 pr-4 pl-10"
+                  onChange={(e) => handleChange("newPassword", e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={() => toggle("new")}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                >
+                  {show.new ? <EyeSlash size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
-            {errors.newPassword && <p className="text-sm text-red-500">{errors.newPassword}</p>}
-          </div>
 
-          {/* Confirm Password */}
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword" className="text-sm font-semibold">
-              تکرار رمز عبور جدید
-            </Label>
-            <div className="relative">
-              <Input
-                id="confirmPassword"
-                type={showPasswords.confirm ? "text" : "password"}
-                value={formData.confirmPassword}
-                onChange={(e) => handleChange("confirmPassword", e.target.value)}
-                placeholder="تکرار رمز عبور جدید را وارد کنید ..."
-                className={cn(errors.confirmPassword ? "border-red-500" : "")}
-                dir="rtl"
-              />
-              <button
-                type="button"
-                onClick={() => togglePasswordVisibility("confirm")}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-dark-text"
-              >
-                {showPasswords.confirm ? <EyeSlash size={20} /> : <Eye size={20} />}
-              </button>
+            <div className="space-y-2">
+              <Label>تکرار رمز عبور جدید</Label>
+              <div className="relative">
+                <Input
+                  type={show.confirm ? "text" : "password"}
+                  placeholder="تکرار رمز عبور جدید ..."
+                  className="h-12 bg-gray-50 pr-4 pl-10"
+                  onChange={(e) => handleChange("confirmPassword", e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={() => toggle("confirm")}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                >
+                  {show.confirm ? <EyeSlash size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
-            {errors.confirmPassword && <p className="text-sm text-red-500">{errors.confirmPassword}</p>}
           </div>
 
-          {/* Two-Factor Authentication */}
-          <TwoFactorToggle
-            enabled={formData.twoFactorEnabled}
-            onToggle={(enabled) => handleChange("twoFactorEnabled", enabled)}
-          />
+          {/* Divider */}
+          <div className="border-t border-gray-200 pt-4" />
 
-          <DialogFooter className="flex gap-3 ">
-            <Button type="button" variant="outline" onClick={handleClose} className="flex-1 sm:flex-initial">
+          {/* Two factor */}
+          <TwoFactorToggle enabled={formData.twoFactorEnabled} onToggle={(v) => handleChange("twoFactorEnabled", v)} />
+
+          {/* Footer */}
+          <DialogFooter className="grid grid-cols-2 gap-4 pt-6">
+            <Button className="h-12 bg-[#1e3a5f] hover:bg-[#2a4a6f]">ذخیره تغییرات</Button>
+            <Button variant="outline" className="h-12 border-[#1e3a5f] text-[#1e3a5f]">
               لغو
-            </Button>
-            <Button type="submit" className="bg-primary-600 hover:bg-primary-700 text-white flex-1 sm:flex-initial">
-              ذخیره تغییرات
             </Button>
           </DialogFooter>
         </form>

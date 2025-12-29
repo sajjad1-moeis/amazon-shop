@@ -7,8 +7,11 @@ import { ShieldTick } from "iconsax-reactjs";
 
 export default function TwoFactorToggle({ enabled, onToggle }) {
   return (
-    <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-dark-stroke rounded-lg bg-gray-50 dark:bg-dark-box/50">
-      <div className="flex items-center gap-3 flex-1">
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <Label htmlFor="twoFactor" className="text-sm font-semibold text-gray-700 dark:text-dark-text cursor-pointer">
+          ورود دو مرحله ای
+        </Label>
         <Switch
           className="data-[state=checked]:bg-primary-500"
           dir="ltr"
@@ -16,13 +19,8 @@ export default function TwoFactorToggle({ enabled, onToggle }) {
           checked={enabled}
           onCheckedChange={onToggle}
         />
-        <div className="flex-1">
-          <Label htmlFor="twoFactor" className="text-sm font-semibold text-gray-900 dark:text-dark-title cursor-pointer">
-            ورود دو مرحله‌ای
-          </Label>
-          <p className="text-xs text-gray-500 dark:text-dark-text mt-1">امنیت بیشتر با یک کد یک‌بار مصرف</p>
-        </div>
       </div>
+      <p className="text-xs text-gray-500 dark:text-dark-text">امنیت بیشتر با یک کد یک بار مصرف</p>
     </div>
   );
 }

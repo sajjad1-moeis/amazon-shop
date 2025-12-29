@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Timeline from "@/components/TimeLine";
 import { DocumentText, Send2, Box, ClipboardTick, ReceiptItem, Wallet3 } from "iconsax-reactjs";
+import StatusBadge from "@/components/StatusBadge";
 
 const returnSteps = [
   {
@@ -40,18 +41,7 @@ const returnSteps = [
 ];
 
 export default function ActiveReturnCard({ returnData, onCancel }) {
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case "reviewing":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
-            در حال بررسی
-          </span>
-        );
-      default:
-        return null;
-    }
-  };
+  // StatusBadge component is used instead
 
   return (
     <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4">
@@ -89,7 +79,7 @@ export default function ActiveReturnCard({ returnData, onCancel }) {
                 </div>
                 <div>
                   <span className="text-gray-600 dark:text-dark-text">وضعیت : </span>
-                  {getStatusBadge(returnData.status)}
+                  <StatusBadge status={returnData.status} />
                 </div>
               </div>
             </div>

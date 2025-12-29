@@ -1,41 +1,13 @@
 "use client";
 
 import React from "react";
+import StatusBadge from "@/components/StatusBadge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export default function RequestsTable({ requests }) {
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case "reviewing":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
-            در حال بررسی
-          </span>
-        );
-      case "successful":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-            موفق
-          </span>
-        );
-      case "failed":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
-            ناموفق
-          </span>
-        );
-      case "pending":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
-            در انتظار
-          </span>
-        );
-      default:
-        return null;
-    }
-  };
+  // StatusBadge component is used instead
 
   return (
     <div className="border border-gray-200 dark:border-dark-stroke rounded-lg overflow-hidden">
@@ -81,14 +53,18 @@ export default function RequestsTable({ requests }) {
                 <TableCell className="text-sm text-gray-900 dark:text-dark-title py-4 px-4 font-medium">
                   {request.id}
                 </TableCell>
-                <TableCell className="text-sm text-gray-900 dark:text-dark-title py-4 px-4">{request.serviceType}</TableCell>
+                <TableCell className="text-sm text-gray-900 dark:text-dark-title py-4 px-4">
+                  {request.serviceType}
+                </TableCell>
                 <TableCell className="text-sm font-medium text-gray-900 dark:text-dark-title py-4 px-4">
                   {request.amount}
                 </TableCell>
-                <TableCell className="py-4 px-4">{getStatusBadge(request.status)}</TableCell>
+                <TableCell className="py-4 px-4">
+                  <StatusBadge status={request.status} />
+                </TableCell>
                 <TableCell className="text-sm text-gray-600 dark:text-dark-text py-4 px-4">{request.date}</TableCell>
                 <TableCell className="py-4 px-4">
-                  <Button variant="outline" size="sm" className="gap-2">
+                  <Button variant="ghost" size="sm" className="gap-2 bg-gray-200">
                     مشاهده جزئیات
                   </Button>
                 </TableCell>

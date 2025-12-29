@@ -1,29 +1,13 @@
 "use client";
 
 import React from "react";
+import StatusBadge from "@/components/StatusBadge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export default function InvoicesTable({ invoices, onView }) {
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case "paid":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-            پرداخت شده
-          </span>
-        );
-      case "pending":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
-            در انتظار پرداخت
-          </span>
-        );
-      default:
-        return null;
-    }
-  };
+  // StatusBadge component is used instead
 
   return (
     <div className="border border-gray-200 dark:border-dark-stroke rounded-lg overflow-hidden bg-white dark:bg-dark-box">
@@ -84,7 +68,9 @@ export default function InvoicesTable({ invoices, onView }) {
                 <TableCell className="text-sm text-gray-900 dark:text-dark-title py-4 px-4">
                   {invoice.issueDate || invoice.date}
                 </TableCell>
-                <TableCell className="py-4 px-4">{getStatusBadge(invoice.status)}</TableCell>
+                <TableCell className="py-4 px-4">
+                  <StatusBadge status={invoice.status} variant="rounded-full" />
+                </TableCell>
                 <TableCell className="py-4 px-4">
                   <Button
                     variant="outline"

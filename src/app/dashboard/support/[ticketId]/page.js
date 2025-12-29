@@ -97,31 +97,7 @@ export default function TicketDetail() {
     }
   };
 
-  const getStatusBadge = () => {
-    if (!ticket) return null;
-    switch (ticket.status) {
-      case "reviewing":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
-            در حال بررسی
-          </span>
-        );
-      case "answered":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-            پاسخ داده شده
-          </span>
-        );
-      case "closed":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-            بسته شده
-          </span>
-        );
-      default:
-        return null;
-    }
-  };
+  // StatusBadge component is used instead
 
   const getPriorityText = () => {
     if (!ticket) return null;
@@ -179,7 +155,7 @@ export default function TicketDetail() {
           />
         </div>
         <div>
-          <TicketSidebar ticketData={ticket} getStatusBadge={getStatusBadge} getPriorityText={getPriorityText} />
+          <TicketSidebar ticketData={ticket} getPriorityText={getPriorityText} />
         </div>
       </div>
     </DashboardLayout>

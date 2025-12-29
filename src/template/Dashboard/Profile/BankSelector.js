@@ -1,13 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const banks = [
   { value: "melli", label: "بانک ملی ایران" },
@@ -40,7 +34,7 @@ const banks = [
 export default function BankSelector({ value, onChange }) {
   return (
     <Select value={value || undefined} onValueChange={onChange} dir="rtl">
-      <SelectTrigger className="w-full">
+      <SelectTrigger className="h-10 bg-gray-50">
         <SelectValue placeholder="انتخاب بانک" />
       </SelectTrigger>
       <SelectContent>
@@ -53,4 +47,3 @@ export default function BankSelector({ value, onChange }) {
     </Select>
   );
 }
-

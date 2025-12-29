@@ -23,3 +23,4 @@ export default function HistoryTab({ filteredHistory, historyFilters, onFiltersC
     </div>
   );
 }
+

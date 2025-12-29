@@ -6,38 +6,10 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Eye } from "lucide-react";
 import Link from "next/link";
+import StatusBadge from "@/components/StatusBadge";
 
 export default function OrdersTable({ orders }) {
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case "processing":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
-            در حال پردازش
-          </span>
-        );
-      case "shipped":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400">
-            ارسال شده
-          </span>
-        );
-      case "delivered":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-            تحویل داده شده
-          </span>
-        );
-      case "cancelled":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
-            لغو شده
-          </span>
-        );
-      default:
-        return null;
-    }
-  };
+  // StatusBadge component is used instead
 
   return (
     <div className="border border-gray-200 dark:border-dark-stroke rounded-lg overflow-hidden">
@@ -92,7 +64,9 @@ export default function OrdersTable({ orders }) {
                 <TableCell className="text-sm font-medium text-gray-900 dark:text-dark-title py-4 px-4">
                   {order.amount}
                 </TableCell>
-                <TableCell className="py-4 px-4">{getStatusBadge(order.status)}</TableCell>
+                <TableCell className="py-4 px-4">
+                  <StatusBadge status={order.status} variant="rounded-full" />
+                </TableCell>
                 <TableCell className="py-4 px-4">
                   <Link href={`/dashboard/orders/${order.id}`}>
                     <Button variant="outline" size="sm" className="gap-2">

@@ -3,8 +3,9 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import StatusBadge from "@/components/StatusBadge";
 
-export default function TicketSidebar({ ticketData, getStatusBadge, getPriorityText }) {
+export default function TicketSidebar({ ticketData, getPriorityText }) {
   const sidebarItems = [
     {
       label: "شماره تیکت",
@@ -20,7 +21,7 @@ export default function TicketSidebar({ ticketData, getStatusBadge, getPriorityT
     },
     {
       label: "وضعیت",
-      value: getStatusBadge(), // خروجی JSX
+      value: <StatusBadge status={ticketData?.status} variant="rounded-lg" />,
       isJsx: true,
     },
     {

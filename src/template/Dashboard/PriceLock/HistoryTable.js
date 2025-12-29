@@ -6,26 +6,10 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import StatusBadge from "@/components/StatusBadge";
 
 export default function HistoryTable({ locks }) {
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case "active":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-            فعال
-          </span>
-        );
-      case "inactive":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-gray-100 dark:bg-dark-field text-gray-700 dark:bg-dark-field dark:text-dark-text">
-            غیر فعال
-          </span>
-        );
-      default:
-        return null;
-    }
-  };
+  // StatusBadge component is used instead
 
   return (
     <div className="border border-gray-200 dark:border-dark-stroke rounded-lg overflow-hidden">
@@ -87,7 +71,9 @@ export default function HistoryTable({ locks }) {
                 </TableCell>
 
                 {/* Status */}
-                <TableCell>{getStatusBadge(lock.status)}</TableCell>
+                <TableCell>
+                  <StatusBadge status={lock.status} variant="rounded-lg" />
+                </TableCell>
 
                 {/* Operations */}
                 <TableCell>
@@ -105,6 +91,7 @@ export default function HistoryTable({ locks }) {
     </div>
   );
 }
+
 
 
 

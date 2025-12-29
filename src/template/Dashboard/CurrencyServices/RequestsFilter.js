@@ -33,7 +33,7 @@ export default function RequestsFilter({ filters, onFiltersChange }) {
           value={filters.serviceType || undefined}
           onValueChange={(value) => handleFilterChange("serviceType", value)}
         >
-          <SelectTrigger className="w-full md:w-[160px]" dir="rtl">
+          <SelectTrigger className="w-full md:w-fit gap-5" dir="rtl">
             <SelectValue placeholder="نوع خدمت" />
           </SelectTrigger>
           <SelectContent dir="rtl">
@@ -62,7 +62,7 @@ export default function RequestsFilter({ filters, onFiltersChange }) {
           value={filters.dateRange || undefined}
           onValueChange={(value) => handleFilterChange("dateRange", value)}
         >
-          <SelectTrigger className="w-full md:w-[160px]" dir="rtl">
+          <SelectTrigger className="w-full md:w-fit gap-5" dir="rtl">
             <SelectValue placeholder="بازه تاریخ" />
           </SelectTrigger>
           <SelectContent dir="rtl">
