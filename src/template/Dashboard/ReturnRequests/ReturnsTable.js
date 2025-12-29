@@ -15,17 +15,25 @@ export default function ReturnsTable({ returns, onCancel }) {
       <Table>
         <TableHeader className="bg-gray-50 dark:bg-dark-field/50">
           <TableRow className="border-b border-gray-200 dark:border-dark-stroke">
-            <TableHead className="text-right py-3 px-4 text-sm text-gray-500 dark:text-dark-text first:rounded-tr-lg">
+            <TableHead className="whitespace-nowrap text-right py-3 px-4 text-sm text-gray-500 dark:text-dark-text first:rounded-tr-lg">
               شماره درخواست
             </TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm text-gray-500 dark:text-dark-text">محصول</TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm text-gray-500 dark:text-dark-text">علت مرجوعی</TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm text-gray-500 dark:text-dark-text">تاریخ ثبت</TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm text-gray-500 dark:text-dark-text">وضعیت</TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm text-gray-500 dark:text-dark-text">
+            <TableHead className="whitespace-nowrap text-right py-3 px-4 text-sm text-gray-500 dark:text-dark-text">
+              محصول
+            </TableHead>
+            <TableHead className="whitespace-nowrap text-right py-3 px-4 text-sm text-gray-500 dark:text-dark-text">
+              علت مرجوعی
+            </TableHead>
+            <TableHead className="whitespace-nowrap text-right py-3 px-4 text-sm text-gray-500 dark:text-dark-text">
+              تاریخ ثبت
+            </TableHead>
+            <TableHead className="whitespace-nowrap text-right py-3 px-4 text-sm text-gray-500 dark:text-dark-text">
+              وضعیت
+            </TableHead>
+            <TableHead className="whitespace-nowrap text-right py-3 px-4 text-sm text-gray-500 dark:text-dark-text">
               مبلغ بازگشتی (ت)
             </TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm text-gray-500 dark:text-dark-text last:rounded-tl-lg">
+            <TableHead className="whitespace-nowrap text-right py-3 px-4 text-sm text-gray-500 dark:text-dark-text last:rounded-tl-lg">
               عملیات
             </TableHead>
           </TableRow>
@@ -33,7 +41,7 @@ export default function ReturnsTable({ returns, onCancel }) {
         <TableBody>
           {returns.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="text-center py-8 text-gray-500 dark:text-dark-text">
+              <TableCell colSpan={7} className=" text-center py-8 text-gray-500 dark:text-dark-text">
                 درخواست مرجوعی یافت نشد
               </TableCell>
             </TableRow>
@@ -42,12 +50,14 @@ export default function ReturnsTable({ returns, onCancel }) {
               <TableRow
                 key={returnItem.id}
                 className={cn(
-                  "hover:bg-gray-50 dark:hover:bg-dark-field/50 transition-colors",
+                  "hover:bg-gray-50 whitespace-nowrap dark:hover:bg-dark-field/50 transition-colors",
                   index === returns.length - 1 && "last:border-b-0"
                 )}
               >
-                <TableCell className="text-sm text-gray-900 dark:text-dark-title py-4 px-4">{returnItem.id}</TableCell>
-                <TableCell className="py-4 px-4">
+                <TableCell className="whitespace-nowrap text-sm text-gray-900 dark:text-dark-title py-4 px-4">
+                  {returnItem.id}
+                </TableCell>
+                <TableCell className="whitespace-nowrap py-4 px-4">
                   <div className="flex items-center gap-3">
                     <div className="relative w-12 h-12 bg-gray-100 dark:bg-dark-field rounded-lg overflow-hidden flex-shrink-0">
                       <Image
@@ -61,17 +71,19 @@ export default function ReturnsTable({ returns, onCancel }) {
                     <span className="text-sm text-gray-900 dark:text-dark-title">{returnItem.product.name}</span>
                   </div>
                 </TableCell>
-                <TableCell className="text-sm text-gray-600 dark:text-dark-text py-4 px-4">
+                <TableCell className="text-sm text-gray-600 whitespace-nowrap dark:text-dark-text py-4 px-4">
                   {returnItem.reason}
                 </TableCell>
-                <TableCell className="text-sm text-gray-600 dark:text-dark-text py-4 px-4">{returnItem.date}</TableCell>
-                <TableCell className="p-0">
+                <TableCell className="text-sm text-gray-600 whitespace-nowrap dark:text-dark-text py-4 px-4">
+                  {returnItem.date}
+                </TableCell>
+                <TableCell className="p-0 whitespace-nowrap">
                   <StatusBadge status={returnItem.status} className="px-1 py-1" />
                 </TableCell>
-                <TableCell className="text-sm text-gray-900 dark:text-dark-title py-4 px-4">
+                <TableCell className="whitespace-nowrap text-sm text-gray-900 dark:text-dark-title py-4 px-4">
                   {returnItem.refundAmount || "---"}
                 </TableCell>
-                <TableCell className="py-4 px-4">
+                <TableCell className="whitespace-nowrap py-4 px-4">
                   <div className="flex items-center gap-2">
                     {returnItem.status === "reviewing" && (
                       <Button

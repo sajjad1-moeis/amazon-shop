@@ -4,11 +4,11 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
 import { Button } from "@/components/ui/button";
-import ProductInputSection from "./ProductInputSection";
-import ProductCard from "./ProductCard";
-import PriceCalculationDetails from "./PriceCalculationDetails";
-import ShippingMethodSection from "./ShippingMethodSection";
-import PaymentMethodSection from "./PaymentMethodSection";
+import ProductInputSection from "@/template/Dashboard/NewExclusiveOrder/ProductInputSection";
+import ProductCard from "@/template/Dashboard/NewExclusiveOrder/ProductCard";
+import PriceCalculationDetails from "@/template/Dashboard/NewExclusiveOrder/PriceCalculationDetails";
+import ShippingMethodSection from "@/template/Dashboard/NewExclusiveOrder/ShippingMethodSection";
+import PaymentMethodSection from "@/template/Dashboard/NewExclusiveOrder/PaymentMethodSection";
 import DashboardLayout from "@/layout/DashboardLayout";
 
 // Mock product data - در واقع باید از API بیاید

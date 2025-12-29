@@ -27,14 +27,15 @@ export default function ReturnRequestsFilter({ filters, onFiltersChange }) {
 
       <div className="flex flex-wrap gap-2">
         {/* Sort By */}
-        <Select value={filters.sortBy || undefined} onValueChange={(value) => handleFilterChange("sortBy", value)}>
+        <Select value={filters.category || undefined} onValueChange={(value) => handleFilterChange("category", value)}>
           <SelectTrigger className="w-fit  gap-5" dir="rtl">
-            <SelectValue placeholder="مرتب سازی" />
+            <SelectValue placeholder="دسته بندی" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="newest">جدیدترین</SelectItem>
-            <SelectItem value="oldest">قدیمی‌ترین</SelectItem>
+            <SelectItem value="electronics">الکترونیک</SelectItem>
+            <SelectItem value="clothing">پوشاک</SelectItem>
+            <SelectItem value="home">خانه و آشپزخانه</SelectItem>
           </SelectContent>
         </Select>
 
@@ -51,18 +52,18 @@ export default function ReturnRequestsFilter({ filters, onFiltersChange }) {
           </SelectContent>
         </Select>
 
-        {/* Category */}
-        <Select value={filters.category || undefined} onValueChange={(value) => handleFilterChange("category", value)}>
+        <Select value={filters.sortBy || undefined} onValueChange={(value) => handleFilterChange("sortBy", value)}>
           <SelectTrigger className="w-fit  gap-5" dir="rtl">
-            <SelectValue placeholder="دسته بندی" />
+            <SelectValue placeholder="مرتب سازی" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="electronics">الکترونیک</SelectItem>
-            <SelectItem value="clothing">پوشاک</SelectItem>
-            <SelectItem value="home">خانه و آشپزخانه</SelectItem>
+            <SelectItem value="newest">جدیدترین</SelectItem>
+            <SelectItem value="oldest">قدیمی‌ترین</SelectItem>
           </SelectContent>
         </Select>
+
+        {/* Category */}
       </div>
 
       {/* New Request Button */}

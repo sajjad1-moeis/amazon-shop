@@ -1,36 +1,47 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import DashboardLayout from "@/layout/DashboardLayout";
-
-// Mock data - should be replaced with API call
-const invitedFriends = [];
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
 import InvitedFriendsTable from "@/template/Dashboard/Invite/InvitedFriendsTable";
+import RewardConditionsModal from "@/template/Dashboard/Invite/RewardConditionsModal";
+import ShareModal from "@/template/Dashboard/Invite/ShareModal";
 import { toast } from "sonner";
+
+// Mock data - should be replaced with API call
+const invitedFriends = [
+  {
+    id: 1,
+    name: "علی رضایی",
+    membershipDate: "۱۴۰۳/۱۰/۱۵",
+    registrationStatus: "not-completed",
+    purchaseStatus: "done",
+    reward: "۲۵۰ امتیاز",
+  },
+  {
+    id: 2,
+    name: "لیلا محمدی",
+    membershipDate: "۱۴۰۳/۱۰/۲۰",
+    registrationStatus: "completed",
+    purchaseStatus: "done",
+    reward: "۵۰۰ امتیاز",
+  },
+];
+
 const referralCode = "REF-۹۳";
-const referralLink = "http://example.com/r...";
+const referralLink = "http://example.com/referral/REF-93";
 
 export default function InvitePage() {
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: "دعوت به میکرولس",
-          text: "به میکرولس بپیوندید و از تخفیف‌های ویژه بهره‌مند شوید",
-          url: referralLink,
-        });
-      } catch (err) {
-        console.log("Error sharing:", err);
-      }
-    } else {
-      navigator.clipboard.writeText(referralLink);
-      toast.success("لینک دعوت کپی شد");
-    }
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [rewardModalOpen, setRewardModalOpen] = useState(false);
+
+  const handleShare = () => {
+    setShareModalOpen(true);
   };
 
   const handleRewardConditions = () => {
-    toast.info("در حال باز کردن شرایط دریافت پاداش...");
+    setRewardModalOpen(true);
   };
 
   return (
@@ -87,6 +98,15 @@ export default function InvitePage() {
           </div>
         </div>
       </div>
+
+      {/* Modals */}
+      <ShareModal
+        isOpen={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
+        referralCode={referralCode}
+        referralLink={referralLink}
+      />
+      <RewardConditionsModal isOpen={rewardModalOpen} onClose={() => setRewardModalOpen(false)} />
     </DashboardLayout>
   );
 }

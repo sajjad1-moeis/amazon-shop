@@ -18,7 +18,7 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
   return (
     <div className="bg-white dark:bg-dark-box rounded-xl shadow-box p-4">
       {/* Order Summary - بالا با border */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6 pb-6 border-b border-gray-200 dark:border-dark-stroke">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-3 mb-6 pb-6 border-b border-gray-200 dark:border-dark-stroke">
         <div>
           <span className="text-sm text-gray-600 dark:text-dark-text ">شماره سفارش: </span>
           <span className="text-sm font-medium text-gray-900 dark:text-dark-title">{order.orderNumber}</span>
@@ -114,11 +114,11 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
           <AccordionTrigger className="font-semibold text-primary-500 dark:text-dark-text hover:no-underline py-2">
             وضعیت سفارش:
           </AccordionTrigger>
-          <AccordionContent className="pt-4">
+          <AccordionContent className="p-0">
             <div className="text-gray-600 dark:text-dark-text mb-2 text-sm">
               {order.timeline.productName || "محصول اول"}
             </div>
-            <div className="px-2 pb-20  relative">
+            <div className="px-2  relative">
               {order.timeline && order.timeline.steps && order.timeline.steps.length > 0 ? (
                 <Timeline currentStep={order.timeline.currentStepIndex} steps={order.timeline.steps} />
               ) : (

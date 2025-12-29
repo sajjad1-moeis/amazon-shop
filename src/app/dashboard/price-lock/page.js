@@ -5,6 +5,7 @@ import PageHeader from "@/template/Dashboard/Common/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Lock } from "iconsax-reactjs";
 import NewPriceLockModal from "@/template/Dashboard/PriceLock/NewPriceLockModal";
+import PriceLockDetailModal from "@/template/Dashboard/PriceLock/PriceLockDetailModal";
 import PriceLockTabs from "@/template/Dashboard/PriceLock/PriceLockTabs";
 import DashboardLayout from "@/layout/DashboardLayout";
 
@@ -55,6 +56,8 @@ const HISTORY_LOCKS = [
 export default function PriceLockList() {
   const [activeTab, setActiveTab] = useState("active");
   const [isNewLockModalOpen, setIsNewLockModalOpen] = useState(false);
+  const [selectedLock, setSelectedLock] = useState(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   const [activeLocks, setActiveLocks] = useState(ACTIVE_LOCKS);
   const [historyLocks] = useState(HISTORY_LOCKS);
@@ -90,6 +93,13 @@ export default function PriceLockList() {
     setActiveLocks((prev) => prev.filter((lock) => lock.id !== id));
   };
 
+  const handleViewDetails = (lock) => {
+    // Find the full lock data from activeLocks
+    const fullLockData = activeLocks.find((l) => l.id === lock.id) || lock;
+    setSelectedLock(fullLockData);
+    setIsDetailModalOpen(true);
+  };
+
   return (
     <DashboardLayout>
       <PageHeader title="قفل قیمت" description="قیمت برخی محصولات را برای مدت محدود ثابت نگه دارید">
@@ -108,6 +118,7 @@ export default function PriceLockList() {
           onTabChange={setActiveTab}
           activeLocks={activeLocks}
           onCancelLock={handleCancelLock}
+          onViewDetails={handleViewDetails}
           filteredHistory={filteredHistory}
           historyFilters={historyFilters}
           onFiltersChange={setHistoryFilters}
@@ -118,6 +129,13 @@ export default function PriceLockList() {
         open={isNewLockModalOpen}
         onOpenChange={setIsNewLockModalOpen}
         onSubmit={handleSubmitNewLock}
+      />
+
+      <PriceLockDetailModal
+        lock={selectedLock}
+        open={isDetailModalOpen}
+        onOpenChange={setIsDetailModalOpen}
+        onCancelLock={handleCancelLock}
       />
     </DashboardLayout>
   );

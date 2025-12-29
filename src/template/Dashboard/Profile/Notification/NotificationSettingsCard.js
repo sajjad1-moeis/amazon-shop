@@ -7,9 +7,9 @@ import EditNotificationSettingsModal from "./EditNotificationSettingsModal";
 import { Row } from "../BasicInfo/BasicInfoCard";
 
 const notificationData = {
-  notificationTypes: ["orders", "tickets"],
-  notificationMethods: ["sms", "email"],
-  telegramConnected: true,
+  notificationTypes: ["orders"], // فقط سفارش‌ها انتخاب شده
+  notificationMethods: ["site", "telegram"], // نوتیفیکیشن داخل سایت و تلگرام
+  telegramConnected: false, // تلگرام متصل نشده
 };
 
 const getNotificationTypesText = (types) => {

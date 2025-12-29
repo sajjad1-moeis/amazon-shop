@@ -13,6 +13,7 @@ import {
 import { Clock, CloseCircle } from "iconsax-reactjs";
 import { cn } from "@/lib/utils";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import OrderDocumentsCard from "./OrderDocumentsCard";
 
 export default function PriceLockDetailModal({ lock, open, onOpenChange, onCancelLock }) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -81,32 +82,10 @@ export default function PriceLockDetailModal({ lock, open, onOpenChange, onCance
 
           {/* More Details Section */}
           <div className="border-t border-gray-200 dark:border-dark-stroke pt-4">
-            <h4 className="text-base font-bold text-gray-900 dark:text-dark-title dark:text-dark-title mb-4">جزئیات بیشتر</h4>
+            <h4 className="text-base font-bold text-gray-900 dark:text-dark-title mb-4">جزئیات بیشتر</h4>
             
-            {/* First Row */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-              <div className="flex flex-col gap-1">
-                <span className="text-sm text-gray-600 dark:text-dark-text">تاریخ پرداخت</span>
-                <span className="text-sm font-medium text-gray-900 dark:text-dark-title dark:text-dark-title">
-                  {lock.paymentDate || "۱۳:۰۹ - ۱۴۰۳/۱۰/۰۱"}
-                </span>
-              </div>
-              <div className="flex flex-col gap-1">
-                <span className="text-sm text-gray-600 dark:text-dark-text">نرخ تبدیل</span>
-                <span className="text-sm font-medium text-gray-900 dark:text-dark-title dark:text-dark-title">
-                  {lock.conversionRate || "۱۸,۴۰۰"}
-                </span>
-              </div>
-              <div className="flex flex-col gap-1">
-                <span className="text-sm text-gray-600 dark:text-dark-text">تاریخ ایجاد</span>
-                <span className="text-sm font-medium text-gray-900 dark:text-dark-title dark:text-dark-title">
-                  {lock.creationDate || "۱۳:۰۹ - ۱۴۰۳/۱۰/۰۱"}
-                </span>
-              </div>
-            </div>
-
-            {/* Second Row */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* First Row */}
               <div className="flex flex-col gap-1">
                 <span className="text-sm text-gray-600 dark:text-dark-text">قیمت نهایی</span>
                 <span className="text-sm font-bold text-blue-600 dark:text-blue-400">
@@ -115,17 +94,42 @@ export default function PriceLockDetailModal({ lock, open, onOpenChange, onCance
               </div>
               <div className="flex flex-col gap-1">
                 <span className="text-sm text-gray-600 dark:text-dark-text">هزینه حمل</span>
-                <span className="text-sm font-medium text-gray-900 dark:text-dark-title dark:text-dark-title">
+                <span className="text-sm font-medium text-gray-900 dark:text-dark-title">
                   {lock.shippingCost || "۱,۲۰۰,۰۰۰ تومان"}
                 </span>
               </div>
               <div className="flex flex-col gap-1">
                 <span className="text-sm text-gray-600 dark:text-dark-text">قیمت پایه</span>
-                <span className="text-sm font-medium text-gray-900 dark:text-dark-title dark:text-dark-title">
+                <span className="text-sm font-medium text-gray-900 dark:text-dark-title">
                   {lock.basePrice || "۱,۲۹۹ AED"}
                 </span>
               </div>
+
+              {/* Second Row */}
+              <div className="flex flex-col gap-1">
+                <span className="text-sm text-gray-600 dark:text-dark-text">نرخ تبدیل</span>
+                <span className="text-sm font-medium text-gray-900 dark:text-dark-title">
+                  {lock.conversionRate || "۱۸,۴۰۰"}
+                </span>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-sm text-gray-600 dark:text-dark-text">تاریخ ایجاد</span>
+                <span className="text-sm font-medium text-gray-900 dark:text-dark-title">
+                  {lock.creationDate || "۱۳:۰۹ - ۱۴۰۳/۱۰/۰۱"}
+                </span>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-sm text-gray-600 dark:text-dark-text">تاریخ پرداخت</span>
+                <span className="text-sm font-medium text-gray-900 dark:text-dark-title">
+                  {lock.paymentDate || "۱۳:۰۹ - ۱۴۰۳/۱۰/۰۱"}
+                </span>
+              </div>
             </div>
+          </div>
+
+          {/* Order Documents Section */}
+          <div className="border-t border-gray-200 dark:border-dark-stroke pt-4">
+            <OrderDocumentsCard documents={lock.documents || []} />
           </div>
 
           {/* Action Buttons */}

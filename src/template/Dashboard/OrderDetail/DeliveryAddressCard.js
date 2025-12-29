@@ -5,13 +5,30 @@ import { Button } from "@/components/ui/button";
 import { Location } from "iconsax-reactjs";
 import { useAddresses } from "@/utils/func/use-address";
 import { mockAddresses } from "@/data";
-import AddressCard from "../../Addresses/AddressCard";
+import AddressCard from "../Addresses/AddressCard";
 import { useRouter } from "next/navigation";
 
-export default function DeliveryAddressCard({ showEditButton = false }) {
+export default function DeliveryAddressCard({ address, showEditButton = false, onEdit }) {
   const { addresses } = useAddresses(mockAddresses);
-  const address = addresses[0];
+  const displayAddress = address || addresses[0];
+  console.log(displayAddress);
   const router = useRouter();
+
+  const handleEditClick = (addressId) => {
+    if (onEdit) {
+      onEdit();
+    } else {
+      router.push("/dashboard/account/addresses");
+    }
+  };
+
+  const handleDeleteClick = (addressId) => {
+    // Handle delete if needed
+  };
+
+  const handleSetDefault = (addressId) => {
+    // Handle set default if needed
+  };
 
   return (
     <div className="bg-white dark:bg-dark-box rounded-xl border border-gray-200 dark:border-dark-stroke p-3">
@@ -33,11 +50,11 @@ export default function DeliveryAddressCard({ showEditButton = false }) {
 
       <AddressCard
         removeHandler
-        key={address.id}
-        address={address}
-        onEdit={() => handleEditClick(address.id)}
-        onDelete={() => handleDeleteClick(address.id)}
-        onSetDefault={() => handleSetDefault(address.id)}
+        key={displayAddress?.id}
+        address={displayAddress}
+        onEdit={() => handleEditClick(displayAddress?.id)}
+        onDelete={() => handleDeleteClick(displayAddress?.id)}
+        onSetDefault={() => handleSetDefault(displayAddress?.id)}
       />
     </div>
   );

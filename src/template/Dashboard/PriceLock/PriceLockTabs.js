@@ -17,6 +17,7 @@ export default function PriceLockTabs({
   onTabChange,
   activeLocks,
   onCancelLock,
+  onViewDetails,
   filteredHistory,
   historyFilters,
   onFiltersChange,
@@ -36,7 +37,7 @@ export default function PriceLockTabs({
       </TabsList>
 
       <TabsContent value="active" className="mt-6">
-        <ActiveLocksTab activeLocks={activeLocks} onCancelLock={onCancelLock} />
+        <ActiveLocksTab activeLocks={activeLocks} onCancelLock={onCancelLock} onViewDetails={onViewDetails} />
       </TabsContent>
 
       <TabsContent value="history" className="mt-6">

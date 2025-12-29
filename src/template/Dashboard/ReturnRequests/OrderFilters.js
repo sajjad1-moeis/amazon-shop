@@ -76,17 +76,18 @@ export default function OrderFilters({ selectedOrder, onOrderSelect }) {
         </div>
 
         <div className="flex gap-2">
-          {/* Sort By */}
+          {/* Category */}
           <Select
-            value={filters.sortBy || undefined}
-            onValueChange={(value) => setFilters((prev) => ({ ...prev, sortBy: value }))}
+            value={filters.category || undefined}
+            onValueChange={(value) => setFilters((prev) => ({ ...prev, category: value }))}
           >
             <SelectTrigger className="w-fit gap-5">
-              <SelectValue placeholder="مرتب سازی" />
+              <SelectValue placeholder="دسته بندی" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="newest">جدیدترین</SelectItem>
-              <SelectItem value="oldest">قدیمی‌ترین</SelectItem>
+              <SelectItem value="all">همه</SelectItem>
+              <SelectItem value="electronics">الکترونیک</SelectItem>
+              <SelectItem value="clothing">پوشاک</SelectItem>
             </SelectContent>
           </Select>
 
@@ -104,19 +105,17 @@ export default function OrderFilters({ selectedOrder, onOrderSelect }) {
               <SelectItem value="shipped">ارسال شده</SelectItem>
             </SelectContent>
           </Select>
-
-          {/* Category */}
+          {/* Sort By */}
           <Select
-            value={filters.category || undefined}
-            onValueChange={(value) => setFilters((prev) => ({ ...prev, category: value }))}
+            value={filters.sortBy || undefined}
+            onValueChange={(value) => setFilters((prev) => ({ ...prev, sortBy: value }))}
           >
             <SelectTrigger className="w-fit gap-5">
-              <SelectValue placeholder="دسته بندی" />
+              <SelectValue placeholder="مرتب سازی" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">همه</SelectItem>
-              <SelectItem value="electronics">الکترونیک</SelectItem>
-              <SelectItem value="clothing">پوشاک</SelectItem>
+              <SelectItem value="newest">جدیدترین</SelectItem>
+              <SelectItem value="oldest">قدیمی‌ترین</SelectItem>
             </SelectContent>
           </Select>
         </div>

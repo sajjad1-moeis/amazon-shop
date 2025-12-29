@@ -22,27 +22,11 @@ const returnReasonOptions = [
 export default function ReturnReasonForm({ formData, onFormChange }) {
   return (
     <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4">
-      <h3 className="text-lg font-bold text-gray-700 dark:text-dark-title mb-6">علت مرجوعی</h3>
+      <h3 className="text-lg text-gray-700 dark:text-dark-title mb-6">علت مرجوعی</h3>
 
       <div className="space-y-6">
         {/* Packaging Status */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label className="text-sm ">وضعیت بسته بندی</Label>
-            <Select value={formData.packagingStatus} onValueChange={(value) => onFormChange("packagingStatus", value)}>
-              <SelectTrigger className="bg-gray-50 dark:bg-dark-field border border-gray-200 dark:border-dark-stroke">
-                <SelectValue placeholder="وضعیت بسته بندی را انتخاب کنید" />
-              </SelectTrigger>
-              <SelectContent>
-                {packagingStatusOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
           {/* Return Reason */}
           <div className="space-y-2">
             <Label className="text-sm ">علت مرجوعی</Label>
@@ -52,6 +36,21 @@ export default function ReturnReasonForm({ formData, onFormChange }) {
               </SelectTrigger>
               <SelectContent>
                 {returnReasonOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm ">وضعیت بسته بندی</Label>
+            <Select value={formData.packagingStatus} onValueChange={(value) => onFormChange("packagingStatus", value)}>
+              <SelectTrigger className="bg-gray-50 dark:bg-dark-field border border-gray-200 dark:border-dark-stroke">
+                <SelectValue placeholder="وضعیت بسته بندی را انتخاب کنید" />
+              </SelectTrigger>
+              <SelectContent>
+                {packagingStatusOptions.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
                   </SelectItem>
@@ -70,6 +69,7 @@ export default function ReturnReasonForm({ formData, onFormChange }) {
             onChange={(e) => onFormChange("description", e.target.value)}
             placeholder="توضیحات اختیاری درباره مشکل..."
             dir="rtl"
+            rows={8}
           />
         </div>
       </div>

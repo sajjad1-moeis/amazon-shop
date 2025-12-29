@@ -2,16 +2,17 @@
 
 import { orderDetailData } from "@/data";
 import DashboardLayout from "@/layout/DashboardLayout";
-import TrackingCodesCard from "@/template/Dashboard/Invoices/InvoiceDetail/TrackingCodesCard";
-import DeliveryAddressCard from "@/template/Dashboard/Orders/OrderDetail/DeliveryAddressCard";
-import OrderDetailHeader from "@/template/Dashboard/Orders/OrderDetail/OrderDetailHeader";
-import OrderProgressSection from "@/template/Dashboard/Orders/OrderDetail/OrderProgressSection";
-import PaymentInfoCard from "@/template/Dashboard/Orders/OrderDetail/PaymentInfoCard";
-import PaymentStatusCard from "@/template/Dashboard/Orders/OrderDetail/PaymentStatusCard";
-import ProductListSection from "@/template/Dashboard/Orders/OrderDetail/ProductListSection";
-import ProductMediaSlider from "@/template/Dashboard/Orders/OrderDetail/ProductMediaSlider";
-import SecondPaymentCard from "@/template/Dashboard/Orders/OrderDetail/SecondPaymentCard";
-import SupportCard from "@/template/Dashboard/Orders/OrderDetail/SupportCard";
+import TrackingCodesCard from "@/template/Dashboard/InvoiceDetail/TrackingCodesCard";
+import DeliveryAddressCard from "@/template/Dashboard/OrderDetail/DeliveryAddressCard";
+import OrderDetailHeader from "@/template/Dashboard/OrderDetail/OrderDetailHeader";
+import OrderProgressSection from "@/template/Dashboard/OrderDetail/OrderProgressSection";
+import PaymentInfoCard from "@/template/Dashboard/OrderDetail/PaymentInfoCard";
+import PaymentStatusCard from "@/template/Dashboard/OrderDetail/PaymentStatusCard";
+import ProductListSection from "@/template/Dashboard/OrderDetail/ProductListSection";
+import ProductMediaSlider from "@/template/Dashboard/OrderDetail/ProductMediaSlider";
+import OrderDocumentsCard from "@/template/Dashboard/OrderDetail/OrderDocumentsCard";
+import SecondPaymentCard from "@/template/Dashboard/OrderDetail/SecondPaymentCard";
+import SupportCard from "@/template/Dashboard/OrderDetail/SupportCard";
 import { toast } from "sonner";
 
 export default function OrderDetail({ params }) {
@@ -30,10 +31,6 @@ export default function OrderDetail({ params }) {
 
   const handleSecondPayment = () => {
     toast.info("در حال انتقال به صفحه پرداخت...");
-  };
-
-  const handleCreateTicket = () => {
-    toast.info("در حال باز کردن فرم ثبت تیکت...");
   };
 
   const handleEditAddress = () => {
@@ -58,6 +55,11 @@ export default function OrderDetail({ params }) {
         <PaymentStatusCard paymentStatus={order.paymentStatus} />
       </div>
 
+      {/* Order Documents */}
+      <div className="mb-6">
+        <OrderDocumentsCard documents={order.documents || []} />
+      </div>
+
       {/* Media and Second Payment - کنار هم */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         <div className="lg:col-span-2">
@@ -74,11 +76,8 @@ export default function OrderDetail({ params }) {
         <TrackingCodesCard trackingCodes={order.trackingCodes} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 my-8">
-        <div className="lg:col-span-3">
-          <DeliveryAddressCard address={order.deliveryAddress} showEditButton={true} onEdit={handleEditAddress} />
-        </div>
-        <SupportCard hasTicket={order.hasTicket} onCreateTicket={handleCreateTicket} />
+      <div className="my-8">
+        <SupportCard hasTicket={order.hasTicket} />
       </div>
     </DashboardLayout>
   );

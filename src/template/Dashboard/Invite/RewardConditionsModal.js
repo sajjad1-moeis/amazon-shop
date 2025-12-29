@@ -19,7 +19,7 @@ export default function RewardConditionsModal({ isOpen, onClose }) {
           <div className="space-y-6">
             {/* Introduction */}
             <p className="text-gray-700 dark:text-dark-text text-right">
-              با دعوت از دوستانتان به میکرولس امتیاز دریافت کنید.
+              با دعوت از دوستانتان به میکرونی امتیاز دریافت کنید.
             </p>
 
             {/* Section 1 */}
@@ -28,7 +28,7 @@ export default function RewardConditionsModal({ isOpen, onClose }) {
                 ۱. ثبت نام موفق دوست شما
               </h3>
               <p className="text-gray-700 dark:text-dark-text text-right leading-relaxed">
-                هر دوست وقتی با لینک دعوت شما ثبت نام کند، شما ۵۰ امتیاز می‌گیرید.
+                هر دوست وقتی با لینک دعوت شما ثبت نام کند. شما ۵۰ امتیاز می‌گیرید.
               </p>
             </div>
 
@@ -38,14 +38,13 @@ export default function RewardConditionsModal({ isOpen, onClose }) {
                 ۲. اولین خرید دوست شما
               </h3>
               <p className="text-gray-700 dark:text-dark-text text-right leading-relaxed">
-                اگر او اولین خرید خود را انجام دهد، ۳٪ مبلغ اولین سفارش به عنوان پاداش به شما تعلق می‌گیرد.
+                اگر او اولین خرید خود را انجام دهد. ۳٪ مبلغ اولین سفارش به عنوان یاداش به شما تعلق می‌گیرد.
               </p>
             </div>
 
             {/* Conclusion */}
-            <p className="text-primary-400 dark:text-dark-text text-right leading-relaxed">
-              هرچه دوستان بیشتری دعوت کنید، امتیاز بیشتری جمع می‌کنید و می‌توانید از این امتیازها برای تخفیف، خرید یا
-              مزایای ویژه استفاده کنید.
+            <p className="text-gray-700 dark:text-dark-text text-right leading-relaxed">
+              هر چه دوستان بیشتری دعوت کنید امتیاز بیشتری جمع میکنید و میتوانید از این امتیازها برای تخفیف خرید با مزایای ویژه استفاده کنید.
             </p>
 
             {/* Guide Link */}

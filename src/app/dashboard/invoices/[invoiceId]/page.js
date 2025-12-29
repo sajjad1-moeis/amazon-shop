@@ -2,12 +2,12 @@
 
 import React from "react";
 import DashboardLayout from "@/layout/DashboardLayout";
-import InvoiceDetailHeader from "@/template/Dashboard/Invoices/InvoiceDetail/InvoiceDetailHeader";
-import OrderTimelineSection from "@/template/Dashboard/Invoices/InvoiceDetail/OrderTimelineSection";
-import RecipientInfoCard from "@/template/Dashboard/Invoices/InvoiceDetail/RecipientInfoCard";
-import ProductsTable from "@/template/Dashboard/Invoices/InvoiceDetail/ProductsTable";
-import PaymentInfoCard from "@/template/Dashboard/Invoices/InvoiceDetail/PaymentInfoCard";
-import TrackingCodesCard from "@/template/Dashboard/Invoices/InvoiceDetail/TrackingCodesCard";
+import InvoiceDetailHeader from "@/template/Dashboard/InvoiceDetail/InvoiceDetailHeader";
+import OrderTimelineSection from "@/template/Dashboard/InvoiceDetail/OrderTimelineSection";
+import RecipientInfoCard from "@/template/Dashboard/InvoiceDetail/RecipientInfoCard";
+import ProductsTable from "@/template/Dashboard/InvoiceDetail/ProductsTable";
+import PaymentInfoCard from "@/template/Dashboard/InvoiceDetail/PaymentInfoCard";
+import TrackingCodesCard from "@/template/Dashboard/InvoiceDetail/TrackingCodesCard";
 import { toast } from "sonner";
 import { mockInvoiceData } from "@/data";
 

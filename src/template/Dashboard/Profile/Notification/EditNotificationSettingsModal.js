@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { InfoCircle, Warning2 } from "iconsax-reactjs";
+import { InfoCircle, Warning2, Send2 } from "iconsax-reactjs";
 import { toast } from "sonner";
 
 const notificationTypes = [
@@ -92,93 +92,94 @@ export default function EditNotificationSettingsModal({ isOpen, onClose, initial
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose} dir="rtl">
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto" dir="rtl">
+      <DialogContent className="sm:max-w-[1000px] max-h-[90vh] overflow-y-auto" dir="rtl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">تنظیمات نوتیفیکیشن</DialogTitle>
-          <DialogDescription className="text-sm text-gray-600 dark:text-dark-text">
-            نوع و روش دریافت اعلان‌ها را تنظیم کنید
-          </DialogDescription>
+          <DialogTitle className="text-2xl font-bold text-primary-700 text-center">تنظیمات نوتیفیکیشن</DialogTitle>
         </DialogHeader>
+        <p className="text-lg font-bold text-primary-700 dark:text-dark-text">تنظیمات اعلان‌ها</p>
 
         <form onSubmit={handleSubmit} className="space-y-6 py-4">
           {/* Notification Types */}
           <div className="space-y-3">
-            <Label className="text-sm font-semibold text-gray-700 dark:text-dark-text">نوع اعلان ها</Label>
-            <div className="space-y-2">
+            <Label className="text-sm  text-gray-700 dark:text-dark-text">نوع اعلان ها</Label>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
               {notificationTypes.map((type) => (
-                <div key={type.id} className="flex items-center space-x-2 space-x-reverse">
+                <label
+                  key={type.id}
+                  htmlFor={type.id}
+                  className="flex items-center space-x-2 space-x-reverse border border-gray-300 bg-gray-100 dark:bg-dark-field rounded-lg p-2 hover:bg-gray-200 dark:hover:bg-dark-field/80 transition-colors cursor-pointer"
+                >
                   <Checkbox
                     id={type.id}
                     checked={formData.notificationTypes.includes(type.id)}
                     onCheckedChange={() => handleTypeToggle(type.id)}
+                    className="flex-shrink-0"
                   />
-                  <Label
-                    htmlFor={type.id}
-                    className="text-sm font-normal cursor-pointer text-gray-700 dark:text-dark-text"
-                  >
+                  <span className="text-sm font-normal cursor-pointer text-gray-700 dark:text-dark-text flex-1">
                     {type.label}
-                  </Label>
-                </div>
+                  </span>
+                </label>
               ))}
             </div>
           </div>
 
           {/* Notification Methods */}
-          <div className="space-y-3">
-            <Label className="text-sm font-semibold text-gray-700 dark:text-dark-text">روش دریافت اعلان</Label>
-            <div className="space-y-2">
+          <div className="space-y-3 pb-6 border-b border-gray-200">
+            <Label className="text-sm  text-gray-700 dark:text-dark-text">روش دریافت اعلان</Label>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
               {notificationMethods.map((method) => (
-                <div key={method.id} className="flex items-center space-x-2 space-x-reverse">
+                <label
+                  key={method.id}
+                  htmlFor={method.id}
+                  className="flex items-center space-x-2 space-x-reverse border border-gray-300 bg-gray-100 dark:bg-dark-field rounded-lg p-2 hover:bg-gray-200 dark:hover:bg-dark-field/80 transition-colors cursor-pointer"
+                >
                   <Checkbox
                     id={method.id}
                     checked={formData.notificationMethods.includes(method.id)}
                     onCheckedChange={() => handleMethodToggle(method.id)}
+                    className="flex-shrink-0"
                   />
-                  <Label
-                    htmlFor={method.id}
-                    className="text-sm font-normal cursor-pointer text-gray-700 dark:text-dark-text flex items-center gap-2"
-                  >
+                  <span className="text-sm font-normal cursor-pointer text-gray-700 dark:text-dark-text flex items-center gap-2 flex-1">
                     {method.label}
                     {method.id === "telegram" && !formData.telegramConnected && (
-                      <Warning2 size={16} className="text-yellow-500" />
+                      <Warning2 size={16} className="text-yellow-500 flex-shrink-0" />
                     )}
-                  </Label>
-                </div>
+                  </span>
+                </label>
               ))}
             </div>
           </div>
 
           {/* Telegram Connection */}
           {formData.notificationMethods.includes("telegram") && (
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 space-y-3">
-              <div>
-                <Label className="text-sm font-semibold text-gray-700 dark:text-dark-text">اتصال به تلگرام</Label>
-                <p className="text-xs text-gray-600 dark:text-dark-text mt-1">
-                  برای دریافت اعلان ها در تلگرام باید حساب خود را به ربات ما متصل کنید.
+            <div className="space-y-3 bg-gray-100 p-3 rounded-xl flex-between">
+              <div className="">
+                <Label className="text-lg font-bold text-primary-700 dark:text-dark-text">اتصال به تلگرام</Label>
+                <p className="text-sm mt-2 text-gray-600 dark:text-dark-text">
+                  برای دریافت اعلان‌ها در تلگرام، باید حساب خود را به ربات ما متصل کنید
                 </p>
               </div>
-              {!formData.telegramConnected ? (
-                <Button
-                  type="button"
-                  onClick={handleTelegramConnect}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-white gap-2"
-                >
-                  <InfoCircle size={16} />
-                  اتصال به تلگرام
-                </Button>
-              ) : (
-                <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-                  متصل شده
-                </div>
-              )}
+              <Button
+                type="button"
+                onClick={handleTelegramConnect}
+                className="bg-yellow-500 px-10 hover:bg-yellow-600 text-primary-800 gap-2 rounded-lg"
+              >
+                <Send2 size={18} variant="Bold" />
+                اتصال به تلگرام
+              </Button>
             </div>
           )}
 
-          <DialogFooter className="flex gap-3 sm:gap-0">
-            <Button type="button" variant="outline" onClick={handleClose} className="flex-1 sm:flex-initial">
+          <DialogFooter className="grid grid-cols-2 gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleClose}
+              className="border-2 border-primary-700 text-primary-700"
+            >
               لغو
             </Button>
-            <Button type="submit" className="bg-primary-600 hover:bg-primary-700 text-white flex-1 sm:flex-initial">
+            <Button type="submit" className="bg-primary-700 hover:bg-primary-500 text-white">
               ذخیره تغییرات
             </Button>
           </DialogFooter>
@@ -187,4 +188,3 @@ export default function EditNotificationSettingsModal({ isOpen, onClose, initial
     </Dialog>
   );
 }
-

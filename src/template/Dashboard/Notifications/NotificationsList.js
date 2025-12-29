@@ -9,7 +9,96 @@ import { toast } from "sonner";
 import PageHeader from "../Common/PageHeader";
 
 // Mock data - should be replaced with API call
-const initialNotifications = [];
+const initialNotifications = [
+  {
+    id: 1,
+    type: "order",
+    title: "سفارش شما تحویل داده شد",
+    description: "سفارش شماره #12345 با موفقیت به آدرس شما تحویل داده شد. لطفاً در صورت رضایت، نظر خود را ثبت کنید.",
+    time: "۲ ساعت پیش",
+    actionUrl: "/dashboard/orders/12345",
+    actionText: "مشاهده سفارش",
+    isRead: false,
+    isPinned: true,
+  },
+  {
+    id: 2,
+    type: "ticket",
+    title: "پاسخ جدید به تیکت شما",
+    description: "پشتیبانی به تیکت شماره #789 پاسخ داده است. لطفاً پاسخ را بررسی کنید.",
+    time: "۵ ساعت پیش",
+    actionUrl: "/dashboard/support/789",
+    actionText: "مشاهده تیکت",
+    isRead: false,
+    isPinned: false,
+  },
+  {
+    id: 3,
+    type: "order",
+    title: "سفارش شما در حال آماده‌سازی است",
+    description: "سفارش شماره #12346 در حال بسته‌بندی و آماده‌سازی برای ارسال است.",
+    time: "۱ روز پیش",
+    actionUrl: "/dashboard/orders/12346",
+    actionText: "مشاهده سفارش",
+    isRead: true,
+    isPinned: false,
+  },
+  {
+    id: 4,
+    type: "wallet",
+    title: "شارژ کیف پول",
+    description: "مبلغ ۵۰۰,۰۰۰ تومان به کیف پول شما اضافه شد. موجودی فعلی: ۱,۲۰۰,۰۰۰ تومان",
+    time: "۲ روز پیش",
+    actionUrl: "/dashboard/wallet",
+    actionText: "مشاهده کیف پول",
+    isRead: true,
+    isPinned: false,
+  },
+  {
+    id: 5,
+    type: "ticket",
+    title: "تیکت شما بسته شد",
+    description: "تیکت شماره #788 با رضایت شما بسته شد. در صورت نیاز می‌توانید تیکت جدیدی ایجاد کنید.",
+    time: "۳ روز پیش",
+    actionUrl: "/dashboard/support",
+    actionText: "مشاهده تیکت‌ها",
+    isRead: true,
+    isPinned: false,
+  },
+  {
+    id: 6,
+    type: "order",
+    title: "سفارش شما ارسال شد",
+    description: "سفارش شماره #12347 با کد پیگیری 1234567890 ارسال شد. می‌توانید وضعیت آن را پیگیری کنید.",
+    time: "۴ روز پیش",
+    actionUrl: "/dashboard/orders/12347",
+    actionText: "پیگیری سفارش",
+    isRead: false,
+    isPinned: false,
+  },
+  {
+    id: 7,
+    type: "currency",
+    title: "درخواست خدمات ارزی",
+    description: "درخواست شما برای تبدیل ارز با موفقیت ثبت شد. کارشناسان ما در حال بررسی هستند.",
+    time: "۵ روز پیش",
+    actionUrl: "/dashboard/currency-services",
+    actionText: "مشاهده درخواست",
+    isRead: true,
+    isPinned: false,
+  },
+  {
+    id: 8,
+    type: "wallet",
+    title: "برداشت از کیف پول",
+    description: "مبلغ ۲۰۰,۰۰۰ تومان از کیف پول شما برداشت شد. موجودی فعلی: ۷۰۰,۰۰۰ تومان",
+    time: "۱ هفته پیش",
+    actionUrl: "/dashboard/wallet",
+    actionText: "مشاهده تراکنش‌ها",
+    isRead: true,
+    isPinned: false,
+  },
+];
 import ConfirmDialog from "@/components/ConfirmDialog";
 
 export default function NotificationsList() {
@@ -93,7 +182,7 @@ export default function NotificationsList() {
 
         {notifications.length === 0 ? (
           <div
-            className="bg-white dark:bg-dark-box dark:bg-dark-box rounded-2xl shadow-md p-8 text-center mt-6"
+            className="bg-white dark:bg-dark-box  rounded-2xl shadow-md p-8 text-center mt-6"
             style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
           >
             <p className="text-gray-500 dark:text-dark-text">هیچ اعلانی وجود ندارد</p>

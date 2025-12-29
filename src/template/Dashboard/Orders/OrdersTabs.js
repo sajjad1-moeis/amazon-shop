@@ -5,10 +5,10 @@ import { cn } from "@/lib/utils";
 
 const tabs = [
   { id: "all", label: "همه" },
+  { id: "special-amazon", label: "اختصاصی آمازون" },
   { id: "processing", label: "در حال پردازش" },
   { id: "to-dubai", label: "در مسیر دبی" },
   { id: "to-iran", label: "در مسیر ایران" },
-  { id: "clearance", label: "ترخیص" },
   { id: "delivered", label: "تحویل شده" },
   { id: "returned", label: "مرجوعی" },
 ];
@@ -33,15 +33,3 @@ export default function OrdersTabs({ activeTab, onTabChange }) {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-

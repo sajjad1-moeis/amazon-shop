@@ -927,12 +927,12 @@ export const orderDetailData = {
     },
   ],
   deliveryAddress: {
-    recipientName: "محسن رضایی",
+    name: "محسن رضایی",
     phone: "۰۹۱۲۹۸۱۴۴۲۱",
     province: "تهران",
     city: "پونک",
     postalCode: "۱۴۵۶۷۵۹۲۲۱",
-    fullAddress: "تهران، شهر ری خیابان کریم خان ، کوچه آزاده ۲ پلاک ۱۲",
+    address: "تهران، شهر ری خیابان کریم خان ، کوچه آزاده ۲ پلاک ۱۲",
   },
   paymentStatus: {
     paidPercentage: 65,

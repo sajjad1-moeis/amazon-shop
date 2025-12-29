@@ -25,7 +25,7 @@ export default function TrackingCodesCard({ trackingCodes }) {
             {/* Left Button */}
             <Button
               onClick={() => window.open(tracking.url, "_blank")}
-              className="h-9 px-4 rounded-lg bg-[#D8DADF] text-gray-600 dark:text-dark-text hover:bg-gray-300 dark:bg-dark-field dark:text-dark-text dark:hover:bg-dark-box text-sm w-full sm:w-auto"
+              className="h-9 px-4 rounded-lg bg-[#D8DADF] text-gray-600  hover:bg-gray-300 dark:bg-dark-field dark:text-dark-text dark:hover:bg-dark-box text-sm w-full sm:w-auto"
             >
               <span className="hidden sm:inline">مشاهده در سایت</span>
               <span className="sm:hidden">مشاهده</span>

@@ -14,25 +14,25 @@ export default function InvoicesTable({ invoices, onView }) {
       <Table>
         <TableHeader className="bg-gray-50 dark:bg-dark-field/50">
           <TableRow className="border-b border-gray-200 dark:border-dark-stroke">
-            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text">
+            <TableHead className="text-right py-3 px-4 text-sm whitespace-nowrap text-gray-500 dark:text-dark-text">
               شماره فاکتور
             </TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text">
+            <TableHead className="text-right py-3 px-4 text-sm whitespace-nowrap text-gray-500 dark:text-dark-text">
               شماره سفارش
             </TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text">
+            <TableHead className="text-right py-3 px-4 text-sm whitespace-nowrap text-gray-500 dark:text-dark-text">
               نوع سفارش
             </TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text">
+            <TableHead className="text-right py-3 px-4 text-sm whitespace-nowrap text-gray-500 dark:text-dark-text">
               مبلغ فاکتور
             </TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text">
+            <TableHead className="text-right py-3 px-4 text-sm whitespace-nowrap text-gray-500 dark:text-dark-text">
               تاریخ صدور
             </TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text">
+            <TableHead className="text-right py-3 px-4 text-sm whitespace-nowrap text-gray-500 dark:text-dark-text">
               وضعیت
             </TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text">
+            <TableHead className="text-right py-3 px-4 text-sm whitespace-nowrap text-gray-500 dark:text-dark-text">
               عملیات
             </TableHead>
           </TableRow>
@@ -56,7 +56,7 @@ export default function InvoicesTable({ invoices, onView }) {
                 <TableCell className="text-sm text-gray-900 dark:text-dark-title py-4 px-4">
                   {invoice.invoiceNumber || invoice.id}
                 </TableCell>
-                <TableCell className="text-sm text-orange-600 dark:text-orange-400 py-4 px-4">
+                <TableCell className="text-sm text-yellow-600 dark:text-yellow-400 py-4 px-4">
                   {invoice.orderNumber}
                 </TableCell>
                 <TableCell className="text-sm text-gray-900 dark:text-dark-title py-4 px-4">
@@ -69,14 +69,14 @@ export default function InvoicesTable({ invoices, onView }) {
                   {invoice.issueDate || invoice.date}
                 </TableCell>
                 <TableCell className="py-4 px-4">
-                  <StatusBadge status={invoice.status} variant="rounded-full" />
+                  <StatusBadge status={invoice.status} />
                 </TableCell>
                 <TableCell className="py-4 px-4">
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => onView?.(invoice.id)}
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-dark-field dark:hover:bg-dark-field/80 dark:text-dark-text border-gray-200 dark:border-dark-stroke rounded-lg text-sm font-medium px-4 py-2"
+                    className="bg-gray-100 hover:bg-whitespace-nowrap text-gray-500 dark:bg-dark-field dark:hover:bg-dark-field/80 dark:text-dark-text border-gray-200 dark:border-dark-stroke rounded-lg text-sm font-medium px-4 py-2"
                   >
                     مشاهده فاکتور
                   </Button>

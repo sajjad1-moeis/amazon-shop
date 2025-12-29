@@ -3,7 +3,7 @@
 import React from "react";
 import PriceLockCard from "./PriceLockCard";
 
-export default function ActiveLocksTab({ activeLocks, onCancelLock }) {
+export default function ActiveLocksTab({ activeLocks, onCancelLock, onViewDetails }) {
   if (activeLocks.length === 0) {
     return (
       <div className="bg-white dark:bg-dark-box rounded-2xl shadow-sm p-8 text-center">
@@ -25,7 +25,14 @@ export default function ActiveLocksTab({ activeLocks, onCancelLock }) {
           downPayment: lock.downPayment,
           timeRemaining: lock.timeRemaining,
         };
-        return <PriceLockCard key={lock.id} product={productData} onCancelLock={onCancelLock} />;
+        return (
+          <PriceLockCard
+            key={lock.id}
+            product={productData}
+            onCancelLock={onCancelLock}
+            onViewDetails={onViewDetails}
+          />
+        );
       })}
     </div>
   );

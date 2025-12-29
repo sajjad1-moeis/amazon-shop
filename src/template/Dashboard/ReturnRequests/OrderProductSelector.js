@@ -52,10 +52,7 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
           </div>
         ) : (
           filteredOrders.map((order) => (
-            <div
-              key={order.id}
-              className="border rounded-xl p-4  bg-gray-50 dark:bg-dark-field  border-gray-300 dark:bg-dark-box"
-            >
+            <div key={order.id} className="border rounded-xl p-4  bg-gray-50  border-gray-300 dark:bg-dark-box">
               {/* Order Header */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
                 <div>
@@ -111,19 +108,37 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
                                 : "border-gray-300 text-gray-300 hover:border-primary-400 focus:ring-primary-500"
                             )}
                           />
+                          <div class="w-full">
+                            <div class="flex gap-2">
+                              {/* Image */}
+                              <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100 dark:bg-dark-field flex-shrink-0">
+                                <Image src={item.image} alt={item.name} fill className="object-cover" sizes="80px" />
+                              </div>
 
-                          {/* Image */}
-                          <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100 dark:bg-dark-field flex-shrink-0">
-                            <Image src={item.image} alt={item.name} fill className="object-cover" sizes="80px" />
-                          </div>
-
-                          {/* Info */}
-                          <div className="flex-1 space-y-1">
-                            <h4 className="text-sm font-semibold line-clamp-2">{item.name}</h4>
-                            <div className="text-xs text-gray-500 dark:text-dark-text">{item.quantity} عدد</div>
-                            <div className="text-sm">
-                              <span className="text-gray-500 dark:text-dark-text">قیمت: </span>
-                              <span className="font-semibold">{item.price}</span>
+                              {/* Info */}
+                              <div className="flex-1 space-y-1">
+                                <h4 className="text-sm font-semibold line-clamp-2">{item.name}</h4>
+                              </div>
+                            </div>
+                            <div class="grid grid-cols-2 mt-2 gap-3">
+                              <div
+                                className={cn(
+                                  "text-xs flex-between text-gray-500 dark:text-dark-text p-2 rounded-lg",
+                                  isSelected ? "bg-[#B6BCDF66]" : "bg-gray-100"
+                                )}
+                              >
+                                <p className="text-gray-600">تعداد</p>
+                                <div>{item.quantity} عدد</div>
+                              </div>
+                              <div
+                                className={cn(
+                                  "text-xs flex-between text-gray-500 dark:text-dark-text p-2 rounded-lg",
+                                  isSelected ? "bg-[#B6BCDF66]" : "bg-gray-100"
+                                )}
+                              >
+                                <p className="text-gray-600">قیمت کالا (تومان)</p>
+                                <div>{item.price} </div>
+                              </div>
                             </div>
                           </div>
                         </Label>

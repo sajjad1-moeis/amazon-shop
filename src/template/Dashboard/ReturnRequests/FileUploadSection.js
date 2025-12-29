@@ -42,7 +42,7 @@ export default function FileUploadSection({ images, invoice, onImagesChange, onI
 
   return (
     <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4">
-      <h3 className="text-lg font-bold text-gray-700 dark:text-dark-title mb-6">مدارک و تصاویر</h3>
+      <h3 className="text-lg  text-gray-700 dark:text-dark-title mb-6">مدارک و تصاویر</h3>
 
       <div className="space-y-6">
         {/* Image/Video Upload */}

@@ -24,19 +24,20 @@ const getTypeStyles = (type) => {
       return {
         card: "bg-[#E5E8F599] border-primary-300",
         icon: "text-green-600",
-        actionBtn: "bg-white dark:bg-dark-box  border border-primary-700 text-primary-700  hover:bg-gray-50 dark:hover:bg-dark-field",
+        actionBtn:
+          "bg-transparent dark:bg-dark-box  border border-primary-700 text-primary-700  hover:bg-gray-50 dark:hover:bg-dark-field",
       };
     case "ticket":
       return {
-        card: "border-gray-200 dark:border-dark-stroke bg-white dark:bg-dark-box",
+        card: "border-gray-200 dark:border-dark-stroke bg-transparent dark:bg-dark-box",
         icon: "text-yellow-600",
         actionBtn: "bg-gray-200 dark:bg-dark-field text-gray-700 dark:text-dark-text",
       };
     default:
       return {
-        card: "border-gray-200 dark:border-dark-stroke bg-white dark:bg-dark-box",
-        icon: "text-blue-600",
-        actionBtn: "bg-blue-600 text-white border border-blue-600 hover:bg-blue-700",
+        card: "border-gray-200 dark:border-dark-stroke bg-transparent dark:bg-dark-box",
+        icon: "text-primary-600",
+        actionBtn: "bg-primary-600 text-white border border-primary-600 hover:bg-primary-700",
       };
   }
 };
@@ -46,10 +47,7 @@ export default function NotificationCard({ notification, onDelete, onPinToggle }
   const styles = getTypeStyles(notification.type);
 
   return (
-    <div
-      className={cn("group relative w-full rounded-xl border p-4 ", styles.card)}
-      style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
-    >
+    <div className={cn("group relative w-full rounded-xl border p-4 ", styles.card)}>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex items-center gap-2">
           <Icon size={18} className={styles.icon} variant="Bold" />
@@ -57,10 +55,10 @@ export default function NotificationCard({ notification, onDelete, onPinToggle }
         </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1 text-xs text-gray-400">
-            <Calendar size={14} />
+            <Calendar size={18} variant="Bold" />
             <span>{notification.time}</span>
           </div>
-          <button onClick={() => onPinToggle(notification.id)} className="text-blue-600">
+          <button onClick={() => onPinToggle(notification.id)} className="text-primary-600">
             <Pin size={18} variant="Bold" />
           </button>
         </div>

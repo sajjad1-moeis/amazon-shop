@@ -30,7 +30,7 @@ export default function RecentViewCard({ product, onDelete }) {
         </button>
 
         {!product.inStock && (
-          <div className="absolute top-2 right-2 z-10 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+          <div className="absolute top-2 right-2 z-10 bg-red-100 text-red-800 px-3 py-1 rounded-md text-xs ">
             ناموجود
           </div>
         )}

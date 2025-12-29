@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Timer1 } from "iconsax-reactjs";
 
-export default function PriceLockCard({ product, onCancelLock }) {
+export default function PriceLockCard({ product, onCancelLock, onViewDetails }) {
   const {
     title,
     image,
@@ -61,7 +61,10 @@ export default function PriceLockCard({ product, onCancelLock }) {
           ادامه خرید با قیمت قفل شده
         </Button>
 
-        <Button className="w-full bg-primary-700 hover:bg-[#3143D8] text-white font-medium text-sm py-2 rounded-lg">
+        <Button
+          onClick={() => onViewDetails?.(product)}
+          className="w-full bg-primary-700 hover:bg-[#3143D8] text-white font-medium text-sm py-2 rounded-lg"
+        >
           مشاهده جزئیات
         </Button>
 
