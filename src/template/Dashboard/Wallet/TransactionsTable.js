@@ -41,19 +41,19 @@ export default function TransactionsTable() {
     switch (status) {
       case "reviewing":
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+          <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
             در حال بررسی
           </span>
         );
       case "answered":
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+          <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
             پاسخ داده شده
           </span>
         );
       case "completed":
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+          <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
             تکمیل شده
           </span>
         );
@@ -93,7 +93,9 @@ export default function TransactionsTable() {
               نوع تراکنش
             </TableHead>
             <TableHead className="text-right py-3 px-4 text-sm  text-gray-700 dark:text-dark-text">مبلغ</TableHead>
-            <TableHead className="text-right py-3 px-4 text-sm  text-gray-700 dark:text-dark-text">ساعت_تاریخ</TableHead>
+            <TableHead className="text-right py-3 px-4 text-sm  text-gray-700 dark:text-dark-text">
+              ساعت_تاریخ
+            </TableHead>
             <TableHead className="text-right py-3 px-4 text-sm  text-gray-700 dark:text-dark-text">توضیحات</TableHead>
             <TableHead className="text-right py-3 px-4 text-sm  text-gray-700 dark:text-dark-text last:rounded-tl-lg">
               وضعیت
@@ -123,7 +125,9 @@ export default function TransactionsTable() {
                   {getAmountSign(transaction.type)}
                   {transaction.amount} تومان
                 </TableCell>
-                <TableCell className="text-sm text-gray-600 dark:text-dark-text py-4 px-4">{transaction.date}</TableCell>
+                <TableCell className="text-sm text-gray-600 dark:text-dark-text py-4 px-4">
+                  {transaction.date}
+                </TableCell>
                 <TableCell className="text-sm text-gray-600 dark:text-dark-text py-4 px-4">
                   {transaction.description}
                 </TableCell>

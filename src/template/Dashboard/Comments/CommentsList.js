@@ -1,12 +1,24 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import CommentCard from "./CommentCard";
+import ConfirmDialog from "@/components/ConfirmDialog";
+import { Button } from "@/components/ui/button";
 
 function CommentsList({ comments, setComments }) {
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedCommentId, setSelectedCommentId] = useState(null);
+
   const handleDelete = (commentId) => {
-    if (confirm("آیا از حذف این نظر اطمینان دارید؟")) {
-      setComments(comments.filter((c) => c.id !== commentId));
+    setSelectedCommentId(commentId);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (selectedCommentId) {
+      setComments(comments.filter((c) => c.id !== selectedCommentId));
+      setDeleteDialogOpen(false);
+      setSelectedCommentId(null);
     }
   };
 
@@ -18,8 +30,12 @@ function CommentsList({ comments, setComments }) {
   return (
     <div className="space-y-4">
       {comments.length === 0 ? (
-        <div className="bg-white dark:bg-dark-box rounded-2xl shadow-sm p-8 text-center">
-          <p className="text-gray-500 dark:text-dark-text">هیچ نظری ثبت نشده است</p>
+        <div className="mt-20 flex-center flex-col p-8 text-center">
+          <h3 className="text-2xl text-primary-500 mb-2 dark:text-blue-400">شما هنوز نظری ثبت نکرده اید.</h3>
+          <p className="text-primary-300 font-thin dark:text-dark-text">با ثبت نظر، به سایر خریداران کمک میکنید.</p>
+          <Button className="bg-yellow-400 mt-8 hover:bg-yellow-500 text-gray-900 dark:text-dark-title font-medium rounded-lg">
+            مشاهده محصولات خریداری شده
+          </Button>
         </div>
       ) : (
         <div className="space-y-4">
@@ -33,6 +49,15 @@ function CommentsList({ comments, setComments }) {
           ))}
         </div>
       )}
+
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="حذف نظر"
+        description="آیا از حذف این نظر اطمینان دارید؟ این عمل غیرقابل بازگشت است."
+        onConfirm={handleDeleteConfirm}
+        theme="dashboard"
+      />
     </div>
   );
 }

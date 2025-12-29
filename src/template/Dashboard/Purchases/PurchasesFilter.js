@@ -34,7 +34,7 @@ export default function PurchasesFilter({ filters, onFiltersChange }) {
           {/* Sort By */}
           {/* Date Filter */}
           <Select value={filters.dateFilter} onValueChange={(value) => handleFilterChange("dateFilter", value)}>
-            <SelectTrigger className="w-[140px]" dir="rtl">
+            <SelectTrigger className="w-full md:w-fit gap-5" dir="rtl">
               <SelectValue placeholder="تاریخ" />
             </SelectTrigger>
             <SelectContent>
@@ -46,7 +46,7 @@ export default function PurchasesFilter({ filters, onFiltersChange }) {
           </Select>
 
           <Select value={filters.sortBy} onValueChange={(value) => handleFilterChange("sortBy", value)}>
-            <SelectTrigger className="w-[140px]" dir="rtl">
+            <SelectTrigger className="w-full md:w-fit gap-5" dir="rtl">
               <SelectValue placeholder="مرتب سازی" />
             </SelectTrigger>
             <SelectContent>

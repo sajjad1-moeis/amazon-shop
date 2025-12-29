@@ -26,25 +26,24 @@ export default function FavoritesFilter({ filters, onFiltersChange }) {
             />
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4">
+        <div className="flex flex-wrap items-center gap-2">
           {/* Sort By */}
           {/* Search */}
-
-          <Select value={filters.sortBy} onValueChange={(value) => handleFilterChange("sortBy", value)}>
-            <SelectTrigger className="w-[140px]" dir="rtl">
-              <SelectValue placeholder="مرتب سازی" />
+          {/* Brand */}
+          <Select value={filters.brand} onValueChange={(value) => handleFilterChange("brand", value)}>
+            <SelectTrigger className="w-full md:w-fit gap-5" dir="rtl">
+              <SelectValue placeholder="برند" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="newest">جدیدترین</SelectItem>
-              <SelectItem value="oldest">قدیمی‌ترین</SelectItem>
-              <SelectItem value="price-high">قیمت: بالا به پایین</SelectItem>
-              <SelectItem value="price-low">قیمت: پایین به بالا</SelectItem>
+              <SelectItem value="sony">SONY</SelectItem>
+              <SelectItem value="microsoft">Microsoft</SelectItem>
+              <SelectItem value="nintendo">Nintendo</SelectItem>
             </SelectContent>
           </Select>
 
           {/* Tracking Status */}
           <Select value={filters.trackingStatus} onValueChange={(value) => handleFilterChange("trackingStatus", value)}>
-            <SelectTrigger className="w-[140px]" dir="rtl">
+            <SelectTrigger className="w-full md:w-fit gap-5" dir="rtl">
               <SelectValue placeholder="وضعیت ردیابی" />
             </SelectTrigger>
             <SelectContent>
@@ -53,15 +52,15 @@ export default function FavoritesFilter({ filters, onFiltersChange }) {
             </SelectContent>
           </Select>
 
-          {/* Brand */}
-          <Select value={filters.brand} onValueChange={(value) => handleFilterChange("brand", value)}>
-            <SelectTrigger className="w-[140px]" dir="rtl">
-              <SelectValue placeholder="برند" />
+          <Select value={filters.sortBy} onValueChange={(value) => handleFilterChange("sortBy", value)}>
+            <SelectTrigger className="w-full md:w-fit gap-5" dir="rtl">
+              <SelectValue placeholder="مرتب سازی" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="sony">SONY</SelectItem>
-              <SelectItem value="microsoft">Microsoft</SelectItem>
-              <SelectItem value="nintendo">Nintendo</SelectItem>
+              <SelectItem value="newest">جدیدترین</SelectItem>
+              <SelectItem value="oldest">قدیمی‌ترین</SelectItem>
+              <SelectItem value="price-high">قیمت: بالا به پایین</SelectItem>
+              <SelectItem value="price-low">قیمت: پایین به بالا</SelectItem>
             </SelectContent>
           </Select>
         </div>

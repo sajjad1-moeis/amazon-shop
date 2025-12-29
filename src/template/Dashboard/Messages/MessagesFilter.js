@@ -29,16 +29,6 @@ export default function MessagesFilter({ filters, onFiltersChange }) {
 
       <div className="flex flex-wrap items-center gap-2">
         {/* Sort By Filter */}
-        <Select value={filters.sortBy || undefined} onValueChange={(value) => handleFilterChange("sortBy", value)}>
-          <SelectTrigger className="w-32">
-            <SelectValue placeholder="مرتب سازی" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="newest">جدیدترین</SelectItem>
-            <SelectItem value="oldest">قدیمی‌ترین</SelectItem>
-          </SelectContent>
-        </Select>
 
         {/* Message Type Filter */}
         <Select
@@ -55,8 +45,17 @@ export default function MessagesFilter({ filters, onFiltersChange }) {
             <SelectItem value="order">سفارشات</SelectItem>
           </SelectContent>
         </Select>
+        <Select value={filters.sortBy || undefined} onValueChange={(value) => handleFilterChange("sortBy", value)}>
+          <SelectTrigger className="w-32">
+            <SelectValue placeholder="مرتب سازی" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">همه</SelectItem>
+            <SelectItem value="newest">جدیدترین</SelectItem>
+            <SelectItem value="oldest">قدیمی‌ترین</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
 }
-

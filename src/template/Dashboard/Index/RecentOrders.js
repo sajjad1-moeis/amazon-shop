@@ -46,44 +46,38 @@ const otherOrders = [
 
 export default function RecentOrders() {
   return (
-    <>
+    <div className="shadow-box rounded-2xl p-3 bg-white">
+      <div class="">
+        <h3 className="text-gray-800 text-lg">سفارش‌های اخیر</h3>
+        <p className="text-sm text-gray-500 mt-2">آخرین سفارش‌هایی که ثبت کرده‌اید</p>
+      </div>
       {/* سفارش اخیر با تایم‌لاین */}
       <RecentOrderTimeline order={recentOrderWithTimeline} />
 
-      {/* دکمه مشاهده همه سفارش‌ها */}
-      <div className="mb-6">
-        <Button
-          variant="ghost"
-          className="text-orange-600 dark:text-orange-400 hover:text-orange-500 dark:hover:text-orange-300 text-sm sm:text-base"
-        >
-          مشاهده همه سفارش‌ها
-        </Button>
-      </div>
-
       {/* جدول سفارش‌های دیگر */}
-      <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-3 mb-6">
+      <div className="bg-white dark:bg-dark-box rounded-2xl p-3 mb-6">
         <div className="mb-4 md:mb-6">
-          <h3 className="text-lg text-gray-700 dark:text-dark-text dark:text-dark-title mb-2">دیگر سفارش‌ها</h3>
+          <h3 className="text-lg text-gray-700  dark:text-dark-title mb-2">دیگر سفارش‌ها</h3>
         </div>
 
         {/* Desktop Table */}
-        <div className="block overflow-x-auto border border-gray-200 dark:border-dark-stroke rounded-lg">
-          <table className="w-full min-w-[600px]">
+        <div className="block overflow-auto border border-gray-200 dark:border-dark-stroke rounded-lg">
+          <table className="w-full">
             <thead className="bg-gray-50 dark:bg-dark-field/50">
               <tr className="border-b border-gray-200 dark:border-dark-stroke">
-                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text dark:text-dark-text first:rounded-tr-lg">
+                <th className="text-right whitespace-nowrap py-3 px-4 text-sm font-thin text-gray-500  dark:text-dark-text first:rounded-tr-lg">
                   شماره
                 </th>
-                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text dark:text-dark-text">
+                <th className="text-right whitespace-nowrap py-3 px-4 text-sm font-thin text-gray-500  dark:text-dark-text">
                   تاریخ
                 </th>
-                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text dark:text-dark-text">
+                <th className="text-right whitespace-nowrap py-3 px-4 text-sm font-thin text-gray-500 dark:text-dark-text ">
                   مبلغ
                 </th>
-                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text dark:text-dark-text">
+                <th className="text-right whitespace-nowrap py-3 px-4 text-sm font-thin text-gray-500 dark:text-dark-text ">
                   وضعیت
                 </th>
-                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text dark:text-dark-text last:rounded-tl-lg">
+                <th className="text-right whitespace-nowrap py-3 px-4 text-sm font-thin text-gray-500 dark:text-dark-text  last:rounded-tl-lg">
                   عملیات
                 </th>
               </tr>
@@ -99,15 +93,19 @@ export default function RecentOrders() {
                 >
                   <td
                     className={cn(
-                      "py-4 px-4 text-sm text-gray-900 dark:text-dark-title",
+                      "py-4 whitespace-nowrap px-4 text-sm text-gray-900 dark:text-dark-title",
                       index === otherOrders.length - 1 && "first:rounded-br-lg"
                     )}
                   >
                     {order.id}
                   </td>
-                  <td className="py-4 px-4 text-sm text-gray-600 dark:text-dark-text">{order.date}</td>
-                  <td className="py-4 px-4 text-sm font-medium text-gray-900 dark:text-dark-title">{order.amount}</td>
-                  <td className="py-4 px-4">
+                  <td className="py-4 whitespace-nowrap px-4 text-sm text-gray-600 dark:text-dark-text">
+                    {order.date}
+                  </td>
+                  <td className="py-4 whitespace-nowrap px-4 text-sm font-medium text-gray-900 dark:text-dark-title">
+                    {order.amount}
+                  </td>
+                  <td className="py-4 whitespace-nowrap px-4">
                     <span
                       className={cn(
                         "inline-flex items-center px-3 py-1 rounded-md text-xs font-medium",
@@ -117,11 +115,18 @@ export default function RecentOrders() {
                       {order.status}
                     </span>
                   </td>
-                  <td className={cn("py-4 px-4", index === otherOrders.length - 1 && "last:rounded-bl-lg")}>
-                    <button className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-dark-field text-gray-700 dark:text-dark-text hover:bg-gray-200 dark:bg-dark-field dark:text-dark-text dark:hover:bg-gray-600 transition-colors">
-                      <Eye className="h-4 w-4" />
+                  <td
+                    className={cn(
+                      "py-4 whitespace-nowrap px-4",
+                      index === otherOrders.length - 1 && "last:rounded-bl-lg"
+                    )}
+                  >
+                    <Button
+                      varant="ghost"
+                      className="inline-flex items-center gap-2 px-3 py-1 rounded-lg text-sm font-medium text-white bg-primary-700 dark:bg-dark-field   dark:text-dark-text  "
+                    >
                       پیگیری سفارش
-                    </button>
+                    </Button>
                   </td>
                 </tr>
               ))}
@@ -129,6 +134,6 @@ export default function RecentOrders() {
           </table>
         </div>
       </div>
-    </>
+    </div>
   );
 }

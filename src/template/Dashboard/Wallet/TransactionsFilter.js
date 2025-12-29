@@ -29,34 +29,6 @@ export default function TransactionsFilter({ filters, onFiltersChange }) {
 
       <div className="flex flex-wrap gap-2">
         {/* Date Range */}
-        <Select
-          value={filters.dateRange || undefined}
-          onValueChange={(value) => handleFilterChange("dateRange", value)}
-        >
-          <SelectTrigger className="w-full md:w-32" dir="rtl">
-            <SelectValue placeholder="بازه تاریخ" />
-          </SelectTrigger>
-          <SelectContent dir="rtl">
-            <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="today">امروز</SelectItem>
-            <SelectItem value="week">این هفته</SelectItem>
-            <SelectItem value="month">این ماه</SelectItem>
-            <SelectItem value="year">امسال</SelectItem>
-          </SelectContent>
-        </Select>
-
-        {/* Status */}
-        <Select value={filters.status || undefined} onValueChange={(value) => handleFilterChange("status", value)}>
-          <SelectTrigger className="w-full md:w-[140px]" dir="rtl">
-            <SelectValue placeholder="وضعیت" />
-          </SelectTrigger>
-          <SelectContent dir="rtl">
-            <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="reviewing">در حال بررسی</SelectItem>
-            <SelectItem value="answered">پاسخ داده شده</SelectItem>
-            <SelectItem value="completed">تکمیل شده</SelectItem>
-          </SelectContent>
-        </Select>
 
         {/* Transaction Type */}
         <Select
@@ -71,6 +43,33 @@ export default function TransactionsFilter({ filters, onFiltersChange }) {
             <SelectItem value="charge">شارژ کیف پول</SelectItem>
             <SelectItem value="withdraw">برداشت</SelectItem>
             <SelectItem value="payment">پرداخت</SelectItem>
+          </SelectContent>
+        </Select>
+        {/* Status */}
+        <Select value={filters.status || undefined} onValueChange={(value) => handleFilterChange("status", value)}>
+          <SelectTrigger className="w-full md:w-[140px]" dir="rtl">
+            <SelectValue placeholder="وضعیت" />
+          </SelectTrigger>
+          <SelectContent dir="rtl">
+            <SelectItem value="all">همه</SelectItem>
+            <SelectItem value="reviewing">در حال بررسی</SelectItem>
+            <SelectItem value="answered">پاسخ داده شده</SelectItem>
+            <SelectItem value="completed">تکمیل شده</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select
+          value={filters.dateRange || undefined}
+          onValueChange={(value) => handleFilterChange("dateRange", value)}
+        >
+          <SelectTrigger className="w-full md:w-32" dir="rtl">
+            <SelectValue placeholder="بازه تاریخ" />
+          </SelectTrigger>
+          <SelectContent dir="rtl">
+            <SelectItem value="all">همه</SelectItem>
+            <SelectItem value="today">امروز</SelectItem>
+            <SelectItem value="week">این هفته</SelectItem>
+            <SelectItem value="month">این ماه</SelectItem>
+            <SelectItem value="year">امسال</SelectItem>
           </SelectContent>
         </Select>
       </div>

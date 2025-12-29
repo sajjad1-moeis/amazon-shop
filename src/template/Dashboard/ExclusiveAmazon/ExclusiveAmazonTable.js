@@ -11,25 +11,25 @@ export default function ExclusiveAmazonTable({ orders }) {
     switch (status) {
       case "pending":
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
+          <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-primary-100 text-primary-700 dark:bg-yellow-900/30 dark:text-yellow-400">
             در انتظار بررسی
           </span>
         );
       case "approved":
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+          <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
             تأیید شده
           </span>
         );
       case "rejected":
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
+          <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
             رد شده
           </span>
         );
       case "processing":
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+          <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
             در حال پردازش
           </span>
         );
@@ -68,32 +68,24 @@ export default function ExclusiveAmazonTable({ orders }) {
                 )}
               >
                 {/* Order Number */}
-                <TableCell className="text-sm text-gray-900 dark:text-dark-title">
-                  #{order.orderNumber}
-                </TableCell>
+                <TableCell className="text-sm text-gray-900 dark:text-dark-title">#{order.orderNumber}</TableCell>
 
                 {/* ASIN/Link */}
-                <TableCell className="text-sm text-gray-900 dark:text-dark-title">
-                  {order.asin}
-                </TableCell>
+                <TableCell className="text-sm text-gray-900 dark:text-dark-title">{order.asin}</TableCell>
 
                 {/* Final Amount */}
-                <TableCell className="text-sm text-gray-900 dark:text-dark-title">
-                  {order.finalAmount} تومان
-                </TableCell>
+                <TableCell className="text-sm text-gray-900 dark:text-dark-title">{order.finalAmount} تومان</TableCell>
 
                 {/* Status */}
                 <TableCell>{getStatusBadge(order.status)}</TableCell>
 
                 {/* Last Update */}
-                <TableCell className="text-sm text-gray-600 dark:text-dark-text">
-                  {order.lastUpdate}
-                </TableCell>
+                <TableCell className="text-sm text-gray-600 dark:text-dark-text">{order.lastUpdate}</TableCell>
 
                 {/* Operations */}
                 <TableCell>
                   <Link href="#">
-                    <Button variant="outline" size="sm" className="gap-2">
+                    <Button variant="secondary" size="sm" className="gap-2 bg-gray-100">
                       مشاهده جزئیات
                     </Button>
                   </Link>
@@ -106,10 +98,3 @@ export default function ExclusiveAmazonTable({ orders }) {
     </div>
   );
 }
-
-
-
-
-
-
-

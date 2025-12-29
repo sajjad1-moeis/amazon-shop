@@ -55,7 +55,7 @@ export default function DashboardHeader({ onMenuClick }) {
         </div>
 
         {/* Right: User Info & Logo */}
-        <div className="flex items-center gap-2 sm:gap-3 md:gap-4 flex-shrink-0">
+        <div className="flex items-center gap-2 flex-shrink-0">
           {/* User Name & Icons - Hidden on mobile */}
           <div className="hidden sm:flex items-center gap-1.5 md:gap-2 text-white">
             <Link href={"/dashboard/notifications"}>

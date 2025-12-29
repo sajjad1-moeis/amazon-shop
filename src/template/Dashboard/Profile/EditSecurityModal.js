@@ -103,7 +103,7 @@ export default function EditSecurityModal({ isOpen, onClose, onSave }) {
       <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto" dir="rtl">
         <DialogHeader>
           <DialogTitle className="text-2xl">ویرایش امنیت حساب</DialogTitle>
-          <DialogDescription className="text-sm text-gray-600 dark:text-dark-text dark:text-dark-text">
+          <DialogDescription className="text-sm text-gray-600 dark:text-dark-text ">
             رمز عبور و تنظیمات امنیتی خود را تغییر دهید
           </DialogDescription>
         </DialogHeader>

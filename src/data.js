@@ -1463,3 +1463,42 @@ export const initialComments = [
     replies: [],
   },
 ];
+
+export const initialMessages = [
+  {
+    id: 1,
+    title: "پاسخ جدید به تیکت شما",
+    type: "support",
+    typeLabel: "پشتیبانی",
+    message: "",
+    actionButton: null,
+  },
+  {
+    id: 2,
+    title: "پرداخت موفق | کیف پول",
+    type: "payment",
+    typeLabel: "پرداخت",
+    message: "",
+    actionButton: null,
+  },
+  {
+    id: 3,
+    title: "در حال ارسال: کنترلر پلی استیشن ۵",
+    type: "order",
+    typeLabel: "سفارشات",
+    message:
+      "متن پیام: سفارش شما با شماره ۴۵۲۳۱# با موفقیت تحویل داده شد. در صورت نیاز میتوانید جزئیات سفارش را مشاهده کنید.",
+    actionButton: {
+      label: "مشاهده سفارش",
+      href: "#",
+    },
+  },
+  {
+    id: 4,
+    title: "پرداخت موفق | کیف پول",
+    type: "payment",
+    typeLabel: "پرداخت",
+    message: "",
+    actionButton: null,
+  },
+];

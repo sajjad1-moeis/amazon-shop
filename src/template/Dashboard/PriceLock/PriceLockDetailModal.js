@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -12,8 +12,11 @@ import {
 } from "@/components/ui/dialog";
 import { Clock, CloseCircle } from "iconsax-reactjs";
 import { cn } from "@/lib/utils";
+import ConfirmDialog from "@/components/ConfirmDialog";
 
 export default function PriceLockDetailModal({ lock, open, onOpenChange, onCancelLock }) {
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
   if (!lock) return null;
 
   return (
@@ -130,12 +133,7 @@ export default function PriceLockDetailModal({ lock, open, onOpenChange, onCance
             <Button
               variant="outline"
               className="flex-1 bg-gray-100 dark:bg-dark-field hover:bg-gray-200 dark:bg-dark-field text-red-500 hover:text-red-600 border-red-200"
-              onClick={() => {
-                if (confirm("آیا از لغو قفل قیمت اطمینان دارید؟")) {
-                  onCancelLock?.(lock.id);
-                  onOpenChange(false);
-                }
-              }}
+              onClick={() => setDeleteDialogOpen(true)}
             >
               لغو قفل
             </Button>
@@ -151,6 +149,20 @@ export default function PriceLockDetailModal({ lock, open, onOpenChange, onCance
           </div>
         </div>
       </DialogContent>
+
+      {/* Delete Confirm Dialog */}
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="لغو قفل قیمت"
+        description="آیا از لغو قفل قیمت اطمینان دارید؟ این عمل غیرقابل بازگشت است."
+        onConfirm={() => {
+          onCancelLock?.(lock.id);
+          setDeleteDialogOpen(false);
+          onOpenChange(false);
+        }}
+        theme="dashboard"
+      />
     </Dialog>
   );
 }

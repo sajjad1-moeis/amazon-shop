@@ -28,17 +28,17 @@ export default function TicketsFilter({ filters, onFiltersChange }) {
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        <Select value={filters.sortBy || undefined} onValueChange={(value) => handleFilterChange("sortBy", value)}>
+        <Select value={filters.priority || undefined} onValueChange={(value) => handleFilterChange("priority", value)}>
           <SelectTrigger className="w-32">
-            <SelectValue placeholder="مرتب سازی" />
+            <SelectValue placeholder="اولویت" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="newest">جدیدترین</SelectItem>
-            <SelectItem value="oldest">قدیمی‌ترین</SelectItem>
+            <SelectItem value="high">بالا</SelectItem>
+            <SelectItem value="medium">متوسط</SelectItem>
+            <SelectItem value="low">پایین</SelectItem>
           </SelectContent>
         </Select>
-
         {/* Status */}
         <Select value={filters.status || undefined} onValueChange={(value) => handleFilterChange("status", value)}>
           <SelectTrigger className="w-32">
@@ -51,19 +51,18 @@ export default function TicketsFilter({ filters, onFiltersChange }) {
             <SelectItem value="closed">بسته شده</SelectItem>
           </SelectContent>
         </Select>
-
-        {/* Priority */}
-        <Select value={filters.priority || undefined} onValueChange={(value) => handleFilterChange("priority", value)}>
+        <Select value={filters.sortBy || undefined} onValueChange={(value) => handleFilterChange("sortBy", value)}>
           <SelectTrigger className="w-32">
-            <SelectValue placeholder="اولویت" />
+            <SelectValue placeholder="مرتب سازی" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="high">بالا</SelectItem>
-            <SelectItem value="medium">متوسط</SelectItem>
-            <SelectItem value="low">پایین</SelectItem>
+            <SelectItem value="newest">جدیدترین</SelectItem>
+            <SelectItem value="oldest">قدیمی‌ترین</SelectItem>
           </SelectContent>
         </Select>
+
+        {/* Priority */}
       </div>
 
       {/* Search */}

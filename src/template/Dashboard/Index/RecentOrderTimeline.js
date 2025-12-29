@@ -44,31 +44,18 @@ export default function RecentOrderTimeline({ order }) {
   }
 
   return (
-    <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4 md:p-6 mb-6">
+    <div className="bg-gray-100 dark:bg-dark-box rounded-2xl p-3 my-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-dark-title mb-1">
-              سفارش شماره {order.orderNumber}
-            </h3>
-            <p className="text-sm text-gray-600 dark:text-dark-text">تاریخ سفارش: {order.orderDate}</p>
-          </div>
-          {getStatusBadge(order.status)}
-        </div>
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-          <div className="text-left sm:text-right">
-            <p className="text-sm text-gray-600 dark:text-dark-text">مبلغ کل:</p>
-            <p className="text-lg font-bold text-gray-900 dark:text-dark-title">
-              {order.totalAmount} <span className="text-sm font-normal">تومان</span>
-            </p>
-          </div>
-          <Button
-            variant="outline"
-            className="border-blue-600 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-          >
-            مشاهده جزئیات
-          </Button>
+        <h3 className=" text-gray-800 dark:text-dark-title">سفارش شماره {order.orderNumber}</h3>
+        <div class="flex gap-4">
+          <p className="text-sm text-gray-500 dark:text-dark-text">
+            تاریخ سفارش: <span className="text-sm  text-gray-700 dark:text-dark-title">{order.orderDate}</span>
+          </p>
+          <p className="text-sm text-gray-500 dark:text-dark-text">وضعیت: {getStatusBadge(order.status)}</p>
+          <p className="text-sm text-gray-500 dark:text-dark-text">
+            مبلغ کل: <span className="text-sm  text-gray-700 dark:text-dark-title">{order.totalAmount}تومان</span>
+          </p>
         </div>
       </div>
 

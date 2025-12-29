@@ -1,10 +1,12 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { products } from "@/data";
 import DashboardLayout from "@/layout/DashboardLayout";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
 import FavoriteCard from "@/template/Dashboard/Favorites/FavoriteCard";
 import FavoritesFilter from "@/template/Dashboard/Favorites/FavoritesFilter";
+import { Add } from "iconsax-reactjs";
 import { useState } from "react";
 
 export default function FavoritesPage() {
@@ -19,13 +21,17 @@ export default function FavoritesPage() {
     <DashboardLayout>
       {/* Top Section: Header */}
       <PageHeader title="علاقه مندی ها" description="لیست محصولاتی که ذخیره کرده اید.">
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-5">
+        <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-5">
           <p className="text-gray-500">
             تعداد محصولات: : <span className="text-yellow-600">4</span>
           </p>
           <p className="text-gray-500">
             کاهش قیمت اخیر: <span className="text-yellow-600">3 مورد</span>
           </p>
+          <Button className="bg-yellow-500 hover:bg-yellow-600 text-primary-800">
+            افزودن علاقه‌مندی جدید
+            <Add size={24} />
+          </Button>
         </div>
       </PageHeader>
 

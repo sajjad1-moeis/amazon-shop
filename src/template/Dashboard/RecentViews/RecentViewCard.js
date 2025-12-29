@@ -42,7 +42,7 @@ export default function RecentViewCard({ product, onDelete }) {
 
         {/* Price */}
         <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <p className="text-xs text-gray-500 dark:text-dark-text dark:text-dark-text">قیمت فعلی (تومان)</p>
+          <p className="text-xs text-gray-500 dark:text-dark-text ">قیمت فعلی (تومان)</p>
           <p className="text-sm  text-gray-700 dark:text-dark-title">{product.price}</p>
         </div>
 

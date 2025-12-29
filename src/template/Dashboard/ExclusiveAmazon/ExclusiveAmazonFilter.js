@@ -28,24 +28,12 @@ export default function ExclusiveAmazonFilter({ filters, onFiltersChange }) {
       </div>
 
       {/* Filters - Left */}
-      <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4">
+      <div className="flex flex-wrap items-center gap-2 ">
         {/* Time Range */}
-        <Select value={filters.timeRange || ""} onValueChange={(value) => handleFilterChange("timeRange", value)}>
-          <SelectTrigger className="w-[140px]" dir="rtl">
-            <SelectValue placeholder="بازه زمانی" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="today">امروز</SelectItem>
-            <SelectItem value="week">این هفته</SelectItem>
-            <SelectItem value="month">این ماه</SelectItem>
-            <SelectItem value="year">امسال</SelectItem>
-          </SelectContent>
-        </Select>
 
         {/* Status */}
         <Select value={filters.status || ""} onValueChange={(value) => handleFilterChange("status", value)}>
-          <SelectTrigger className="w-[140px]" dir="rtl">
+          <SelectTrigger className="w-full md:w-fit gap-5" dir="rtl">
             <SelectValue placeholder="وضعیت" />
           </SelectTrigger>
           <SelectContent>
@@ -56,14 +44,19 @@ export default function ExclusiveAmazonFilter({ filters, onFiltersChange }) {
             <SelectItem value="processing">در حال پردازش</SelectItem>
           </SelectContent>
         </Select>
+        <Select value={filters.timeRange || ""} onValueChange={(value) => handleFilterChange("timeRange", value)}>
+          <SelectTrigger className="w-full md:w-fit gap-5" dir="rtl">
+            <SelectValue placeholder="بازه زمانی" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">همه</SelectItem>
+            <SelectItem value="today">امروز</SelectItem>
+            <SelectItem value="week">این هفته</SelectItem>
+            <SelectItem value="month">این ماه</SelectItem>
+            <SelectItem value="year">امسال</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
 }
-
-
-
-
-
-
-

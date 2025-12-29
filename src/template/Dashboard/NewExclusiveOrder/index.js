@@ -9,7 +9,6 @@ import ProductCard from "./ProductCard";
 import PriceCalculationDetails from "./PriceCalculationDetails";
 import ShippingMethodSection from "./ShippingMethodSection";
 import PaymentMethodSection from "./PaymentMethodSection";
-import DashboardLayout from "@/layout/DashboardLayout";
 
 // Mock product data - در واقع باید از API بیاید
 const MOCK_PRODUCT = {
@@ -36,7 +35,10 @@ export default function NewExclusiveOrder() {
   const [paymentMethod, setPaymentMethod] = useState("two-stage");
 
   const handleProductSearch = () => {
-    if (productLink.trim()) setSelectedProduct(MOCK_PRODUCT);
+    if (productLink.trim()) {
+      // در واقع باید API call شود
+      setSelectedProduct(MOCK_PRODUCT);
+    }
   };
 
   const handleSubmit = () => {
@@ -44,6 +46,7 @@ export default function NewExclusiveOrder() {
       alert("لطفاً محصول را وارد کنید");
       return;
     }
+    // Handle order submission
     console.log("Order submitted:", {
       product: selectedProduct,
       shippingMethod,
@@ -54,8 +57,11 @@ export default function NewExclusiveOrder() {
   };
 
   return (
-    <DashboardLayout dir="rtl">
-      <PageHeader title="ثبت سفارش جدید" description="برای ثبت سفارش خرید اختصاصی از آمازون اطلاعات زیر را وارد کنید" />
+    <div dir="rtl">
+      <PageHeader
+        title="ثبت سفارش جدید"
+        description="برای ثبت سفارش خرید اختصاصی از آمازون اطلاعات زیر را وارد کنید"
+      />
 
       <div className="mt-6 space-y-6">
         <ProductInputSection
@@ -68,8 +74,14 @@ export default function NewExclusiveOrder() {
           <>
             <ProductCard product={selectedProduct} />
             <PriceCalculationDetails product={selectedProduct} />
-            <ShippingMethodSection selectedMethod={shippingMethod} onMethodChange={setShippingMethod} />
-            <PaymentMethodSection selectedMethod={paymentMethod} onMethodChange={setPaymentMethod} />
+            <ShippingMethodSection
+              selectedMethod={shippingMethod}
+              onMethodChange={setShippingMethod}
+            />
+            <PaymentMethodSection
+              selectedMethod={paymentMethod}
+              onMethodChange={setPaymentMethod}
+            />
             <div className="flex justify-end">
               <Button
                 onClick={handleSubmit}
@@ -81,6 +93,7 @@ export default function NewExclusiveOrder() {
           </>
         )}
       </div>
-    </DashboardLayout>
+    </div>
   );
 }
+

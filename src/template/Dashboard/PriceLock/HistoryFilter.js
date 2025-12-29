@@ -28,10 +28,10 @@ export default function HistoryFilter({ filters, onFiltersChange }) {
       </div>
 
       {/* Filters - Left */}
-      <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4">
+      <div className="flex flex-wrap items-center gap-2 ">
         {/* Time Range */}
         <Select value={filters.timeRange || ""} onValueChange={(value) => handleFilterChange("timeRange", value)}>
-          <SelectTrigger className="w-[140px]" dir="rtl">
+          <SelectTrigger className="w-full md:w-fit gap-5" dir="rtl">
             <SelectValue placeholder="بازه زمانی" />
           </SelectTrigger>
           <SelectContent>
@@ -45,7 +45,7 @@ export default function HistoryFilter({ filters, onFiltersChange }) {
 
         {/* Status */}
         <Select value={filters.status || ""} onValueChange={(value) => handleFilterChange("status", value)}>
-          <SelectTrigger className="w-[140px]" dir="rtl">
+          <SelectTrigger className="w-full md:w-fit gap-5" dir="rtl">
             <SelectValue placeholder="وضعیت" />
           </SelectTrigger>
           <SelectContent>
@@ -58,10 +58,3 @@ export default function HistoryFilter({ filters, onFiltersChange }) {
     </div>
   );
 }
-
-
-
-
-
-
-
