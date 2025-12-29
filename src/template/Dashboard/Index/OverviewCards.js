@@ -42,7 +42,7 @@ const overviewCards = [
 export default function OverviewCards() {
   return (
     <div className="mb-8">
-      <div className="mb-8 pb-4 border-gray-200 border-b">
+      <div className="mb-8 pb-4 border-gray-200 dark:border-dark-stroke border-b">
         <h2 className="text-2xl  text-primary-700 dark:text-dark-title mb-2">داشبورد</h2>
         <p className="text-sm  text-[#6B7280] dark:text-dark-text">وضعیت کلی حساب شما در یک نگاه</p>
       </div>

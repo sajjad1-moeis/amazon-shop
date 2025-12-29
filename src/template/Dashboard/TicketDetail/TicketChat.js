@@ -13,7 +13,7 @@ export default function TicketChat({ ticketData, messagesList, message, setMessa
       style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
     >
       {/* Title */}
-      <div className="mb-6 flex-between border-b-2 border-gray-200 pb-4">
+      <div className="mb-6 flex-between border-b-2 border-gray-200 dark:border-dark-stroke pb-4">
         <h2 className="text-lg  text-gray-700 dark:text-dark-title">تاریخچه پیام ها</h2>
         <div class="flex items-center gap-4 text-xs">
           <div className="text-gray-400  flex gap-2">

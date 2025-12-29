@@ -5,15 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
 import RecentOrderTimeline from "./RecentOrderTimeline";
-import {
-  TickCircle,
-  CardTick1,
-  Shop,
-  BoxTick,
-  Send2,
-  Truck,
-  TickSquare,
-} from "iconsax-reactjs";
+import { TickCircle, CardTick1, Shop, BoxTick, Send2, Truck, TickSquare } from "iconsax-reactjs";
 
 // داده نمونه برای سفارش اخیر با تایم‌لاین کامل
 const recentOrderWithTimeline = {
@@ -71,7 +63,7 @@ export default function RecentOrders() {
       {/* جدول سفارش‌های دیگر */}
       <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-3 mb-6">
         <div className="mb-4 md:mb-6">
-          <h3 className="text-lg text-gray-700 dark:text-dark-title mb-2">دیگر سفارش‌ها</h3>
+          <h3 className="text-lg text-gray-700 dark:text-dark-text dark:text-dark-title mb-2">دیگر سفارش‌ها</h3>
         </div>
 
         {/* Desktop Table */}
@@ -79,17 +71,19 @@ export default function RecentOrders() {
           <table className="w-full min-w-[600px]">
             <thead className="bg-gray-50 dark:bg-dark-field/50">
               <tr className="border-b border-gray-200 dark:border-dark-stroke">
-                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text first:rounded-tr-lg">
+                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text dark:text-dark-text first:rounded-tr-lg">
                   شماره
                 </th>
-                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text">
+                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text dark:text-dark-text">
                   تاریخ
                 </th>
-                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text">مبلغ</th>
-                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text">
+                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text dark:text-dark-text">
+                  مبلغ
+                </th>
+                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text dark:text-dark-text">
                   وضعیت
                 </th>
-                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text last:rounded-tl-lg">
+                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text dark:text-dark-text last:rounded-tl-lg">
                   عملیات
                 </th>
               </tr>
@@ -124,7 +118,7 @@ export default function RecentOrders() {
                     </span>
                   </td>
                   <td className={cn("py-4 px-4", index === otherOrders.length - 1 && "last:rounded-bl-lg")}>
-                    <button className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-dark-field dark:text-dark-text dark:hover:bg-gray-600 transition-colors">
+                    <button className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-dark-field text-gray-700 dark:text-dark-text hover:bg-gray-200 dark:bg-dark-field dark:text-dark-text dark:hover:bg-gray-600 transition-colors">
                       <Eye className="h-4 w-4" />
                       پیگیری سفارش
                     </button>

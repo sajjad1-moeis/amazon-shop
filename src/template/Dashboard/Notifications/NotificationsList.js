@@ -73,7 +73,7 @@ export default function NotificationsList() {
           حذف همه اعلانها
         </Button>
       </PageHeader>
-      <div className="bg-white p-4 rounded-xl">
+      <div className="bg-white dark:bg-dark-box p-4 rounded-xl">
         <div className="mb-6">
           {/* Section Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
@@ -93,7 +93,7 @@ export default function NotificationsList() {
 
         {notifications.length === 0 ? (
           <div
-            className="bg-white dark:bg-dark-box rounded-2xl shadow-md p-8 text-center mt-6"
+            className="bg-white dark:bg-dark-box dark:bg-dark-box rounded-2xl shadow-md p-8 text-center mt-6"
             style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
           >
             <p className="text-gray-500 dark:text-dark-text">هیچ اعلانی وجود ندارد</p>

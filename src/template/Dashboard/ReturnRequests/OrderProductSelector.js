@@ -47,12 +47,12 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
         className="space-y-4"
       >
         {filteredOrders.length === 0 ? (
-          <div className="text-center text-gray-500 dark:text-dark-text py-8">
+          <div className="text-center text-gray-500 dark:text-dark-text dark:text-dark-text py-8">
             {search.trim() ? "کالایی با این جستجو یافت نشد" : "سفارشی یافت نشد"}
           </div>
         ) : (
           filteredOrders.map((order) => (
-            <div key={order.id} className="border rounded-xl p-4  bg-gray-50  border-gray-300 dark:bg-dark-box">
+            <div key={order.id} className="border rounded-xl p-4  bg-gray-50 dark:bg-dark-field  border-gray-300 dark:bg-dark-box">
               {/* Order Header */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
                 <div>
@@ -93,7 +93,7 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
                             "cursor-pointer border rounded-lg p-4 transition-all flex gap-4",
                             isSelected
                               ? "border-primary-300 bg-[#E5E8F599]"
-                              : "border-gray-200 hover:border-gray-300 bg-white"
+                              : "border-gray-200 dark:border-dark-stroke hover:border-gray-300 bg-white dark:bg-dark-box"
                           )}
                         >
                           <RadioGroupItem
@@ -108,16 +108,16 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
                           />
 
                           {/* Image */}
-                          <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                          <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100 dark:bg-dark-field flex-shrink-0">
                             <Image src={item.image} alt={item.name} fill className="object-cover" sizes="80px" />
                           </div>
 
                           {/* Info */}
                           <div className="flex-1 space-y-1">
                             <h4 className="text-sm font-semibold line-clamp-2">{item.name}</h4>
-                            <div className="text-xs text-gray-500">{item.quantity} عدد</div>
+                            <div className="text-xs text-gray-500 dark:text-dark-text">{item.quantity} عدد</div>
                             <div className="text-sm">
-                              <span className="text-gray-500">قیمت: </span>
+                              <span className="text-gray-500 dark:text-dark-text">قیمت: </span>
                               <span className="font-semibold">{item.price}</span>
                             </div>
                           </div>
@@ -125,7 +125,7 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
                       );
                     })
                 ) : (
-                  <div className="col-span-2 text-center text-gray-500 dark:text-dark-text py-4">
+                  <div className="col-span-2 text-center text-gray-500 dark:text-dark-text dark:text-dark-text py-4">
                     این سفارش محصولی ندارد
                   </div>
                 )}

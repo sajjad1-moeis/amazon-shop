@@ -52,7 +52,7 @@ export default function FileUploadSection({ images, invoice, onImagesChange, onI
             {/* Upload Button */}
             <div
               onClick={() => imageInputRef.current?.click()}
-              className="border bg-gray-50 border-gray-200 dark:border-dark-stroke rounded-lg p-5 text-center cursor-pointer hover:border-gray-400 dark:hover:border-dark-stroke transition-colors"
+              className="border bg-gray-50 dark:bg-dark-field border-gray-200 dark:border-dark-stroke rounded-lg p-5 text-center cursor-pointer hover:border-gray-400 dark:hover:border-dark-stroke transition-colors"
             >
               <Add size={32} className="mx-auto mb-2 text-gray-400" />
               <p className="text-sm text-gray-600 dark:text-dark-text">برای آپلود کلیک کنید</p>
@@ -103,7 +103,7 @@ export default function FileUploadSection({ images, invoice, onImagesChange, onI
           <Label className="text-sm">آپلود فاکتور (اختیاری)</Label>
           <div
             onClick={() => invoiceInputRef.current?.click()}
-            className="border bg-gray-50 border-gray-200 dark:border-dark-stroke rounded-lg p-5 text-center cursor-pointer hover:border-gray-400 dark:hover:border-dark-stroke transition-colors"
+            className="border bg-gray-50 dark:bg-dark-field border-gray-200 dark:border-dark-stroke rounded-lg p-5 text-center cursor-pointer hover:border-gray-400 dark:hover:border-dark-stroke transition-colors"
           >
             {invoice ? (
               <div className="space-y-2">

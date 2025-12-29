@@ -21,8 +21,8 @@ export default function AddressCard({
   return (
     <div
       dir="rtl"
-      className={`bg-gray-50 p-3 border border-gray-100 rounded-xl overflow-hidden ${
-        showBottomBorder ? "border-b border-gray-200" : ""
+      className={`bg-gray-50 dark:bg-dark-field p-3 border border-gray-100 rounded-xl overflow-hidden ${
+        showBottomBorder ? "border-b border-gray-200 dark:border-dark-stroke" : ""
       }`}
     >
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -30,20 +30,20 @@ export default function AddressCard({
         <div className="flex-1 space-y-2">
           <h4 className="text-primary-500 font-medium">{address.name}</h4>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-500">شماره تماس:</span>
-            <span className="text-sm text-gray-700">{address.mobile || address.phone}</span>
+            <span className="text-xs text-gray-500 dark:text-dark-text">شماره تماس:</span>
+            <span className="text-sm text-gray-700 dark:text-dark-text">{address.mobile || address.phone}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-500">استان/شهر:</span>
-            <span className="text-sm text-gray-700">
+            <span className="text-xs text-gray-500 dark:text-dark-text">استان/شهر:</span>
+            <span className="text-sm text-gray-700 dark:text-dark-text">
               {address.province && address.city
                 ? `${address.province} / ${address.city}`
                 : address.city || address.province}
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-500">کدپستی:</span>
-            <span className="text-sm text-gray-700">{address.postalCode}</span>
+            <span className="text-xs text-gray-500 dark:text-dark-text">کدپستی:</span>
+            <span className="text-sm text-gray-700 dark:text-dark-text">{address.postalCode}</span>
           </div>
         </div>
         <div className="flex-shrink-0">
@@ -59,11 +59,11 @@ export default function AddressCard({
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-4 pt-4 border-t border-gray-200">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-4 pt-4 border-t border-gray-200 dark:border-dark-stroke">
         {/* ACTIONS - سمت چپ */}
         <div className="flex items-center gap-2">
           <Location size={16} className="text-gray-400" />
-          <span className="text-gray-600">{address.address}</span>
+          <span className="text-gray-600 dark:text-dark-text">{address.address}</span>
         </div>
         {removeHandler || (
           <div className="flex items-center gap-3 min-w-[56px]">
@@ -74,7 +74,7 @@ export default function AddressCard({
                   <Button
                     variant="gray"
                     onClick={() => onSetDefault(address.id)}
-                    className="text-sm text-primary-600 bg-gray-200 px-3 py-1 rounded-md"
+                    className="text-sm text-primary-600 bg-gray-200 dark:bg-dark-field px-3 py-1 rounded-md"
                   >
                     انتخاب به عنوان پیش‌فرض
                   </Button>
@@ -91,7 +91,7 @@ export default function AddressCard({
 
             <button
               onClick={() => onEdit(address.id)}
-              className="p-1 rounded-md hover:bg-gray-50"
+              className="p-1 rounded-md hover:bg-gray-50 dark:hover:bg-dark-field"
               aria-label="ویرایش"
               title="ویرایش"
             >

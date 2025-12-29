@@ -1,11 +1,77 @@
-import DashboardLayout from "@/layout/DashboardLayout";
-import ComparisonsList from "@/template/Dashboard/Comparisons/ComparisonsList";
+"use client";
 
-export default function ComparisonsPage() {
+import DashboardLayout from "@/layout/DashboardLayout";
+
+import React, { useState } from "react";
+import ComparisonCard from "@/template/Dashboard/Comparisons/ComparisonCard";
+import { Button } from "@/components/ui/button";
+import { Trash, Add } from "iconsax-reactjs";
+import { toast } from "sonner";
+import PageHeader from "@/template/Dashboard/Common/PageHeader";
+import { initialComparisons } from "@/data";
+import { useRouter } from "next/navigation";
+
+export default function ComparisonsList() {
+  const [comparisons, setComparisons] = useState(initialComparisons);
+  const route = useRouter();
+
+  const handleDelete = (comparisonId) => {
+    if (confirm("آیا از حذف این مقایسه اطمینان دارید؟")) {
+      setComparisons(comparisons.filter((c) => c.id !== comparisonId));
+      toast.success("مقایسه با موفقیت حذف شد");
+    }
+  };
+
+  const handleDeleteAll = () => {
+    if (confirm("آیا از حذف همه مقایسه‌ها اطمینان دارید؟")) {
+      setComparisons([]);
+      toast.success("همه مقایسه‌ها با موفقیت حذف شدند");
+    }
+  };
+
+  const handleCreateNew = () => {
+    route.push("/dashboard/compare");
+  };
+
   return (
     <DashboardLayout>
-      <ComparisonsList />
+      <PageHeader
+        title="مقایسه های ذخیره شده"
+        description="مقایسه هایی که ذخیره کرده اید را اینجا ببینید و دوباره بررسی کنید."
+      >
+        <div class="flex-center">
+          <Button
+            variant="ghost"
+            onClick={handleDeleteAll}
+            className="gap-2 text-red-600 dark:text-dark-text hover:bg-gray-100 dark:hover:bg-dark-field"
+            disabled={comparisons.length === 0}
+          >
+            <Trash size={18} />
+            حذف همه
+          </Button>
+          <Button
+            onClick={handleCreateNew}
+            className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 dark:text-dark-title font-medium gap-2"
+          >
+            ایجاد مقایسه جدید
+            <Add size={20} />
+          </Button>
+        </div>
+      </PageHeader>
+      <div class="mb-8" />
+
+      {/* Comparisons Grid */}
+      {comparisons.length === 0 ? (
+        <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-8 text-center">
+          <p className="text-gray-500 dark:text-dark-text">هیچ مقایسه‌ای ذخیره نشده است</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {comparisons.map((comparison) => (
+            <ComparisonCard key={comparison.id} comparison={comparison} onDelete={() => handleDelete(comparison.id)} />
+          ))}
+        </div>
+      )}
     </DashboardLayout>
   );
 }
-

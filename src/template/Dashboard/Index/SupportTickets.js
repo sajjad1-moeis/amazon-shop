@@ -58,7 +58,7 @@ export default function SupportTickets() {
           return (
             <div
               key={ticket.id}
-              className={cn("p-3 rounded-2xl border transition-colors bg-gray-50 border-gray-200 dark:border-dark-stroke")}
+              className={cn("p-3 rounded-2xl border transition-colors bg-gray-50 dark:bg-dark-field border-gray-200 dark:border-dark-stroke")}
             >
               {/* Status Badge */}
               <div className="flex justify-between">

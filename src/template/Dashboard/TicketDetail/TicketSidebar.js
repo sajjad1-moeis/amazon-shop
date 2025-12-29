@@ -44,12 +44,12 @@ export default function TicketSidebar({ ticketData, getStatusBadge, getPriorityT
   ];
 
   return (
-    <div className="bg-white dark:bg-dark-box rounded-2xl border border-gray-200 p-4">
+    <div className="bg-white dark:bg-dark-box rounded-2xl border border-gray-200 dark:border-dark-stroke p-4">
       <div className="flex flex-col gap-3">
         {sidebarItems.map((item, index) => (
           <div
             key={index}
-            className={cn("flex-between", sidebarItems?.length === index + 1 || "border-b border-gray-200 pb-3")}
+            className={cn("flex-between", sidebarItems?.length === index + 1 || "border-b border-gray-200 dark:border-dark-stroke pb-3")}
           >
             <p className="text-sm text-gray-500 dark:text-dark-text mb-1">{item.label}</p>
 

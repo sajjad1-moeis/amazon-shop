@@ -21,7 +21,7 @@ const verificationData = {
 
 export default function IdentityVerification() {
   return (
-    <div className="bg-white border-2 border-gray-300 dark:bg-dark-box rounded-2xl p-3 mt-8">
+    <div className="bg-white dark:bg-dark-box border-2 border-gray-300 dark:bg-dark-box rounded-2xl p-3 mt-8">
       <div className="flex justify-between">
         <h3 className="text-lg md:text-xl text-gray-900 dark:text-dark-title mb-6">احراز هویت</h3>
 

@@ -199,7 +199,7 @@ export default function NewReturnRequest() {
               type="button"
               variant="ghost"
               onClick={() => router.push("/dashboard/return-requests")}
-              className="md:w-48 h-11 bg-gray-200"
+              className="md:w-48 h-11 bg-gray-200 dark:bg-dark-field"
             >
               انصراف
             </Button>

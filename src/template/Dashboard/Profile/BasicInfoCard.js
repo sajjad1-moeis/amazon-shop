@@ -21,7 +21,7 @@ export default function BasicInfoCard() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="bg-white rounded-2xl shadow-box p-4">
+    <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3 text-[#292D32CC]">
@@ -44,7 +44,7 @@ export default function BasicInfoCard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
         {/* Avatar */}
         <div className="flex items-center gap-2 sm:col-span-2 lg:col-span-1">
-          <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-200 bg-gray-100 flex items-center justify-center flex-shrink-0">
+          <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-200 dark:border-dark-stroke bg-gray-100 dark:bg-dark-field flex items-center justify-center flex-shrink-0">
             {data.avatar ? (
               <Image src={data.avatar} alt="avatar" width={64} height={64} className="object-cover" />
             ) : (
@@ -81,7 +81,7 @@ export default function BasicInfoCard() {
 export function Row({ label, value, mono }) {
   return (
     <div className=" justify-between text-sm">
-      <p className={`mb-2 text-gray-600 font-medium ${mono ? "font-mono" : ""}`}>{value}</p>
+      <p className={`mb-2 text-gray-600 dark:text-dark-text font-medium ${mono ? "font-mono" : ""}`}>{value}</p>
       <p className="text-gray-400">{label}</p>
     </div>
   );

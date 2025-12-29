@@ -1,44 +1,40 @@
 "use client";
 
 import React from "react";
-import { CloseCircle, Wallet3 } from "iconsax-reactjs";
+import { CloseCircle, CloudAdd, Moneys, Wallet3 } from "iconsax-reactjs";
 import { cn } from "@/lib/utils";
 
 export default function FeatureHighlightCards({ products }) {
   const highlights = [
     {
-      icon: CloseCircle,
+      icon: Moneys,
       title: "ظرفیت ذخیره سازی بیشتر",
       description: "Xbox Series X حافظه داخلی بیشتری ارائه میدهد",
-      bgColor: "bg-blue-50 dark:bg-blue-900/20",
-      titleColor: "text-blue-700 dark:text-blue-300",
     },
     {
-      icon: Wallet3,
+      icon: CloudAdd,
       title: "قیمت اقتصادی تر",
       description: "PS5 Digital با حذف درایو دیسک قیمت مناسب تری دارد",
-      bgColor: "bg-green-50 dark:bg-green-900/20",
-      titleColor: "text-green-700 dark:text-green-300",
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {highlights.map((highlight, index) => {
         const Icon = highlight.icon;
         return (
-          <div key={index} className={cn("rounded-2xl p-6 shadow-sm", highlight.bgColor)}>
-            <div className="flex flex-col items-center text-center">
+          <div key={index} className={cn("rounded-xl p-4 shadow-sm bg-white border-2 border-primary-400")}>
+            <div className="flex flex-col">
               {/* Icon in dark blue square */}
-              <div className="w-14 h-14 bg-blue-700 dark:bg-blue-600 rounded-lg flex items-center justify-center mb-4">
-                <Icon size={28} className="text-white" variant="Bold" />
+              <div className="w-14 h-14 bg-primary-700  dark:bg-blue-600 rounded-lg flex items-center justify-center mb-4">
+                <Icon size={28} className="text-primary-50" variant="Bold" />
               </div>
 
               {/* Title */}
-              <h3 className={cn("text-base font-bold mb-2", highlight.titleColor)}>{highlight.title}</h3>
+              <h3 className={cn("text-base font-bold mb-2 text-primary-700")}>{highlight.title}</h3>
 
               {/* Description */}
-              <p className="text-sm text-gray-600 dark:text-dark-text">{highlight.description}</p>
+              <p className="text-sm text-gray-500 dark:text-dark-text">{highlight.description}</p>
             </div>
           </div>
         );

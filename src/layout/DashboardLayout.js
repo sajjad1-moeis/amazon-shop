@@ -12,13 +12,13 @@ export default function DashboardLayout({ children }) {
       {/* Header */}
       <DashboardHeader onMenuClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} />
 
-      <div className="flex relative py-6 lg:px-8">
+      <div className="flex relative gap-4  md:gap-6 p-4 md:p-6 lg:p-8">
         {/* Sidebar */}
 
         <DashboardSidebar isMobileOpen={isMobileMenuOpen} setIsMobileOpen={setIsMobileMenuOpen} />
 
         {/* Main Content */}
-        <main className="flex-1  px-4 md:px-6  max-w-full overflow-x-hidden">{children}</main>
+        <main className="flex-1   max-w-full overflow-x-hidden">{children}</main>
       </div>
     </div>
   );

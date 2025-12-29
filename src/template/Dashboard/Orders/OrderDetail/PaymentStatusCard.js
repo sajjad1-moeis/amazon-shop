@@ -7,15 +7,15 @@ export default function PaymentStatusCard({ paymentStatus }) {
   const { paidPercentage, paidAmount, remainingPercentage, remainingAmount } = paymentStatus;
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-3 w-full max-w-md">
+    <div className="bg-white dark:bg-dark-box rounded-xl border border-gray-200 dark:border-dark-stroke p-3 w-full max-w-md">
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
-        <h3 className="text-base font-bold text-gray-900">وضعیت پرداخت</h3>
+        <h3 className="text-base font-bold text-gray-900 dark:text-dark-title">وضعیت پرداخت</h3>
         <span className="text-sm text-primary-500 cursor-pointer">مشاهده جزییات</span>
       </div>
 
       {/* Progress */}
-      <div className="relative w-full h-2 rounded-full bg-gray-200 mb-6">
+      <div className="relative w-full h-2 rounded-full bg-gray-200 dark:bg-dark-field mb-6">
         {/* Blue (Remaining) → RIGHT */}
         <div
           className="absolute right-0 top-0 h-full bg-primary-500 rounded-full"
@@ -47,7 +47,7 @@ export default function PaymentStatusCard({ paymentStatus }) {
 
         <div className="text-left">
           <div className="text-gray-400">{paidPercentage}%</div>
-          <div className="text-gray-500 mt-1">{paidAmount} ت</div>
+          <div className="text-gray-500 dark:text-dark-text mt-1">{paidAmount} ت</div>
         </div>
       </div>
     </div>

@@ -23,7 +23,7 @@ export default function DashboardHeader({ onMenuClick }) {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden text-white hover:bg-white/10 h-9 w-9"
+            className="md:hidden text-white hover:bg-white dark:bg-dark-box/10 h-9 w-9"
             onClick={onMenuClick}
           >
             <Menu className="h-5 w-5" />
@@ -42,7 +42,7 @@ export default function DashboardHeader({ onMenuClick }) {
 
         {/* Center: Search Bar */}
         <div className="flex-1 flex items-center justify-center mx-2 md:mx-4">
-          <div className="bg-white  dark:bg-[#8989893D] w-full rounded-lg p-1 flex-between">
+          <div className="bg-white dark:bg-dark-box  dark:bg-[#8989893D] w-full rounded-lg p-1 flex-between">
             <input
               type="text"
               className="px-2 outline-none placeholder:max-md:text-xs bg-transparent"

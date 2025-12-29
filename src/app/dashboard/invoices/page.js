@@ -7,7 +7,6 @@ import InvoicesFilter from "@/template/Dashboard/Invoices/InvoicesFilter";
 import InvoicesTable from "@/template/Dashboard/Invoices/InvoicesTable";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { toast } from "sonner";
 
 export default function InvoicesPage() {
   const router = useRouter();
@@ -26,7 +25,9 @@ export default function InvoicesPage() {
     if (filters.searchQuery) {
       const query = filters.searchQuery.toLowerCase();
       result = result.filter(
-        (invoice) => invoice.id.toLowerCase().includes(query) || invoice.orderNumber.toLowerCase().includes(query)
+        (invoice) =>
+          (invoice.invoiceNumber || invoice.id || "").toLowerCase().includes(query) ||
+          (invoice.orderNumber || "").toLowerCase().includes(query)
       );
     }
 
@@ -39,10 +40,18 @@ export default function InvoicesPage() {
     if (filters.sortBy) {
       switch (filters.sortBy) {
         case "newest":
-          result.sort((a, b) => new Date(b.date) - new Date(a.date));
+          result.sort((a, b) => {
+            const dateA = a.issueDate || a.date || "";
+            const dateB = b.issueDate || b.date || "";
+            return dateB.localeCompare(dateA, "fa-IR");
+          });
           break;
         case "oldest":
-          result.sort((a, b) => new Date(a.date) - new Date(b.date));
+          result.sort((a, b) => {
+            const dateA = a.issueDate || a.date || "";
+            const dateB = b.issueDate || b.date || "";
+            return dateA.localeCompare(dateB, "fa-IR");
+          });
           break;
         case "amount-high":
           result.sort((a, b) => b.amountNumber - a.amountNumber);
@@ -58,10 +67,6 @@ export default function InvoicesPage() {
     return result;
   }, [filters]);
 
-  const handleDownload = (invoiceId) => {
-    toast.success("فاکتور با موفقیت دانلود شد");
-  };
-
   const handleView = (invoiceId) => {
     router.push(`/dashboard/invoices/${invoiceId}`);
   };
@@ -76,14 +81,14 @@ export default function InvoicesPage() {
         <InvoicesFilter filters={filters} onFiltersChange={setFilters} />
 
         {/* Invoices Table Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-box p-4 mt-8">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-box p-4 md:p-6 mt-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-            <h2 className="text-lg md:text-xl text-primary-700 dark:text-white">لیست فاکتورها</h2>
-            <p className="text-gray-500">
-              تعداد کل فاکتور‌ها: <span className="text-yellow-600">3 </span>
+            <h2 className="text-lg md:text-xl font-bold text-[#1E429F] dark:text-white">لیست فاکتورها</h2>
+            <p className="text-gray-600 dark:text-dark-text">
+              تعداد کل فاکتورها: <span className="text-orange-600 dark:text-orange-400 font-semibold">{filteredInvoices.length}</span>
             </p>
           </div>
-          <InvoicesTable invoices={filteredInvoices} onDownload={handleDownload} onView={handleView} />
+          <InvoicesTable invoices={filteredInvoices} onView={handleView} />
         </div>
       </div>
     </DashboardLayout>

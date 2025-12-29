@@ -22,7 +22,7 @@ export default function ReferralCodeBox({ referralCode, referralLink, onShareCli
             type="text"
             value={referralCode}
             readOnly
-            className="bg-white/90 text-gray-900 font-medium text-center"
+            className="bg-white dark:bg-dark-box/90 text-gray-900 dark:text-dark-title font-medium text-center"
             dir="ltr"
           />
         </div>
@@ -37,7 +37,7 @@ export default function ReferralCodeBox({ referralCode, referralLink, onShareCli
             type="text"
             value={referralLink}
             readOnly
-            className="bg-white/90 text-gray-900"
+            className="bg-white dark:bg-dark-box/90 text-gray-900 dark:text-dark-title"
             dir="ltr"
           />
         </div>
@@ -45,7 +45,7 @@ export default function ReferralCodeBox({ referralCode, referralLink, onShareCli
         {/* Share Button */}
         <Button
           onClick={onShareClick}
-          className="w-full bg-white text-purple-600 hover:bg-white/90 font-medium gap-2"
+          className="w-full bg-white dark:bg-dark-box text-purple-600 hover:bg-white dark:bg-dark-box/90 font-medium gap-2"
         >
           <Share size={18} />
           اشتراک گذاری
@@ -55,7 +55,7 @@ export default function ReferralCodeBox({ referralCode, referralLink, onShareCli
         <Button
           onClick={onRewardConditionsClick}
           variant="outline"
-          className="w-full bg-white/10 border-white/30 text-white hover:bg-white/20 font-medium gap-2"
+          className="w-full bg-white dark:bg-dark-box/10 border-white/30 text-white hover:bg-white dark:bg-dark-box/20 font-medium gap-2"
         >
           شرایط دریافت پاداش
         </Button>

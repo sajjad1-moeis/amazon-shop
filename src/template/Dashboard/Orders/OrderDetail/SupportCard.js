@@ -9,7 +9,7 @@ export default function SupportCard({ hasTicket }) {
   const router = useRouter();
 
   return (
-    <div className="bg-white dark:bg-dark-box rounded-xl border border-gray-200 p-3">
+    <div className="bg-white dark:bg-dark-box rounded-xl border border-gray-200 dark:border-dark-stroke p-3">
       <h3 className="text-lg font-bold text-gray-800 dark:text-dark-title mb-8">پشتیبانی و تیکت</h3>
 
       {hasTicket ? (

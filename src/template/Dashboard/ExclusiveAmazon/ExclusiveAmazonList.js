@@ -67,7 +67,7 @@ export default function ExclusiveAmazonList() {
     <div dir="rtl">
       {/* Header Section */}
       <PageHeader title="خرید اختصاصی از آمازون" description="دسترسی ویژه برای سفارش کالاهای خاص و غیر عمومی">
-        <Button onClick={handleNewOrder} className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-medium gap-2">
+        <Button onClick={handleNewOrder} className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 dark:text-dark-title font-medium gap-2">
           <Add size={20} />
           ثبت سفارش جدید
         </Button>
@@ -80,7 +80,7 @@ export default function ExclusiveAmazonList() {
           return (
             <div
               key={card.id}
-              className="bg-white dark:bg-dark-box gap-3 flex items-center rounded-2xl shadow-md p-3 md:p-4 hover:shadow-md transition-shadow"
+              className="bg-white dark:bg-dark-box dark:bg-dark-box gap-3 flex items-center rounded-2xl shadow-md p-3 md:p-4 hover:shadow-md transition-shadow"
             >
               <div className="flex items-center justify-between">
                 <div className={cn("p-3 rounded-lg bg-primary-700")}>
@@ -89,7 +89,7 @@ export default function ExclusiveAmazonList() {
               </div>
               <div>
                 <p className="text-xl font-bold text-primary-700 dark:text-dark-title mb-1">{card.value}</p>
-                <p className="text-xs md:text-sm text-gray-500 dark:text-dark-text mt-1">{card.title}</p>
+                <p className="text-xs md:text-sm text-gray-500 dark:text-dark-text dark:text-dark-text mt-1">{card.title}</p>
               </div>
             </div>
           );
@@ -99,16 +99,16 @@ export default function ExclusiveAmazonList() {
       {/* Tabs Section */}
       <div className="mt-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} dir="rtl" className="w-full rounded-xl overflow-hidden">
-          <TabsList className="bg-white dark:bg-dark-box shadow w-full justify-between overflow-auto flex-none lg:overflow-hidden h-full rounded-xl p-0 flex flex-nowrap lg:grid grid-cols-2">
+          <TabsList className="bg-white dark:bg-dark-box dark:bg-dark-box shadow w-full justify-between overflow-auto flex-none lg:overflow-hidden h-full rounded-xl p-0 flex flex-nowrap lg:grid grid-cols-2">
             <TabsTrigger
               value="orders"
-              className="data-[state=active]:bg-primary-50 data-[state=active]:border-b-2 dark:data-[state=active]:border-dark-title border-primary-500 !w-full data-[state=active]:text-primary-600 dark:data-[state=active]:text-dark-title dark:data-[state=active]:bg-white/10 dark:text-dark-text text-gray-500 px-5 py-3 rounded-none transition"
+              className="data-[state=active]:bg-primary-50 data-[state=active]:border-b-2 dark:data-[state=active]:border-dark-title border-primary-500 !w-full data-[state=active]:text-primary-600 dark:data-[state=active]:text-dark-title dark:data-[state=active]:bg-white dark:bg-dark-box/10 dark:text-dark-text text-gray-500 dark:text-dark-text px-5 py-3 rounded-none transition"
             >
               سفارش های اختصاصی من
             </TabsTrigger>
             <TabsTrigger
               value="rules"
-              className="data-[state=active]:bg-primary-50 data-[state=active]:border-b-2 dark:data-[state=active]:border-dark-title border-primary-500 !w-full data-[state=active]:text-primary-600 dark:data-[state=active]:text-dark-title dark:data-[state=active]:bg-white/10 dark:text-dark-text text-gray-500 px-5 py-3 rounded-none transition"
+              className="data-[state=active]:bg-primary-50 data-[state=active]:border-b-2 dark:data-[state=active]:border-dark-title border-primary-500 !w-full data-[state=active]:text-primary-600 dark:data-[state=active]:text-dark-title dark:data-[state=active]:bg-white dark:bg-dark-box/10 dark:text-dark-text text-gray-500 dark:text-dark-text px-5 py-3 rounded-none transition"
             >
               قوانین و راهنما
             </TabsTrigger>
@@ -116,10 +116,10 @@ export default function ExclusiveAmazonList() {
 
           {/* Orders Tab */}
           <TabsContent value="orders" className="mt-6 space-y-4">
-            <div className="bg-white dark:bg-dark-box rounded-2xl shadow-sm p-3">
+            <div className="bg-white dark:bg-dark-box dark:bg-dark-box rounded-2xl shadow-sm p-3">
               {/* Header with Title and Count */}
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-                <h2 className="text-lg text-gray-900 dark:text-dark-title">لیست سفارشها</h2>
+                <h2 className="text-lg text-gray-900 dark:text-dark-title dark:text-dark-title">لیست سفارشها</h2>
                 <div className="text-sm text-gray-700 dark:text-dark-text">
                   تعداد کل :{" "}
                   <span className="font-semibold text-yellow-600 dark:text-yellow-400">{initialOrders.length} عدد</span>
@@ -138,11 +138,11 @@ export default function ExclusiveAmazonList() {
 
           {/* Rules Tab */}
           <TabsContent value="rules" className="mt-6 space-y-4">
-            <div className="bg-white dark:bg-dark-box rounded-2xl shadow-sm p-6">
+            <div className="bg-white dark:bg-dark-box dark:bg-dark-box rounded-2xl shadow-sm p-6">
               <div className="space-y-6">
                 {/* Who is this service for? */}
                 <div>
-                  <h3 className="text-base font-bold text-gray-900 dark:text-dark-title mb-2">
+                  <h3 className="text-base font-bold text-gray-900 dark:text-dark-title dark:text-dark-title mb-2">
                     این سرویس برای چه کسانی است؟
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-dark-text leading-relaxed">
@@ -154,7 +154,7 @@ export default function ExclusiveAmazonList() {
 
                 {/* How to place an order */}
                 <div>
-                  <h3 className="text-base font-bold text-gray-900 dark:text-dark-title mb-4">نحوه ثبت سفارش</h3>
+                  <h3 className="text-base font-bold text-gray-900 dark:text-dark-title dark:text-dark-title mb-4">نحوه ثبت سفارش</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <p className="text-sm text-gray-600 dark:text-dark-text leading-relaxed mb-2">
@@ -164,7 +164,7 @@ export default function ExclusiveAmazonList() {
                       </p>
                     </div>
                     <div>
-                      <h4 className="text-sm font-semibold text-gray-900 dark:text-dark-title mb-2">
+                      <h4 className="text-sm font-semibold text-gray-900 dark:text-dark-title dark:text-dark-title mb-2">
                         فرآیند بررسی و خرید
                       </h4>
                       <p className="text-sm text-gray-600 dark:text-dark-text leading-relaxed">
@@ -178,7 +178,7 @@ export default function ExclusiveAmazonList() {
 
                 {/* Pricing and Payment */}
                 <div>
-                  <h3 className="text-base font-bold text-gray-900 dark:text-dark-title mb-4">قیمت گذاری و پرداخت</h3>
+                  <h3 className="text-base font-bold text-gray-900 dark:text-dark-title dark:text-dark-title mb-4">قیمت گذاری و پرداخت</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <p className="text-sm text-gray-600 dark:text-dark-text leading-relaxed mb-2">
@@ -189,7 +189,7 @@ export default function ExclusiveAmazonList() {
                       </p>
                     </div>
                     <div>
-                      <h4 className="text-sm font-semibold text-gray-900 dark:text-dark-title mb-2">
+                      <h4 className="text-sm font-semibold text-gray-900 dark:text-dark-title dark:text-dark-title mb-2">
                         حمل، گمرک و محدودیت ها
                       </h4>
                       <p className="text-sm text-gray-600 dark:text-dark-text leading-relaxed">
@@ -204,7 +204,7 @@ export default function ExclusiveAmazonList() {
 
                 {/* Order Limit and User Restrictions */}
                 <div>
-                  <h3 className="text-base font-bold text-gray-900 dark:text-dark-title mb-2">
+                  <h3 className="text-base font-bold text-gray-900 dark:text-dark-title dark:text-dark-title mb-2">
                     سقف سفارش و محدودیت کاربر
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-dark-text leading-relaxed">
@@ -217,7 +217,7 @@ export default function ExclusiveAmazonList() {
 
                 {/* Order Display and Confidentiality */}
                 <div>
-                  <h3 className="text-base font-bold text-gray-900 dark:text-dark-title mb-2">
+                  <h3 className="text-base font-bold text-gray-900 dark:text-dark-title dark:text-dark-title mb-2">
                     نمایش و محرمانگی سفارش ها
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-dark-text leading-relaxed">
@@ -229,7 +229,7 @@ export default function ExclusiveAmazonList() {
 
                 {/* Order Status and Tracking */}
                 <div>
-                  <h3 className="text-base font-bold text-gray-900 dark:text-dark-title mb-2">
+                  <h3 className="text-base font-bold text-gray-900 dark:text-dark-title dark:text-dark-title mb-2">
                     وضعیت و پیگیری سفارش
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-dark-text leading-relaxed">
@@ -241,7 +241,7 @@ export default function ExclusiveAmazonList() {
 
                 {/* Order Rejection or Cancellation */}
                 <div>
-                  <h3 className="text-base font-bold text-gray-900 dark:text-dark-title mb-2">رد یا لغو سفارش</h3>
+                  <h3 className="text-base font-bold text-gray-900 dark:text-dark-title dark:text-dark-title mb-2">رد یا لغو سفارش</h3>
                   <p className="text-sm text-gray-600 dark:text-dark-text leading-relaxed">
                     در صورت عدم تطابق سفارش ثبت شده با قوانین محدودیت یا شرایط فنی، ممکن است سفارش رد شود و دلیل آن
                     به صورت شفاف به کاربر اطلاع داده می‌شود. امکان لغو سفارش قبل از خرید نهایی از آمازون وجود دارد.
@@ -251,7 +251,7 @@ export default function ExclusiveAmazonList() {
 
                 {/* Responsibilities and Transparency */}
                 <div>
-                  <h3 className="text-base font-bold text-gray-900 dark:text-dark-title mb-2">
+                  <h3 className="text-base font-bold text-gray-900 dark:text-dark-title dark:text-dark-title mb-2">
                     مسئولیت ها و شفافیت
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-dark-text leading-relaxed">
@@ -263,7 +263,7 @@ export default function ExclusiveAmazonList() {
 
                 {/* Changes and Terms of Use */}
                 <div>
-                  <h3 className="text-base font-bold text-gray-900 dark:text-dark-title mb-2">
+                  <h3 className="text-base font-bold text-gray-900 dark:text-dark-title dark:text-dark-title mb-2">
                     تغییرات و شرایط استفاده
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-dark-text leading-relaxed">

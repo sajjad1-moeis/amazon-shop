@@ -30,7 +30,7 @@ export default function ReturnReasonForm({ formData, onFormChange }) {
           <div className="space-y-2">
             <Label className="text-sm ">وضعیت بسته بندی</Label>
             <Select value={formData.packagingStatus} onValueChange={(value) => onFormChange("packagingStatus", value)}>
-              <SelectTrigger className="bg-gray-50 border border-gray-200">
+              <SelectTrigger className="bg-gray-50 dark:bg-dark-field border border-gray-200 dark:border-dark-stroke">
                 <SelectValue placeholder="وضعیت بسته بندی را انتخاب کنید" />
               </SelectTrigger>
               <SelectContent>
@@ -47,7 +47,7 @@ export default function ReturnReasonForm({ formData, onFormChange }) {
           <div className="space-y-2">
             <Label className="text-sm ">علت مرجوعی</Label>
             <Select value={formData.returnReason} onValueChange={(value) => onFormChange("returnReason", value)}>
-              <SelectTrigger className="bg-gray-50 border border-gray-200">
+              <SelectTrigger className="bg-gray-50 dark:bg-dark-field border border-gray-200 dark:border-dark-stroke">
                 <SelectValue placeholder="دلیل مرجوعی این محصول" />
               </SelectTrigger>
               <SelectContent>
@@ -66,7 +66,7 @@ export default function ReturnReasonForm({ formData, onFormChange }) {
           <Label className="text-sm ">توضیحات بیشتر</Label>
           <Textarea
             value={formData.description}
-            className="bg-gray-50 border border-gray-200 min-h-[100px]"
+            className="bg-gray-50 dark:bg-dark-field border border-gray-200 dark:border-dark-stroke min-h-[100px]"
             onChange={(e) => onFormChange("description", e.target.value)}
             placeholder="توضیحات اختیاری درباره مشکل..."
             dir="rtl"

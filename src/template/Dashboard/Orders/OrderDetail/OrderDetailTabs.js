@@ -11,7 +11,7 @@ export default function OrderDetailTabs({ activeTab, onTabChange, children }) {
         <TabsTrigger
           value="details"
           className={cn(
-            "data-[state=active]:bg-white data-[state=active]:text-primary-600 dark:data-[state=active]:bg-gray-800 dark:data-[state=active]:text-primary-400"
+            "data-[state=active]:bg-white dark:bg-dark-box data-[state=active]:text-primary-600 dark:data-[state=active]:bg-gray-800 dark:data-[state=active]:text-primary-400"
           )}
         >
           مشاهده جزئیات
@@ -19,7 +19,7 @@ export default function OrderDetailTabs({ activeTab, onTabChange, children }) {
         <TabsTrigger
           value="payment"
           className={cn(
-            "data-[state=active]:bg-white data-[state=active]:text-primary-600 dark:data-[state=active]:bg-gray-800 dark:data-[state=active]:text-primary-400"
+            "data-[state=active]:bg-white dark:bg-dark-box data-[state=active]:text-primary-600 dark:data-[state=active]:bg-gray-800 dark:data-[state=active]:text-primary-400"
           )}
         >
           وضعیت پرداخت
@@ -27,7 +27,7 @@ export default function OrderDetailTabs({ activeTab, onTabChange, children }) {
         <TabsTrigger
           value="address"
           className={cn(
-            "data-[state=active]:bg-white data-[state=active]:text-primary-600 dark:data-[state=active]:bg-gray-800 dark:data-[state=active]:text-primary-400"
+            "data-[state=active]:bg-white dark:bg-dark-box data-[state=active]:text-primary-600 dark:data-[state=active]:bg-gray-800 dark:data-[state=active]:text-primary-400"
           )}
         >
           تغییر آدرس

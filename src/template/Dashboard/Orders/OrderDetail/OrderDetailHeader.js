@@ -43,7 +43,7 @@ const getStatusBadge = (status) => {
 
 export default function OrderDetailHeader({ order, onDownloadInvoice, onCancelOrder }) {
   return (
-    <div className=" mb-6 pb-4 border-b-2 border-gray-200">
+    <div className=" mb-6 pb-4 border-b-2 border-gray-200 dark:border-dark-stroke">
       {/* Order Information */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="text-xl sm:text-2xl text-primary-700">
@@ -54,7 +54,7 @@ export default function OrderDetailHeader({ order, onDownloadInvoice, onCancelOr
         <div className="flex flex-wrap gap-2 sm:gap-3">
           <Button
             onClick={onCancelOrder}
-            className="bg-gray-200 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 gap-2 text-sm"
+            className="bg-gray-200 dark:bg-dark-field text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 gap-2 text-sm"
           >
             <CloseCircle size={18} />
             <span className="hidden sm:inline">لغو سفارش</span>

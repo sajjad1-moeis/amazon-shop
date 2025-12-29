@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 export default function FavoriteCard({ product }) {
   return (
     <div
-      className="w-full bg-white rounded-2xl p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 shadow-sm"
+      className="w-full bg-white dark:bg-dark-box rounded-2xl p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 shadow-sm"
       style={{
         boxShadow: "0px 1px 6px 0px #0000000F",
         direction: "rtl",
@@ -21,7 +21,7 @@ export default function FavoriteCard({ product }) {
       {/* Middle Content */}
       <div className="flex-1 flex flex-col gap-3">
         {/* Product Title */}
-        <h3 className="text-[15px] font-bold text-gray-900 leading-6">{product.title}</h3>
+        <h3 className="text-[15px] font-bold text-gray-900 dark:text-dark-title leading-6">{product.title}</h3>
 
         {/* Brand Section */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 w-full">
@@ -30,7 +30,7 @@ export default function FavoriteCard({ product }) {
             <Image src={product.brandLogo} alt="brand logo" fill className="object-contain" />
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-gray-600 text-sm">وضعیت ردیابی</span>
+            <span className="text-gray-600 dark:text-dark-text text-sm">وضعیت ردیابی</span>
             <span className="bg-green-100 text-green-700 text-xs px-3 py-1 rounded-lg">فعال</span>
           </div>
         </div>
@@ -38,27 +38,27 @@ export default function FavoriteCard({ product }) {
         {/* Three Gray Boxes Row */}
         <div className="w-full flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           {/* Box 1 */}
-          <div className="flex-1 bg-gray-100 px-3 py-2 rounded-xl flex justify-between items-center">
-            <span className="text-gray-600 text-sm">قیمت فعلی</span>
-            <span className="text-gray-900 font-bold text-base">{product.currentPrice}</span>
+          <div className="flex-1 bg-gray-100 dark:bg-dark-field px-3 py-2 rounded-xl flex justify-between items-center">
+            <span className="text-gray-600 dark:text-dark-text text-sm">قیمت فعلی</span>
+            <span className="text-gray-900 dark:text-dark-title font-bold text-base">{product.currentPrice}</span>
           </div>
 
           {/* Box 2 */}
-          <div className="flex-1 bg-gray-100 px-3 py-2 rounded-xl flex justify-between items-center">
-            <span className="text-gray-600 text-sm">کمترین قیمت</span>
-            <span className="text-gray-900 font-bold text-base">{product.lowestPrice}</span>
+          <div className="flex-1 bg-gray-100 dark:bg-dark-field px-3 py-2 rounded-xl flex justify-between items-center">
+            <span className="text-gray-600 dark:text-dark-text text-sm">کمترین قیمت</span>
+            <span className="text-gray-900 dark:text-dark-title font-bold text-base">{product.lowestPrice}</span>
           </div>
 
           {/* Box 3 */}
-          <div className="flex-1 bg-gray-100 px-3 py-2 rounded-xl flex justify-between items-center">
-            <span className="text-gray-600 text-sm">بیشترین قیمت</span>
-            <span className="text-gray-900 font-bold text-base">{product.highestPrice}</span>
+          <div className="flex-1 bg-gray-100 dark:bg-dark-field px-3 py-2 rounded-xl flex justify-between items-center">
+            <span className="text-gray-600 dark:text-dark-text text-sm">بیشترین قیمت</span>
+            <span className="text-gray-900 dark:text-dark-title font-bold text-base">{product.highestPrice}</span>
           </div>
         </div>
       </div>
       {/* Left Buttons */}
       <div className="flex flex-row md:flex-col gap-2 w-full md:w-32 flex-shrink-0">
-        <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-medium text-sm py-2 rounded-lg">
+        <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 dark:text-dark-title font-medium text-sm py-2 rounded-lg">
           مشاهده محصول
         </Button>
 

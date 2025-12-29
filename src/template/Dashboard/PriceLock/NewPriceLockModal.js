@@ -125,7 +125,7 @@ export default function NewPriceLockModal({ open, onOpenChange, onSubmit }) {
                     </p>
                   </div>
                 </div>
-                <div className="w-32 h-32 relative flex-shrink-0 rounded-xl overflow-hidden bg-gray-100">
+                <div className="w-32 h-32 relative flex-shrink-0 rounded-xl overflow-hidden bg-gray-100 dark:bg-dark-field">
                   <Image
                     src={selectedProduct.image}
                     alt={selectedProduct.name}
@@ -204,5 +204,10 @@ export default function NewPriceLockModal({ open, onOpenChange, onSubmit }) {
     </Dialog>
   );
 }
+
+
+
+
+
 
 

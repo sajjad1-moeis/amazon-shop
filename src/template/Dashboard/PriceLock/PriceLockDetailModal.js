@@ -28,7 +28,7 @@ export default function PriceLockDetailModal({ lock, open, onOpenChange, onCance
         <div className="space-y-6 mt-4">
           {/* Product Info Section */}
           <div className="flex items-start gap-4">
-            <div className="w-24 h-24 relative flex-shrink-0 rounded-xl overflow-hidden bg-gray-100">
+            <div className="w-24 h-24 relative flex-shrink-0 rounded-xl overflow-hidden bg-gray-100 dark:bg-dark-field">
               <Image
                 src={lock.productImage}
                 alt={lock.productName}
@@ -37,7 +37,7 @@ export default function PriceLockDetailModal({ lock, open, onOpenChange, onCance
               />
             </div>
             <div className="flex-1">
-              <h3 className="text-base font-bold text-gray-900 dark:text-dark-title mb-2">
+              <h3 className="text-base font-bold text-gray-900 dark:text-dark-title dark:text-dark-title mb-2">
                 {lock.productName}
               </h3>
               <div className="flex items-center gap-2">
@@ -64,39 +64,39 @@ export default function PriceLockDetailModal({ lock, open, onOpenChange, onCance
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="flex flex-col gap-1">
               <span className="text-sm text-gray-600 dark:text-dark-text">زمان باقی مانده</span>
-              <span className="text-base font-semibold text-gray-900 dark:text-dark-title">{lock.timeRemaining}</span>
+              <span className="text-base font-semibold text-gray-900 dark:text-dark-title dark:text-dark-title">{lock.timeRemaining}</span>
             </div>
             <div className="flex flex-col gap-1">
               <span className="text-sm text-gray-600 dark:text-dark-text">پیش پرداخت</span>
-              <span className="text-base font-semibold text-gray-900 dark:text-dark-title">{lock.downPayment}</span>
+              <span className="text-base font-semibold text-gray-900 dark:text-dark-title dark:text-dark-title">{lock.downPayment}</span>
             </div>
             <div className="flex flex-col gap-1">
               <span className="text-sm text-gray-600 dark:text-dark-text">قیمت قفل شده (تومان)</span>
-              <span className="text-base font-semibold text-gray-900 dark:text-dark-title">{lock.lockedPrice}</span>
+              <span className="text-base font-semibold text-gray-900 dark:text-dark-title dark:text-dark-title">{lock.lockedPrice}</span>
             </div>
           </div>
 
           {/* More Details Section */}
           <div className="border-t border-gray-200 dark:border-dark-stroke pt-4">
-            <h4 className="text-base font-bold text-gray-900 dark:text-dark-title mb-4">جزئیات بیشتر</h4>
+            <h4 className="text-base font-bold text-gray-900 dark:text-dark-title dark:text-dark-title mb-4">جزئیات بیشتر</h4>
             
             {/* First Row */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <div className="flex flex-col gap-1">
                 <span className="text-sm text-gray-600 dark:text-dark-text">تاریخ پرداخت</span>
-                <span className="text-sm font-medium text-gray-900 dark:text-dark-title">
+                <span className="text-sm font-medium text-gray-900 dark:text-dark-title dark:text-dark-title">
                   {lock.paymentDate || "۱۳:۰۹ - ۱۴۰۳/۱۰/۰۱"}
                 </span>
               </div>
               <div className="flex flex-col gap-1">
                 <span className="text-sm text-gray-600 dark:text-dark-text">نرخ تبدیل</span>
-                <span className="text-sm font-medium text-gray-900 dark:text-dark-title">
+                <span className="text-sm font-medium text-gray-900 dark:text-dark-title dark:text-dark-title">
                   {lock.conversionRate || "۱۸,۴۰۰"}
                 </span>
               </div>
               <div className="flex flex-col gap-1">
                 <span className="text-sm text-gray-600 dark:text-dark-text">تاریخ ایجاد</span>
-                <span className="text-sm font-medium text-gray-900 dark:text-dark-title">
+                <span className="text-sm font-medium text-gray-900 dark:text-dark-title dark:text-dark-title">
                   {lock.creationDate || "۱۳:۰۹ - ۱۴۰۳/۱۰/۰۱"}
                 </span>
               </div>
@@ -112,13 +112,13 @@ export default function PriceLockDetailModal({ lock, open, onOpenChange, onCance
               </div>
               <div className="flex flex-col gap-1">
                 <span className="text-sm text-gray-600 dark:text-dark-text">هزینه حمل</span>
-                <span className="text-sm font-medium text-gray-900 dark:text-dark-title">
+                <span className="text-sm font-medium text-gray-900 dark:text-dark-title dark:text-dark-title">
                   {lock.shippingCost || "۱,۲۰۰,۰۰۰ تومان"}
                 </span>
               </div>
               <div className="flex flex-col gap-1">
                 <span className="text-sm text-gray-600 dark:text-dark-text">قیمت پایه</span>
-                <span className="text-sm font-medium text-gray-900 dark:text-dark-title">
+                <span className="text-sm font-medium text-gray-900 dark:text-dark-title dark:text-dark-title">
                   {lock.basePrice || "۱,۲۹۹ AED"}
                 </span>
               </div>
@@ -129,7 +129,7 @@ export default function PriceLockDetailModal({ lock, open, onOpenChange, onCance
           <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200 dark:border-dark-stroke">
             <Button
               variant="outline"
-              className="flex-1 bg-gray-100 hover:bg-gray-200 text-red-500 hover:text-red-600 border-red-200"
+              className="flex-1 bg-gray-100 dark:bg-dark-field hover:bg-gray-200 dark:bg-dark-field text-red-500 hover:text-red-600 border-red-200"
               onClick={() => {
                 if (confirm("آیا از لغو قفل قیمت اطمینان دارید؟")) {
                   onCancelLock?.(lock.id);
@@ -140,7 +140,7 @@ export default function PriceLockDetailModal({ lock, open, onOpenChange, onCance
               لغو قفل
             </Button>
             <Button
-              className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-medium"
+              className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-gray-900 dark:text-dark-title font-medium"
               onClick={() => {
                 // Handle continue purchase
                 console.log("Continue purchase with locked price");

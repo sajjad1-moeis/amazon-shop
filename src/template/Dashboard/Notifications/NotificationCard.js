@@ -24,17 +24,17 @@ const getTypeStyles = (type) => {
       return {
         card: "bg-[#E5E8F599] border-primary-300",
         icon: "text-green-600",
-        actionBtn: "bg-white  border border-primary-700 text-primary-700  hover:bg-gray-50",
+        actionBtn: "bg-white dark:bg-dark-box  border border-primary-700 text-primary-700  hover:bg-gray-50 dark:hover:bg-dark-field",
       };
     case "ticket":
       return {
-        card: "border-gray-200 bg-white",
+        card: "border-gray-200 dark:border-dark-stroke bg-white dark:bg-dark-box",
         icon: "text-yellow-600",
-        actionBtn: "bg-gray-200 text-gray-700",
+        actionBtn: "bg-gray-200 dark:bg-dark-field text-gray-700 dark:text-dark-text",
       };
     default:
       return {
-        card: "border-gray-200 bg-white",
+        card: "border-gray-200 dark:border-dark-stroke bg-white dark:bg-dark-box",
         icon: "text-blue-600",
         actionBtn: "bg-blue-600 text-white border border-blue-600 hover:bg-blue-700",
       };
@@ -71,7 +71,7 @@ export default function NotificationCard({ notification, onDelete, onPinToggle }
 
         {/* Text content */}
         <div className="flex flex-col gap-1">
-          <p className="text-sm text-gray-600">{notification.description}</p>
+          <p className="text-sm text-gray-600 dark:text-dark-text">{notification.description}</p>
         </div>
         <div className="flex items-center gap-3">
           <button onClick={onDelete} className="opacity-0 group-hover:opacity-100 transition-opacity text-red-500">

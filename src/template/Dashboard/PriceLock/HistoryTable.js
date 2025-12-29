@@ -18,7 +18,7 @@ export default function HistoryTable({ locks }) {
         );
       case "inactive":
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-gray-100 text-gray-700 dark:bg-dark-field dark:text-dark-text">
+          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-gray-100 dark:bg-dark-field text-gray-700 dark:bg-dark-field dark:text-dark-text">
             غیر فعال
           </span>
         );
@@ -59,7 +59,7 @@ export default function HistoryTable({ locks }) {
                 {/* Product */}
                 <TableCell>
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 relative flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
+                    <div className="w-12 h-12 relative flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 dark:bg-dark-field">
                       <Image
                         src={lock.productImage}
                         alt={lock.productName}
@@ -105,5 +105,10 @@ export default function HistoryTable({ locks }) {
     </div>
   );
 }
+
+
+
+
+
 
 

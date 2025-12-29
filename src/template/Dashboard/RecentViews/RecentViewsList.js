@@ -75,7 +75,7 @@ export default function RecentViewsList() {
       {/* Top Section: Header with Count */}
 
       <PageHeader title="بازدیدهای اخیر" description="محصولاتی که اخیراً مشاهده کرده‌اید">
-        <Button variant="ghost" className="bg-gray-200 text-red-600">
+        <Button variant="ghost" className="bg-gray-200 dark:bg-dark-field text-red-600">
           <Trash />
           حذف همه بازدید‌ها
         </Button>

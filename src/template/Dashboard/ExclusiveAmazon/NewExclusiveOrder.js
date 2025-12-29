@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Truck, Card, Wallet3 } from "iconsax-reactjs";
 import { cn } from "@/lib/utils";
 
 export default function NewExclusiveOrder() {
@@ -105,7 +106,7 @@ export default function NewExclusiveOrder() {
             </Label>
             <div className="flex gap-4">
               <div className="flex-1 space-y-3">
-                <h3 className="text-base font-bold text-gray-900 dark:text-dark-title">{selectedProduct.name}</h3>
+                <h3 className="text-base font-bold text-gray-900 dark:text-dark-title dark:text-dark-title">{selectedProduct.name}</h3>
                 <div className="space-y-1.5 text-sm text-gray-600 dark:text-dark-text">
                   <p>برند: {selectedProduct.brand}</p>
                   {selectedProduct.available && (
@@ -118,7 +119,7 @@ export default function NewExclusiveOrder() {
                   <p>قیمت فعلی: {selectedProduct.currentPrice}</p>
                 </div>
               </div>
-              <div className="w-32 h-32 relative flex-shrink-0 rounded-xl overflow-hidden bg-gray-100">
+              <div className="w-32 h-32 relative flex-shrink-0 rounded-xl overflow-hidden bg-gray-100 dark:bg-dark-field">
                 <Image
                   src={selectedProduct.image}
                   alt={selectedProduct.name}
@@ -133,33 +134,33 @@ export default function NewExclusiveOrder() {
         {/* Price Calculation Details */}
         {selectedProduct && (
           <div className="bg-white dark:bg-dark-box rounded-2xl shadow-sm p-6">
-            <h3 className="text-base font-bold text-gray-900 dark:text-dark-title mb-4">جزئیات محاسبه قیمت</h3>
+            <h3 className="text-base font-bold text-gray-900 dark:text-dark-title dark:text-dark-title mb-4">جزئیات محاسبه قیمت</h3>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600 dark:text-dark-text">قیمت کالا در آمازون:</span>
-                <span className="text-sm font-medium text-gray-900 dark:text-dark-title">{selectedProduct.amazonPrice}</span>
+                <span className="text-sm font-medium text-gray-900 dark:text-dark-title dark:text-dark-title">{selectedProduct.amazonPrice}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600 dark:text-dark-text">هزینه حمل بین المللی:</span>
-                <span className="text-sm font-medium text-gray-900 dark:text-dark-title">
+                <span className="text-sm font-medium text-gray-900 dark:text-dark-title dark:text-dark-title">
                   {selectedProduct.shippingCost}
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600 dark:text-dark-text">هزینه گمرک و ترخیص:</span>
-                <span className="text-sm font-medium text-gray-900 dark:text-dark-title">
+                <span className="text-sm font-medium text-gray-900 dark:text-dark-title dark:text-dark-title">
                   {selectedProduct.customsFee} تومان
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600 dark:text-dark-text">کارمزد خدمات خرید اختصاصی:</span>
-                <span className="text-sm font-medium text-gray-900 dark:text-dark-title">
+                <span className="text-sm font-medium text-gray-900 dark:text-dark-title dark:text-dark-title">
                   {selectedProduct.serviceFee} تومان
                 </span>
               </div>
               <div className="border-t border-gray-200 dark:border-dark-stroke pt-3 mt-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-base font-bold text-gray-900 dark:text-dark-title">مبلغ نهایی تخمینی:</span>
+                  <span className="text-base font-bold text-gray-900 dark:text-dark-title dark:text-dark-title">مبلغ نهایی تخمینی:</span>
                   <span className="text-base font-bold text-primary-700 dark:text-primary-400">
                     {selectedProduct.estimatedTotal} AED
                   </span>
@@ -176,71 +177,240 @@ export default function NewExclusiveOrder() {
         {/* Shipping Method */}
         {selectedProduct && (
           <div className="bg-white dark:bg-dark-box rounded-2xl shadow-sm p-6">
-            <Label className="text-sm font-medium text-gray-700 dark:text-dark-text mb-4 block">
-              روش ارسال به ایران
-            </Label>
-            <RadioGroup value={shippingMethod} onValueChange={setShippingMethod} className="space-y-3">
-              <div className="flex items-center gap-3 p-3 border border-gray-200 dark:border-dark-stroke rounded-lg hover:bg-gray-50 dark:hover:bg-dark-field">
-                <RadioGroupItem value="normal" id="shipping-normal" />
-                <Label
-                  htmlFor="shipping-normal"
-                  className="flex-1 cursor-pointer text-sm text-gray-700 dark:text-dark-text"
-                >
-                  <span className="font-medium">ارسال عادی</span>
-                  <span className="text-gray-500 dark:text-dark-text mr-2">تحویل ۲۵ تا ۳۰ روز</span>
-                </Label>
+            <h3 className="text-xl text-gray-700 dark:text-dark-title mb-4">روش ارسال به ایران</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Normal Shipping */}
+              <div
+                onClick={() => setShippingMethod("normal")}
+                className={cn(
+                  "border-2 rounded-xl p-4 cursor-pointer transition-all",
+                  shippingMethod === "normal"
+                    ? "bg-primary-50 dark:bg-[#8893BF3D] border-primary-300 dark:border-primary-400"
+                    : "bg-white dark:bg-white/10 border-gray-200 dark:border-dark-stroke hover:border-gray-300"
+                )}
+              >
+                <div className="flex items-start gap-4">
+                  {/* Radio Button */}
+                  <div className="flex items-center pt-1 shrink-0">
+                    <div
+                      className={cn(
+                        "w-5 h-5 rounded-full border-2 bg-white dark:bg-transparent flex items-center justify-center transition-all",
+                        shippingMethod === "normal"
+                          ? "border-primary-500 dark:border-primary-400"
+                          : "border-gray-300 dark:border-dark-stroke"
+                      )}
+                    >
+                      {shippingMethod === "normal" && (
+                        <div className="w-2.5 h-2.5 rounded-full bg-primary-500 dark:bg-primary-400"></div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Icon */}
+                  <div
+                    className={cn(
+                      "shrink-0 text-white p-2 rounded-md",
+                      shippingMethod === "normal" ? "bg-primary-400" : "bg-gray-500"
+                    )}
+                  >
+                    <Truck size={20} />
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1">
+                    <h4
+                      className={cn(
+                        "font-semibold mb-1",
+                        shippingMethod === "normal"
+                          ? "text-primary-500 dark:text-dark-title"
+                          : "text-gray-900 dark:text-dark-titre"
+                      )}
+                    >
+                      ارسال عادی
+                    </h4>
+                    <p className="text-sm text-gray-600 dark:text-dark-text">تحویل ۲۵ تا ۳۰ روز</p>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-3 p-3 border border-gray-200 dark:border-dark-stroke rounded-lg hover:bg-gray-50 dark:hover:bg-dark-field">
-                <RadioGroupItem value="express" id="shipping-express" />
-                <Label
-                  htmlFor="shipping-express"
-                  className="flex-1 cursor-pointer text-sm text-gray-700 dark:text-dark-text"
-                >
-                  <span className="font-medium">ارسال اکسپرس</span>
-                  <span className="text-gray-500 dark:text-dark-text mr-2">تحویل ۱۸ تا ۲۲ روز</span>
-                </Label>
+
+              {/* Express Shipping */}
+              <div
+                onClick={() => setShippingMethod("express")}
+                className={cn(
+                  "border-2 rounded-xl p-4 cursor-pointer transition-all",
+                  shippingMethod === "express"
+                    ? "bg-primary-50 dark:bg-[#8893BF3D] border-primary-300 dark:border-primary-400"
+                    : "bg-white dark:bg-white/10 border-gray-200 dark:border-dark-stroke hover:border-gray-300"
+                )}
+              >
+                <div className="flex items-start gap-4">
+                  {/* Radio Button */}
+                  <div className="flex items-center pt-1 shrink-0">
+                    <div
+                      className={cn(
+                        "w-5 h-5 rounded-full border-2 bg-white dark:bg-transparent flex items-center justify-center transition-all",
+                        shippingMethod === "express"
+                          ? "border-primary-500 dark:border-primary-400"
+                          : "border-gray-300 dark:border-dark-stroke"
+                      )}
+                    >
+                      {shippingMethod === "express" && (
+                        <div className="w-2.5 h-2.5 rounded-full bg-primary-500 dark:bg-primary-400"></div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Icon */}
+                  <div
+                    className={cn(
+                      "shrink-0 text-white p-2 rounded-md",
+                      shippingMethod === "express" ? "bg-green-500" : "bg-gray-500"
+                    )}
+                  >
+                    <Truck size={20} />
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1">
+                    <h4
+                      className={cn(
+                        "font-semibold mb-1",
+                        shippingMethod === "express"
+                          ? "text-primary-500 dark:text-dark-title"
+                          : "text-gray-900 dark:text-dark-titre"
+                      )}
+                    >
+                      ارسال اکسپرس
+                    </h4>
+                    <p className="text-sm text-gray-600 dark:text-dark-text">تحویل ۱۸ تا ۲۲ روز</p>
+                  </div>
+                </div>
               </div>
-            </RadioGroup>
+            </div>
           </div>
         )}
 
         {/* Payment Method */}
         {selectedProduct && (
           <div className="bg-white dark:bg-dark-box rounded-2xl shadow-sm p-6">
-            <Label className="text-sm font-medium text-gray-700 dark:text-dark-text mb-4 block">
-              نحوه پرداخت
-            </Label>
-            <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="space-y-3">
-              <div className="flex items-center gap-3 p-3 border border-gray-200 dark:border-dark-stroke rounded-lg hover:bg-gray-50 dark:hover:bg-dark-field">
-                <RadioGroupItem value="two-stage" id="payment-two-stage" />
-                <Label
-                  htmlFor="payment-two-stage"
-                  className="flex-1 cursor-pointer text-sm text-gray-700 dark:text-dark-text"
-                >
-                  <span className="font-medium">پرداخت دو مرحله ای</span>
-                  <span className="text-gray-500 dark:text-dark-text mr-2 block text-xs mt-1">
-                    پرداخت اولیه برای ثبت سفارش، پرداخت نهایی پس از خرید کالا
-                  </span>
-                </Label>
-              </div>
-              <div className="flex items-center gap-3 p-3 border border-gray-200 dark:border-dark-stroke rounded-lg hover:bg-gray-50 dark:hover:bg-dark-field">
-                <RadioGroupItem value="full" id="payment-full" />
-                <Label
-                  htmlFor="payment-full"
-                  className="flex-1 cursor-pointer text-sm text-gray-700 dark:text-dark-text"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium">پرداخت کامل</span>
-                    <span className="text-xs bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 px-2 py-0.5 rounded">
-                      پیشنهادی
-                    </span>
+            <h3 className="text-xl text-gray-700 dark:text-dark-title mb-4">نحوه پرداخت</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Two-stage Payment */}
+              <div
+                onClick={() => setPaymentMethod("two-stage")}
+                className={cn(
+                  "border-2 rounded-xl p-4 cursor-pointer transition-all relative",
+                  paymentMethod === "two-stage"
+                    ? "bg-primary-50 dark:bg-[#8893BF3D] border-primary-300 dark:border-primary-400"
+                    : "bg-white dark:bg-white/10 border-gray-200 dark:border-dark-stroke hover:border-gray-300"
+                )}
+              >
+                {/* Suggested Badge */}
+                <span className="absolute top-2 left-2 text-xs bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 px-2 py-0.5 rounded">
+                  پیشنهادی
+                </span>
+                <div className="flex items-start gap-4">
+                  {/* Radio Button */}
+                  <div className="flex items-center pt-1 shrink-0">
+                    <div
+                      className={cn(
+                        "w-5 h-5 rounded-full border-2 bg-white dark:bg-transparent flex items-center justify-center transition-all",
+                        paymentMethod === "two-stage"
+                          ? "border-primary-500 dark:border-primary-400"
+                          : "border-gray-300 dark:border-dark-stroke"
+                      )}
+                    >
+                      {paymentMethod === "two-stage" && (
+                        <div className="w-2.5 h-2.5 rounded-full bg-primary-500 dark:bg-primary-400"></div>
+                      )}
+                    </div>
                   </div>
-                  <span className="text-gray-500 dark:text-dark-text block text-xs mt-1">
-                    پرداخت کل مبلغ به صورت یکجا (در صورت تأیید ادمین)
-                  </span>
-                </Label>
+
+                  {/* Icon */}
+                  <div
+                    className={cn(
+                      "shrink-0 text-white p-2 rounded-md",
+                      paymentMethod === "two-stage" ? "bg-primary-400" : "bg-gray-500"
+                    )}
+                  >
+                    <Wallet3 size={20} />
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1">
+                    <h4
+                      className={cn(
+                        "font-semibold mb-1",
+                        paymentMethod === "two-stage"
+                          ? "text-primary-500 dark:text-dark-title"
+                          : "text-gray-900 dark:text-dark-titre"
+                      )}
+                    >
+                      پرداخت دو مرحله ای
+                    </h4>
+                    <p className="text-sm text-gray-600 dark:text-dark-text">
+                      پرداخت اولیه برای ثبت سفارش، پرداخت نهایی پس از خرید کالا
+                    </p>
+                  </div>
+                </div>
               </div>
-            </RadioGroup>
+
+              {/* Full Payment */}
+              <div
+                onClick={() => setPaymentMethod("full")}
+                className={cn(
+                  "border-2 rounded-xl p-4 cursor-pointer transition-all",
+                  paymentMethod === "full"
+                    ? "bg-primary-50 dark:bg-[#8893BF3D] border-primary-300 dark:border-primary-400"
+                    : "bg-white dark:bg-white/10 border-gray-200 dark:border-dark-stroke hover:border-gray-300"
+                )}
+              >
+                <div className="flex items-start gap-4">
+                  {/* Radio Button */}
+                  <div className="flex items-center pt-1 shrink-0">
+                    <div
+                      className={cn(
+                        "w-5 h-5 rounded-full border-2 bg-white dark:bg-transparent flex items-center justify-center transition-all",
+                        paymentMethod === "full"
+                          ? "border-primary-500 dark:border-primary-400"
+                          : "border-gray-300 dark:border-dark-stroke"
+                      )}
+                    >
+                      {paymentMethod === "full" && (
+                        <div className="w-2.5 h-2.5 rounded-full bg-primary-500 dark:bg-primary-400"></div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Icon */}
+                  <div
+                    className={cn(
+                      "shrink-0 text-white p-2 rounded-md",
+                      paymentMethod === "full" ? "bg-primary-400" : "bg-gray-500"
+                    )}
+                  >
+                    <Card size={20} />
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1">
+                    <h4
+                      className={cn(
+                        "font-semibold mb-1",
+                        paymentMethod === "full"
+                          ? "text-primary-500 dark:text-dark-title"
+                          : "text-gray-900 dark:text-dark-titre"
+                      )}
+                    >
+                      پرداخت کامل
+                    </h4>
+                    <p className="text-sm text-gray-600 dark:text-dark-text">
+                      پرداخت کل مبلغ به صورت یکجا (در صورت تأیید ادمین)
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
@@ -249,7 +419,7 @@ export default function NewExclusiveOrder() {
           <div className="flex justify-end">
             <Button
               onClick={handleSubmit}
-              className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-medium px-8 py-3 rounded-lg"
+              className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 dark:text-dark-title font-medium px-8 py-3 rounded-lg"
             >
               ثبت سفارش اختصاصی
             </Button>

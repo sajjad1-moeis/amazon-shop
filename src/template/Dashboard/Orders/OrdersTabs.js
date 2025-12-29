@@ -15,7 +15,7 @@ const tabs = [
 
 export default function OrdersTabs({ activeTab, onTabChange }) {
   return (
-    <div className="flex flex-wrap  bg-white rounded-lg  overflow-hidden">
+    <div className="flex flex-wrap  bg-white dark:bg-dark-box rounded-lg  overflow-hidden">
       {tabs.map((tab) => (
         <button
           key={tab.id}

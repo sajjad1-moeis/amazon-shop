@@ -103,7 +103,7 @@ export default function EditSecurityModal({ isOpen, onClose, onSave }) {
       <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto" dir="rtl">
         <DialogHeader>
           <DialogTitle className="text-2xl">ویرایش امنیت حساب</DialogTitle>
-          <DialogDescription className="text-sm text-gray-600 dark:text-dark-text">
+          <DialogDescription className="text-sm text-gray-600 dark:text-dark-text dark:text-dark-text">
             رمز عبور و تنظیمات امنیتی خود را تغییر دهید
           </DialogDescription>
         </DialogHeader>
@@ -127,7 +127,7 @@ export default function EditSecurityModal({ isOpen, onClose, onSave }) {
               <button
                 type="button"
                 onClick={() => togglePasswordVisibility("current")}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-dark-text"
               >
                 {showPasswords.current ? <EyeSlash size={20} /> : <Eye size={20} />}
               </button>
@@ -153,7 +153,7 @@ export default function EditSecurityModal({ isOpen, onClose, onSave }) {
               <button
                 type="button"
                 onClick={() => togglePasswordVisibility("new")}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-dark-text"
               >
                 {showPasswords.new ? <EyeSlash size={20} /> : <Eye size={20} />}
               </button>
@@ -179,7 +179,7 @@ export default function EditSecurityModal({ isOpen, onClose, onSave }) {
               <button
                 type="button"
                 onClick={() => togglePasswordVisibility("confirm")}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-dark-text"
               >
                 {showPasswords.confirm ? <EyeSlash size={20} /> : <Eye size={20} />}
               </button>

@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button";
 
 export default function PurchaseCard({ product }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-200">
+    <div className="bg-white dark:bg-dark-box rounded-xl border border-gray-200 dark:border-dark-stroke">
       {/* Product Image */}
-      <div className="relative w-full h-40 mb-3  overflow-hidden rounded-xl bg-gray-100">
+      <div className="relative w-full h-40 mb-3  overflow-hidden rounded-xl bg-gray-100 dark:bg-dark-field">
         <Image src={product.image} alt={product.title} fill className="object-cover" />
       </div>
 
@@ -19,20 +19,20 @@ export default function PurchaseCard({ product }) {
         <div className="flex flex-wrap gap-2 mb-4">
           {/* Purchase Date */}
           {/* ID */}
-          <div className="bg-gray-50 rounded-xl p-2 text-center flex-1">
-            <div className="text-sm text-gray-900">{product.id}</div>
-            <div className="text-xs text-gray-500 mt-3 mb-1">شماره</div>
+          <div className="bg-gray-50 dark:bg-dark-field rounded-xl p-2 text-center flex-1">
+            <div className="text-sm text-gray-900 dark:text-dark-title">{product.id}</div>
+            <div className="text-xs text-gray-500 dark:text-dark-text mt-3 mb-1">شماره</div>
           </div>
 
           {/* Amount */}
-          <div className="bg-gray-50 rounded-xl p-2 text-center flex-1">
-            <div className="text-sm text-gray-900">{product.amount}</div>
-            <div className="text-xs text-gray-500 mt-3 mb-1">مبلغ (تومان)</div>
+          <div className="bg-gray-50 dark:bg-dark-field rounded-xl p-2 text-center flex-1">
+            <div className="text-sm text-gray-900 dark:text-dark-title">{product.amount}</div>
+            <div className="text-xs text-gray-500 dark:text-dark-text mt-3 mb-1">مبلغ (تومان)</div>
           </div>
 
-          <div className="bg-gray-50 rounded-xl p-2 text-center flex-1">
-            <div className="text-sm text-gray-900">{product.purchaseDate}</div>
-            <div className="text-xs text-gray-500 mt-3 mb-1">تاریخ خرید</div>
+          <div className="bg-gray-50 dark:bg-dark-field rounded-xl p-2 text-center flex-1">
+            <div className="text-sm text-gray-900 dark:text-dark-title">{product.purchaseDate}</div>
+            <div className="text-xs text-gray-500 dark:text-dark-text mt-3 mb-1">تاریخ خرید</div>
           </div>
         </div>
 

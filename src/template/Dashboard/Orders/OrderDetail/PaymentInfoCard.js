@@ -19,7 +19,7 @@ const Row = ({ label, value, valueClass = "text-gray-900 dark:text-dark-title", 
 
 export default function PaymentInfoCard({ paymentInfo }) {
   return (
-    <div className="bg-white dark:bg-dark-box rounded-xl border border-gray-200 p-3">
+    <div className="bg-white dark:bg-dark-box rounded-xl border border-gray-200 dark:border-dark-stroke p-3">
       <h3 className="text-lg font-bold text-gray-900 dark:text-dark-title mb-4">اطلاعات پرداخت</h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">

@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils";
 
 export default function ProductsTable({ products }) {
   return (
-    <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4 md:p-6 mb-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-dark-title mb-6">لیست کالاها</h3>
+    <div className="bg-white dark:bg-dark-box rounded-xl border border-gray-200 dark:border-dark-stroke p-3">
+      <h3 className="text-lg text-gray-800 dark:text-dark-title mb-6">لیست کالاها</h3>
 
       <div className="border border-gray-200 dark:border-dark-stroke rounded-lg overflow-hidden">
         <Table>
@@ -40,7 +40,7 @@ export default function ProductsTable({ products }) {
                     index === products.length - 1 && "last:border-b-0"
                   )}
                 >
-                  <TableCell className="text-sm text-gray-900 dark:text-dark-title py-4 px-4 font-medium">
+                  <TableCell className="text-sm text-yellow-600 underline dark:text-dark-title py-4 px-4 font-medium">
                     {product.name}
                   </TableCell>
                   <TableCell className="text-sm dark:text-dark-text py-4 px-4">
@@ -66,7 +66,3 @@ export default function ProductsTable({ products }) {
     </div>
   );
 }
-
-
-
-

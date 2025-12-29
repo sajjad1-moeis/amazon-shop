@@ -2,12 +2,13 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Trash } from "iconsax-reactjs";
+import { Add, Trash } from "iconsax-reactjs";
 import { toast } from "sonner";
 import ProductComparisonColumn from "./ProductComparisonColumn";
 import ComparisonTable from "./ComparisonTable";
 import FeatureHighlightCards from "./FeatureHighlightCards";
 import AddProductColumn from "./AddProductColumn";
+import PageHeader from "../Common/PageHeader";
 
 const mockProducts = [
   {
@@ -81,45 +82,49 @@ export default function ProductComparison() {
 
   return (
     <div className="space-y-6">
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-dark-title mb-2">مقایسه محصولات - کنترلر پلی استیشن</h1>
-          <p className="text-gray-600 dark:text-dark-text">دسته بندی : {category}</p>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex gap-3">
-          <Button
-            onClick={handleSaveComparison}
-            className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-medium"
-          >
-            ذخیره مقایسه
-          </Button>
+      <PageHeader
+        title="مقایسه محصولات - کنترلر پلی استیشن"
+        description={
+          <p className="text-gray-600 dark:text-dark-text">
+            دسته بندی : <span className="px-2 py-1 bg-primary-100 text-primary-800 rounded-md text-sm">{category}</span>
+          </p>
+        }
+      >
+        <div class="flex-center gap-2">
           <Button
             variant="destructive"
             onClick={handleDeleteComparison}
-            className="gap-2"
+            className="gap-2 bg-gray-200 text-red-600 hover:text-white"
             disabled={products.length === 0}
           >
-            <Trash size={18} />
             حذف
           </Button>
+          <Button
+            variant="ghost"
+            onClick={handleSaveComparison}
+            className="bg-yellow-500 text-gray-900 dark:text-dark-title font-medium"
+          >
+            ذخیره مقایسه
+          </Button>
         </div>
-      </div>
+      </PageHeader>
 
       {/* Products Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {products.map((product) => (
-          <ProductComparisonColumn
-            key={product.id}
-            product={product}
-            onRemove={() => handleRemoveProduct(product.id)}
-          />
-        ))}
+      <div class="flex gap-6">
+        <div class="max-w-48">
+          <AddProductColumn onAdd={handleAddProduct} />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
+          {products.map((product) => (
+            <ProductComparisonColumn
+              key={product.id}
+              product={product}
+              onRemove={() => handleRemoveProduct(product.id)}
+            />
+          ))}
 
-        {/* Add Product Column */}
-        {products.length < 3 && <AddProductColumn onAdd={handleAddProduct} />}
+          {/* Add Product Column */}
+        </div>
       </div>
 
       {/* Comparison Table */}
@@ -130,4 +135,5 @@ export default function ProductComparison() {
     </div>
   );
 }
+
 

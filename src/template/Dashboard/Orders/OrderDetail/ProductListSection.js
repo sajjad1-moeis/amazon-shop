@@ -74,13 +74,13 @@ export default function ProductListSection({ products, title = "لیست محص�
                     <span className="font-medium text-gray-900 dark:text-dark-title">{product.quantity} عدد</span>
                   </div>
                   <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                    <div className="bg-gray-100 p-2 rounded-lg text-center flex-1">
+                    <div className="bg-gray-100 dark:bg-dark-field p-2 rounded-lg text-center flex-1">
                       <p className="font-medium text-gray-900 dark:text-dark-title mb-3">
                         {product.unitPrice.toLocaleString("fa-IR")}
                       </p>
                       <p>قیمت واحد (ت): </p>
                     </div>
-                    <div className="bg-gray-100 p-2 rounded-lg text-center flex-1">
+                    <div className="bg-gray-100 dark:bg-dark-field p-2 rounded-lg text-center flex-1">
                       <p className="font-medium text-gray-900 dark:text-dark-title mb-3">
                         {product.totalPrice.toLocaleString("fa-IR")}
                       </p>

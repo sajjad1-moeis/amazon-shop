@@ -99,7 +99,7 @@ function SidebarContent({ onLinkClick }) {
   return (
     <div
       dir="rtl"
-      className="w-60 bg-white border-2 md:sticky top-0 border-primary-200 p-3 rounded-2xl max-md:h-full overflow-y-auto"
+      className=" md:w-60 bg-white dark:bg-dark-box md:border-2 md:sticky top-0 border-primary-200 dark:border-dark-stroke p-3 rounded-2xl max-md:h-full overflow-y-auto"
     >
       <Link href={"/dashboard/wallet"} onClick={handleLinkClick}>
         {/* Wallet Card */}
@@ -144,7 +144,9 @@ function SidebarContent({ onLinkClick }) {
                 onClick={handleLinkClick}
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all",
-                  Active ? "text-[#3F51B5] bg-[#E3E7FF] font-medium" : "text-gray-700 hover:bg-gray-50"
+                  Active
+                    ? "text-[#3F51B5] dark:text-primary-400 bg-[#E3E7FF] dark:bg-primary-900/30 font-medium"
+                    : "text-gray-700 dark:text-dark-text hover:bg-gray-50 dark:hover:bg-dark-field"
                 )}
               >
                 <Icon size={22} variant={Active ? "Bold" : "Outline"} color={Active ? "#3F51B5" : "#555"} />
@@ -159,7 +161,9 @@ function SidebarContent({ onLinkClick }) {
                 onClick={() => toggleExpand(item.id)}
                 className={cn(
                   "flex w-full items-center gap-3 px-3 py-2.5 rounded-lg transition-all justify-between",
-                  Active ? "text-[#3F51B5] font-medium" : "text-gray-700 hover:bg-gray-50"
+                  Active
+                    ? "text-[#3F51B5] dark:text-primary-400 font-medium"
+                    : "text-gray-700 dark:text-dark-text hover:bg-gray-50 dark:hover:bg-dark-field"
                 )}
               >
                 <div className="flex gap-2">
@@ -185,7 +189,9 @@ function SidebarContent({ onLinkClick }) {
                         onClick={handleLinkClick}
                         className={cn(
                           "flex items-center gap-2 px-3 py-2 rounded-lg text-sm",
-                          CActive ? "bg-[#E3E7FF] text-[#3F51B5] font-medium" : "text-gray-600 hover:bg-gray-50"
+                          CActive
+                            ? "bg-[#E3E7FF] dark:bg-primary-900/30 text-[#3F51B5] dark:text-primary-400 font-medium"
+                            : "text-gray-600 dark:text-dark-text hover:bg-gray-50 dark:hover:bg-dark-field"
                         )}
                       >
                         {child.label}
@@ -200,7 +206,7 @@ function SidebarContent({ onLinkClick }) {
       </nav>
 
       {/* Logout */}
-      <button className="mt-8 w-full flex items-center gap-3 px-3 py-3 text-gray-700 hover:bg-gray-50 rounded-lg">
+      <button className="mt-8 w-full flex items-center gap-3 px-3 py-3 text-gray-700 dark:text-dark-text hover:bg-gray-50 dark:hover:bg-dark-field rounded-lg">
         <LogoutCurve size={22} />
         خروج از حساب کاربری
       </button>
@@ -228,22 +234,11 @@ export default function DashboardSidebar({ isMobileOpen, setIsMobileOpen }) {
       <aside
         dir="rtl"
         className={cn(
-          "fixed top-0 right-0 h-full w-[280px] bg-white border-l-2 border-primary-200 z-50 md:hidden transition-transform duration-300 ease-in-out shadow-xl",
+          "fixed top-0 right-0 h-full w-[280px] bg-white dark:bg-dark-box border-l-2 border-primary-200 dark:border-dark-stroke z-50 md:hidden transition-transform duration-300 ease-in-out shadow-xl",
           isMobileOpen ? "translate-x-0" : "translate-x-full"
         )}
       >
         <div className="relative h-full overflow-y-auto">
-          {/* Close Button */}
-          <div className="flex w-full justify-end">
-            <button
-              onClick={() => setIsMobileOpen(false)}
-              className=" z-10 bg-white p-2 hover:bg-gray-50 transition-colors"
-            >
-              <CloseCircle size={20} className="text-gray-600" />
-            </button>
-          </div>
-
-          {/* Sidebar Content */}
           <SidebarContent onLinkClick={() => setIsMobileOpen(false)} />
         </div>
       </aside>

@@ -56,29 +56,29 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
       {/* Order Summary - بالا با border */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6 pb-6 border-b border-gray-200 dark:border-dark-stroke">
         <div>
-          <span className="text-sm text-gray-600 dark:text-dark-text">شماره سفارش: </span>
+          <span className="text-sm text-gray-600 dark:text-dark-text dark:text-dark-text">شماره سفارش: </span>
           <span className="text-sm font-medium text-gray-900 dark:text-dark-title">{order.orderNumber}</span>
         </div>
         <div>
-          <span className="text-sm text-gray-600 dark:text-dark-text">تعداد محصول: </span>
+          <span className="text-sm text-gray-600 dark:text-dark-text dark:text-dark-text">تعداد محصول: </span>
           <span className="text-sm font-medium px-1 rounded text-primary-500 bg-primary-100 dark:text-dark-title">
             {order.itemsCount}
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600 dark:text-dark-text">وضعیت:</span>
+          <span className="text-sm text-gray-600 dark:text-dark-text dark:text-dark-text">وضعیت:</span>
           {getStatusBadge(order.status)}
         </div>
         <div>
-          <span className="text-sm text-gray-600 dark:text-dark-text">مبلغ کل: </span>
+          <span className="text-sm text-gray-600 dark:text-dark-text dark:text-dark-text">مبلغ کل: </span>
           <span className="text-sm font-medium text-gray-900 dark:text-dark-title">{order.totalAmount} تومان</span>
         </div>
         <div>
-          <span className="text-sm text-gray-600 dark:text-dark-text">تاریخ سفارش: </span>
+          <span className="text-sm text-gray-600 dark:text-dark-text dark:text-dark-text">تاریخ سفارش: </span>
           <span className="text-sm font-medium text-gray-900 dark:text-dark-title">{order.orderDate}</span>
         </div>
         <div>
-          <span className="text-sm text-gray-600 dark:text-dark-text">درصد پرداختی: </span>
+          <span className="text-sm text-gray-600 dark:text-dark-text dark:text-dark-text">درصد پرداختی: </span>
           <span className="text-sm font-medium text-green-600 dark:text-dark-title">{order.paymentStatus}</span>
         </div>
       </div>
@@ -124,14 +124,14 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-2 text-xs text-gray-600 dark:text-dark-text">
-                  <div className="bg-gray-200 flex-1 rounded-lg p-2">
+                <div className="flex flex-col sm:flex-row gap-2 text-xs text-gray-600 dark:text-dark-text dark:text-dark-text">
+                  <div className="bg-gray-200 dark:bg-dark-field flex-1 rounded-lg p-2">
                     قیمت کالا (تومان):{" "}
                     <span className="font-medium text-gray-900 dark:text-dark-title">
                       {product.price.toLocaleString("fa-IR")}
                     </span>
                   </div>
-                  <div className="bg-gray-200 flex rounded-lg p-2">
+                  <div className="bg-gray-200 dark:bg-dark-field flex rounded-lg p-2">
                     تعداد: <span className="font-medium text-gray-900 dark:text-dark-title">{product.quantity} عدد</span>
                   </div>
                 </div>
@@ -148,7 +148,7 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
             وضعیت سفارش:
           </AccordionTrigger>
           <AccordionContent className="pt-4">
-            <div className="text-gray-600 mb-2 text-sm">{order.timeline.productName || "محصول اول"}</div>
+            <div className="text-gray-600 dark:text-dark-text mb-2 text-sm">{order.timeline.productName || "محصول اول"}</div>
             <div className="px-2 pb-20  relative">
               {order.timeline && order.timeline.steps && order.timeline.steps.length > 0 ? (
                 <Timeline currentStep={order.timeline.currentStepIndex} steps={order.timeline.steps} />
