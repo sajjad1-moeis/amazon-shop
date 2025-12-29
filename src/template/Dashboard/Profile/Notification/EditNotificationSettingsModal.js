@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { InfoCiInfoCircle, rcle, Warning2 } from "iconsax-reactjs";
+import { InfoCircle, Warning2 } from "iconsax-reactjs";
 import { toast } from "sonner";
 
 const notificationTypes = [
@@ -187,3 +187,4 @@ export default function EditNotificationSettingsModal({ isOpen, onClose, initial
     </Dialog>
   );
 }
+

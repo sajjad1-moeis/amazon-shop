@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Edit2, Lock, Devices, Profile, Lock1 } from "iconsax-reactjs";
 import EditSecurityModal from "./EditSecurityModal";
 import ConnectedDevicesModal from "./ConnectedDevicesModal";
-import { Row } from "./BasicInfoCard";
+import { Row } from "../BasicInfo/BasicInfoCard";
 
 const securityData = {
   password: "******",
@@ -71,3 +71,4 @@ export default function SecurityCard() {
     </div>
   );
 }
+

@@ -162,3 +162,4 @@ export default function EditFinancialInfoModal({ isOpen, onClose, initialData })
     </Dialog>
   );
 }
+

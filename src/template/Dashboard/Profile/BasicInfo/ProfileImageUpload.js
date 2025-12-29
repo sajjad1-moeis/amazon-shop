@@ -66,3 +66,4 @@ export default function ProfileImageUpload({ image, onImageChange }) {
     </div>
   );
 }
+

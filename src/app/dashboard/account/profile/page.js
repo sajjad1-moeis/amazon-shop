@@ -1,9 +1,9 @@
 import DashboardLayout from "@/layout/DashboardLayout";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
-import BasicInfoCard from "@/template/Dashboard/Profile/BasicInfoCard";
-import FinancialInfoCard from "@/template/Dashboard/Profile/FinancialInfoCard";
-import NotificationSettingsCard from "@/template/Dashboard/Profile/NotificationSettingsCard";
-import SecurityCard from "@/template/Dashboard/Profile/SecurityCard";
+import BasicInfoCard from "@/template/Dashboard/Profile/BasicInfo/BasicInfoCard";
+import FinancialInfoCard from "@/template/Dashboard/Profile/Financial/FinancialInfoCard";
+import NotificationSettingsCard from "@/template/Dashboard/Profile/Notification/NotificationSettingsCard";
+import SecurityCard from "@/template/Dashboard/Profile/Security/SecurityCard";
 
 export default function ProfilePage() {
   return (

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Edit2, Cards } from "iconsax-reactjs";
 import EditFinancialInfoModal from "./EditFinancialInfoModal";
-import { Row } from "./BasicInfoCard";
+import { Row } from "../BasicInfo/BasicInfoCard";
 
 const financialData = {
   shaba: "IR۸۲۰۵۴۰۱۰۲۶۸۰۰۲۰۸۱۷۹۰۹۰۰۲",
@@ -60,3 +60,4 @@ export default function FinancialInfoCard() {
     </div>
   );
 }
+

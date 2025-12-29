@@ -24,3 +24,4 @@ export default function TwoFactorToggle({ enabled, onToggle }) {
     </div>
   );
 }
+

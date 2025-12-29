@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Edit2, Lock1, Notification, NotificationBing } from "iconsax-reactjs";
 import EditNotificationSettingsModal from "./EditNotificationSettingsModal";
-import { Row } from "./BasicInfoCard";
+import { Row } from "../BasicInfo/BasicInfoCard";
 
 const notificationData = {
   notificationTypes: ["orders", "tickets"],
@@ -82,3 +82,4 @@ export default function NotificationSettingsCard() {
     </div>
   );
 }
+
