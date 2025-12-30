@@ -17,8 +17,8 @@ const RULES_SECTIONS = [
     title: "",
     content: (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-gray-100 rounded-xl p-3">
-          <h4 className="text-gray-700 mb-3">نحوه ثبت سفارش</h4>
+        <div className="bg-gray-100 dark:bg-dark-field rounded-xl p-3">
+          <h4 className="text-gray-700 mb-3 dark:text-dark-titre">نحوه ثبت سفارش</h4>
 
           <ul className=" text-gray-600 dark:text-dark-text leading-relaxed mb-2 list-disc ps-5 space-y-2 text-sm">
             <li>ثبت سفارش فقط از طریق وارد کردن لینک مستقیم محصول در Amazon.ae یا ASIN امکان‌پذیر است.</li>
@@ -28,8 +28,8 @@ const RULES_SECTIONS = [
             <li>هر سفارش پس از ثبت، قبل از خرید نهایی توسط تیم بررسی می‌شود.</li>
           </ul>
         </div>
-        <div className="bg-gray-100 rounded-xl p-3">
-          <h4 className="text-gray-700 mb-3">فرآیند بررسی و خرید</h4>
+        <div className="bg-gray-100 rounded-xl p-3 dark:bg-dark-field">
+          <h4 className="text-gray-700 mb-3 dark:text-dark-titre">فرآیند بررسی و خرید</h4>
           <ul className=" text-gray-600 dark:text-dark-text leading-relaxed mb-2 list-disc ps-5 space-y-2 text-sm">
             <li>پس از ثبت سفارش، وضعیت آن در حالت «در انتظار بررسی» قرار می‌گیرد.</li>
             <li>سفارش‌ها به‌صورت دستی توسط ادمین بررسی می‌شوند.</li>
@@ -44,8 +44,8 @@ const RULES_SECTIONS = [
     title: "",
     content: (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-gray-100 rounded-xl p-3">
-          <h4 className="text-gray-700 mb-3">قیمت گذاری و پرداخت</h4>
+        <div className="bg-gray-100 rounded-xl p-3 dark:bg-dark-field">
+          <h4 className="text-gray-700 mb-3 dark:text-dark-titre">قیمت گذاری و پرداخت</h4>
 
           <ul className=" text-gray-600 dark:text-dark-text leading-relaxed mb-2 list-disc ps-5 space-y-2 text-sm">
             <li>ثبت سفارش فقط از طریق وارد کردن لینک مستقیم محصول در Amazon.ae یا ASIN امکان‌پذیر است.</li>
@@ -55,8 +55,8 @@ const RULES_SECTIONS = [
             <li>هر سفارش پس از ثبت، قبل از خرید نهایی توسط تیم بررسی می‌شود.</li>
           </ul>
         </div>
-        <div className="bg-gray-100 rounded-xl p-3">
-          <h4 className="text-gray-700 mb-3">حمل، گمرک و محدودیت ها</h4>
+        <div className="bg-gray-100 rounded-xl p-3 dark:bg-dark-field">
+          <h4 className="text-gray-700 mb-3 dark:text-dark-titre">حمل، گمرک و محدودیت ها</h4>
           <ul className=" text-gray-600 dark:text-dark-text leading-relaxed mb-2 list-disc ps-5 space-y-2 text-sm">
             <li>ثبت سفارش فقط از طریق وارد کردن لینک مستقیم محصول در Amazon.ae یا ASIN امکان‌پذیر است.</li>
             <li>
@@ -134,7 +134,7 @@ export default function RulesTab() {
       <div className="space-y-6">
         {RULES_SECTIONS.map((section, index) => (
           <div key={index}>
-            <h3 className="text-lg  text-gray-700 dark:text-dark-title mb-2">{section.title}</h3>
+            <h3 className="text-lg  text-gray-700 dark:text-dark-titre mb-2">{section.title}</h3>
             {section.content}
           </div>
         ))}

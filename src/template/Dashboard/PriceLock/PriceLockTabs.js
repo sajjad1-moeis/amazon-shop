@@ -29,7 +29,7 @@ export default function PriceLockTabs({
           <TabsTrigger
             key={tab.value}
             value={tab.value}
-            className="data-[state=active]:bg-primary-50 data-[state=active]:border-b-2 dark:data-[state=active]:border-dark-title border-primary-500 !w-full data-[state=active]:text-primary-600 dark:data-[state=active]:text-dark-title dark:data-[state=active]:bg-white dark:bg-dark-box/10 dark:text-dark-text text-gray-500 dark:text-dark-text px-5 py-3 rounded-none transition"
+            className="data-[state=active]:bg-primary-50 dark:data-[state=active]:bg-dark-blue data-[state=active]:border-b-2 dark:data-[state=active]:border-dark-title border-primary-500 !w-full data-[state=active]:text-primary-600 dark:data-[state=active]:text-dark-title  dark:bg-dark-box/10 dark:text-dark-text text-gray-500 px-5 py-4 rounded-none transition"
           >
             {tab.label}
           </TabsTrigger>
@@ -54,5 +54,3 @@ export default function PriceLockTabs({
     </Tabs>
   );
 }
-
-

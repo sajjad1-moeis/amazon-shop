@@ -47,7 +47,7 @@ export default function ExclusiveAmazonList() {
       <PageHeader title="خرید اختصاصی از آمازون" description="دسترسی ویژه برای سفارش کالاهای خاص و غیر عمومی">
         <Button
           onClick={handleNewOrder}
-          className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 dark:text-dark-title font-medium gap-2"
+          className="bg-yellow-500 hover:bg-yellow-600 text-primary-800  font-medium gap-2"
         >
           ثبت سفارش جدید
           <Add size={20} />
@@ -68,4 +68,3 @@ export default function ExclusiveAmazonList() {
     </DashboardLayout>
   );
 }
-

@@ -45,7 +45,7 @@ export default function Timeline({ currentStep = 1, steps }) {
             >
               <div
                 style={{ boxShadow: "0px 1px 5px -1px #0000001F" }}
-                className={`size-[52px] text-xl flex items-center bg-white dark:bg-dark-box justify-center rounded-full shadow-md transition-all duration-300 `}
+                className={`size-[52px] text-xl flex items-center bg-white dark:bg-dark-field justify-center rounded-full shadow-md transition-all duration-300 `}
               >
                 <Icon variant="Bold" className={` w-6 h-6 `} />
               </div>

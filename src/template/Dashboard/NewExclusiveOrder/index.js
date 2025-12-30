@@ -58,10 +58,7 @@ export default function NewExclusiveOrder() {
 
   return (
     <div dir="rtl">
-      <PageHeader
-        title="ثبت سفارش جدید"
-        description="برای ثبت سفارش خرید اختصاصی از آمازون اطلاعات زیر را وارد کنید"
-      />
+      <PageHeader title="ثبت سفارش جدید" description="برای ثبت سفارش خرید اختصاصی از آمازون اطلاعات زیر را وارد کنید" />
 
       <div className="mt-6 space-y-6">
         <ProductInputSection
@@ -74,18 +71,12 @@ export default function NewExclusiveOrder() {
           <>
             <ProductCard product={selectedProduct} />
             <PriceCalculationDetails product={selectedProduct} />
-            <ShippingMethodSection
-              selectedMethod={shippingMethod}
-              onMethodChange={setShippingMethod}
-            />
-            <PaymentMethodSection
-              selectedMethod={paymentMethod}
-              onMethodChange={setPaymentMethod}
-            />
+            <ShippingMethodSection selectedMethod={shippingMethod} onMethodChange={setShippingMethod} />
+            <PaymentMethodSection selectedMethod={paymentMethod} onMethodChange={setPaymentMethod} />
             <div className="flex justify-end">
               <Button
                 onClick={handleSubmit}
-                className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 dark:text-dark-title font-medium px-8 py-3 rounded-lg"
+                className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-medium px-8 py-3 rounded-lg"
               >
                 ثبت سفارش اختصاصی
               </Button>
@@ -96,4 +87,3 @@ export default function NewExclusiveOrder() {
     </div>
   );
 }
-

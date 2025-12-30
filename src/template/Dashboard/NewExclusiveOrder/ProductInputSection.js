@@ -4,6 +4,8 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { filterInputStyles } from "@/utils/filterStyles";
+import { cn } from "@/lib/utils";
 
 export default function ProductInputSection({ productLink, onProductLinkChange, onSearch }) {
   return (
@@ -24,10 +26,14 @@ export default function ProductInputSection({ productLink, onProductLinkChange, 
                 onSearch();
               }
             }}
-            className="flex-1 bg-gray-50 border border-gray-200"
+            className={cn("flex-1 bg-gray-50 border border-gray-200", filterInputStyles)}
             dir="rtl"
           />
-          <Button type="button" onClick={onSearch} className="bg-primary-600 hover:bg-primary-700 text-white">
+          <Button
+            type="button"
+            onClick={onSearch}
+            className="bg-primary-600 hover:bg-primary-700 dark:bg-dark-primary dark:hover:bg-primary-600 text-white"
+          >
             جستجو
           </Button>
         </div>

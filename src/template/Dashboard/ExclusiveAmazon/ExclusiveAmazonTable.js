@@ -21,7 +21,7 @@ export default function ExclusiveAmazonTable({ orders }) {
             <TableHead className="text-right last:rounded-tl-lg">عملیات</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="dark:bg-white/5">
           {orders.length === 0 ? (
             <TableRow>
               <TableCell colSpan={6} className="text-center py-8 text-gray-500 dark:text-dark-text">
@@ -38,13 +38,13 @@ export default function ExclusiveAmazonTable({ orders }) {
                 )}
               >
                 {/* Order Number */}
-                <TableCell className="text-sm text-gray-900 dark:text-dark-title">#{order.orderNumber}</TableCell>
+                <TableCell className="text-sm text-gray-900 dark:text-dark-titre">#{order.orderNumber}</TableCell>
 
                 {/* ASIN/Link */}
-                <TableCell className="text-sm text-gray-900 dark:text-dark-title">{order.asin}</TableCell>
+                <TableCell className="text-sm text-gray-900 dark:text-dark-titre">{order.asin}</TableCell>
 
                 {/* Final Amount */}
-                <TableCell className="text-sm text-gray-900 dark:text-dark-title">{order.finalAmount} تومان</TableCell>
+                <TableCell className="text-sm text-gray-900 dark:text-dark-titre">{order.finalAmount} تومان</TableCell>
 
                 {/* Status */}
                 <TableCell>
@@ -57,7 +57,7 @@ export default function ExclusiveAmazonTable({ orders }) {
                 {/* Operations */}
                 <TableCell>
                   <Link href="#">
-                    <Button variant="secondary" size="sm" className="gap-2 bg-gray-100">
+                    <Button variant="secondary" size="sm" className="gap-2 bg-gray-100 dark:bg-dark-stroke">
                       مشاهده جزئیات
                     </Button>
                   </Link>

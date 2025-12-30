@@ -41,7 +41,7 @@ export default function DashboardHeader({ onMenuClick }) {
         </div>
 
         {/* Center: Search Bar */}
-        <div className="flex-1 flex items-center justify-center mx-2 md:mx-4">
+        <div className="flex-1 max-md:hidden flex items-center justify-center mx-2 md:mx-4">
           <div className="bg-white  dark:bg-[#8989893D] dark:border-dark-stroke dark:border w-full rounded-lg p-1 flex-between">
             <input
               type="text"

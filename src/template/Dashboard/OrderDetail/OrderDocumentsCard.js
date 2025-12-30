@@ -15,7 +15,7 @@ export default function OrderDocumentsCard({ documents = [] }) {
           <h3 className="text-lg  text-gray-900 dark:text-dark-title">مستندات سفارش</h3>
           <Button
             onClick={() => setModalOpen(true)}
-            className="bg-primary-700 hover:bg-primary-800 text-white rounded-lg gap-2 text-sm"
+            className="bg-primary-700 hover:bg-primary-800 dark:bg-dark-primary text-white rounded-lg gap-2 text-sm"
           >
             <DocumentText size={18} />
             درخواست مستند خرید

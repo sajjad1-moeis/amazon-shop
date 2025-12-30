@@ -22,7 +22,7 @@ export default function PriceLockDetailModal({ lock, open, onOpenChange, onCance
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange} dir="rtl">
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl dark:bg-dark-box" dir="rtl">
         <DialogHeader className="relative">
           <DialogTitle className="text-xl font-bold text-primary-700 dark:text-dark-title text-center mb-0">
             جزئیات قفل قیمت
@@ -59,7 +59,7 @@ export default function PriceLockDetailModal({ lock, open, onOpenChange, onCance
               <Clock size={20} className="text-blue-700 dark:text-blue-400" />
               <span className="text-lg font-bold text-blue-700 dark:text-blue-400">{lock.countdown}</span>
             </div>
-            <Link href="#" className="text-sm font-medium text-orange-600 hover:underline">
+            <Link href="#" className="text-sm font-medium text-orange-600 dark:text-orange-400 hover:underline">
               مشاهده در آمازون
             </Link>
           </div>
@@ -136,13 +136,13 @@ export default function PriceLockDetailModal({ lock, open, onOpenChange, onCance
           <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200 dark:border-dark-stroke">
             <Button
               variant="outline"
-              className="flex-1 bg-gray-100 dark:bg-dark-field hover:bg-gray-200 dark:bg-dark-field text-red-500 hover:text-red-600 border-red-200"
+              className="flex-1 bg-gray-100 dark:bg-dark-field hover:bg-gray-200 dark:hover:bg-dark-field/80 text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 border-red-200 dark:border-red-800"
               onClick={() => setDeleteDialogOpen(true)}
             >
               لغو قفل
             </Button>
             <Button
-              className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-gray-900 dark:text-dark-title font-medium"
+              className="flex-1 bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-600 text-gray-900 dark:text-dark-title font-medium"
               onClick={() => {
                 // Handle continue purchase
                 console.log("Continue purchase with locked price");

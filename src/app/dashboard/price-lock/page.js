@@ -103,10 +103,7 @@ export default function PriceLockList() {
   return (
     <DashboardLayout>
       <PageHeader title="قفل قیمت" description="قیمت برخی محصولات را برای مدت محدود ثابت نگه دارید">
-        <Button
-          onClick={handleNewLock}
-          className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 dark:text-dark-title font-medium gap-2"
-        >
+        <Button onClick={handleNewLock} className="bg-yellow-500 hover:bg-yellow-600 text-gray-900  font-medium gap-2">
           <Lock size={20} />
           قفل قیمت جدید
         </Button>
@@ -140,4 +137,3 @@ export default function PriceLockList() {
     </DashboardLayout>
   );
 }
-

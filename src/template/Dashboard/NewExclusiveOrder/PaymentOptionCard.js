@@ -24,7 +24,7 @@ export default function PaymentOptionCard({ option, isSelected, onSelect }) {
     >
       {/* Suggested Badge */}
       {option.suggested && (
-        <span className="absolute -top-2 -rotate-[20deg] -left-2 text-sm bg-primary-100 text-primary-700 border border-primary-300 dark:bg-primary-900/30 dark:text-primary-400 px-2 py-0.5 rounded-md">
+        <span className="absolute -top-2 -rotate-[20deg] -left-2 text-sm bg-primary-100 text-primary-700 border border-primary-300 dark:bg-dark-blue dark:text-dark-title px-2 py-0.5 rounded-md">
           پیشنهادی
         </span>
       )}

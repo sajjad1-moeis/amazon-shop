@@ -12,10 +12,10 @@ export default function HistoryTable({ locks }) {
   // StatusBadge component is used instead
 
   return (
-    <div className="border border-gray-200 dark:border-dark-stroke rounded-lg overflow-hidden">
+    <div className="border border-gray-200 dark:border-dark-stroke  rounded-lg overflow-hidden">
       <Table>
         <TableHeader>
-          <TableRow className="bg-gray-50 dark:bg-dark-stroke">
+          <TableRow className="bg-gray-50 dark:bg-dark-stroke dark:text-dark-titre">
             <TableHead className="text-right first:rounded-tr-lg">محصول</TableHead>
             <TableHead className="text-right">قیمت قفل شده</TableHead>
             <TableHead className="text-right">تاریخ ایجاد</TableHead>
@@ -46,12 +46,12 @@ export default function HistoryTable({ locks }) {
                     <div className="w-12 h-12 relative flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 dark:bg-dark-field">
                       <Image src={lock.productImage} alt={lock.productName} fill className="object-cover" />
                     </div>
-                    <span className="text-sm text-gray-900 dark:text-dark-title">{lock.productName}</span>
+                    <span className="text-sm text-gray-900 dark:text-dark-titre">{lock.productName}</span>
                   </div>
                 </TableCell>
 
                 {/* Locked Price */}
-                <TableCell className="text-sm text-gray-900 dark:text-dark-title">{lock.lockedPrice} تومان</TableCell>
+                <TableCell className="text-sm text-gray-900 dark:text-dark-titre">{lock.lockedPrice} تومان</TableCell>
 
                 {/* Creation Date */}
                 <TableCell className="text-sm text-gray-600 dark:text-dark-text">{lock.creationDate}</TableCell>
@@ -67,7 +67,7 @@ export default function HistoryTable({ locks }) {
                 {/* Operations */}
                 <TableCell>
                   <Link href="#">
-                    <Button variant="outline" size="sm" className="gap-2">
+                    <Button variant="ghost" size="sm" className="gap-2 dark:bg-dark-stroke border dark:border-0">
                       مشاهده جزئیات
                     </Button>
                   </Link>
