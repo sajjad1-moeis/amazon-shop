@@ -4,6 +4,7 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SearchNormal1 } from "iconsax-reactjs";
+import { filterInputStyles, filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
 
 export default function MessagesFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
@@ -23,7 +24,7 @@ export default function MessagesFilter({ filters, onFiltersChange }) {
           placeholder="جستجو بر اساس عنوان پیام ..."
           value={filters.searchQuery || ""}
           onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
-          className="pr-10"
+          className={`pr-10 ${filterInputStyles}`}
         />
       </div>
 
@@ -35,10 +36,10 @@ export default function MessagesFilter({ filters, onFiltersChange }) {
           value={filters.messageType || undefined}
           onValueChange={(value) => handleFilterChange("messageType", value)}
         >
-          <SelectTrigger className="w-32">
+          <SelectTrigger className={filterSelectTriggerStyles}>
             <SelectValue placeholder="نوع پیام" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className={filterSelectContentStyles}>
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="support">پشتیبانی</SelectItem>
             <SelectItem value="payment">پرداخت</SelectItem>
@@ -46,10 +47,10 @@ export default function MessagesFilter({ filters, onFiltersChange }) {
           </SelectContent>
         </Select>
         <Select value={filters.sortBy || undefined} onValueChange={(value) => handleFilterChange("sortBy", value)}>
-          <SelectTrigger className="w-32">
+          <SelectTrigger className={filterSelectTriggerStyles}>
             <SelectValue placeholder="مرتب سازی" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className={filterSelectContentStyles}>
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="newest">جدیدترین</SelectItem>
             <SelectItem value="oldest">قدیمی‌ترین</SelectItem>

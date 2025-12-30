@@ -4,6 +4,7 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SearchNormal1 } from "iconsax-reactjs";
+import { filterInputStyles, filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
 
 export default function RequestsFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
@@ -23,7 +24,7 @@ export default function RequestsFilter({ filters, onFiltersChange }) {
           placeholder="جستجو بر اساس کد درخواست..."
           value={filters.searchQuery || ""}
           onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
-          className="pr-10"
+          className={`pr-10 ${filterInputStyles}`}
         />
       </div>
 
@@ -33,10 +34,10 @@ export default function RequestsFilter({ filters, onFiltersChange }) {
           value={filters.serviceType || undefined}
           onValueChange={(value) => handleFilterChange("serviceType", value)}
         >
-          <SelectTrigger className="w-full md:w-fit gap-5" dir="rtl">
+          <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
             <SelectValue placeholder="نوع خدمت" />
           </SelectTrigger>
-          <SelectContent dir="rtl">
+          <SelectContent className={filterSelectContentStyles} dir="rtl">
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="transfer">انتقال حواله</SelectItem>
             <SelectItem value="payment">پرداخت سرویس خارجی</SelectItem>
@@ -45,10 +46,10 @@ export default function RequestsFilter({ filters, onFiltersChange }) {
         </Select>
         {/* Status */}
         <Select value={filters.status || undefined} onValueChange={(value) => handleFilterChange("status", value)}>
-          <SelectTrigger className="w-full md:w-[140px]" dir="rtl">
+          <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
             <SelectValue placeholder="وضعیت" />
           </SelectTrigger>
-          <SelectContent dir="rtl">
+          <SelectContent className={filterSelectContentStyles} dir="rtl">
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="reviewing">در حال بررسی</SelectItem>
             <SelectItem value="successful">موفق</SelectItem>
@@ -62,10 +63,10 @@ export default function RequestsFilter({ filters, onFiltersChange }) {
           value={filters.dateRange || undefined}
           onValueChange={(value) => handleFilterChange("dateRange", value)}
         >
-          <SelectTrigger className="w-full md:w-fit gap-5" dir="rtl">
+          <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
             <SelectValue placeholder="بازه تاریخ" />
           </SelectTrigger>
-          <SelectContent dir="rtl">
+          <SelectContent className={filterSelectContentStyles} dir="rtl">
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="today">امروز</SelectItem>
             <SelectItem value="week">این هفته</SelectItem>

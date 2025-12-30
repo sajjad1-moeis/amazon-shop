@@ -40,8 +40,9 @@ export default function RequestDocumentModal({ isOpen, onClose }) {
 
         <div className="space-y-6 py-4">
           {/* Introductory Paragraph */}
-          <p className="text-sm text-gray-700 dark:text-dark-text leading-relaxed text-right">
-            برای درخواست مستند خرید، لطفا یک اسکرین‌شات از صفحه ثبت سفارش خود در سایت آمازون (یا هر سایت دیگری که از آن خرید کرده‌اید) تهیه کنید. این اسکرین‌شات باید شامل اطلاعات زیر باشد:
+          <p className="text-sm text-gray-700 dark:text-dark-text dark:bg-white/5 leading-relaxed text-right">
+            برای درخواست مستند خرید، لطفا یک اسکرین‌شات از صفحه ثبت سفارش خود در سایت آمازون (یا هر سایت دیگری که از آن
+            خرید کرده‌اید) تهیه کنید. این اسکرین‌شات باید شامل اطلاعات زیر باشد:
           </p>
 
           {/* Warning/Information Box */}
@@ -50,7 +51,7 @@ export default function RequestDocumentModal({ isOpen, onClose }) {
               <Warning2 size={24} className="text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
               <div className="flex-1 space-y-2">
                 {requiredInfo.map((info, index) => (
-                  <p key={index} className="text-sm text-gray-700 dark:text-dark-text text-right">
+                  <p key={index} className="text-sm text-gray-700 dark:text-dark-text dark:bg-white/5 text-right">
                     {info}
                   </p>
                 ))}
@@ -59,8 +60,9 @@ export default function RequestDocumentModal({ isOpen, onClose }) {
           </div>
 
           {/* Concluding Paragraph */}
-          <p className="text-sm text-gray-700 dark:text-dark-text leading-relaxed text-right">
-            پس از تهیه اسکرین‌شات، آن را در بخش تیکت‌های پشتیبانی برای ما ارسال کنید. مستند خرید شما حداکثر تا ۲۴ ساعت کاری آماده و برای شما ارسال خواهد شد.
+          <p className="text-sm text-gray-700 dark:text-dark-text dark:bg-white/5 leading-relaxed text-right">
+            پس از تهیه اسکرین‌شات، آن را در بخش تیکت‌های پشتیبانی برای ما ارسال کنید. مستند خرید شما حداکثر تا ۲۴ ساعت
+            کاری آماده و برای شما ارسال خواهد شد.
           </p>
         </div>
 
@@ -87,4 +89,3 @@ export default function RequestDocumentModal({ isOpen, onClose }) {
     </Dialog>
   );
 }
-

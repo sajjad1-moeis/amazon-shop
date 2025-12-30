@@ -6,21 +6,20 @@ import { Add } from "iconsax-reactjs";
 import AddressCard from "./AddressCard";
 import AddressModal from "@/components/module/AddressModal";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
-import { useAddresses } from "@/utils/func/use-address";
-import { formatAddress, formatFullName, parseAddressData } from "@/utils/func/address-utlis";
+import { useAddresses } from "@/hooks/use-address";
+import { formatAddress, formatFullName, parseAddressData } from "@/utils/address-utlis";
 import { toast } from "sonner";
 import { mockAddresses } from "@/data";
 import ConfirmDialog from "@/components/ConfirmDialog";
 
 export default function AddressesList({ isModalOpen, setIsModalOpen, editingAddress, setEditingAddress }) {
   const { addresses, addAddress, updateAddress, deleteAddress, setDefaultAddress } = useAddresses(mockAddresses);
-  
-  // اگر props پاس داده نشده باشد، state را خودمان مدیریت می‌کنیم
+
   const [internalIsModalOpen, setInternalIsModalOpen] = useState(false);
   const [internalEditingAddress, setInternalEditingAddress] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
-  
+
   const modalOpen = isModalOpen !== undefined ? isModalOpen : internalIsModalOpen;
   const setModalOpen = setIsModalOpen || setInternalIsModalOpen;
   const editing = editingAddress !== undefined ? editingAddress : internalEditingAddress;
@@ -95,7 +94,7 @@ export default function AddressesList({ isModalOpen, setIsModalOpen, editingAddr
         className="bg-white dark:bg-dark-box rounded-2xl shadow-md p-4 md:p-6"
         style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
       >
-        <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-dark-title mb-4">لیست آدرسهای ثبت شده</h2>
+        <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-dark-titre mb-4">لیست آدرسهای ثبت شده</h2>
         <div className="space-y-4">
           {addresses.map((address) => (
             <AddressCard

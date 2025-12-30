@@ -15,7 +15,7 @@ export default function HistoryTable({ locks }) {
     <div className="border border-gray-200 dark:border-dark-stroke rounded-lg overflow-hidden">
       <Table>
         <TableHeader>
-          <TableRow className="bg-gray-50 dark:bg-dark-field/50">
+          <TableRow className="bg-gray-50 dark:bg-dark-stroke">
             <TableHead className="text-right first:rounded-tr-lg">محصول</TableHead>
             <TableHead className="text-right">قیمت قفل شده</TableHead>
             <TableHead className="text-right">تاریخ ایجاد</TableHead>
@@ -44,31 +44,20 @@ export default function HistoryTable({ locks }) {
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 relative flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 dark:bg-dark-field">
-                      <Image
-                        src={lock.productImage}
-                        alt={lock.productName}
-                        fill
-                        className="object-cover"
-                      />
+                      <Image src={lock.productImage} alt={lock.productName} fill className="object-cover" />
                     </div>
                     <span className="text-sm text-gray-900 dark:text-dark-title">{lock.productName}</span>
                   </div>
                 </TableCell>
 
                 {/* Locked Price */}
-                <TableCell className="text-sm text-gray-900 dark:text-dark-title">
-                  {lock.lockedPrice} تومان
-                </TableCell>
+                <TableCell className="text-sm text-gray-900 dark:text-dark-title">{lock.lockedPrice} تومان</TableCell>
 
                 {/* Creation Date */}
-                <TableCell className="text-sm text-gray-600 dark:text-dark-text">
-                  {lock.creationDate}
-                </TableCell>
+                <TableCell className="text-sm text-gray-600 dark:text-dark-text">{lock.creationDate}</TableCell>
 
                 {/* End Date */}
-                <TableCell className="text-sm text-gray-600 dark:text-dark-text">
-                  {lock.endDate}
-                </TableCell>
+                <TableCell className="text-sm text-gray-600 dark:text-dark-text">{lock.endDate}</TableCell>
 
                 {/* Status */}
                 <TableCell>
@@ -91,11 +80,3 @@ export default function HistoryTable({ locks }) {
     </div>
   );
 }
-
-
-
-
-
-
-
-

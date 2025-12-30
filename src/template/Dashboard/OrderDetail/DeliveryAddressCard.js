@@ -3,7 +3,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Location } from "iconsax-reactjs";
-import { useAddresses } from "@/utils/func/use-address";
+import { useAddresses } from "@/hooks/use-address";
 import { mockAddresses } from "@/data";
 import AddressCard from "../Addresses/AddressCard";
 import { useRouter } from "next/navigation";

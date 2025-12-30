@@ -64,6 +64,9 @@ module.exports = {
           field: "#484848",
           stroke: "#686869",
           primary: "#3F51B5",
+          green: "#426F5B",
+          blue: "#4F5F70",
+          yellow: "#71653E",
         },
         red: {
           400: "#F98080",

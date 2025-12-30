@@ -4,6 +4,7 @@ import React from "react";
 import { SearchNormal1 } from "iconsax-reactjs";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { filterInputStyles, filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
 
 export default function TransactionsFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (name, value) => {
@@ -21,7 +22,7 @@ export default function TransactionsFilter({ filters, onFiltersChange }) {
             value={filters.searchQuery || ""}
             onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
             placeholder="جستجو بر اساس عنوان یا شماره تیکت..."
-            className="pr-10"
+            className={`pr-10 ${filterInputStyles}`}
             dir="rtl"
           />
         </div>
@@ -35,10 +36,10 @@ export default function TransactionsFilter({ filters, onFiltersChange }) {
           value={filters.transactionType || undefined}
           onValueChange={(value) => handleFilterChange("transactionType", value)}
         >
-          <SelectTrigger className="w-full md:w-32" dir="rtl">
+          <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
             <SelectValue placeholder="نوع تراکنش" />
           </SelectTrigger>
-          <SelectContent dir="rtl">
+          <SelectContent className={filterSelectContentStyles} dir="rtl">
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="charge">شارژ کیف پول</SelectItem>
             <SelectItem value="withdraw">برداشت</SelectItem>
@@ -47,10 +48,10 @@ export default function TransactionsFilter({ filters, onFiltersChange }) {
         </Select>
         {/* Status */}
         <Select value={filters.status || undefined} onValueChange={(value) => handleFilterChange("status", value)}>
-          <SelectTrigger className="w-full md:w-[140px]" dir="rtl">
+          <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
             <SelectValue placeholder="وضعیت" />
           </SelectTrigger>
-          <SelectContent dir="rtl">
+          <SelectContent className={filterSelectContentStyles} dir="rtl">
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="reviewing">در حال بررسی</SelectItem>
             <SelectItem value="answered">پاسخ داده شده</SelectItem>
@@ -61,10 +62,10 @@ export default function TransactionsFilter({ filters, onFiltersChange }) {
           value={filters.dateRange || undefined}
           onValueChange={(value) => handleFilterChange("dateRange", value)}
         >
-          <SelectTrigger className="w-full md:w-32" dir="rtl">
+          <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
             <SelectValue placeholder="بازه تاریخ" />
           </SelectTrigger>
-          <SelectContent dir="rtl">
+          <SelectContent className={filterSelectContentStyles} dir="rtl">
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="today">امروز</SelectItem>
             <SelectItem value="week">این هفته</SelectItem>

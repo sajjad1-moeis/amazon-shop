@@ -4,6 +4,7 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SearchNormal1 } from "iconsax-reactjs";
+import { filterInputStyles, filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
 
 export default function NotificationsFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
@@ -23,7 +24,7 @@ export default function NotificationsFilter({ filters, onFiltersChange }) {
           placeholder="جستجو در عنوان اعلان..."
           value={filters.searchQuery || ""}
           onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
-          className="pr-10 border-none py-0  h-8"
+          className={`pr-10 border-none py-0 h-8 ${filterInputStyles}`}
         />
         <Select
           value={filters.allCategories || undefined}
@@ -48,10 +49,10 @@ export default function NotificationsFilter({ filters, onFiltersChange }) {
           value={filters.timeRange || undefined}
           onValueChange={(value) => handleFilterChange("timeRange", value)}
         >
-          <SelectTrigger className="gap-5 w-fit">
+          <SelectTrigger className={filterSelectTriggerStyles}>
             <SelectValue placeholder="بازه زمانی" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className={filterSelectContentStyles}>
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="today">امروز</SelectItem>
             <SelectItem value="week">این هفته</SelectItem>
@@ -61,10 +62,10 @@ export default function NotificationsFilter({ filters, onFiltersChange }) {
 
         {/* Status Filter */}
         <Select value={filters.status || undefined} onValueChange={(value) => handleFilterChange("status", value)}>
-          <SelectTrigger className="gap-5 w-fit">
+          <SelectTrigger className={filterSelectTriggerStyles}>
             <SelectValue placeholder="وضعیت" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className={filterSelectContentStyles}>
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="read">خوانده شده</SelectItem>
             <SelectItem value="unread">خوانده نشده</SelectItem>
@@ -73,10 +74,10 @@ export default function NotificationsFilter({ filters, onFiltersChange }) {
 
         {/* Category Filter */}
         <Select value={filters.category || undefined} onValueChange={(value) => handleFilterChange("category", value)}>
-          <SelectTrigger className="gap-5 w-fit">
+          <SelectTrigger className={filterSelectTriggerStyles}>
             <SelectValue placeholder="دسته بندی" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className={filterSelectContentStyles}>
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="orders">سفارش‌ها</SelectItem>
             <SelectItem value="tickets">تیکت‌ها</SelectItem>

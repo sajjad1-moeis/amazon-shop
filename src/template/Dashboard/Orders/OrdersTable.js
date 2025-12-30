@@ -14,7 +14,7 @@ export default function OrdersTable({ orders }) {
   return (
     <div className="border border-gray-200 dark:border-dark-stroke rounded-lg overflow-hidden">
       <Table>
-        <TableHeader className="bg-gray-50 dark:bg-dark-field/50">
+        <TableHeader className="bg-gray-50 dark:bg-dark-stroke">
           <TableRow className="border-b border-gray-200 dark:border-dark-stroke">
             <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text first:rounded-tr-lg">
               شماره سفارش
@@ -55,9 +55,7 @@ export default function OrdersTable({ orders }) {
                 <TableCell className="text-sm text-gray-900 dark:text-dark-title py-4 px-4 font-medium">
                   {order.orderNumber}
                 </TableCell>
-                <TableCell className="text-sm text-gray-600 dark:text-dark-text py-4 px-4">
-                  {order.date}
-                </TableCell>
+                <TableCell className="text-sm text-gray-600 dark:text-dark-text py-4 px-4">{order.date}</TableCell>
                 <TableCell className="text-sm text-gray-600 dark:text-dark-text py-4 px-4">
                   {order.items} آیتم
                 </TableCell>
@@ -83,4 +81,3 @@ export default function OrdersTable({ orders }) {
     </div>
   );
 }
-

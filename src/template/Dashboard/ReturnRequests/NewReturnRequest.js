@@ -169,7 +169,7 @@ export default function NewReturnRequest() {
                 />
                 <Label
                   htmlFor="terms"
-                  className="text-sm text-gray-700 dark:text-dark-text cursor-pointer leading-relaxed"
+                  className="text-sm text-gray-700 dark:text-dark-text dark:bg-white/5 cursor-pointer leading-relaxed"
                 >
                   اطلاعات وارد شده صحیح است و <span className="text-yellow-500">شرایط مرجوعی</span> را مطالعه کرده‌ام.
                 </Label>

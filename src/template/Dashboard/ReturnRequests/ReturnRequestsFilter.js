@@ -4,6 +4,7 @@ import React from "react";
 import { SearchNormal1 } from "iconsax-reactjs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { filterInputStyles, filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
 
 export default function ReturnRequestsFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (name, value) => {
@@ -20,7 +21,7 @@ export default function ReturnRequestsFilter({ filters, onFiltersChange }) {
           value={filters.searchQuery || ""}
           onChange={(e) => onFiltersChange((prev) => ({ ...prev, searchQuery: e.target.value }))}
           placeholder="جستجو بر اساس شماره درخواست یا نام کالا...."
-          className="pr-10"
+          className={`pr-10 ${filterInputStyles}`}
           dir="rtl"
         />
       </div>
@@ -28,10 +29,10 @@ export default function ReturnRequestsFilter({ filters, onFiltersChange }) {
       <div className="flex flex-wrap gap-2">
         {/* Sort By */}
         <Select value={filters.category || undefined} onValueChange={(value) => handleFilterChange("category", value)}>
-          <SelectTrigger className="w-fit  gap-5" dir="rtl">
+          <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
             <SelectValue placeholder="دسته بندی" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className={filterSelectContentStyles}>
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="electronics">الکترونیک</SelectItem>
             <SelectItem value="clothing">پوشاک</SelectItem>
@@ -41,10 +42,10 @@ export default function ReturnRequestsFilter({ filters, onFiltersChange }) {
 
         {/* Status */}
         <Select value={filters.status || undefined} onValueChange={(value) => handleFilterChange("status", value)}>
-          <SelectTrigger className="w-fit  gap-5" dir="rtl">
+          <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
             <SelectValue placeholder="وضعیت" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className={filterSelectContentStyles}>
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="reviewing">در حال بررسی</SelectItem>
             <SelectItem value="approved">تأیید شده</SelectItem>
@@ -53,10 +54,10 @@ export default function ReturnRequestsFilter({ filters, onFiltersChange }) {
         </Select>
 
         <Select value={filters.sortBy || undefined} onValueChange={(value) => handleFilterChange("sortBy", value)}>
-          <SelectTrigger className="w-fit  gap-5" dir="rtl">
+          <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
             <SelectValue placeholder="مرتب سازی" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className={filterSelectContentStyles}>
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="newest">جدیدترین</SelectItem>
             <SelectItem value="oldest">قدیمی‌ترین</SelectItem>

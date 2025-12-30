@@ -30,7 +30,7 @@ export default function RequestDocumentModal({ isOpen, onClose }) {
 
         <div className="space-y-6 py-4">
           {/* Introductory Paragraph */}
-          <p className="text-sm text-gray-700 dark:text-dark-text leading-relaxed text-right">
+          <p className="text-sm text-gray-700 dark:text-dark-text dark:bg-white/5 leading-relaxed text-right">
             با ثبت این درخواست، پس از خرید نهایی کالا، یک اسکرین‌شات از صفحه ثبت سفارش در وبسایت فروشنده (مثلا Amazon)
             در بخش مستندات همین سفارش برای شما نمایش داده می‌شود. این تصویر نشان می‌دهد که کالا مستقیماً از آمازون
             خریداری شده است.

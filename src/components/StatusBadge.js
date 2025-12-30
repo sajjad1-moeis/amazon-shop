@@ -7,11 +7,11 @@ const STATUS_CONFIG = {
   // Common statuses
   reviewing: {
     label: "در حال بررسی",
-    className: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+    className: "bg-blue-100 text-blue-700 dark:bg-dark-blue dark:text-dark-title ",
   },
   answered: {
     label: "پاسخ داده شده",
-    className: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+    className: "bg-green-100 text-green-700 dark:bg-dark-green dark:text-green-200",
   },
   completed: {
     label: "تکمیل شده",
@@ -31,12 +31,12 @@ const STATUS_CONFIG = {
   },
   processing: {
     label: "در حال پردازش",
-    className: "bg-blue-100 text-blue-700 dark:bg-[#4F5F70] dark:text-dark-title ",
+    className: "bg-blue-100 text-blue-700 dark:bg-dark-blue dark:text-dark-title ",
   },
   // Order statuses
   "to-iran": {
     label: "در مسیر ایران",
-    className: "bg-green-100 text-green-700 dark:bg-[#4F5F70] dark:text-dark-title ",
+    className: "bg-green-100 text-green-700 dark:bg-dark-blue dark:text-dark-title ",
   },
   "to-dubai": {
     label: "در مسیر دبی",

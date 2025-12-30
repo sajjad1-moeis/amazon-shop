@@ -8,12 +8,11 @@ import { cn } from "@/lib/utils";
 import StatusBadge from "@/components/StatusBadge";
 
 export default function ExclusiveAmazonTable({ orders }) {
-
   return (
     <div className="border border-gray-200 dark:border-dark-stroke rounded-lg overflow-hidden">
       <Table>
         <TableHeader>
-          <TableRow className="bg-gray-50 dark:bg-dark-field/50">
+          <TableRow className="bg-gray-50 dark:bg-dark-stroke">
             <TableHead className="text-right first:rounded-tr-lg">شماره سفارش</TableHead>
             <TableHead className="text-right">ASIN/لینک</TableHead>
             <TableHead className="text-right">مبلغ نهایی</TableHead>
@@ -71,4 +70,3 @@ export default function ExclusiveAmazonTable({ orders }) {
     </div>
   );
 }
-

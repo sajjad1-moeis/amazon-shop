@@ -4,6 +4,7 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SearchNormal1 } from "iconsax-reactjs";
+import { filterInputStyles, filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
 
 export default function TicketsFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
@@ -23,16 +24,16 @@ export default function TicketsFilter({ filters, onFiltersChange }) {
           placeholder="جستجو بر اساس شماره تیکت یا موضوع..."
           value={filters.searchQuery || ""}
           onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
-          className="pr-10"
+          className={`pr-10 ${filterInputStyles}`}
         />
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
         <Select value={filters.priority || undefined} onValueChange={(value) => handleFilterChange("priority", value)}>
-          <SelectTrigger className="w-32">
+          <SelectTrigger className={filterSelectTriggerStyles}>
             <SelectValue placeholder="اولویت" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className={filterSelectContentStyles}>
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="high">بالا</SelectItem>
             <SelectItem value="medium">متوسط</SelectItem>
@@ -41,10 +42,10 @@ export default function TicketsFilter({ filters, onFiltersChange }) {
         </Select>
         {/* Status */}
         <Select value={filters.status || undefined} onValueChange={(value) => handleFilterChange("status", value)}>
-          <SelectTrigger className="w-32">
+          <SelectTrigger className={filterSelectTriggerStyles}>
             <SelectValue placeholder="وضعیت" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className={filterSelectContentStyles}>
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="pending">در حال پردازش</SelectItem>
             <SelectItem value="answered">پاسخ داده شده</SelectItem>
@@ -52,10 +53,10 @@ export default function TicketsFilter({ filters, onFiltersChange }) {
           </SelectContent>
         </Select>
         <Select value={filters.sortBy || undefined} onValueChange={(value) => handleFilterChange("sortBy", value)}>
-          <SelectTrigger className="w-32">
+          <SelectTrigger className={filterSelectTriggerStyles}>
             <SelectValue placeholder="مرتب سازی" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className={filterSelectContentStyles}>
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="newest">جدیدترین</SelectItem>
             <SelectItem value="oldest">قدیمی‌ترین</SelectItem>

@@ -12,13 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 
 const initialData = {
@@ -108,7 +102,10 @@ export default function EditNotificationModal({ isOpen, onClose, onSave }) {
             <Label className="text-sm font-semibold">نوع اعلان ها</Label>
             <div className="space-y-2">
               {["orders", "tickets", "payments", "promotions"].map((type) => (
-                <div key={type} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-field/50 rounded-lg">
+                <div
+                  key={type}
+                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-stroke rounded-lg"
+                >
                   <Label htmlFor={type} className="text-sm cursor-pointer">
                     {getNotificationTypeLabel(type)}
                   </Label>
@@ -120,9 +117,7 @@ export default function EditNotificationModal({ isOpen, onClose, onSave }) {
                 </div>
               ))}
             </div>
-            {errors.notificationTypes && (
-              <p className="text-sm text-red-500">{errors.notificationTypes}</p>
-            )}
+            {errors.notificationTypes && <p className="text-sm text-red-500">{errors.notificationTypes}</p>}
           </div>
 
           {/* Notification Methods */}
@@ -130,7 +125,10 @@ export default function EditNotificationModal({ isOpen, onClose, onSave }) {
             <Label className="text-sm font-semibold">روش دریافت نوتیفیکیشن</Label>
             <div className="space-y-2">
               {["sms", "email", "push"].map((method) => (
-                <div key={method} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-field/50 rounded-lg">
+                <div
+                  key={method}
+                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-stroke rounded-lg"
+                >
                   <Label htmlFor={method} className="text-sm cursor-pointer">
                     {getNotificationMethodLabel(method)}
                   </Label>
@@ -142,27 +140,21 @@ export default function EditNotificationModal({ isOpen, onClose, onSave }) {
                 </div>
               ))}
             </div>
-            {errors.notificationMethods && (
-              <p className="text-sm text-red-500">{errors.notificationMethods}</p>
-            )}
+            {errors.notificationMethods && <p className="text-sm text-red-500">{errors.notificationMethods}</p>}
           </div>
 
           {/* Telegram Connection */}
-          <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-field/50 rounded-lg">
+          <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-stroke rounded-lg">
             <div className="flex-1">
               <Label htmlFor="telegram" className="text-sm font-semibold block mb-1">
                 اتصال به تلگرام
               </Label>
-              <p className="text-xs text-gray-600 dark:text-dark-text">
-                دریافت اعلان‌ها از طریق ربات تلگرام
-              </p>
+              <p className="text-xs text-gray-600 dark:text-dark-text">دریافت اعلان‌ها از طریق ربات تلگرام</p>
             </div>
             <Switch
               id="telegram"
               checked={formData.telegramConnected}
-              onCheckedChange={(checked) =>
-                setFormData((prev) => ({ ...prev, telegramConnected: checked }))
-              }
+              onCheckedChange={(checked) => setFormData((prev) => ({ ...prev, telegramConnected: checked }))}
             />
           </div>
 
@@ -179,4 +171,3 @@ export default function EditNotificationModal({ isOpen, onClose, onSave }) {
     </Dialog>
   );
 }
-

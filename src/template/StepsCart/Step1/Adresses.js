@@ -4,8 +4,8 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AddressList from "./AddressList";
 import AddressForm from "./AddAddressModal";
-import { useAddresses } from "@/utils/func/use-address";
-import { formatAddress, formatFullName, parseAddressData } from "@/utils/func/address-utlis";
+import { useAddresses } from "@/hooks/use-address";
+import { formatAddress, formatFullName, parseAddressData } from "@/utils/address-utlis";
 import { toast } from "sonner";
 import Link from "next/link";
 

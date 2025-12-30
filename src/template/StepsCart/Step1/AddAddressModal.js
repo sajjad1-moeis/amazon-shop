@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ADDRESS_FORM_FIELDS } from "@/data";
-import { DEFAULT_FORM_DATA } from "@/utils/func/use-address";
+import { DEFAULT_FORM_DATA } from "@/hooks/use-address";
 
 export default function AddressForm({ isOpen, onClose, defaultValues, onSubmit }) {
   const {

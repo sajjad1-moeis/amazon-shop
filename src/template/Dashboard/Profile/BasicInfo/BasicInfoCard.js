@@ -25,7 +25,7 @@ export default function BasicInfoCard() {
     <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3 text-gray-700">
+        <div className="flex items-center gap-3 text-gray-700 dark:text-dark-titre">
           <Profile size={28} variant="Bold" />
           <span className=" text-xl">اطلاعات اصلی</span>
         </div>
@@ -33,7 +33,7 @@ export default function BasicInfoCard() {
         <Button
           variant="outline"
           size="sm"
-          className="gap-2 px-3 border-2 text-primary-700 rounded-lg border-primary-700"
+          className="gap-2 px-3 border-2 text-primary-700 rounded-lg border-primary-700 dark:text-dark-title dark:border-dark-title"
           onClick={() => setOpen(true)}
         >
           <Edit2 size={16} />
@@ -59,10 +59,10 @@ export default function BasicInfoCard() {
         <Row className={"mx-auto"} label="ایمیل" value={data.email || "---"} />
         <Row className={"mx-auto"} label="کد ملی" value={data.nationalId} />
         <div className="text-sm">
-          <p className="mb-2 px-3 py-1 w-max mx-auto rounded-md bg-green-100 text-green-700 text-xs font-medium">
+          <p className="mb-2 px-3 py-1 w-max mx-auto rounded-md bg-green-100 dark:bg-dark-green dark:text-green-300 text-green-700 text-xs font-medium">
             {data.verificationStatusText}
           </p>
-          <p className="text-gray-400 text-center">وضعیت احراز هویت</p>
+          <p className="text-gray-400 dark:text-caption text-center">وضعیت احراز هویت</p>
         </div>
         <Row className={"mx-auto"} label="تاریخ عضویت" value={data.membershipDate} />
       </div>
@@ -82,9 +82,8 @@ export default function BasicInfoCard() {
 export function Row({ label, value, mono, className }) {
   return (
     <div className={cn(" justify-between text-sm", className)}>
-      <p className={`mb-2 text-gray-600 dark:text-dark-text font-medium ${mono ? "font-mono" : ""}`}>{value}</p>
-      <p className="text-gray-400">{label}</p>
+      <p className={`mb-2 text-gray-600 dark:text-dark-titre font-medium ${mono ? "font-mono" : ""}`}>{value}</p>
+      <p className="text-gray-400 dark:text-caption">{label}</p>
     </div>
   );
 }
-

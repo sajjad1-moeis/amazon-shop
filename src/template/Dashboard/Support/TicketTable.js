@@ -21,21 +21,21 @@ export default function TicketTable({ tickets, onDelete }) {
         return (
           <div className="flex items-center gap-2 bg-red-100 w-max py-1 px-2 rounded">
             <div className="w-3 h-3 rounded-full bg-red-500"></div>
-            <span className="text-sm text-gray-700 dark:text-dark-text">بالا</span>
+            <span className="text-sm text-gray-700 dark:text-dark-text dark:bg-white/5">بالا</span>
           </div>
         );
       case 2:
         return (
           <div className="flex items-center gap-2 bg-yellow-100 px-2 py-1 w-max rounded">
             <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-            <span className="text-sm text-gray-700 dark:text-dark-text">متوسط</span>
+            <span className="text-sm text-gray-700 dark:text-dark-text dark:bg-white/5">متوسط</span>
           </div>
         );
       case 1:
         return (
           <div className="flex items-center gap-2 w-max bg-green-100 px-2 py-1 rounded">
             <div className="w-3 h-3 rounded-full bg-green-500"></div>
-            <span className="text-sm text-gray-700 dark:text-dark-text">پایین</span>
+            <span className="text-sm text-gray-700 dark:text-dark-text dark:bg-white/5">پایین</span>
           </div>
         );
       default:
@@ -50,7 +50,7 @@ export default function TicketTable({ tickets, onDelete }) {
       <div className="border border-gray-200 dark:border-dark-stroke rounded-lg overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="bg-gray-50 dark:bg-dark-field/50">
+            <TableRow className="bg-gray-50 dark:bg-dark-stroke">
               <TableHead className="text-right first:rounded-tr-lg">شماره تیکت</TableHead>
               <TableHead className="text-right">عنوان</TableHead>
               <TableHead className="text-right">تاریخ</TableHead>
@@ -79,13 +79,11 @@ export default function TicketTable({ tickets, onDelete }) {
                   <TableCell className="text-sm text-gray-900 dark:text-dark-title">
                     {ticket.ticketNumber || `TKT-${ticket.id}`}
                   </TableCell>
-                  <TableCell className="text-sm text-gray-900 dark:text-dark-title">
-                    {ticket.subject || "-"}
-                  </TableCell>
+                  <TableCell className="text-sm text-gray-900 dark:text-dark-title">{ticket.subject || "-"}</TableCell>
                   <TableCell className="text-sm text-gray-600 dark:text-dark-text">
                     {ticket.createdAt ? new Date(ticket.createdAt).toLocaleDateString("fa-IR") : "-"}
                   </TableCell>
-                  <TableCell className="text-sm text-gray-700 dark:text-dark-text">
+                  <TableCell className="text-sm text-gray-700 dark:text-dark-text dark:bg-white/5">
                     {ticket.categoryName || "-"}
                   </TableCell>
                   <TableCell>{getPriorityBadge(ticket.priority)}</TableCell>

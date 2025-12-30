@@ -37,7 +37,7 @@ export default function CurrencyServicesPage() {
       </div>
 
       {/* Requests Section */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-box p-4">
+      <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4">
         <h2 className="text-lg md:text-xl text-gray-900 dark:text-white mb-6">تاریخچه درخواست‌ها</h2>
 
         {/* Filters */}

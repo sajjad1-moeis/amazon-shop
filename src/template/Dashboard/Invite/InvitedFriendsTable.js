@@ -49,7 +49,7 @@ export default function InvitedFriendsTable({ friends = [] }) {
         دوستان دعوت شده
       </h3>
       <Table>
-        <TableHeader className="bg-gray-50 dark:bg-dark-field/50">
+        <TableHeader className="bg-gray-50 dark:bg-dark-stroke">
           <TableRow className="border-b border-gray-200 dark:border-dark-stroke">
             <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text">
               نام
@@ -70,19 +70,18 @@ export default function InvitedFriendsTable({ friends = [] }) {
         </TableHeader>
         <TableBody>
           {friends.map((friend) => (
-            <TableRow key={friend.id} className="border-b border-gray-200 dark:border-dark-stroke hover:bg-gray-50 dark:hover:bg-dark-field/50">
+            <TableRow
+              key={friend.id}
+              className="border-b border-gray-200 dark:border-dark-stroke hover:bg-gray-50 dark:hover:bg-dark-field/50"
+            >
               <TableCell className="text-right py-4 px-4 text-sm text-gray-900 dark:text-dark-title">
                 {friend.name}
               </TableCell>
               <TableCell className="text-right py-4 px-4 text-sm text-gray-600 dark:text-dark-text">
                 {friend.membershipDate}
               </TableCell>
-              <TableCell className="py-4 px-4">
-                {getRegistrationStatusBadge(friend.registrationStatus)}
-              </TableCell>
-              <TableCell className="py-4 px-4">
-                {getPurchaseStatusBadge(friend.purchaseStatus)}
-              </TableCell>
+              <TableCell className="py-4 px-4">{getRegistrationStatusBadge(friend.registrationStatus)}</TableCell>
+              <TableCell className="py-4 px-4">{getPurchaseStatusBadge(friend.purchaseStatus)}</TableCell>
               <TableCell className="text-right py-4 px-4 text-sm text-gray-900 dark:text-dark-title">
                 {friend.reward || "-"}
               </TableCell>

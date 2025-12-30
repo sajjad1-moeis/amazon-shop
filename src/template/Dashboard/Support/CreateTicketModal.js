@@ -18,10 +18,17 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DocumentUpload } from "iconsax-reactjs";
+import {
+  filterInputStyles,
+  filterTextareaStyles,
+  filterSelectTriggerStyles,
+  filterSelectContentStyles,
+} from "@/utils/filterStyles";
 import { ticketService } from "@/services/ticket/ticketService";
 import { ticketCategoryService } from "@/services/ticket/ticketCategoryService";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
+import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   title: z.string().min(3, "عنوان تیکت باید حداقل 3 کاراکتر باشد"),
@@ -124,7 +131,7 @@ export default function CreateTicketModal({ isOpen, onClose, onSubmit }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" dir="rtl">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto dark:bg-dark-box" dir="rtl">
         <DialogHeader>
           <DialogTitle>ایجاد تیکت جدید</DialogTitle>
           <DialogDescription>لطفاً اطلاعات تیکت را تکمیل کنید</DialogDescription>
@@ -140,7 +147,12 @@ export default function CreateTicketModal({ isOpen, onClose, onSubmit }) {
                   <FormItem>
                     <FormLabel>عنوان تیکت</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="عنوان تیکت..." dir="rtl" />
+                      <Input
+                        {...field}
+                        placeholder="عنوان تیکت..."
+                        dir="rtl"
+                        className={cn("w-full", filterInputStyles)}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -155,11 +167,11 @@ export default function CreateTicketModal({ isOpen, onClose, onSubmit }) {
                     <FormLabel>دسته بندی</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value} disabled={loadingCategories}>
                       <FormControl>
-                        <SelectTrigger dir="rtl">
+                        <SelectTrigger dir="rtl" className={cn("!w-full", filterSelectTriggerStyles)}>
                           <SelectValue placeholder={loadingCategories ? "در حال بارگذاری..." : "انتخاب کنید"} />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent>
+                      <SelectContent className={filterSelectContentStyles}>
                         {loadingCategories ? (
                           <SelectItem value="__loading__" disabled>
                             در حال بارگذاری...
@@ -190,11 +202,11 @@ export default function CreateTicketModal({ isOpen, onClose, onSubmit }) {
                     <FormLabel>انتخاب اولویت</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
-                        <SelectTrigger dir="rtl">
+                        <SelectTrigger dir="rtl" className={cn("!w-full", filterSelectTriggerStyles)}>
                           <SelectValue placeholder="انتخاب کنید" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent>
+                      <SelectContent className={filterSelectContentStyles}>
                         {PRIORITY_OPTIONS.map((option) => (
                           <SelectItem key={option.value} value={option.value}>
                             {option.label}
@@ -215,7 +227,13 @@ export default function CreateTicketModal({ isOpen, onClose, onSubmit }) {
                 <FormItem>
                   <FormLabel>توضیحات</FormLabel>
                   <FormControl>
-                    <Textarea {...field} placeholder="توضیحات درخواست پشتیبانی..." rows={6} dir="rtl" />
+                    <Textarea
+                      {...field}
+                      placeholder="توضیحات درخواست پشتیبانی..."
+                      rows={6}
+                      dir="rtl"
+                      className={filterTextareaStyles}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -239,7 +257,10 @@ export default function CreateTicketModal({ isOpen, onClose, onSubmit }) {
                       />
                       <label
                         htmlFor="file-upload"
-                        className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 dark:border-dark-stroke rounded-lg cursor-pointer hover:border-primary-500 dark:hover:border-primary-400 transition-colors bg-gray-50 dark:bg-dark-field/50"
+                        className={cn(
+                          "flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 dark:border-dark-stroke rounded-lg cursor-pointer !w-full",
+                          filterSelectTriggerStyles
+                        )}
                       >
                         <DocumentUpload size={32} className="text-gray-400 mb-2" />
                         <span className="text-sm text-gray-600 dark:text-dark-text">برای آپلود کلیک کنید</span>
@@ -257,7 +278,12 @@ export default function CreateTicketModal({ isOpen, onClose, onSubmit }) {
             />
 
             <DialogFooter className="flex-row gap-2">
-              <Button type="button" variant="outline" onClick={onClose} className="w-full">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onClose}
+                className="w-full dark:border-primary-400 border-2 dark:text-primary-400"
+              >
                 لغو
               </Button>
               <Button

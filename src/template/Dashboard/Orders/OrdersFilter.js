@@ -4,6 +4,7 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SearchNormal1 } from "iconsax-reactjs";
+import { filterInputStyles, filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
 
 export default function OrdersFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
@@ -23,7 +24,7 @@ export default function OrdersFilter({ filters, onFiltersChange }) {
           placeholder="جستجو بر اساس شماره سفارش یا نام محصول..."
           value={filters.searchQuery || ""}
           onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
-          className="pr-10"
+          className={`pr-10 ${filterInputStyles}`}
         />
       </div>
 
@@ -33,10 +34,10 @@ export default function OrdersFilter({ filters, onFiltersChange }) {
           value={filters.timeRange || undefined}
           onValueChange={(value) => handleFilterChange("timeRange", value)}
         >
-          <SelectTrigger className="w-full md:w-fit gap-4">
+          <SelectTrigger className={filterSelectTriggerStyles}>
             <SelectValue placeholder="بازه زمانی" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className={filterSelectContentStyles}>
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="today">امروز</SelectItem>
             <SelectItem value="week">این هفته</SelectItem>
@@ -47,10 +48,10 @@ export default function OrdersFilter({ filters, onFiltersChange }) {
 
         {/* Status Filter */}
         <Select value={filters.status || undefined} onValueChange={(value) => handleFilterChange("status", value)}>
-          <SelectTrigger className="w-full md:w-fit gap-4">
+          <SelectTrigger className={filterSelectTriggerStyles}>
             <SelectValue placeholder="وضعیت" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className={filterSelectContentStyles}>
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="processing">در حال پردازش</SelectItem>
             <SelectItem value="to-dubai">در مسیر دبی</SelectItem>
@@ -66,10 +67,10 @@ export default function OrdersFilter({ filters, onFiltersChange }) {
           value={filters.paymentStatus || undefined}
           onValueChange={(value) => handleFilterChange("paymentStatus", value)}
         >
-          <SelectTrigger className="w-full md:w-fit gap-4">
+          <SelectTrigger className={filterSelectTriggerStyles}>
             <SelectValue placeholder="وضعیت پرداخت" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className={filterSelectContentStyles}>
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="full">پرداخت کامل</SelectItem>
             <SelectItem value="partial">پرداخت جزئی</SelectItem>

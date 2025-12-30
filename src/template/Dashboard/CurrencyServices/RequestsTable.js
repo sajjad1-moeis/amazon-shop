@@ -12,7 +12,7 @@ export default function RequestsTable({ requests }) {
   return (
     <div className="border border-gray-200 dark:border-dark-stroke rounded-lg overflow-hidden">
       <Table>
-        <TableHeader className="bg-gray-50 dark:bg-dark-field/50">
+        <TableHeader className="bg-gray-50 dark:bg-dark-stroke">
           <TableRow className="border-b border-gray-200 dark:border-dark-stroke">
             <TableHead className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-dark-text first:rounded-tr-lg">
               کد درخواست
@@ -46,17 +46,17 @@ export default function RequestsTable({ requests }) {
               <TableRow
                 key={request.id}
                 className={cn(
-                  "hover:bg-gray-50 dark:hover:bg-dark-field/50 transition-colors",
+                  "hover:bg-gray-50 dark:bg-white/5 dark:hover:bg-dark-field/50 transition-colors",
                   index === requests.length - 1 && "last:border-b-0"
                 )}
               >
-                <TableCell className="text-sm text-gray-900 dark:text-dark-title py-4 px-4 font-medium">
+                <TableCell className="text-sm text-gray-900 dark:text-dark-titre py-4 px-4 font-medium">
                   {request.id}
                 </TableCell>
-                <TableCell className="text-sm text-gray-900 dark:text-dark-title py-4 px-4">
+                <TableCell className="text-sm text-gray-900 dark:text-dark-titre py-4 px-4">
                   {request.serviceType}
                 </TableCell>
-                <TableCell className="text-sm font-medium text-gray-900 dark:text-dark-title py-4 px-4">
+                <TableCell className="text-sm font-medium text-gray-900 dark:text-dark-titre py-4 px-4">
                   {request.amount}
                 </TableCell>
                 <TableCell className="py-4 px-4">
@@ -64,7 +64,11 @@ export default function RequestsTable({ requests }) {
                 </TableCell>
                 <TableCell className="text-sm text-gray-600 dark:text-dark-text py-4 px-4">{request.date}</TableCell>
                 <TableCell className="py-4 px-4">
-                  <Button variant="ghost" size="sm" className="gap-2 bg-gray-200">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="gap-2 bg-gray-200 dark:bg-dark-stroke dark:to-dark-titre"
+                  >
                     مشاهده جزئیات
                   </Button>
                 </TableCell>

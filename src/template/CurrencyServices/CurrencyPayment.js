@@ -192,7 +192,7 @@ export default function CurrencyPaymentForm({ removeDesc }) {
           </div>
           <Button
             type="submit"
-            className="w-full  bg-yellow-400 hover:bg-yellow-700 dark:bg-yellow-700 dark:hover:bg-yellow-600 text-gray-900 px-8 py-2 md:py-6 md:text-lg rounded-xl"
+            className="w-full  bg-yellow-400 hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600 text-gray-900 px-8 py-2 md:py-6 md:text-lg rounded-xl"
           >
             پرداخت
           </Button>

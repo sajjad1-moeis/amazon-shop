@@ -139,7 +139,7 @@ function Page() {
         <TicketsFilter filters={filters} onFiltersChange={setFilters} />
 
         {/* Tickets Table Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-box p-3 mt-8">
+        <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-3 mt-8">
           <h2 className="text-lg  text-gray-900 dark:text-white mb-6">لیست تیکت های ثبت شده</h2>
           {loading ? (
             <div className="flex justify-center items-center py-8">

@@ -4,6 +4,7 @@ import React from "react";
 import { SearchNormal1 } from "iconsax-reactjs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { filterInputStyles, filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
 
 export default function FavoritesFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (name, value) => {
@@ -21,7 +22,7 @@ export default function FavoritesFilter({ filters, onFiltersChange }) {
               value={filters.searchQuery}
               onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
               placeholder="جستجو بر اساس نام محصول ..."
-              className="pr-10 pl-4"
+              className={`pr-10 pl-4 ${filterInputStyles}`}
               dir="rtl"
             />
           </div>
@@ -31,10 +32,10 @@ export default function FavoritesFilter({ filters, onFiltersChange }) {
           {/* Search */}
           {/* Brand */}
           <Select value={filters.brand} onValueChange={(value) => handleFilterChange("brand", value)}>
-            <SelectTrigger className="w-full md:w-fit gap-5" dir="rtl">
+            <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
               <SelectValue placeholder="برند" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className={filterSelectContentStyles}>
               <SelectItem value="sony">SONY</SelectItem>
               <SelectItem value="microsoft">Microsoft</SelectItem>
               <SelectItem value="nintendo">Nintendo</SelectItem>
@@ -43,20 +44,20 @@ export default function FavoritesFilter({ filters, onFiltersChange }) {
 
           {/* Tracking Status */}
           <Select value={filters.trackingStatus} onValueChange={(value) => handleFilterChange("trackingStatus", value)}>
-            <SelectTrigger className="w-full md:w-fit gap-5" dir="rtl">
+            <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
               <SelectValue placeholder="وضعیت ردیابی" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className={filterSelectContentStyles}>
               <SelectItem value="active">فعال</SelectItem>
               <SelectItem value="inactive">غیرفعال</SelectItem>
             </SelectContent>
           </Select>
 
           <Select value={filters.sortBy} onValueChange={(value) => handleFilterChange("sortBy", value)}>
-            <SelectTrigger className="w-full md:w-fit gap-5" dir="rtl">
+            <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
               <SelectValue placeholder="مرتب سازی" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className={filterSelectContentStyles}>
               <SelectItem value="newest">جدیدترین</SelectItem>
               <SelectItem value="oldest">قدیمی‌ترین</SelectItem>
               <SelectItem value="price-high">قیمت: بالا به پایین</SelectItem>

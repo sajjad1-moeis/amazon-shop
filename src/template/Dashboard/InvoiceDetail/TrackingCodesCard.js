@@ -16,7 +16,7 @@ export default function TrackingCodesCard({ trackingCodes }) {
             className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-gray-100 dark:bg-dark-field/40 rounded-lg px-3 py-2"
           >
             {/* Right Content */}
-            <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-dark-text flex-1">
+            <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-dark-text dark:bg-white/5 flex-1">
               <span className="font-medium">{tracking.label} :</span>
               <span className="text-gray-600 dark:text-dark-text  break-all">{tracking.code}</span>
               <DocumentCopy size={18} className="text-gray-500 dark:text-dark-text flex-shrink-0" />

@@ -4,6 +4,7 @@ import React from "react";
 import { SearchNormal1 } from "iconsax-reactjs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { filterInputStyles, filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
 
 export default function PurchasesFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (name, value) => {
@@ -24,7 +25,7 @@ export default function PurchasesFilter({ filters, onFiltersChange }) {
               value={filters.searchQuery}
               onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
               placeholder="جستجو بر اساس نام محصول ..."
-              className="pr-10 pl-4 dark:bg-dark-field dark:border-dark-stroke"
+              className={`pr-10 pl-4 ${filterInputStyles}`}
               dir="rtl"
             />
           </div>
@@ -34,10 +35,10 @@ export default function PurchasesFilter({ filters, onFiltersChange }) {
           {/* Sort By */}
           {/* Date Filter */}
           <Select value={filters.dateFilter} onValueChange={(value) => handleFilterChange("dateFilter", value)}>
-            <SelectTrigger className="w-full md:w-fit gap-5" dir="rtl">
+            <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
               <SelectValue placeholder="تاریخ" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className={filterSelectContentStyles}>
               <SelectItem value="today">امروز</SelectItem>
               <SelectItem value="week">این هفته</SelectItem>
               <SelectItem value="month">این ماه</SelectItem>
@@ -46,10 +47,10 @@ export default function PurchasesFilter({ filters, onFiltersChange }) {
           </Select>
 
           <Select value={filters.sortBy} onValueChange={(value) => handleFilterChange("sortBy", value)}>
-            <SelectTrigger className="w-full md:w-fit gap-5" dir="rtl">
+            <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
               <SelectValue placeholder="مرتب سازی" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className={filterSelectContentStyles}>
               <SelectItem value="newest">جدیدترین</SelectItem>
               <SelectItem value="oldest">قدیمی‌ترین</SelectItem>
               <SelectItem value="price-high">قیمت: بالا به پایین</SelectItem>

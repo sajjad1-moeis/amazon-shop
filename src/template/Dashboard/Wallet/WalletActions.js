@@ -16,7 +16,7 @@ export default function WalletActions() {
         <Button
           onClick={() => setIsWithdrawOpen(true)}
           variant="ghost"
-          className="border-gray-300  bg-gray-200 dark:border-dark-stroke dark:text-dark-text dark:hover:bg-dark-field h-10 font-medium"
+          className="border-gray-300  bg-gray-200 dark:border-0 dark:bg-transparent dark:text-dark-titre dark:hover:bg-dark-field h-10 font-medium"
         >
           برداشت از کیف پول
         </Button>

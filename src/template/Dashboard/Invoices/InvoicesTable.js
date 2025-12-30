@@ -12,7 +12,7 @@ export default function InvoicesTable({ invoices, onView }) {
   return (
     <div className="border border-gray-200 dark:border-dark-stroke rounded-lg overflow-hidden bg-white dark:bg-dark-box">
       <Table>
-        <TableHeader className="bg-gray-50 dark:bg-dark-field/50">
+        <TableHeader className="bg-gray-50 dark:bg-dark-stroke">
           <TableRow className="border-b border-gray-200 dark:border-dark-stroke">
             <TableHead className="text-right py-3 px-4 text-sm whitespace-nowrap text-gray-500 dark:text-dark-text">
               شماره فاکتور

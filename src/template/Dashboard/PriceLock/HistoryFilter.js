@@ -4,6 +4,7 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SearchNormal1 } from "iconsax-reactjs";
+import { filterInputStyles, filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
 
 export default function HistoryFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (name, value) => {
@@ -21,7 +22,7 @@ export default function HistoryFilter({ filters, onFiltersChange }) {
             value={filters.searchQuery || ""}
             onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
             placeholder="جستجو نام محصول ..."
-            className="pr-10 pl-4"
+            className={`pr-10 pl-4 ${filterInputStyles}`}
             dir="rtl"
           />
         </div>
@@ -31,10 +32,10 @@ export default function HistoryFilter({ filters, onFiltersChange }) {
       <div className="flex flex-wrap items-center gap-2 ">
         {/* Time Range */}
         <Select value={filters.timeRange || ""} onValueChange={(value) => handleFilterChange("timeRange", value)}>
-          <SelectTrigger className="w-full md:w-fit gap-5" dir="rtl">
+          <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
             <SelectValue placeholder="بازه زمانی" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className={filterSelectContentStyles}>
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="today">امروز</SelectItem>
             <SelectItem value="week">این هفته</SelectItem>
@@ -45,10 +46,10 @@ export default function HistoryFilter({ filters, onFiltersChange }) {
 
         {/* Status */}
         <Select value={filters.status || ""} onValueChange={(value) => handleFilterChange("status", value)}>
-          <SelectTrigger className="w-full md:w-fit gap-5" dir="rtl">
+          <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
             <SelectValue placeholder="وضعیت" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className={filterSelectContentStyles}>
             <SelectItem value="all">همه</SelectItem>
             <SelectItem value="active">فعال</SelectItem>
             <SelectItem value="inactive">غیر فعال</SelectItem>

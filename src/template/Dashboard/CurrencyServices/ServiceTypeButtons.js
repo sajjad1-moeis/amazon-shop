@@ -29,8 +29,8 @@ export default function ServiceTypeButtons({ selectedType, onTypeChange }) {
             className={cn(
               "flex items-center gap-2 py-4 rounded-lg border-b-2 transition-all",
               isSelected
-                ? "bg-primary-50 border-primary-500  text-primary-600"
-                : "bg-white dark:bg-dark-box text-gray-700 dark:text-dark-text border-gray-200 dark:border-dark-stroke hover:border-gray-300"
+                ? "bg-primary-50 border-primary-500  dark:border-dark-title dark:bg-primary-50/25 text-primary-600 dark:text-dark-title"
+                : "bg-white dark:bg-dark-field text-gray-700 dark:text-dark-text border-gray-200 dark:border-dark-stroke hover:border-gray-300"
             )}
           >
             <Icon size={20} variant={isSelected ? "Bold" : "Outline"} />
@@ -41,18 +41,3 @@ export default function ServiceTypeButtons({ selectedType, onTypeChange }) {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

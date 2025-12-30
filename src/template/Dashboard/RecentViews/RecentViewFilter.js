@@ -4,6 +4,7 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SearchNormal1 } from "iconsax-reactjs";
+import { filterInputStyles, filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
 
 export default function InvoicesFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
@@ -24,16 +25,16 @@ export default function InvoicesFilter({ filters, onFiltersChange }) {
             placeholder="جستجو بر اساس شماره فاکتور..."
             value={filters.searchQuery || ""}
             onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
-            className="pr-10"
+            className={`pr-10 ${filterInputStyles}`}
           />
         </div>
         <div className="flex flex-wrap gap-2">
           {/* Status Filter */}
           <Select value={filters.status || undefined} onValueChange={(value) => handleFilterChange("status", value)}>
-            <SelectTrigger className="gap-5 w-fit">
+            <SelectTrigger className={filterSelectTriggerStyles}>
               <SelectValue placeholder="وضعیت پرداخت" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className={filterSelectContentStyles}>
               <SelectItem value="all">همه</SelectItem>
               <SelectItem value="paid">پرداخت شده</SelectItem>
               <SelectItem value="pending">در انتظار پرداخت</SelectItem>
@@ -45,10 +46,10 @@ export default function InvoicesFilter({ filters, onFiltersChange }) {
             value={filters.dateRange || undefined}
             onValueChange={(value) => handleFilterChange("dateRange", value)}
           >
-            <SelectTrigger className="gap-5 w-fit">
+            <SelectTrigger className={filterSelectTriggerStyles}>
               <SelectValue placeholder="بازه تاریخ" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className={filterSelectContentStyles}>
               <SelectItem value="all">همه</SelectItem>
               <SelectItem value="today">امروز</SelectItem>
               <SelectItem value="week">این هفته</SelectItem>

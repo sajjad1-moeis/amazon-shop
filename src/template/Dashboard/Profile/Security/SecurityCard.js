@@ -32,14 +32,14 @@ export default function SecurityCard() {
     <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3 text-gray-700">
+        <div className="flex items-center gap-3 text-gray-700 dark:text-dark-titre">
           <Lock1 size={28} variant="Bold" />
           <span className=" text-xl">امنیت حساب</span>
         </div>
         <Button
           variant="outline"
           size="sm"
-          className="gap-2 px-3 border-2 text-primary-700 rounded-lg border-primary-700"
+          className="gap-2 px-3 border-2 text-primary-700 rounded-lg border-primary-700 dark:text-dark-title dark:border-dark-title"
           onClick={() => setIsModalOpen(true)}
         >
           <Edit2 size={16} />
@@ -58,7 +58,7 @@ export default function SecurityCard() {
           >
             {securityInfo.activeDevices} دستگاه متصل
           </span>
-          <p className="text-sm text-gray-400 mt-2">تعداد دستگاه‌های فعال</p>
+          <p className="text-sm text-gray-400 dark:text-caption mt-2">تعداد دستگاه‌های فعال</p>
         </div>
         <Row label={"آخرین تغییر رمز"} value={securityInfo.lastPasswordChange} />
       </div>
@@ -71,4 +71,3 @@ export default function SecurityCard() {
     </div>
   );
 }
-
