@@ -1,18 +1,52 @@
-import DashboardLayout from "@/layout/DashboardLayout";
-import MessagesList from "@/template/Dashboard/Messages/MessagesList";
+"use client";
 
-export default function MessagesPage() {
+import React, { useState } from "react";
+import PageHeader from "@/template/Dashboard/Common/PageHeader";
+import { Button } from "@/components/ui/button";
+import MessagesFilter from "@/template/Dashboard/Messages/MessagesFilter";
+import MessageCard from "@/template/Dashboard/Messages/MessageCard";
+import { initialMessages } from "@/data";
+import DashboardLayout from "@/layout/DashboardLayout";
+import { Repeat } from "iconsax-reactjs";
+
+export default function MessagesList() {
+  const [messages, setMessages] = useState(initialMessages);
+  const [filters, setFilters] = useState({
+    sortBy: "",
+    messageType: "",
+    searchQuery: "",
+  });
+
+  const handleRefresh = () => {
+    // Handle refresh logic
+    console.log("Refreshing messages...");
+  };
+
   return (
     <DashboardLayout>
-      <MessagesList />
+      {/* Header Section */}
+      <PageHeader title="مرکز پیام" description="نظراتی که روی محصولات ثبت کرده اید و وضعیت بررسی آنها.">
+        <Button onClick={handleRefresh} variant="ghost" className="text-primary-500 dark:text-primary-300 gap-2">
+          <Repeat size={24} />
+          بروزرسانی
+        </Button>
+      </PageHeader>
+
+      {/* Filters Section */}
+      <MessagesFilter filters={filters} onFiltersChange={setFilters} />
+
+      {/* Messages List */}
+      <div className="bg-white dark:bg-dark-box rounded-xl border dark:border-0 border-gray-200 p-3 mt-8">
+        <div className="space-y-4">
+          {messages.length === 0 ? (
+            <div className="p-8 text-center">
+              <p className="text-gray-500 dark:text-dark-text">هیچ پیامی وجود ندارد</p>
+            </div>
+          ) : (
+            messages.map((message) => <MessageCard key={message.id} message={message} />)
+          )}
+        </div>
+      </div>
     </DashboardLayout>
   );
 }
-
-
-
-
-
-
-
-

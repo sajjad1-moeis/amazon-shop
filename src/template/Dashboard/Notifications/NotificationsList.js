@@ -156,7 +156,7 @@ export default function NotificationsList() {
         <Button
           variant="outline"
           onClick={handleDeleteAll}
-          className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-900/20 border-red-500 dark:border-red-400"
+          className="gap-2 text-red-600 dark:bg-dark-field dark:border-0 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-900/20 border-red-500 dark:border-red-400"
         >
           <Trash size={18} />
           حذف همه اعلانها
@@ -166,13 +166,12 @@ export default function NotificationsList() {
         <div className="mb-6">
           {/* Section Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-            {notifications.length > 0 && <h2 className="text-lg  text-gray-700 dark:text-dark-title">لیست اعلانها</h2>}
+            {notifications.length > 0 && <h2 className="text-lg  text-gray-700 dark:text-dark-titre">لیست اعلانها</h2>}
             <Button
               variant="ghost"
               onClick={handleMarkAllAsRead}
-              className="gap-2 h-7 p-1 text-primary-700 bg-transparent"
+              className="gap-2 h-7 p-1 text-primary-700 bg-transparent dark:text-primary-300"
             >
-              <TickCircle size={18} />
               علامت گذاری همه به عنوان خوانده شده
             </Button>
           </div>

@@ -57,7 +57,7 @@ export default function InvitePage() {
           <div className="lg:col-span-2">
             <InvitedFriendsTable friends={invitedFriends} />
           </div>
-          <div className="bg-gradient-to-b from-[#606EC0] to-[#8995D6] rounded-xl p-4 shadow-xl">
+          <div className=" bg-gradient-to-b from-[#606EC0] to-[#8995D6] dark:from-[#606EC066] dark:to-[#8995D666] rounded-xl p-4 shadow-xl">
             <h3 className="text-white text-lg  mb-6">کد دعوت اختصاصی شما</h3>
 
             <div>
@@ -78,13 +78,13 @@ export default function InvitePage() {
               {/* Share Button */}
               <Button
                 onClick={handleShare}
-                className="w-full bg-gray-200 text-gray-700 hover:bg-white/90 font-medium gap-2 mt-8"
+                className="w-full bg-gray-200 text-gray-700 hover:bg-white/90 dark:bg-dark-title font-medium gap-2 mt-8"
               >
                 اشتراک گذاری
               </Button>
 
               {/* Description Text */}
-              <p className="text-white/90 text-xs mt-4 leading-relaxed">
+              <p className="text-white/90 dark:text-white/65 text-xs mt-4 leading-relaxed">
                 با ارسال لینک به دوستان خود میتوانید طبق{" "}
                 <button
                   onClick={handleRewardConditions}

@@ -48,7 +48,7 @@ export default function ActiveReturnCard({ returnData, onCancel }) {
       <h2 className="text-lg  text-gray-900 dark:text-dark-titre mb-6">وضعیت درخواست‌های در حال بررسی</h2>
 
       {/* Product Card */}
-      <div className="bg-[#E5E8F566] border border-primary-200 dark:border-caption dark:bg-[#494B56] rounded-xl p-3 mb-6">
+      <div className="bg-[#E5E8F566] border border-primary-200 dark:border-caption dark:bg-dark-gray-primary rounded-xl p-3 mb-6">
         <div className="flex flex-col  w-full  md:gap-6">
           {/* Product Details */}
           <div className="flex gap-3">

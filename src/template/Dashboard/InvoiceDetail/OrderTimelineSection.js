@@ -11,7 +11,7 @@ export default function OrderTimelineSection({ timelineSteps }) {
 
   return (
     <div className="bg-white dark:bg-dark-box rounded-xl border border-gray-200 dark:border-dark-stroke p-3">
-      <h3 className="text-lg text-gray-800 dark:text-dark-title mb-4">مراحل سفارش</h3>
+      <h3 className="text-lg text-gray-800 dark:text-dark-titre mb-4">مراحل سفارش</h3>
 
       <div className="relative">
         {/* Vertical Line - کلفت و سفید مثل Timeline اصلی (عمودی) */}
@@ -41,7 +41,7 @@ export default function OrderTimelineSection({ timelineSteps }) {
                     style={{ boxShadow: "0px 1px 5px -1px #0000001F" }}
                     className={cn(
                       "relative z-10 size-9 flex items-center bg-white dark:bg-dark-field justify-center rounded-full shadow-md transition-all duration-300",
-                      isCompleted ? "text-primary-600 dark:text-primary-400" : "text-gray-400"
+                      isCompleted ? "text-primary-600 dark:text-dark-titre" : "text-gray-400"
                     )}
                   >
                     {isCompleted ? (
@@ -54,7 +54,7 @@ export default function OrderTimelineSection({ timelineSteps }) {
                     <h4
                       className={cn(
                         "text-sm",
-                        isCompleted ? "text-primary-600 dark:text-primary-400" : "text-gray-400 dark:text-[#4B5563]"
+                        isCompleted ? "text-primary-600 dark:text-dark-titre " : "text-gray-400 dark:text-caption"
                       )}
                     >
                       {step.label}

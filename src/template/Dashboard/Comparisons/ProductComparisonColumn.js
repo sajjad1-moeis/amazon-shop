@@ -29,7 +29,7 @@ export default function ProductComparisonColumn({ product, onRemove }) {
       </div>
 
       {/* Product Title */}
-      <h3 className="font-medium text-neutral-800 dark:text-dark-title  line-clamp-2 min-h-[2.5rem]">
+      <h3 className="font-medium text-neutral-800 dark:text-dark-titre  line-clamp-2 min-h-[2.5rem]">
         {product.title}
       </h3>
 
@@ -40,7 +40,7 @@ export default function ProductComparisonColumn({ product, onRemove }) {
         <div className="flex items-center gap-2 mb-3">
           <div className="flex items-center gap-1">
             <Star size={16} className="text-yellow-500 fill-yellow-500" variant="Bold" />
-            <span className="text-sm font-medium text-gray-900 dark:text-dark-title">{product.rating}</span>
+            <span className="text-sm font-medium text-gray-900 dark:text-dark-titre">{product.rating}</span>
           </div>
           <span className="text-xs text-gray-500 dark:text-dark-text">({product.reviewsCount})</span>
         </div>
@@ -52,12 +52,14 @@ export default function ProductComparisonColumn({ product, onRemove }) {
 
       {/* Price */}
       <div className="mb-4">
-        <span className=" text-neutral-800 dark:text-dark-title">{product.price} تومان</span>
+        <span className=" text-neutral-800 dark:text-dark-titre">{product.price} تومان</span>
       </div>
 
       {/* View Product Button */}
       <Link href={`/product/${product.id}`} className="block">
-        <Button className="w-full bg-primary-700 hover:bg-primary-600 text-white">مشاهده محصول</Button>
+        <Button className="w-full bg-primary-700 hover:bg-primary-600 dark:bg-dark-primary text-white">
+          مشاهده محصول
+        </Button>
       </Link>
     </div>
   );

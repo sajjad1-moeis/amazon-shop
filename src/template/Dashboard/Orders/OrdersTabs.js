@@ -23,7 +23,7 @@ export default function OrdersTabs({ activeTab, onTabChange }) {
           className={cn(
             "px-4 py-3 text-sm font-medium border-b-2 transition-all flex-1",
             activeTab === tab.id
-              ? "bg-primary-50 border-primary-500"
+              ? "bg-primary-50 border-primary-500 dark:bg-dark-blue dark:border-dark-title dark:text-dark-title"
               : "border-transparent text-gray-500 dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-600"
           )}
         >

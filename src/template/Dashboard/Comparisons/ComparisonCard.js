@@ -12,12 +12,12 @@ export default function ComparisonCard({ comparison, onDelete, onView }) {
   const secondProduct = comparison.products?.[1];
 
   return (
-    <div className="bg-white dark:bg-dark-box border border-gray-200 rounded-xl p-3">
+    <div className="bg-white dark:bg-dark-box border border-gray-200 dark:border-0 rounded-xl p-3">
       {/* Header - Category Tag and Title */}
       <div className="mb-5 flex-between">
-        <h3 className="text-base  text-gray-800 dark:text-dark-title">{comparison.title}</h3>
+        <h3 className="text-base  text-gray-800 dark:text-dark-titre">{comparison.title}</h3>
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+          <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-700 dark:bg-dark-blue dark:text-primary-300">
             {comparison.category}
           </span>
         </div>
@@ -73,13 +73,13 @@ export default function ComparisonCard({ comparison, onDelete, onView }) {
         {/* Save Date */}
 
         {/* Products Count */}
-        <div className="bg-gray-100 dark:bg-dark-field/50 rounded-lg p-2">
-          <div className="text-sm font-medium text-gray-900 dark:text-dark-title">{comparison.productsCount} محصول</div>
-          <div className="text-xs text-gray-600 dark:text-dark-text mt-2">تعداد محصولات</div>
+        <div className="bg-gray-100 dark:bg-dark-field rounded-lg p-2">
+          <div className="text-sm font-medium text-gray-900 dark:text-dark-titre">{comparison.productsCount} محصول</div>
+          <div className="text-xs text-gray-600 dark:text-caption mt-2">تعداد محصولات</div>
         </div>
-        <div className="bg-gray-100 dark:bg-dark-field/50 rounded-lg p-2">
-          <div className="text-sm font-medium text-gray-700 dark:text-dark-title">{comparison.saveDate}</div>
-          <div className="text-xs text-gray-600 dark:text-dark-text mt-2">تاریخ ذخیره</div>
+        <div className="bg-gray-100 dark:bg-dark-field rounded-lg p-2">
+          <div className="text-sm font-medium text-gray-700 dark:text-dark-titre">{comparison.saveDate}</div>
+          <div className="text-xs text-gray-600 dark:text-caption mt-2">تاریخ ذخیره</div>
         </div>
       </div>
 
@@ -88,13 +88,13 @@ export default function ComparisonCard({ comparison, onDelete, onView }) {
         <Button
           variant="ghost"
           onClick={onDelete}
-          className="text-red-600 flex-1 bg-gray-200 hover:text-red-700 rounded-lg hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 border-red-300 dark:border-red-800 gap-2"
+          className="text-red-600 flex-1 bg-gray-200 hover:text-red-700 rounded-lg hover:bg-red-50 dark:bg-dark-stroke dark:text-red-400 dark:hover:bg-red-900/20 border-red-300 dark:border-red-800 gap-2"
         >
           حذف
         </Button>
         <Button
           onClick={() => onView?.(comparison.id)}
-          className="flex-1 bg-primary-700 hover:bg-primary-600 text-white gap-2 rounded-lg"
+          className="flex-1 bg-primary-700 dark:bg-dark-primary hover:bg-primary-600 text-white gap-2 rounded-lg"
         >
           مشاهده مقایسه
         </Button>

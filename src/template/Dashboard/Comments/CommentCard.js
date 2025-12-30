@@ -12,18 +12,18 @@ export default function CommentCard({ comment, onDelete, onEdit }) {
   const [showReplies, setShowReplies] = useState(false);
 
   return (
-    <div className="bg-white border border-gray-200 dark:bg-dark-box rounded-xl shadow-sm p-3 relative">
+    <div className="bg-white border dark:bg-dark-box dark:border-0 border-gray-200 rounded-xl shadow-sm p-3 relative">
       {/* Status Badge - Top Left */}
 
       <div className="space-y-5">
         {/* Product Information */}
-        <div class="flex-between pb-4 border-b border-gray-200">
+        <div class="flex-between">
           <div className="flex-center gap-4">
             <div className="flex items-center gap-2 flex-1">
               <div className="relative aspect-square size-10">
                 <Image src="/image/Home/product.png" alt="تصویر محصول" fill className="object-cover rounded-xl " />
               </div>
-              <h4 className="text-sm text-neutral-800 dark:text-dark-title">{comment.productTitle}</h4>
+              <h4 className="text-sm text-neutral-800 dark:text-dark-titre">{comment.productTitle}</h4>
             </div>
             <Link href="#" className="text-sm text-yellow-600 dark:text-yellow-400 hover:underline whitespace-nowrap">
               مشاهده محصول
@@ -36,9 +36,9 @@ export default function CommentCard({ comment, onDelete, onEdit }) {
 
         {/* Review Text */}
         <div>
-          <div class="flex gap-2 text-gray-700 dark:text-dark-text mb-3">
+          <div class="flex gap-2 text-gray-700 dark:text-dark-titre mb-3">
             <MessageText1 size={22} />
-            <label className="text-sm font-bold b-2 block">متن نظر</label>
+            <label className=" b-2 block">متن نظر</label>
           </div>
           <div class="flex-between">
             <p className="text-sm text-gray-600 dark:text-dark-text leading-relaxed">{comment.comment}</p>
@@ -56,7 +56,7 @@ export default function CommentCard({ comment, onDelete, onEdit }) {
               <Headphone size={22} className="text-gray-600 dark:text-dark-text" variant="Outline" />
               <label className="text-sm font-medium text-gray-700 dark:text-dark-text">
                 پاسخ ها{" "}
-                <span className="text-primary-400 mr-3">
+                <span className="text-primary-400 dark:text-primary-300 mr-3">
                   {comment.replies && comment.replies.length > 0 ? `${comment.replies.length} پاسخ` : ""}
                 </span>
               </label>
@@ -78,7 +78,7 @@ export default function CommentCard({ comment, onDelete, onEdit }) {
           {comment.replies && comment.replies.length > 0 ? (
             <div className="space-y-3">
               {/* Show first reply */}
-              <div className="bg-[#E5E8F599] border border-primary-200 dark:bg-blue-900/20 rounded-lg p-3 text-sm text-primary-500 dark:text-dark-text">
+              <div className="bg-[#E5E8F599] dark:bg-dark-blue dark:text-primary-300 dark:border-0 border border-primary-200 rounded-lg p-3 text-sm text-primary-500 ">
                 {comment.replies[0].text}
               </div>
             </div>
@@ -90,10 +90,10 @@ export default function CommentCard({ comment, onDelete, onEdit }) {
         {/* Actions */}
         <div class="flex-between">
           {/* Date */}
-          <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-dark-text ">
+          <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-caption ">
             <Calendar size={22} variant="Bold" />
             <span>
-              تاریخ ثبت نظر : <span className="text-gray-500">{comment.date}</span>
+              تاریخ ثبت نظر : <span className="text-gray-500 dark:text-dark-text">{comment.date}</span>
             </span>
           </div>
 
@@ -102,7 +102,7 @@ export default function CommentCard({ comment, onDelete, onEdit }) {
               variant="outline"
               size="sm"
               onClick={onDelete}
-              className="gap-2 border-red-600 text-red-600 border-2 rounded-lg px-10"
+              className="gap-2 border-red-600 dark:text-red-400 dark:border-red-400 text-red-600 border-2 rounded-lg px-10"
             >
               <Trash size={22} />
               حذف
@@ -112,7 +112,7 @@ export default function CommentCard({ comment, onDelete, onEdit }) {
                 variant="outline"
                 size="sm"
                 onClick={onEdit}
-                className="gap-2 border-primary-700 text-primary-700 border-2 rounded-lg px-10"
+                className="gap-2 border-primary-700 dark:border-primary-300 dark:text-primary-300 text-primary-700 border-2 rounded-lg px-10"
               >
                 <Edit size={22} />
                 ویرایش

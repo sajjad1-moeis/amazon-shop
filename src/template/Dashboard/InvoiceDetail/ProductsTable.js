@@ -7,21 +7,17 @@ import { cn } from "@/lib/utils";
 export default function ProductsTable({ products }) {
   return (
     <div className="bg-white dark:bg-dark-box rounded-xl border border-gray-200 dark:border-dark-stroke p-3">
-      <h3 className="text-lg text-gray-800 dark:text-dark-title mb-6">لیست کالاها</h3>
+      <h3 className="text-lg text-gray-800 dark:text-dark-titre mb-6">لیست کالاها</h3>
 
       <div className="border border-gray-200 dark:border-dark-stroke rounded-lg overflow-hidden">
         <Table>
-          <TableHeader className="bg-gray-50 dark:bg-dark-stroke">
+          <TableHeader className="bg-gray-50 dark:bg-dark-stroke text-gray-500 dark:text-dark-titre">
             <TableRow className="border-b border-gray-200 dark:border-dark-stroke">
-              <TableHead className="text-right py-3 px-4 text-sm  text-gray-500 dark:text-dark-text">
-                نام محصول
-              </TableHead>
-              <TableHead className="text-right py-3 px-4 text-sm  text-gray-500 dark:text-dark-text">تعداد</TableHead>
-              <TableHead className="text-right py-3 px-4 text-sm  text-gray-500 dark:text-dark-text">
-                قیمت نماینده
-              </TableHead>
-              <TableHead className="text-right py-3 px-4 text-sm text-gray-500 dark:text-dark-text">جمع جزء</TableHead>
-              <TableHead className="text-right py-3 px-4 text-sm text-gray-500 dark:text-dark-text">وزن</TableHead>
+              <TableHead className="text-right py-3 px-4 text-sm ">نام محصول</TableHead>
+              <TableHead className="text-right py-3 px-4 text-sm  ">تعداد</TableHead>
+              <TableHead className="text-right py-3 px-4 text-sm ">قیمت نماینده</TableHead>
+              <TableHead className="text-right py-3 px-4 text-sm">جمع جزء</TableHead>
+              <TableHead className="text-right py-3 px-4 text-sm">وزن</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -36,25 +32,25 @@ export default function ProductsTable({ products }) {
                 <TableRow
                   key={product.id}
                   className={cn(
-                    "hover:bg-gray-50 dark:hover:bg-dark-field/50 transition-colors",
+                    "hover:bg-gray-50 dark:bg-white/5 dark:hover:bg-dark-field/50 transition-colors",
                     index === products.length - 1 && "last:border-b-0"
                   )}
                 >
-                  <TableCell className="text-sm text-yellow-600 underline dark:text-dark-title py-4 px-4 font-medium">
+                  <TableCell className="text-sm text-yellow-600 underline  py-4 px-4 font-medium">
                     {product.name}
                   </TableCell>
                   <TableCell className="text-sm dark:text-dark-text py-4 px-4">
-                    <div className="bg-primary-100 text-[#1E429F] px-2.5 py-1 w-max rounded-md">
+                    <div className="bg-primary-100 dark:bg-dark-blue dark:text-dark-title text-[#1E429F] px-2.5 py-1 w-max rounded-md">
                       {product.quantity} عدد
                     </div>
                   </TableCell>
-                  <TableCell className="text-sm font-medium text-gray-900 dark:text-dark-title py-4 px-4">
+                  <TableCell className="text-sm font-medium text-gray-900 dark:text-dark-titre py-4 px-4">
                     {product.representativePrice?.toLocaleString("fa-IR")} تومان
                   </TableCell>
-                  <TableCell className="text-sm font-medium text-gray-900 dark:text-dark-title py-4 px-4">
+                  <TableCell className="text-sm font-medium text-gray-900 dark:text-dark-titre py-4 px-4">
                     {product.subtotal?.toLocaleString("fa-IR")} تومان
                   </TableCell>
-                  <TableCell className="text-sm font-medium text-gray-900 dark:text-dark-title py-4 px-4">
+                  <TableCell className="text-sm font-medium text-gray-900 dark:text-dark-titre py-4 px-4">
                     {product.weight ? `${product.weight} kg` : "-"}
                   </TableCell>
                 </TableRow>

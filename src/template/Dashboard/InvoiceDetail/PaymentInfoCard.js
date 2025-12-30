@@ -14,7 +14,7 @@ export default function PaymentInfoCard({ paymentInfo = {} }) {
       label: "مبلغ پرداخت شده",
       value: paymentInfo.paidAmount,
       suffix: "تومان",
-      valueClass: "text-primary-500 dark:text-primary-400",
+      valueClass: "text-primary-500 dark:text-primary-300",
     },
     {
       label: "مبلغ باقی‌مانده",
@@ -36,8 +36,8 @@ export default function PaymentInfoCard({ paymentInfo = {} }) {
   ].filter((item) => item.value !== undefined && item.value !== null);
 
   return (
-    <div className="bg-white dark:bg-dark-box rounded-xl border border-gray-200 dark:border-dark-stroke p-4">
-      <h3 className="text-lg text-gray-800 dark:text-dark-title mb-6">اطلاعات پرداخت</h3>
+    <div className="bg-white dark:bg-dark-box rounded-xl border border-gray-200 dark:border-0 p-4">
+      <h3 className="text-lg text-gray-800 dark:text-dark-titre mb-6">اطلاعات پرداخت</h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
         {items.map((item, index) => (
@@ -48,9 +48,9 @@ export default function PaymentInfoCard({ paymentInfo = {} }) {
               [4, 5].includes(index) || " border-b border-gray-200 dark:border-dark-stroke"
             )}
           >
-            <span className="text-sm text-gray-500 dark:text-dark-text">{item.label}:</span>
+            <span className="text-sm text-gray-500 dark:text-caption">{item.label}:</span>
 
-            <span className={`text-sm font-medium text-gray-900 dark:text-dark-title ${item.valueClass || ""}`}>
+            <span className={`text-sm font-medium text-gray-900 dark:text-dark-titre ${item.valueClass || ""}`}>
               {typeof item.value === "number" ? item.value.toLocaleString("fa-IR") : item.value}
               {item.suffix && ` ${item.suffix}`}
             </span>

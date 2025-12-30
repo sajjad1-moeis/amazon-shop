@@ -16,33 +16,33 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
   const router = useRouter();
 
   return (
-    <div className="bg-white dark:bg-dark-box rounded-xl shadow-box p-4">
+    <div className="bg-white dark:bg-dark-box dark:border dark:border-dark-stroke rounded-xl shadow-box p-4">
       {/* Order Summary - بالا با border */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-3 mb-6 pb-6 border-b border-gray-200 dark:border-dark-stroke">
         <div>
-          <span className="text-sm text-gray-600 dark:text-dark-text ">شماره سفارش: </span>
-          <span className="text-sm font-medium text-gray-900 dark:text-dark-title">{order.orderNumber}</span>
+          <span className="text-sm text-gray-600 dark:text-caption ">شماره سفارش: </span>
+          <span className="text-sm font-medium text-gray-900 dark:text-dark-titre">{order.orderNumber}</span>
         </div>
         <div>
-          <span className="text-sm text-gray-600 dark:text-dark-text ">تعداد محصول: </span>
-          <span className="text-sm font-medium px-1 rounded text-primary-500 bg-primary-100 dark:text-dark-title">
+          <span className="text-sm text-gray-600 dark:text-caption ">تعداد محصول: </span>
+          <span className="text-sm font-medium px-1 rounded text-primary-500 bg-primary-100 dark:bg-dark-blue dark:text-dark-title">
             {order.itemsCount}
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600 dark:text-dark-text ">وضعیت:</span>
+          <span className="text-sm text-gray-600 dark:text-caption ">وضعیت:</span>
           <StatusBadge status={order.status} />
         </div>
         <div>
-          <span className="text-sm text-gray-600 dark:text-dark-text ">مبلغ کل: </span>
-          <span className="text-sm font-medium text-gray-900 dark:text-dark-title">{order.totalAmount} تومان</span>
+          <span className="text-sm text-gray-600 dark:text-caption ">مبلغ کل: </span>
+          <span className="text-sm font-medium text-gray-900 dark:text-dark-titre">{order.totalAmount} تومان</span>
         </div>
         <div>
-          <span className="text-sm text-gray-600 dark:text-dark-text ">تاریخ سفارش: </span>
-          <span className="text-sm font-medium text-gray-900 dark:text-dark-title">{order.orderDate}</span>
+          <span className="text-sm text-gray-600 dark:text-caption ">تاریخ سفارش: </span>
+          <span className="text-sm font-medium text-gray-900 dark:text-dark-titre">{order.orderDate}</span>
         </div>
         <div>
-          <span className="text-sm text-gray-600 dark:text-dark-text ">درصد پرداختی: </span>
+          <span className="text-sm text-gray-600 dark:text-caption ">درصد پرداختی: </span>
           <span className="text-sm font-medium text-green-600 dark:text-dark-title">{order.paymentStatus}</span>
         </div>
       </div>
@@ -61,10 +61,10 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
         >
           {order.products.map((product) => (
             <SwiperSlide key={product.id} className="flex flex-col">
-              <div className="p-3 rounded-lg bg-gray-100 dark:bg-dark-field/30">
+              <div className="p-3 rounded-lg bg-gray-100 dark:bg-dark-field">
                 {/* Product Image */}
                 <div className="flex gap-3 flex-grow">
-                  <div className="flex-shrink-0">
+                  <div className="mb-2">
                     <div className="w-12 h-12 bg-gray-100 dark:bg-dark-field rounded-lg overflow-hidden">
                       {product.image ? (
                         <Image
@@ -75,7 +75,7 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400">
+                        <div className="w-12 h-12 flex items-center justify-center text-gray-400">
                           <Paintbucket size={24} />
                         </div>
                       )}
@@ -84,22 +84,22 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
 
                   {/* Product Details */}
                   <div className="flex-1 min-w-0">
-                    <h4 className=" font-medium text-neutral-800 dark:text-dark-title mb-2 line-clamp-2">
+                    <h4 className=" font-medium text-neutral-800 dark:text-dark-titre mb-2 line-clamp-2">
                       {product.name}
                     </h4>
                   </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-2 text-xs text-gray-600 dark:text-dark-text ">
-                  <div className="bg-gray-200 dark:bg-dark-field flex-1 rounded-lg p-2">
+                  <div className="bg-gray-200 dark:bg-dark-box  rounded-lg p-2 flex-between  flex-1">
                     قیمت کالا (تومان):{" "}
-                    <span className="font-medium text-gray-900 dark:text-dark-title">
+                    <span className="font-medium text-gray-900 dark:text-dark-titre">
                       {product.price.toLocaleString("fa-IR")}
                     </span>
                   </div>
-                  <div className="bg-gray-200 dark:bg-dark-field flex rounded-lg p-2">
+                  <div className="bg-gray-200 dark:bg-dark-box flex rounded-lg p-2 flex-between gap-5">
                     تعداد:{" "}
-                    <span className="font-medium text-gray-900 dark:text-dark-title">{product.quantity} عدد</span>
+                    <span className="font-medium text-gray-900 dark:text-dark-titre">{product.quantity} عدد</span>
                   </div>
                 </div>
               </div>
@@ -111,7 +111,7 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
       {/* Timeline Accordion - Default Open */}
       <Accordion type="single" collapsible defaultValue="timeline" className="mb-6">
         <AccordionItem value="timeline" className="border-0">
-          <AccordionTrigger className="font-semibold text-primary-500 dark:text-dark-text hover:no-underline py-2">
+          <AccordionTrigger className=" text-primary-500 dark:text-dark-title hover:no-underline py-2">
             وضعیت سفارش:
           </AccordionTrigger>
           <AccordionContent className="p-0">
@@ -134,14 +134,14 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
         {order?.status === "delivered" && (
           <Button
             onClick={() => onDownloadInvoice(order.id)}
-            className="text-primary-700 bg-transparent flex-1 border-2 border-primary-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 gap-2"
+            className="text-primary-700 dark:border-primary-300 dark:text-primary-300 bg-transparent flex-1 border-2 border-primary-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 gap-2"
           >
             دانلود فاکتور
           </Button>
         )}
         <Button
           onClick={() => router.push("/dashboard/orders/" + order.id)}
-          className="bg-primary-700 flex-1 hover:bg-primary-600 text-white gap-2"
+          className="bg-primary-700 flex-1 hover:bg-primary-600 dark:bg-dark-primary text-white gap-2"
         >
           مشاهده جزئیات
         </Button>

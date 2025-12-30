@@ -86,7 +86,7 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
                           className={cn(
                             "cursor-pointer border rounded-lg p-4 transition-all flex gap-4",
                             isSelected
-                              ? "border-primary-300 bg-[#E5E8F599] dark:bg-[#494B56]"
+                              ? "border-primary-300 bg-[#E5E8F599] dark:bg-dark-gray-primary"
                               : "border-gray-200 dark:border-dark-box hover:border-gray-300 bg-white dark:bg-dark-box"
                           )}
                         >

@@ -59,7 +59,7 @@ export default function ShareModal({ isOpen, onClose, referralCode, referralLink
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose} dir="rtl">
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto" dir="rtl">
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto dark:bg-dark-box" dir="rtl">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center text-primary-700 dark:text-dark-title">
             اشتراک گذاری کد دعوت
@@ -73,11 +73,11 @@ export default function ShareModal({ isOpen, onClose, referralCode, referralLink
               <img
                 src={qrCodeUrl}
                 alt="QR Code"
-                className="w-48 h-48 border-2 border-gray-200 dark:border-dark-stroke rounded-lg p-2 bg-white"
+                className="w-48 h-48 border-2 border-gray-200 dark:border-dark-stroke rounded-lg p-2 bg-white dark:bg-dark-box"
               />
             ) : (
               <div className="w-48 h-48 border-2 border-gray-200 dark:border-dark-stroke rounded-lg flex items-center justify-center bg-gray-100 dark:bg-dark-field">
-                <p className="text-gray-400 text-sm">در حال تولید QR Code...</p>
+                <p className="text-gray-400 dark:text-dark-text text-sm">در حال تولید QR Code...</p>
               </div>
             )}
           </div>
@@ -87,7 +87,7 @@ export default function ShareModal({ isOpen, onClose, referralCode, referralLink
             <Button
               onClick={handleDownloadQR}
               variant="outline"
-              className="flex-1 gap-2 border-gray-300 dark:border-dark-stroke"
+              className="flex-1 gap-2 border-gray-300 dark:border-dark-stroke dark:bg-dark-field dark:text-dark-text dark:hover:bg-dark-field/80"
             >
               <ArrowDown2 size={18} />
               دانلود کد QR
@@ -95,7 +95,7 @@ export default function ShareModal({ isOpen, onClose, referralCode, referralLink
             <Button
               onClick={handleCopyLink}
               variant="outline"
-              className="flex-1 gap-2 border-gray-300 dark:border-dark-stroke"
+              className="flex-1 gap-2 border-gray-300 dark:border-dark-stroke dark:bg-dark-field dark:text-dark-text dark:hover:bg-dark-field/80"
             >
               <Copy size={18} />
               کپی لینک
@@ -109,14 +109,14 @@ export default function ShareModal({ isOpen, onClose, referralCode, referralLink
           <div className="flex justify-center gap-4">
             <button
               onClick={() => handleSocialShare("linkedin")}
-              className="w-12 h-12 rounded-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center transition-colors"
+              className="w-12 h-12 rounded-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 flex items-center justify-center transition-colors"
               aria-label="اشتراک در LinkedIn"
             >
               <span className="text-white font-bold text-sm">in</span>
             </button>
             <button
               onClick={() => handleSocialShare("telegram")}
-              className="w-12 h-12 rounded-full bg-blue-500 hover:bg-blue-600 flex items-center justify-center transition-colors"
+              className="w-12 h-12 rounded-full bg-blue-500 hover:bg-blue-600 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center justify-center transition-colors"
               aria-label="اشتراک در Telegram"
             >
               <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -125,14 +125,14 @@ export default function ShareModal({ isOpen, onClose, referralCode, referralLink
             </button>
             <button
               onClick={() => handleSocialShare("twitter")}
-              className="w-12 h-12 rounded-full bg-black hover:bg-gray-800 flex items-center justify-center transition-colors"
+              className="w-12 h-12 rounded-full bg-black hover:bg-gray-800 dark:bg-black dark:hover:bg-gray-800 flex items-center justify-center transition-colors"
               aria-label="اشتراک در X (Twitter)"
             >
               <span className="text-white font-bold text-xl">𝕏</span>
             </button>
             <button
               onClick={() => handleSocialShare("whatsapp")}
-              className="w-12 h-12 rounded-full bg-green-500 hover:bg-green-600 flex items-center justify-center transition-colors"
+              className="w-12 h-12 rounded-full bg-green-500 hover:bg-green-600 dark:bg-green-500 dark:hover:bg-green-600 flex items-center justify-center transition-colors"
               aria-label="اشتراک در WhatsApp"
             >
               <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -141,7 +141,7 @@ export default function ShareModal({ isOpen, onClose, referralCode, referralLink
             </button>
             <button
               onClick={() => handleSocialShare("instagram")}
-              className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 hover:opacity-90 flex items-center justify-center transition-opacity"
+              className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 hover:opacity-90 dark:from-purple-600 dark:via-pink-500 dark:to-orange-400 flex items-center justify-center transition-opacity"
               aria-label="اشتراک در Instagram"
             >
               <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">

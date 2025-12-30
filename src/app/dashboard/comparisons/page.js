@@ -43,7 +43,7 @@ export default function ComparisonsList() {
           <Button
             variant="ghost"
             onClick={handleDeleteAll}
-            className="gap-2 text-red-600 dark:text-dark-text hover:bg-gray-100 dark:hover:bg-dark-field"
+            className="gap-2 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-dark-field"
             disabled={comparisons.length === 0}
           >
             <Trash size={18} />
@@ -51,7 +51,7 @@ export default function ComparisonsList() {
           </Button>
           <Button
             onClick={handleCreateNew}
-            className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 dark:text-dark-title font-medium gap-2"
+            className="bg-yellow-500 hover:bg-yellow-600 text-primary-800 font-medium gap-2"
           >
             ایجاد مقایسه جدید
             <Add size={20} />

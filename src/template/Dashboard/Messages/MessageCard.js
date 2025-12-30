@@ -41,7 +41,7 @@ export default function MessageCard({ message }) {
             <div className="flex items-center justify-between w-full">
               {/* Left: Arrow Icon and Title */}
               <div className="flex items-center gap-3 flex-1">
-                <h3 className="text-base text-gray-700 dark:text-dark-title text-right">{message.title}</h3>
+                <h3 className="text-base text-gray-700 dark:text-dark-titre text-right">{message.title}</h3>
               </div>
 
               {/* Right: Badge */}
@@ -61,7 +61,10 @@ export default function MessageCard({ message }) {
                 <p className="text-sm text-gray-600 dark:text-dark-text leading-relaxed">{message.message}</p>
                 {message.actionButton && (
                   <Link href={message.actionButton.href}>
-                    <Button variant="outline" className="border-primary-600  mt-4 text-primary-600">
+                    <Button
+                      variant="outline"
+                      className="border-primary-600 dark:text-primary-300 border-2 dark:border-primary-300  mt-4 text-primary-600"
+                    >
                       {message.actionButton.label}
                     </Button>
                   </Link>

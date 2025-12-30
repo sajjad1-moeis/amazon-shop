@@ -86,7 +86,10 @@ export default function ProductComparison() {
         title="مقایسه محصولات - کنترلر پلی استیشن"
         description={
           <p className="text-gray-600 dark:text-dark-text">
-            دسته بندی : <span className="px-2 py-1 bg-primary-100 text-primary-800 rounded-md text-sm">{category}</span>
+            دسته بندی :{" "}
+            <span className="px-2 py-1  dark:bg-dark-blue dark:text-primary-300 bg-primary-100 text-primary-800 rounded-md text-sm">
+              {category}
+            </span>
           </p>
         }
       >
@@ -94,7 +97,7 @@ export default function ProductComparison() {
           <Button
             variant="destructive"
             onClick={handleDeleteComparison}
-            className="gap-2 bg-gray-200 text-red-600 hover:text-white"
+            className="gap-2 bg-gray-200 text-red-600 dark:text-red-400 hover:text-white dark:bg-dark-field"
             disabled={products.length === 0}
           >
             حذف
@@ -102,7 +105,7 @@ export default function ProductComparison() {
           <Button
             variant="ghost"
             onClick={handleSaveComparison}
-            className="bg-yellow-500 text-gray-900 dark:text-dark-title font-medium"
+            className="bg-yellow-500 text-primary-800  font-medium"
           >
             ذخیره مقایسه
           </Button>
@@ -135,6 +138,3 @@ export default function ProductComparison() {
     </div>
   );
 }
-
-
-

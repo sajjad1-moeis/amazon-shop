@@ -12,17 +12,22 @@ export default function ComparisonTable({ products, features }) {
   const renderFeatureValue = (value) => {
     if (typeof value === "boolean") {
       return (
-        <td className={cn("text-center py-4 px-6 ", value ? "bg-green-50" : "bg-red-50")}>
+        <td
+          className={cn(
+            "text-center py-4 px-6 ",
+            value ? "bg-green-50 dark:bg-[#0E9F6E14]" : "bg-red-50 dark:bg-red-400/5"
+          )}
+        >
           <div className="flex items-center gap-2 justify-center ">
             {value ? (
               <>
                 <TickCircle size={20} className="text-green-600" variant="Bold" />
-                <span className="text-sm text-gray-900 dark:text-dark-title">دارد</span>
+                <span className="text-sm text-gray-900 dark:text-dark-titre">دارد</span>
               </>
             ) : (
               <>
                 <CloseCircle size={20} className="text-red-600" variant="Bold" />
-                <span className="text-sm text-gray-900 dark:text-dark-title">ندارد</span>
+                <span className="text-sm text-gray-900 dark:text-dark-titre">ندارد</span>
               </>
             )}
           </div>
@@ -30,8 +35,8 @@ export default function ComparisonTable({ products, features }) {
       );
     }
     return (
-      <td className={cn("text-center py-4 px-6 ")}>
-        <span className="text-sm text-gray-900 dark:text-dark-title ">{value || "-"}</span>
+      <td className={cn("text-center py-4 px-6 dark:bg-dark-box")}>
+        <span className="text-sm text-gray-900 dark:text-dark-titre ">{value || "-"}</span>
       </td>
     );
   };
@@ -40,14 +45,14 @@ export default function ComparisonTable({ products, features }) {
     <div className="bg-white dark:bg-dark-box rounded-2xl border border-gray-200 dark:border-dark-stroke overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead>
+          <thead className="dark:bg-dark-stroke">
             <tr className="border-b border-gray-200 dark:border-dark-stroke">
-              <th className="text-right py-4 px-6 bg-white dark:bg-dark-bg/50 text-sm font-semibold text-gray-900 dark:text-dark-title"></th>
+              <th className="text-right py-4 px-6 bg-white dark:bg-dark-bg/50 text-sm font-semibold text-gray-900 dark:text-dark-titre"></th>
               {products.map((product, index) => (
                 <th
                   key={product.id}
                   className={cn(
-                    "text-center py-4 px-6 bg-white dark:bg-dark-bg/50 text-sm font-semibold text-gray-900 dark:text-dark-title",
+                    "text-center py-4 px-6 bg-white dark:bg-dark-bg/50 text-sm font-semibold text-gray-900 dark:text-dark-titre",
                     index === 0 && " border-gray-200 dark:border-dark-stroke"
                   )}
                 >
@@ -79,6 +84,3 @@ export default function ComparisonTable({ products, features }) {
     </div>
   );
 }
-
-
-

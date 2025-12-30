@@ -25,7 +25,7 @@ export default function CommentsPage() {
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
         <CommentsFilter filters={filters} onFiltersChange={setFilters} />
         {/* Total Reviews Count - Left */}
-        <div className="text-sm text-gray-700 dark:text-dark-text dark:bg-white/5">
+        <div className="text-sm text-gray-700 dark:text-dark-text">
           کل نظرات : <span className="font-semibold text-yellow-600 dark:text-yellow-400">{comments.length} نظر</span>
         </div>
 

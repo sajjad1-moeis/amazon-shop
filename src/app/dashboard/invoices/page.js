@@ -81,9 +81,9 @@ export default function InvoicesPage() {
         <InvoicesFilter filters={filters} onFiltersChange={setFilters} />
 
         {/* Invoices Table Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-box p-4 md:p-6 mt-8">
+        <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4 md:p-6 mt-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-            <h2 className="text-lg md:text-xl font-bold text-primary-700 dark:text-white">لیست فاکتورها</h2>
+            <h2 className="text-lg md:text-xl text-primary-700 dark:text-dark-titre">لیست فاکتورها</h2>
             <p className="text-gray-600 dark:text-dark-text">
               تعداد کل فاکتورها:{" "}
               <span className="text-yellow-600 dark:text-yellow-400 font-semibold">{filteredInvoices.length}</span>

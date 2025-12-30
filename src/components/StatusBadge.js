@@ -19,11 +19,11 @@ const STATUS_CONFIG = {
   },
   pending: {
     label: "در انتظار بررسی",
-    className: "bg-primary-100 text-primary-700 dark:bg-yellow-900/30 dark:text-yellow-400",
+    className: "bg-primary-100 text-primary-700 dark:bg-dark-blue dark:text-primary-300",
   },
   approved: {
     label: "تأیید شده",
-    className: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+    className: "bg-green-100 text-green-700 dark:bg-dark-green dark:text-green-200",
   },
   rejected: {
     label: "رد شده",
@@ -57,7 +57,7 @@ const STATUS_CONFIG = {
   // Invoice statuses
   paid: {
     label: "پرداخت شده",
-    className: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+    className: "bg-green-100 text-green-700 dark:bg-dark-green dark:text-green-200",
   },
   // PriceLock statuses
   active: {
@@ -94,7 +94,7 @@ const STATUS_CONFIG = {
   // Ticket statuses (numeric)
   0: {
     label: "در انتظار",
-    className: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
+    className: "bg-yellow-100 text-yellow-700 dark:bg-dark-blue dark:text-primary-300",
   },
   1: {
     label: "در حال بررسی",

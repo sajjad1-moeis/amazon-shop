@@ -31,9 +31,9 @@ function CommentsList({ comments, setComments }) {
     <div className="space-y-4">
       {comments.length === 0 ? (
         <div className="mt-20 flex-center flex-col p-8 text-center">
-          <h3 className="text-2xl text-primary-500 mb-2 dark:text-blue-400">شما هنوز نظری ثبت نکرده اید.</h3>
-          <p className="text-primary-300 font-thin dark:text-dark-text">با ثبت نظر، به سایر خریداران کمک میکنید.</p>
-          <Button className="bg-yellow-400 mt-8 hover:bg-yellow-500 text-gray-900 dark:text-dark-title font-medium rounded-lg">
+          <h3 className="text-2xl text-primary-500 mb-2 dark:text-primary-300">شما هنوز نظری ثبت نکرده اید.</h3>
+          <p className="text-primary-300 font-thin dark:text-caption">با ثبت نظر، به سایر خریداران کمک میکنید.</p>
+          <Button className="bg-yellow-400 mt-8 hover:bg-yellow-500 text-primary-800  font-medium rounded-lg">
             مشاهده محصولات خریداری شده
           </Button>
         </div>
