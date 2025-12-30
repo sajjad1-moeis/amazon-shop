@@ -15,16 +15,16 @@ export default function RecentOrderTimeline({ order }) {
     <div className="bg-gray-100 dark:bg-dark-field rounded-2xl p-3 my-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-        <h3 className=" text-gray-800 dark:text-dark-title">سفارش شماره {order.orderNumber}</h3>
+        <h3 className=" text-gray-800 dark:text-dark-titre">سفارش شماره {order.orderNumber}</h3>
         <div class="flex gap-4">
           <p className="text-sm text-gray-500 dark:text-dark-text">
-            تاریخ سفارش: <span className="text-sm  text-gray-700 dark:text-dark-title">{order.orderDate}</span>
+            تاریخ سفارش: <span className="text-sm  text-gray-700 dark:text-dark-titre">{order.orderDate}</span>
           </p>
           <p className="text-sm text-gray-500 dark:text-dark-text">
             وضعیت: <StatusBadge status={order.status} />
           </p>
           <p className="text-sm text-gray-500 dark:text-dark-text">
-            مبلغ کل: <span className="text-sm  text-gray-700 dark:text-dark-title">{order.totalAmount}تومان</span>
+            مبلغ کل: <span className="text-sm  text-gray-700 dark:text-dark-titre">{order.totalAmount}تومان</span>
           </p>
         </div>
       </div>

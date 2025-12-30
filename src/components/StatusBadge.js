@@ -31,12 +31,12 @@ const STATUS_CONFIG = {
   },
   processing: {
     label: "در حال پردازش",
-    className: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+    className: "bg-blue-100 text-blue-700 dark:bg-[#4F5F70] dark:text-dark-title ",
   },
   // Order statuses
   "to-iran": {
     label: "در مسیر ایران",
-    className: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+    className: "bg-green-100 text-green-700 dark:bg-[#4F5F70] dark:text-dark-title ",
   },
   "to-dubai": {
     label: "در مسیر دبی",

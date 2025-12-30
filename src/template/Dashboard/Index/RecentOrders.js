@@ -57,27 +57,19 @@ export default function RecentOrders() {
       {/* جدول سفارش‌های دیگر */}
       <div className="bg-white dark:bg-dark-box rounded-2xl p-3 mb-6">
         <div className="mb-4 md:mb-6">
-          <h3 className="text-lg text-gray-700  dark:text-dark-title mb-2">دیگر سفارش‌ها</h3>
+          <h3 className="text-lg text-gray-700  dark:text-dark-titre mb-2">دیگر سفارش‌ها</h3>
         </div>
 
         {/* Desktop Table */}
         <div className="block overflow-auto border border-gray-200 dark:border-dark-stroke rounded-lg">
           <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-dark-field/50">
+            <thead className="bg-gray-50 dark:bg-dark-stroke text-gray-500 dark:text-dark-text">
               <tr className="border-b border-gray-200 dark:border-dark-stroke">
-                <th className="text-right whitespace-nowrap py-3 px-4 text-sm font-thin text-gray-500  dark:text-dark-text first:rounded-tr-lg">
-                  شماره
-                </th>
-                <th className="text-right whitespace-nowrap py-3 px-4 text-sm font-thin text-gray-500  dark:text-dark-text">
-                  تاریخ
-                </th>
-                <th className="text-right whitespace-nowrap py-3 px-4 text-sm font-thin text-gray-500 dark:text-dark-text ">
-                  مبلغ
-                </th>
-                <th className="text-right whitespace-nowrap py-3 px-4 text-sm font-thin text-gray-500 dark:text-dark-text ">
-                  وضعیت
-                </th>
-                <th className="text-right whitespace-nowrap py-3 px-4 text-sm font-thin text-gray-500 dark:text-dark-text  last:rounded-tl-lg">
+                <th className="text-right whitespace-nowrap py-3 px-4 text-sm font-thin  first:rounded-tr-lg">شماره</th>
+                <th className="text-right whitespace-nowrap py-3 px-4 text-sm font-thin ">تاریخ</th>
+                <th className="text-right whitespace-nowrap py-3 px-4 text-sm font-thin  ">مبلغ</th>
+                <th className="text-right whitespace-nowrap py-3 px-4 text-sm font-thin  ">وضعیت</th>
+                <th className="text-right whitespace-nowrap py-3 px-4 text-sm font-thin   last:rounded-tl-lg">
                   عملیات
                 </th>
               </tr>
@@ -87,13 +79,13 @@ export default function RecentOrders() {
                 <tr
                   key={order.id}
                   className={cn(
-                    "border-b border-gray-200 dark:border-dark-stroke hover:bg-gray-50 dark:hover:bg-dark-field/50 transition-colors",
+                    "border-b border-gray-200 dark:border-dark-stroke hover:bg-gray-50 dark:bg-white/5 dark:hover:bg-dark-field/50 transition-colors",
                     index === otherOrders.length - 1 && "last:border-b-0"
                   )}
                 >
                   <td
                     className={cn(
-                      "py-4 whitespace-nowrap px-4 text-sm text-gray-900 dark:text-dark-title",
+                      "py-4 whitespace-nowrap px-4 text-sm text-gray-900 dark:text-dark-titre",
                       index === otherOrders.length - 1 && "first:rounded-br-lg"
                     )}
                   >
@@ -102,7 +94,7 @@ export default function RecentOrders() {
                   <td className="py-4 whitespace-nowrap px-4 text-sm text-gray-600 dark:text-dark-text">
                     {order.date}
                   </td>
-                  <td className="py-4 whitespace-nowrap px-4 text-sm font-medium text-gray-900 dark:text-dark-title">
+                  <td className="py-4 whitespace-nowrap px-4 text-sm font-medium text-gray-900 dark:text-dark-titre">
                     {order.amount}
                   </td>
                   <td className="py-4 whitespace-nowrap px-4">
@@ -123,7 +115,7 @@ export default function RecentOrders() {
                   >
                     <Button
                       varant="ghost"
-                      className="inline-flex items-center gap-2 px-3 py-1 rounded-lg text-sm font-medium text-white bg-primary-700 dark:bg-dark-field   dark:text-dark-text  "
+                      className="inline-flex items-center gap-2 px-3 py-1 rounded-lg text-sm font-medium text-white bg-primary-700 dark:bg-dark-primary   dark:text-white  "
                     >
                       پیگیری سفارش
                     </Button>

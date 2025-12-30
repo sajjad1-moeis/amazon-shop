@@ -3,6 +3,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import StatusBadge from "@/components/StatusBadge";
 
 const tickets = [
   {
@@ -12,7 +13,6 @@ const tickets = [
     date: "۱۴۰۳/۱۰/۰۹",
     statusText: "پاسخ داده شده",
     buttonText: "نمایش",
-    statusBgColor: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
   },
   {
     id: 2,
@@ -21,7 +21,6 @@ const tickets = [
     date: "۱۴۰۳/۱۰/۰۹",
     statusText: "در حال پردازش",
     buttonText: "مشاهده تیکت",
-    statusBgColor: "bg-primary-100 text-blue-700 dark:bg-primary-900/30 dark:text-blue-400",
   },
 ];
 
@@ -33,8 +32,8 @@ export default function SupportTickets() {
     >
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4 md:mb-6">
         <div>
-          <h3 className="text-lg text-gray-700 dark:text-dark-title mb-2">آخرین تیکتهای پشتیبانی</h3>
-          <p className="text-sm text-gray-500 dark:text-dark-text">وضعیت آخرین درخواستهای شما</p>
+          <h3 className="text-lg text-gray-700 dark:text-dark-titre mb-2">آخرین تیکتهای پشتیبانی</h3>
+          <p className="text-sm text-gray-500 dark:text-caption">وضعیت آخرین درخواستهای شما</p>
         </div>
         <Button
           variant="ghost"
@@ -48,7 +47,7 @@ export default function SupportTickets() {
         {tickets.map((ticket) => {
           const getButtonClassName = () => {
             if (ticket.status === "answered") {
-              return "border border-primary-700 text-primary-700 hover:bg-primary-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-primary-900/20";
+              return "border border-primary-700 text-primary-700 hover:bg-primary-50 dark:border-primary-400 dark:text-primary-400 dark:hover:bg-primary-900/20";
             } else if (ticket.status === "processing") {
               return "bg-primary-600 text-white hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600";
             }
@@ -66,7 +65,7 @@ export default function SupportTickets() {
               <div className="flex justify-between">
                 {/* Title */}
                 <div className="">
-                  <p className="text-sm md:text-base font-medium text-gray-800 dark:text-dark-title mb-2">
+                  <p className="text-sm md:text-base font-medium text-gray-800 dark:text-dark-titre mb-2">
                     {ticket.title}
                   </p>
 
@@ -74,14 +73,7 @@ export default function SupportTickets() {
                   <p className="text-xs md:text-sm text-gray-600 dark:text-dark-text mb-3">تاریخ : {ticket.date}</p>
                 </div>
                 <div className="mb-3">
-                  <span
-                    className={cn(
-                      "inline-flex items-center px-3 py-1 rounded-md text-xs font-medium",
-                      ticket.statusBgColor
-                    )}
-                  >
-                    {ticket.statusText}
-                  </span>
+                  <StatusBadge status={ticket.status} />
                 </div>
               </div>
               {/* Button */}

@@ -24,7 +24,7 @@ export default function PurchasesFilter({ filters, onFiltersChange }) {
               value={filters.searchQuery}
               onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
               placeholder="جستجو بر اساس نام محصول ..."
-              className="pr-10 pl-4"
+              className="pr-10 pl-4 dark:bg-dark-field dark:border-dark-stroke"
               dir="rtl"
             />
           </div>
