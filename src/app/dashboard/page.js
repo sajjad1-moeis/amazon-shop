@@ -3,7 +3,7 @@ import OverviewCards from "@/template/Dashboard/Index/OverviewCards";
 import RecentOrders from "@/template/Dashboard/Index/RecentOrders";
 import CurrencyRates from "@/template/Dashboard/Index/CurrencyRates";
 import SupportTickets from "@/template/Dashboard/Index/SupportTickets";
-import ProductSuggestions from "@/template/Dashboard/Index/ProductSuggestions";
+import ProductSuggestions from "@/template/Dashboard/RecentViews/ProductSuggestions";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
 
 export default function DashboardPage() {

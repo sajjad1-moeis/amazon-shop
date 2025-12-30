@@ -90,7 +90,7 @@ export default function ReturnRequestsList() {
 
       {/* Returns Table Section */}
 
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-box p-4">
+      <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4">
         <h2 className="text-lg  text-gray-900 dark:text-white mb-6">لیست درخواستهای مرجوعی</h2>
         <ReturnsTable returns={filteredReturns} onCancel={handleCancelReturn} />
       </div>

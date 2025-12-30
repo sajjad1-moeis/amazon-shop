@@ -76,7 +76,7 @@ export default function ConnectedDevicesModal({ isOpen, onClose }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose} dir="rtl">
-      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto" dir="rtl">
+      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto dark:bg-dark-box" dir="rtl">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">دستگاه‌های متصل</DialogTitle>
           <DialogDescription className="text-sm text-gray-600 dark:text-dark-text">

@@ -61,14 +61,20 @@ export default function ShareModal({ isOpen, onClose, referralCode, referralLink
     <Dialog open={isOpen} onOpenChange={onClose} dir="rtl">
       <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto" dir="rtl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center text-primary-700">اشتراک گذاری کد دعوت</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-center text-primary-700 dark:text-dark-title">
+            اشتراک گذاری کد دعوت
+          </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6 py-4">
           {/* QR Code */}
           <div className="flex justify-center">
             {qrCodeUrl ? (
-              <img src={qrCodeUrl} alt="QR Code" className="w-48 h-48 border-2 border-gray-200 dark:border-dark-stroke rounded-lg p-2 bg-white" />
+              <img
+                src={qrCodeUrl}
+                alt="QR Code"
+                className="w-48 h-48 border-2 border-gray-200 dark:border-dark-stroke rounded-lg p-2 bg-white"
+              />
             ) : (
               <div className="w-48 h-48 border-2 border-gray-200 dark:border-dark-stroke rounded-lg flex items-center justify-center bg-gray-100 dark:bg-dark-field">
                 <p className="text-gray-400 text-sm">در حال تولید QR Code...</p>

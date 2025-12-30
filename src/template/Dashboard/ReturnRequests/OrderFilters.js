@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SearchNormal1, InfoCircle } from "iconsax-reactjs";
 import { mockOrders } from "@/data";
+import { filterInputStyles, filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
 
 export default function OrderFilters({ selectedOrder, onOrderSelect }) {
   const [filters, setFilters] = useState({
@@ -53,12 +54,12 @@ export default function OrderFilters({ selectedOrder, onOrderSelect }) {
 
   return (
     <div>
-      <h3 className="text-lg font-bold text-gray-900 dark:text-dark-title mb-4">انتخاب سفارش</h3>
+      <h3 className="text-lg  text-gray-900 dark:text-dark-titre mb-4">انتخاب سفارش</h3>
 
       {/* Info Banner */}
-      <div className="bg-primary-50 w-fit text-sm text-primary-400 dark:bg-blue-900/20  rounded-lg p-2 mb-4">
-        فقط محصولاتی را میتوانید مرجوع کنید که <span className="text-primary-500 font-bold">شرایط مرجوعی</span> را داشته
-        باشند
+      <div className="bg-primary-50 w-fit text-sm text-primary-400 dark:bg-dark-blue dark:text-dark-title  rounded-lg p-2 mb-4">
+        فقط محصولاتی را میتوانید مرجوع کنید که{" "}
+        <span className="text-primary-500 font-bold dark:text-dark-title">شرایط مرجوعی</span> را داشته باشند
       </div>
 
       {/* Filters */}
@@ -71,7 +72,7 @@ export default function OrderFilters({ selectedOrder, onOrderSelect }) {
             placeholder="جستجو در سفارشها..."
             value={filters.searchQuery}
             onChange={(e) => setFilters((prev) => ({ ...prev, searchQuery: e.target.value }))}
-            className="pr-10"
+            className={`pr-10 ${filterInputStyles}`}
           />
         </div>
 
@@ -81,10 +82,10 @@ export default function OrderFilters({ selectedOrder, onOrderSelect }) {
             value={filters.category || undefined}
             onValueChange={(value) => setFilters((prev) => ({ ...prev, category: value }))}
           >
-            <SelectTrigger className="w-fit gap-5">
+            <SelectTrigger className={filterSelectTriggerStyles}>
               <SelectValue placeholder="دسته بندی" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className={filterSelectContentStyles}>
               <SelectItem value="all">همه</SelectItem>
               <SelectItem value="electronics">الکترونیک</SelectItem>
               <SelectItem value="clothing">پوشاک</SelectItem>
@@ -96,10 +97,10 @@ export default function OrderFilters({ selectedOrder, onOrderSelect }) {
             value={filters.status || undefined}
             onValueChange={(value) => setFilters((prev) => ({ ...prev, status: value }))}
           >
-            <SelectTrigger className="w-fit gap-5">
+            <SelectTrigger className={filterSelectTriggerStyles}>
               <SelectValue placeholder="وضعیت" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className={filterSelectContentStyles}>
               <SelectItem value="all">همه</SelectItem>
               <SelectItem value="delivered">تحویل شده</SelectItem>
               <SelectItem value="shipped">ارسال شده</SelectItem>
@@ -110,10 +111,10 @@ export default function OrderFilters({ selectedOrder, onOrderSelect }) {
             value={filters.sortBy || undefined}
             onValueChange={(value) => setFilters((prev) => ({ ...prev, sortBy: value }))}
           >
-            <SelectTrigger className="w-fit gap-5">
+            <SelectTrigger className={filterSelectTriggerStyles}>
               <SelectValue placeholder="مرتب سازی" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className={filterSelectContentStyles}>
               <SelectItem value="newest">جدیدترین</SelectItem>
               <SelectItem value="oldest">قدیمی‌ترین</SelectItem>
             </SelectContent>

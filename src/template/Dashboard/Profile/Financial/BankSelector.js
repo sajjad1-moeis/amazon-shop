@@ -2,6 +2,8 @@
 
 import React from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { filterSelectContentStyles, filterSelectTriggerStyles } from "@/utils/filterStyles";
+import { cn } from "@/lib/utils";
 
 const banks = [
   { value: "melli", label: "بانک ملی ایران" },
@@ -34,10 +36,10 @@ const banks = [
 export default function BankSelector({ value, onChange }) {
   return (
     <Select value={value || undefined} onValueChange={onChange} dir="rtl">
-      <SelectTrigger className="h-10 bg-gray-50">
+      <SelectTrigger className={cn("!w-full", filterSelectTriggerStyles)}>
         <SelectValue placeholder="انتخاب بانک" />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className={filterSelectContentStyles}>
         {banks.map((bank) => (
           <SelectItem key={bank.value} value={bank.value}>
             {bank.label}
@@ -47,4 +49,3 @@ export default function BankSelector({ value, onChange }) {
     </Select>
   );
 }
-

@@ -9,6 +9,7 @@ import { Eye, EyeSlash } from "iconsax-reactjs";
 import TwoFactorToggle from "./TwoFactorToggle";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { filterInputStyles } from "@/utils/filterStyles";
 
 export default function EditSecurityModal({ isOpen, onClose }) {
   const [formData, setFormData] = useState({
@@ -36,9 +37,11 @@ export default function EditSecurityModal({ isOpen, onClose }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose} dir="rtl">
-      <DialogContent className="max-w-[720px] rounded-2xl px-8 py-6">
+      <DialogContent className="max-w-[720px] rounded-2xl px-8 py-6 dark:bg-dark-box">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center text-[#1e3a5f] mb-8">ویرایش امنیت حساب</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-center text-[#1e3a5f] dark:text-dark-title mb-8">
+            ویرایش امنیت حساب
+          </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -49,7 +52,7 @@ export default function EditSecurityModal({ isOpen, onClose }) {
               <Input
                 type={show.current ? "text" : "password"}
                 placeholder="رمز عبور فعلی خود را وارد کنید ..."
-                className="h-12 bg-gray-50 pr-4 pl-10"
+                className={cn("h-12 bg-gray-50 pr-4 pl-10", filterInputStyles)}
                 onChange={(e) => handleChange("currentPassword", e.target.value)}
               />
               <button
@@ -70,7 +73,7 @@ export default function EditSecurityModal({ isOpen, onClose }) {
                 <Input
                   type={show.new ? "text" : "password"}
                   placeholder="رمز عبور جدید را وارد کنید ..."
-                  className="h-12 bg-gray-50 pr-4 pl-10"
+                  className={cn("h-12 bg-gray-50 pr-4 pl-10", filterInputStyles)}
                   onChange={(e) => handleChange("newPassword", e.target.value)}
                 />
                 <button
@@ -89,7 +92,7 @@ export default function EditSecurityModal({ isOpen, onClose }) {
                 <Input
                   type={show.confirm ? "text" : "password"}
                   placeholder="تکرار رمز عبور جدید ..."
-                  className="h-12 bg-gray-50 pr-4 pl-10"
+                  className={cn("h-12 bg-gray-50 pr-4 pl-10", filterInputStyles)}
                   onChange={(e) => handleChange("confirmPassword", e.target.value)}
                 />
                 <button
@@ -110,10 +113,16 @@ export default function EditSecurityModal({ isOpen, onClose }) {
           <TwoFactorToggle enabled={formData.twoFactorEnabled} onToggle={(v) => handleChange("twoFactorEnabled", v)} />
 
           {/* Footer */}
-          <DialogFooter className="grid grid-cols-2 gap-4 pt-6">
-            <Button className="h-12 bg-[#1e3a5f] hover:bg-[#2a4a6f]">ذخیره تغییرات</Button>
-            <Button variant="outline" className="h-12 border-[#1e3a5f] text-[#1e3a5f]">
+          <DialogFooter className="flex-row gap-2 pt-6">
+            <Button
+              variant="outline"
+              onClick={onClose}
+              className="w-full dark:border-primary-400 border-2 dark:text-primary-400"
+            >
               لغو
+            </Button>
+            <Button type="submit" className="bg-primary-600 w-full hover:bg-primary-700 text-white">
+              ذخیره تغییرات
             </Button>
           </DialogFooter>
         </form>

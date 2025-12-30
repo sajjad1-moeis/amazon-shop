@@ -3,11 +3,11 @@
 import React, { useState } from "react";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
 import RecentViewCard from "@/template/Dashboard/RecentViews/RecentViewCard";
-import SimilarProductsSection from "@/template/Dashboard/RecentViews/SimilarProductsSection";
 import { Button } from "@/components/ui/button";
 import { Trash } from "iconsax-reactjs";
 import RecentViewFilter from "@/template/Dashboard/RecentViews/RecentViewFilter";
 import DashboardLayout from "@/layout/DashboardLayout";
+import ProductSuggestions from "@/template/Dashboard/RecentViews/ProductSuggestions";
 
 const initialProducts = [
   {
@@ -76,7 +76,7 @@ export default function RecentViewsList() {
       {/* Top Section: Header with Count */}
 
       <PageHeader title="بازدیدهای اخیر" description="محصولاتی که اخیراً مشاهده کرده‌اید">
-        <Button variant="ghost" className="bg-gray-200 dark:bg-dark-field text-red-600">
+        <Button variant="ghost" className="bg-gray-200 dark:bg-dark-field text-red-600 dark:text-red-400">
           <Trash />
           حذف همه بازدید‌ها
         </Button>
@@ -88,7 +88,7 @@ export default function RecentViewsList() {
       <div className="flex items-center justify-between my-8">
         <h2 className="text-lg md:text-xl font-bold text-primary-700 dark:text-dark-title">لیست محصولات</h2>
         <div className="text-sm text-gray-500 dark:text-dark-text">
-          تعداد بازدیدها: <span className="font-semibold text-yellow-600 dark:text-dark-title">{products.length}</span>
+          تعداد بازدیدها: <span className="font-semibold text-yellow-600 ">{products.length}</span>
         </div>
       </div>
 
@@ -109,7 +109,7 @@ export default function RecentViewsList() {
       )}
 
       {/* Similar Products Section */}
-      <SimilarProductsSection />
+      <ProductSuggestions />
     </DashboardLayout>
   );
 }

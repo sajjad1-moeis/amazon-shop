@@ -13,6 +13,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+import { filterInputStyles } from "@/utils/filterStyles";
 
 const initialData = {
   shaba: "IR۸۲۰۵۴۰۱۰۲۶۸۰۰۲۰۸۱۷۹۰۹۰۰۲",
@@ -66,7 +68,7 @@ export default function EditFinancialModal({ isOpen, onClose, onSave }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose} dir="rtl">
-      <DialogContent className="sm:max-w-[500px]" dir="rtl">
+      <DialogContent className="sm:max-w-[500px] dark:bg-dark-box" dir="rtl">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">ویرایش اطلاعات مالی</DialogTitle>
           <DialogDescription className="text-sm text-gray-600 dark:text-dark-text">
@@ -85,7 +87,7 @@ export default function EditFinancialModal({ isOpen, onClose, onSave }) {
               value={formData.shaba}
               onChange={(e) => handleChange("shaba", e.target.value)}
               placeholder="IR..."
-              className={errors.shaba ? "border-red-500 font-mono" : "font-mono"}
+              className={cn(errors.shaba ? "border-red-500 font-mono" : "font-mono", filterInputStyles)}
               dir="rtl"
             />
             {errors.shaba && <p className="text-sm text-red-500">{errors.shaba}</p>}
@@ -101,18 +103,23 @@ export default function EditFinancialModal({ isOpen, onClose, onSave }) {
               value={formData.cardNumber}
               onChange={(e) => handleChange("cardNumber", e.target.value)}
               placeholder="شماره کارت را وارد کنید"
-              className={errors.cardNumber ? "border-red-500 font-mono" : "font-mono"}
+              className={cn(errors.cardNumber ? "border-red-500 font-mono" : "font-mono", filterInputStyles)}
               dir="rtl"
               maxLength={19}
             />
             {errors.cardNumber && <p className="text-sm text-red-500">{errors.cardNumber}</p>}
           </div>
 
-          <DialogFooter className="flex gap-3 sm:gap-0">
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1 sm:flex-initial">
+          <DialogFooter className="flex-row gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              className="w-full dark:border-primary-400 border-2 dark:text-primary-400"
+            >
               لغو
             </Button>
-            <Button type="submit" className="bg-primary-600 hover:bg-primary-700 text-white flex-1 sm:flex-initial">
+            <Button type="submit" className="bg-primary-600 w-full hover:bg-primary-700 text-white">
               ذخیره تغییرات
             </Button>
           </DialogFooter>

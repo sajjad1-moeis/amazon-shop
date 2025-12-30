@@ -31,10 +31,10 @@ export default function ProductSuggestions() {
   return (
     <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-3 mb-6">
       <div className="mb-4 md:mb-6">
-        <h3 className="text-lg text-gray-900 dark:text-dark-title mb-2">پیشنهادهای امروز</h3>
+        <h3 className="text-lg text-gray-900 dark:text-dark-titre mb-2">پیشنهادهای امروز</h3>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {products.map((product) => (
           <Card
             key={product.id}
@@ -42,18 +42,13 @@ export default function ProductSuggestions() {
           >
             <CardContent className="p-0 grid grid-cols-1 sm:grid-cols-4 gap-4">
               {/* Product Image */}
-              <div className="relative aspect-square max-h-64 w-full sm:col-span-1">
-                <Image
-                  src="/image/Home/product.png"
-                  alt={`محصول بازدید شده شماره `}
-                  fill
-                  className="object-cover rounded-md"
-                />
+              <div className="relative aspect-square h-40 w-full sm:col-span-1">
+                <Image src="/image/Home/product.png" alt={`محصول بازدید شده شماره `} fill className="object-cover" />
               </div>
 
               {/* Product Info */}
               <div className="space-y-3 sm:col-span-3 p-3">
-                <h4 className="text-sm md:text-base font-semibold text-gray-900 dark:text-dark-title line-clamp-2">
+                <h4 className="text-sm md:text-base font-semibold text-gray-900 dark:text-dark-titre line-clamp-2">
                   {product.title}
                 </h4>
 
@@ -74,7 +69,7 @@ export default function ProductSuggestions() {
                   <div className="flex items-center gap-2">
                     <div className="flex items-center gap-1">
                       <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span className="text-sm font-medium text-gray-900 dark:text-dark-title">{product.rating}</span>
+                      <span className="text-sm font-medium text-gray-900 dark:text-dark-titre">{product.rating}</span>
                     </div>
                     <span className="text-xs text-gray-600 dark:text-dark-text">
                       ({product.reviews.toLocaleString("fa-IR")})
@@ -83,9 +78,9 @@ export default function ProductSuggestions() {
                 </div>
 
                 {/* Price */}
-                <div className="flex items-center justify-between pt-2 border-t border-gray-200 dark:border-dark-stroke">
-                  <p className="text-lg md:text-xl font-bold text-gray-900 dark:text-dark-title">{product.price}</p>
-                  <Button size="sm" variant="outline" className="gap-2">
+                <div className="flex items-center justify-between">
+                  <p className="text-lg md:text-xl  text-gray-900 dark:text-dark-titre">{product.price}</p>
+                  <Button size="sm" variant="outline" className="gap-2 dark:bg-dark-primary dark:border-0">
                     <Eye className="h-4 w-4" />
                     <span className="hidden sm:inline">مشاهده جزئیات</span>
                     <span className="sm:hidden">جزئیات</span>

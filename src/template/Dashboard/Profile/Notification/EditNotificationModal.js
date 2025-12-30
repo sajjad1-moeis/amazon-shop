@@ -88,9 +88,9 @@ export default function EditNotificationModal({ isOpen, onClose, onSave }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose} dir="rtl">
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto" dir="rtl">
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto dark:bg-dark-box" dir="rtl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">ویرایش تنظیمات نوتیفیکیشن</DialogTitle>
+          <DialogTitle className="text-2xl font-bold ">ویرایش تنظیمات نوتیفیکیشن</DialogTitle>
           <DialogDescription className="text-sm text-gray-600 dark:text-dark-text">
             تنظیمات اعلان‌های خود را تغییر دهید
           </DialogDescription>
@@ -158,11 +158,16 @@ export default function EditNotificationModal({ isOpen, onClose, onSave }) {
             />
           </div>
 
-          <DialogFooter className="flex gap-3 sm:gap-0">
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1 sm:flex-initial">
+          <DialogFooter className="flex-row gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              className="w-full dark:border-primary-400 border-2 dark:text-primary-400"
+            >
               لغو
             </Button>
-            <Button type="submit" className="bg-primary-600 hover:bg-primary-700 text-white flex-1 sm:flex-initial">
+            <Button type="submit" className="bg-primary-600 w-full hover:bg-primary-700 text-white">
               ذخیره تغییرات
             </Button>
           </DialogFooter>

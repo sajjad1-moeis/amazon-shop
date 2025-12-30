@@ -33,7 +33,7 @@ export default function RequestDocumentModal({ isOpen, onClose }) {
     <Dialog open={isOpen} onOpenChange={onClose} dir="rtl">
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto" dir="rtl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center text-primary-700 dark:text-primary-600">
+          <DialogTitle className="text-2xl font-bold text-center text-primary-700 dark:text-dark-title dark:text-primary-600">
             درخواست مستند خرید
           </DialogTitle>
         </DialogHeader>

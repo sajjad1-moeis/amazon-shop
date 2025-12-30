@@ -38,12 +38,12 @@ export default function RecentViewCard({ product, onDelete }) {
 
       <div className="p-3">
         {/* Title */}
-        <p className="text-sm text-gray-800 leading-6 mb-3">{product.title}</p>
+        <p className="text-sm text-gray-800 dark:text-dark-titre leading-6 mb-3">{product.title}</p>
 
         {/* Price */}
         <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <p className="text-xs text-gray-500 dark:text-dark-text ">قیمت فعلی (تومان)</p>
-          <p className="text-sm  text-gray-700 dark:text-dark-title">{product.price}</p>
+          <p className="text-xs text-gray-500 dark:text-caption ">قیمت فعلی (تومان)</p>
+          <p className="text-sm  text-gray-700 dark:text-dark-titre">{product.price}</p>
         </div>
 
         {/* 3 Boxes Row */}
@@ -52,20 +52,20 @@ export default function RecentViewCard({ product, onDelete }) {
 
           {/* Amount */}
           <div className="text-xs bg-gray-50 dark:bg-dark-field rounded-xl p-2 text-center flex-1">
-            <div className=" text-gray-900 dark:text-dark-title">{product.viewCount} مرتبه</div>
-            <div className=" text-gray-500 dark:text-dark-text mt-3 mb-1">تعداد بازدید</div>
+            <div className=" text-gray-900 dark:text-dark-titre">{product.viewCount} مرتبه</div>
+            <div className=" text-gray-500 dark:text-caption mt-3 mb-1">تعداد بازدید</div>
           </div>
 
           <div className="text-xs bg-gray-50 dark:bg-dark-field rounded-xl p-2 text-center flex-1">
-            <div className=" text-gray-900 dark:text-dark-title">{product.lastViewed}</div>
-            <div className=" text-gray-500 dark:text-dark-text mt-3 mb-1">آخرین بازدید</div>
+            <div className=" text-gray-900 dark:text-dark-titre">{product.lastViewed}</div>
+            <div className=" text-gray-500 dark:text-caption mt-3 mb-1">آخرین بازدید</div>
           </div>
         </div>
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" className="p-2 bg-gray-200 dark:bg-dark-field" title="مقایسه">
-            <Maximize size={18} className="text-[#292D32] dark:text-dark-text" />
+            <Maximize size={18} className="text-[#292D32] dark:text-dark-titre" />
           </Button>
           <Button
             variant="outline"

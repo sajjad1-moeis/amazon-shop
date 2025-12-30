@@ -60,10 +60,10 @@ export default function InvoicesFilter({ filters, onFiltersChange }) {
 
           {/* Sort By Filter */}
           <Select value={filters.sortBy || undefined} onValueChange={(value) => handleFilterChange("sortBy", value)}>
-            <SelectTrigger className="gap-5 w-fit">
+            <SelectTrigger className={filterSelectTriggerStyles}>
               <SelectValue placeholder="مرتب‌سازی" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className={filterSelectContentStyles}>
               <SelectItem value="newest">جدیدترین</SelectItem>
               <SelectItem value="oldest">قدیمی‌ترین</SelectItem>
               <SelectItem value="amount-high">بیشترین مبلغ</SelectItem>

@@ -117,7 +117,7 @@ export default function FileUploadSection({ images, invoice, onImagesChange, onI
                     e.stopPropagation();
                     handleRemoveInvoice();
                   }}
-                  className="mt-2"
+                  className="mt-2 dark:border-dark-stroke dark:text-dark-text dark:hover:bg-dark-field"
                 >
                   حذف
                 </Button>

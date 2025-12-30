@@ -92,9 +92,11 @@ export default function EditNotificationSettingsModal({ isOpen, onClose, initial
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose} dir="rtl">
-      <DialogContent className="sm:max-w-[1000px] max-h-[90vh] overflow-y-auto" dir="rtl">
+      <DialogContent className="sm:max-w-[1000px] max-h-[90vh] overflow-y-auto dark:bg-dark-box" dir="rtl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-primary-700 text-center">تنظیمات نوتیفیکیشن</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-primary-700 dark:text-dark-title text-center">
+            تنظیمات نوتیفیکیشن
+          </DialogTitle>
         </DialogHeader>
         <p className="text-lg font-bold text-primary-700 dark:text-dark-text">تنظیمات اعلان‌ها</p>
 
@@ -107,7 +109,7 @@ export default function EditNotificationSettingsModal({ isOpen, onClose, initial
                 <label
                   key={type.id}
                   htmlFor={type.id}
-                  className="flex items-center space-x-2 space-x-reverse border border-gray-300 bg-gray-100 dark:bg-dark-field rounded-lg p-2 hover:bg-gray-200 dark:hover:bg-dark-field/80 transition-colors cursor-pointer"
+                  className="flex items-center space-x-2 space-x-reverse border border-gray-300 bg-gray-100 dark:border-dark-stroke dark:bg-dark-field rounded-lg p-2 hover:bg-gray-200 dark:hover:bg-dark-field/80 transition-colors cursor-pointer"
                 >
                   <Checkbox
                     id={type.id}
@@ -131,7 +133,7 @@ export default function EditNotificationSettingsModal({ isOpen, onClose, initial
                 <label
                   key={method.id}
                   htmlFor={method.id}
-                  className="flex items-center space-x-2 space-x-reverse border border-gray-300 bg-gray-100 dark:bg-dark-field rounded-lg p-2 hover:bg-gray-200 dark:hover:bg-dark-field/80 transition-colors cursor-pointer"
+                  className="flex items-center space-x-2 space-x-reverse border border-gray-300 bg-gray-100 dark:bg-dark-field dark:border-dark-stroke rounded-lg p-2 hover:bg-gray-200 dark:hover:bg-dark-field/80 transition-colors cursor-pointer"
                 >
                   <Checkbox
                     id={method.id}
@@ -152,9 +154,9 @@ export default function EditNotificationSettingsModal({ isOpen, onClose, initial
 
           {/* Telegram Connection */}
           {formData.notificationMethods.includes("telegram") && (
-            <div className="space-y-3 bg-gray-100 p-3 rounded-xl flex-between">
+            <div className="space-y-3 bg-gray-100 dark:bg-dark-field p-3 rounded-xl flex-between">
               <div className="">
-                <Label className="text-lg font-bold text-primary-700 dark:text-dark-text">اتصال به تلگرام</Label>
+                <Label className="text-lg font-bold text-primary-700 dark:text-dark-title">اتصال به تلگرام</Label>
                 <p className="text-sm mt-2 text-gray-600 dark:text-dark-text">
                   برای دریافت اعلان‌ها در تلگرام، باید حساب خود را به ربات ما متصل کنید
                 </p>
@@ -170,16 +172,16 @@ export default function EditNotificationSettingsModal({ isOpen, onClose, initial
             </div>
           )}
 
-          <DialogFooter className="grid grid-cols-2 gap-2">
+          <DialogFooter className="flex-row gap-2">
             <Button
               type="button"
               variant="outline"
               onClick={handleClose}
-              className="border-2 border-primary-700 text-primary-700"
+              className="w-full dark:border-primary-400 border-2 dark:text-primary-400"
             >
               لغو
             </Button>
-            <Button type="submit" className="bg-primary-700 hover:bg-primary-500 text-white">
+            <Button type="submit" className="bg-primary-600 w-full hover:bg-primary-700 text-white">
               ذخیره تغییرات
             </Button>
           </DialogFooter>

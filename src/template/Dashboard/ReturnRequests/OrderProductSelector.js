@@ -7,14 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { SearchNormal1 } from "iconsax-reactjs";
 import { cn } from "@/lib/utils";
-
-/**
- * خروجی onSelect:
- * {
- *   orderId,
- *   productId
- * }
- */
+import StatusBadge from "@/components/StatusBadge";
 
 export default function OrderProductSelector({ orders = [], selectedItem, onSelect }) {
   const [search, setSearch] = useState("");
@@ -47,37 +40,36 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
         className="space-y-4"
       >
         {filteredOrders.length === 0 ? (
-          <div className="text-center text-gray-500 dark:text-dark-text  py-8">
+          <div className="text-center text-gray-500 dark:text-dark-titre  py-8">
             {search.trim() ? "کالایی با این جستجو یافت نشد" : "سفارشی یافت نشد"}
           </div>
         ) : (
           filteredOrders.map((order) => (
-            <div key={order.id} className="border rounded-xl p-4  bg-gray-50  border-gray-300 dark:bg-dark-box">
+            <div
+              key={order.id}
+              className="border rounded-xl p-4  bg-gray-50 dark:bg-dark-field dark:border-dark-stroke  border-gray-300 "
+            >
               {/* Order Header */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
                 <div>
                   <span className="text-sm text-gray-600 dark:text-dark-text">شماره سفارش : </span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-dark-title">#{order.id}</span>
+                  <span className="text-sm  text-gray-900 dark:text-dark-titre">#{order.id}</span>
                 </div>
                 <div>
                   <span className="text-sm text-gray-600 dark:text-dark-text">تاریخ سفارش : </span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-dark-title">{order.date}</span>
+                  <span className="text-sm  text-gray-900 dark:text-dark-titre">{order.date}</span>
                 </div>
                 <div>
                   <span className="text-sm text-gray-600 dark:text-dark-text">مبلغ کل : </span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-dark-title">
-                    {order.totalAmount} تومان
-                  </span>
+                  <span className="text-sm  text-gray-900 dark:text-dark-titre">{order.totalAmount} تومان</span>
                 </div>
                 <div>
                   <span className="text-sm text-gray-600 dark:text-dark-text">وضعیت : </span>
-                  <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-                    {order.statusText}
-                  </span>
+                  <StatusBadge status={order.status} />
                 </div>
               </div>
 
-              <div className="my-5  border-b border-gray-300"></div>
+              <div className="my-5  border-b border-gray-300 dark:border-dark-stroke"></div>
 
               {/* Products */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
@@ -94,8 +86,8 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
                           className={cn(
                             "cursor-pointer border rounded-lg p-4 transition-all flex gap-4",
                             isSelected
-                              ? "border-primary-300 bg-[#E5E8F599]"
-                              : "border-gray-200 dark:border-dark-stroke hover:border-gray-300 bg-white dark:bg-dark-box"
+                              ? "border-primary-300 bg-[#E5E8F599] dark:bg-[#494B56]"
+                              : "border-gray-200 dark:border-dark-box hover:border-gray-300 bg-white dark:bg-dark-box"
                           )}
                         >
                           <RadioGroupItem
@@ -104,7 +96,7 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
                             className={cn(
                               "mt-1 border-2 transition-all accent-transparent",
                               isSelected
-                                ? "border-primary-500 text-primary-500 focus:ring-primary-500 focus:ring-offset-2 accent-primary-500"
+                                ? "border-primary-500 text-primary-500 focus:ring-primary-500 focus:ring-offset-2 accent-primary-500 dark:accent-primary-300"
                                 : "border-gray-300 text-gray-300 hover:border-primary-400 focus:ring-primary-500"
                             )}
                           />
@@ -123,20 +115,24 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
                             <div class="grid grid-cols-2 mt-2 gap-3">
                               <div
                                 className={cn(
-                                  "text-xs flex-between text-gray-500 dark:text-dark-text p-2 rounded-lg",
-                                  isSelected ? "bg-[#B6BCDF66]" : "bg-gray-100"
+                                  "text-xs flex-between text-gray-500 dark:text-dark-titre p-2 rounded-lg",
+                                  isSelected
+                                    ? "bg-[#B6BCDF66] dark:bg-primary-200/40"
+                                    : "bg-gray-100 dark:bg-dark-field"
                                 )}
                               >
-                                <p className="text-gray-600">تعداد</p>
+                                <p className="text-gray-600 dark:text-dark-text">تعداد</p>
                                 <div>{item.quantity} عدد</div>
                               </div>
                               <div
                                 className={cn(
-                                  "text-xs flex-between text-gray-500 dark:text-dark-text p-2 rounded-lg",
-                                  isSelected ? "bg-[#B6BCDF66]" : "bg-gray-100"
+                                  "text-xs flex-between text-gray-500 dark:text-dark-titre p-2 rounded-lg",
+                                  isSelected
+                                    ? "bg-[#B6BCDF66] dark:bg-primary-200/40"
+                                    : "bg-gray-100 dark:bg-dark-field"
                                 )}
                               >
-                                <p className="text-gray-600">قیمت کالا (تومان)</p>
+                                <p className="text-gray-600 dark:text-dark-text">قیمت کالا (تومان)</p>
                                 <div>{item.price} </div>
                               </div>
                             </div>
@@ -145,7 +141,7 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
                       );
                     })
                 ) : (
-                  <div className="col-span-2 text-center text-gray-500 dark:text-dark-text  py-4">
+                  <div className="col-span-2 text-center text-gray-500 dark:text-dark-titre  py-4">
                     این سفارش محصولی ندارد
                   </div>
                 )}

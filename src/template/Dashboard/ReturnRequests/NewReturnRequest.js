@@ -169,7 +169,7 @@ export default function NewReturnRequest() {
                 />
                 <Label
                   htmlFor="terms"
-                  className="text-sm text-gray-700 dark:text-dark-text dark:bg-white/5 cursor-pointer leading-relaxed"
+                  className="text-sm text-gray-700 dark:text-dark-text cursor-pointer leading-relaxed"
                 >
                   اطلاعات وارد شده صحیح است و <span className="text-yellow-500">شرایط مرجوعی</span> را مطالعه کرده‌ام.
                 </Label>
@@ -181,7 +181,7 @@ export default function NewReturnRequest() {
                   <Button
                     type="button"
                     variant="outline"
-                    className="rounded-lg flex items-center gap-2 text-primary-700 border-primary-700 bg-transparent  hover:bg-primary-50 dark:bg-transparent"
+                    className="rounded-lg flex items-center gap-2 text-primary-700 border-primary-700 bg-transparent border-2 hover:bg-primary-50 dark:border-primary-300 dark:text-primary-300 dark:bg-transparent dark:hover:bg-primary-900/20"
                   >
                     <MessageText size={16} />
                     گفت‌وگو با پشتیبان

@@ -45,14 +45,14 @@ export default function ActiveReturnCard({ returnData, onCancel }) {
 
   return (
     <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4">
-      <h2 className="text-lg  text-gray-900 dark:text-dark-title mb-6">وضعیت درخواستهای در حال بررسی</h2>
+      <h2 className="text-lg  text-gray-900 dark:text-dark-titre mb-6">وضعیت درخواست‌های در حال بررسی</h2>
 
       {/* Product Card */}
-      <div className="bg-[#E5E8F566] border border-primary-200 dark:bg-dark-field/50 rounded-xl p-3 mb-6">
+      <div className="bg-[#E5E8F566] border border-primary-200 dark:border-caption dark:bg-[#494B56] rounded-xl p-3 mb-6">
         <div className="flex flex-col  w-full  md:gap-6">
           {/* Product Details */}
           <div className="flex gap-3">
-            <div className="relative w-full md:size-14 bg-gray-200 dark:bg-dark-field rounded-lg overflow-hidden flex-shrink-0">
+            <div className="relative w-full md:size-14 bg-gray-200 dark:bg-dark-titre rounded-lg overflow-hidden flex-shrink-0">
               <Image
                 src={returnData.product.image}
                 alt={returnData.product.name}
@@ -62,20 +62,20 @@ export default function ActiveReturnCard({ returnData, onCancel }) {
               />
             </div>
             <div className="flex-1 space-y-3">
-              <h3 className="text-base text-neutral-800 dark:text-dark-title">{returnData.product.name}</h3>
+              <h3 className="text-base text-neutral-800 dark:text-dark-titre">{returnData.product.name}</h3>
 
               <div className="flex-between text-sm w-full">
                 <div>
                   <span className="text-gray-600 dark:text-dark-text">شماره درخواست : </span>
-                  <span className="font-medium text-gray-900 dark:text-dark-title">{returnData.id}</span>
+                  <span className="font-medium text-gray-900 dark:text-dark-titre">{returnData.id}</span>
                 </div>
                 <div>
                   <span className="text-gray-600 dark:text-dark-text">تاریخ ثبت : </span>
-                  <span className="font-medium text-gray-900 dark:text-dark-title">{returnData.date}</span>
+                  <span className="font-medium text-gray-900 dark:text-dark-titre">{returnData.date}</span>
                 </div>
                 <div>
                   <span className="text-gray-600 dark:text-dark-text">علت مرجوعی : </span>
-                  <span className="font-medium text-gray-900 dark:text-dark-title">{returnData.reason}</span>
+                  <span className="font-medium text-gray-900 dark:text-dark-titre">{returnData.reason}</span>
                 </div>
                 <div>
                   <span className="text-gray-600 dark:text-dark-text">وضعیت : </span>
@@ -101,7 +101,7 @@ export default function ActiveReturnCard({ returnData, onCancel }) {
           <Button
             variant="outline"
             onClick={() => onCancel(returnData.id)}
-            className="border-primary-700 text-primary-700 h-10 rounded-lg px-10 bg-transparent hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20"
+            className="border-primary-700 text-primary-700 h-10 rounded-lg px-10 bg-transparent border-2 hover:bg-primary-50 dark:border-primary-300 dark:text-primary-300 dark:hover:bg-primary-900/20"
           >
             لغو درخواست
           </Button>

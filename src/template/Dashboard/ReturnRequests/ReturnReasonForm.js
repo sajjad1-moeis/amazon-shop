@@ -4,6 +4,11 @@ import React from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  filterSelectTriggerStyles,
+  filterSelectContentStyles,
+  filterTextareaStyles,
+} from "@/utils/filterStyles";
 
 const packagingStatusOptions = [
   { value: "intact", label: "کاملا سالم" },
@@ -31,10 +36,10 @@ export default function ReturnReasonForm({ formData, onFormChange }) {
           <div className="space-y-2">
             <Label className="text-sm ">علت مرجوعی</Label>
             <Select value={formData.returnReason} onValueChange={(value) => onFormChange("returnReason", value)}>
-              <SelectTrigger className="bg-gray-50 dark:bg-dark-field border border-gray-200 dark:border-dark-stroke">
+              <SelectTrigger className={filterSelectTriggerStyles}>
                 <SelectValue placeholder="دلیل مرجوعی این محصول" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className={filterSelectContentStyles}>
                 {returnReasonOptions.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
@@ -46,10 +51,10 @@ export default function ReturnReasonForm({ formData, onFormChange }) {
           <div className="space-y-2">
             <Label className="text-sm ">وضعیت بسته بندی</Label>
             <Select value={formData.packagingStatus} onValueChange={(value) => onFormChange("packagingStatus", value)}>
-              <SelectTrigger className="bg-gray-50 dark:bg-dark-field border border-gray-200 dark:border-dark-stroke">
+              <SelectTrigger className={filterSelectTriggerStyles}>
                 <SelectValue placeholder="وضعیت بسته بندی را انتخاب کنید" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className={filterSelectContentStyles}>
                 {packagingStatusOptions.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
@@ -65,7 +70,7 @@ export default function ReturnReasonForm({ formData, onFormChange }) {
           <Label className="text-sm ">توضیحات بیشتر</Label>
           <Textarea
             value={formData.description}
-            className="bg-gray-50 dark:bg-dark-field border border-gray-200 dark:border-dark-stroke min-h-[100px]"
+            className={`min-h-[100px] ${filterTextareaStyles}`}
             onChange={(e) => onFormChange("description", e.target.value)}
             placeholder="توضیحات اختیاری درباره مشکل..."
             dir="rtl"
