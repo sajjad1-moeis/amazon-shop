@@ -6,43 +6,60 @@ export default function PriceCalculationDetails({ product }) {
   if (!product) return null;
 
   return (
-    <div className="bg-white dark:bg-dark-box rounded-2xl shadow-sm p-6">
-      <h3 className="text-base font-bold text-gray-900 dark:text-dark-title mb-4">جزئیات محاسبه قیمت</h3>
-      <div className="space-y-3">
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600 dark:text-dark-text">قیمت کالا در آمازون:</span>
-          <span className="text-sm font-medium text-gray-900 dark:text-dark-title">{product.amazonPrice}</span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600 dark:text-dark-text">هزینه حمل بین المللی:</span>
-          <span className="text-sm font-medium text-gray-900 dark:text-dark-title">{product.shippingCost}</span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600 dark:text-dark-text">هزینه گمرک و ترخیص:</span>
-          <span className="text-sm font-medium text-gray-900 dark:text-dark-title">
-            {product.customsFee} تومان
-          </span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600 dark:text-dark-text">کارمزد خدمات خرید اختصاصی:</span>
-          <span className="text-sm font-medium text-gray-900 dark:text-dark-title">
-            {product.serviceFee} تومان
-          </span>
-        </div>
-        <div className="border-t border-gray-200 dark:border-dark-stroke pt-3 mt-3">
-          <div className="flex justify-between items-center">
-            <span className="text-base font-bold text-gray-900 dark:text-dark-title">مبلغ نهایی تخمینی:</span>
-            <span className="text-base font-bold text-primary-700 dark:text-primary-400">
-              {product.estimatedTotal} AED
-            </span>
+    <div className="pb-6 border-b border-gray-200">
+      <div className="space-y-4 bg-gray-50 border-gray-200 p-4 rounded-xl">
+        {/* کارت اصلی */}
+        <div>
+          {/* عنوان */}
+          <h3 className="text-lg text-neutral-800 dark:text-dark-title mb-4 text-right">جزئیات محاسبه قیمت</h3>
+
+          {/* ردیف دو ستونه */}
+          <div className="grid grid-cols-2 gap-y-3 text-sm">
+            {/* ستون راست */}
+            <div className="space-y-3 text-right">
+              <div className="flex gap-3">
+                <span className="text-gray-500 dark:text-dark-text">قیمت کالا در آمازون:</span>
+                <span className="font-medium text-gray-600 dark:text-dark-title">{product.amazonPrice}</span>
+              </div>
+
+              <div className="flex gap-3">
+                <span className="text-gray-500 dark:text-dark-text">هزینه گمرک و ترخیص:</span>
+                <span className="font-medium text-gray-600 dark:text-dark-title">{product.customsFee} تومان</span>
+              </div>
+            </div>
+
+            {/* ستون چپ */}
+            <div className="space-y-3 text-right">
+              <div className="flex gap-3">
+                <span className="text-gray-500 dark:text-dark-text">هزینه حمل بین‌المللی:</span>
+                <span className="font-medium text-gray-600 dark:text-dark-title">{product.shippingCost}</span>
+              </div>
+
+              <div className="flex gap-3">
+                <span className="text-gray-500 dark:text-dark-text">کارمزد خدمات خرید اختصاصی:</span>
+                <span className="font-medium text-gray-600 dark:text-dark-title">{product.serviceFee} تومان</span>
+              </div>
+            </div>
+          </div>
+
+          {/* خط جداکننده */}
+          <div className="border-t border-gray-200 dark:border-dark-stroke my-4" />
+
+          {/* مبلغ نهایی */}
+          <div className="flex gap-3 items-center">
+            <span className="text-sm text-gray-500 dark:text-dark-title">مبلغ نهایی تخمینی:</span>
+            <span className="text-lg text-primary-600 dark:text-primary-400">{product.estimatedTotal} AED</span>
           </div>
         </div>
-        <p className="text-xs text-gray-500 dark:text-dark-text mt-3 leading-relaxed">
-          مبلغ نهایی پس از بررسی ادمین و خرید کالا ممکن است تغییر جزئی داشته باشد. هرگونه تغییر قبل از پرداخت نهایی
-          به شما اطلاع داده می‌شود.
+      </div>
+      {/* باکس اطلاع‌رسانی پایین */}
+      <div className="rounded-xl mt-3 border border-primary-200 bg-[#EDEFF799] dark:bg-dark-box dark:border-dark-stroke px-4 py-3">
+        <p className="text-sm text-primary-300 dark:text-dark-text leading-relaxed text-right">
+          مبلغ نهایی پس از بررسی ادمین و خرید کالا ممکن است تغییر جزئی داشته باشد.
+          <br />
+          هرگونه تغییر قبل از پرداخت نهایی به شما اطلاع داده می‌شود.
         </p>
       </div>
     </div>
   );
 }
-

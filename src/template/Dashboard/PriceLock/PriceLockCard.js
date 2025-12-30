@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Timer1 } from "iconsax-reactjs";
 
-export default function PriceLockCard({ product, onCancelLock, onViewDetails }) {
+export default function PriceLockCard({ product, onCancelLock, onViewDetails, removeHandler }) {
   const {
     title,
     image,
@@ -56,25 +56,27 @@ export default function PriceLockCard({ product, onCancelLock, onViewDetails }) 
       </div>
 
       {/* Actions */}
-      <div className="flex flex-row md:flex-col gap-2 w-fit">
-        <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 dark:text-dark-title font-medium text-sm py-2 rounded-lg">
-          ادامه خرید با قیمت قفل شده
-        </Button>
+      {!removeHandler && (
+        <div className="flex flex-row md:flex-col gap-2 w-fit">
+          <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 dark:text-dark-title font-medium text-sm py-2 rounded-lg">
+            ادامه خرید با قیمت قفل شده
+          </Button>
 
-        <Button
-          onClick={() => onViewDetails?.(product)}
-          className="w-full bg-primary-700 hover:bg-[#3143D8] text-white font-medium text-sm py-2 rounded-lg"
-        >
-          مشاهده جزئیات
-        </Button>
+          <Button
+            onClick={() => onViewDetails?.(product)}
+            className="w-full bg-primary-700 hover:bg-[#3143D8] text-white font-medium text-sm py-2 rounded-lg"
+          >
+            مشاهده جزئیات
+          </Button>
 
-        <Button
-          onClick={() => onCancelLock?.(product?.id)}
-          className="w-full bg-[#F6F7FB] text-red-500 hover:bg-red-50 font-medium text-sm py-2 rounded-lg border border-red-200"
-        >
-          لغو قفل
-        </Button>
-      </div>
+          <Button
+            onClick={() => onCancelLock?.(product?.id)}
+            className="w-full bg-[#F6F7FB] text-red-500 hover:bg-red-50 font-medium text-sm py-2 rounded-lg border border-red-200"
+          >
+            لغو قفل
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

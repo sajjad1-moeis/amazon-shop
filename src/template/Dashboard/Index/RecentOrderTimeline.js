@@ -12,7 +12,7 @@ export default function RecentOrderTimeline({ order }) {
   }
 
   return (
-    <div className="bg-gray-100 dark:bg-dark-box rounded-2xl p-3 my-6">
+    <div className="bg-gray-100 dark:bg-dark-field rounded-2xl p-3 my-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <h3 className=" text-gray-800 dark:text-dark-title">سفارش شماره {order.orderNumber}</h3>

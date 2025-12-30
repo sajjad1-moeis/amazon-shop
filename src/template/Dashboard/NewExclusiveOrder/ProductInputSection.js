@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 export default function ProductInputSection({ productLink, onProductLinkChange, onSearch }) {
   return (
-    <div className="bg-white dark:bg-dark-box rounded-2xl shadow-sm p-6">
+    <div>
       <div className="space-y-4">
         <Label htmlFor="product-link" className="text-sm font-medium text-gray-700 dark:text-dark-text">
           محصول
@@ -24,10 +24,10 @@ export default function ProductInputSection({ productLink, onProductLinkChange, 
                 onSearch();
               }
             }}
-            className="flex-1"
+            className="flex-1 bg-gray-50 border border-gray-200"
             dir="rtl"
           />
-          <Button type="button" onClick={onSearch} className="bg-blue-600 hover:bg-blue-700 text-white">
+          <Button type="button" onClick={onSearch} className="bg-primary-600 hover:bg-primary-700 text-white">
             جستجو
           </Button>
         </div>
@@ -35,4 +35,3 @@ export default function ProductInputSection({ productLink, onProductLinkChange, 
     </div>
   );
 }
-

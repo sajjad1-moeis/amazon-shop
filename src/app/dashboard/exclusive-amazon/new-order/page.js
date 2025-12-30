@@ -10,6 +10,7 @@ import PriceCalculationDetails from "@/template/Dashboard/NewExclusiveOrder/Pric
 import ShippingMethodSection from "@/template/Dashboard/NewExclusiveOrder/ShippingMethodSection";
 import PaymentMethodSection from "@/template/Dashboard/NewExclusiveOrder/PaymentMethodSection";
 import DashboardLayout from "@/layout/DashboardLayout";
+import PriceLockCard from "@/template/Dashboard/PriceLock/PriceLockCard";
 
 // Mock product data - در واقع باید از API بیاید
 const MOCK_PRODUCT = {
@@ -58,27 +59,29 @@ export default function NewExclusiveOrder() {
       <PageHeader title="ثبت سفارش جدید" description="برای ثبت سفارش خرید اختصاصی از آمازون اطلاعات زیر را وارد کنید" />
 
       <div className="mt-6 space-y-6">
-        <ProductInputSection
-          productLink={productLink}
-          onProductLinkChange={setProductLink}
-          onSearch={handleProductSearch}
-        />
+        <div class="shadow-box p-4 rounded-xl bg-white">
+          <ProductInputSection
+            productLink={productLink}
+            onProductLinkChange={setProductLink}
+            onSearch={handleProductSearch}
+          />
+          {selectedProduct && <ProductCard product={selectedProduct} />}
+        </div>
 
         {selectedProduct && (
-          <>
-            <ProductCard product={selectedProduct} />
+          <div class="shadow-box p-4 rounded-xl bg-white">
             <PriceCalculationDetails product={selectedProduct} />
             <ShippingMethodSection selectedMethod={shippingMethod} onMethodChange={setShippingMethod} />
             <PaymentMethodSection selectedMethod={paymentMethod} onMethodChange={setPaymentMethod} />
-            <div className="flex justify-end">
+            <div className="flex justify-end mt-6 pt-6 border-t border-gray-200">
               <Button
                 onClick={handleSubmit}
-                className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 dark:text-dark-title font-medium px-8 py-3 rounded-lg"
+                className="bg-yellow-500 w-1/2 ml-auto hover:bg-yellow-600 text-gray-900 dark:text-dark-title font-medium px-8 py-3 rounded-lg"
               >
                 ثبت سفارش اختصاصی
               </Button>
             </div>
-          </>
+          </div>
         )}
       </div>
     </DashboardLayout>

@@ -103,20 +103,22 @@ function SidebarContent({ onLinkClick }) {
     >
       <Link href={"/dashboard/wallet"} onClick={handleLinkClick}>
         {/* Wallet Card */}
-        <div className="bg-[#DCE1FC] p-2 rounded-xl mb-3 border-b-2 border-primary-200">
-          <div className="flex justify-between items-center text-[#3F51B5] pb-2">
+        <div className="bg-[#DCE1FC] dark:bg-dark-primary/35 p-2 rounded-xl mb-3 border-b-2 dark:border-primary-200/15 border-primary-200">
+          <div className="flex justify-between items-center text-[#3F51B5] dark:text-dark-title pb-2">
             <div className="flex gap-2 items-center">
               <Wallet size={20} />
               <span className="text-sm">موجودی کیف‌پول</span>
             </div>
             <ArrowLeft2 size={18} />
           </div>
-          <div className="bg-[#B6BCDF66] p-2 rounded-lg font-medium">۲,۵۰۰,۰۰۰ تومان</div>
+          <div className="bg-[#B6BCDF66] dark:bg-primary-200/15  dark:text-dark-titre p-2 rounded-lg font-medium">
+            ۲,۵۰۰,۰۰۰ تومان
+          </div>
         </div>
       </Link>
 
       {/* Score Card */}
-      <div className="bg-[#FFF1D8] p-2 rounded-xl mb-6 border-b-2 border-[#EEA82699]">
+      <div className="bg-[#FFF1D8] dark:bg-[#EEA8263D] p-2 rounded-xl mb-6 border-b-2 border-[#EEA82699] dark:border-[#EEA82629]">
         <div className="flex justify-between items-center pb-1">
           <div className="flex gap-2 items-center">
             <div className="flex flex-col items-center">
@@ -127,8 +129,12 @@ function SidebarContent({ onLinkClick }) {
           </div>
           <ArrowLeft2 size={18} color="#C27803" />
         </div>
-        <div className="bg-[#FFE9C7] p-2 rounded-lg text-[#C27803]">۲۴۰ امتیاز</div>
+        <div className="bg-[#FFE9C7] dark:bg-[#EEA82629] dark:text-white/80 p-2 rounded-lg text-[#C27803]">
+          ۲۴۰ امتیاز
+        </div>
       </div>
+
+      <div class="my-4 border-b dark:border-dark-stroke border-gray-200" />
 
       {/* Navigation */}
       <nav className="space-y-2">
@@ -145,11 +151,11 @@ function SidebarContent({ onLinkClick }) {
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all",
                   Active
-                    ? "text-[#3F51B5] dark:text-primary-400 bg-[#E3E7FF] dark:bg-primary-900/30 font-medium"
-                    : "text-gray-700 dark:text-dark-text hover:bg-gray-50 dark:hover:bg-dark-field"
+                    ? "text-[#3F51B5] dark:text-dark-title bg-[#E3E7FF] dark:bg-[#E3E5F21F] font-medium"
+                    : "text-gray-700 dark:text-dark-titre hover:bg-gray-50 dark:hover:bg-dark-field"
                 )}
               >
-                <Icon size={22} variant={Active ? "Bold" : "Outline"} color={Active ? "#3F51B5" : "#555"} />
+                <Icon size={22} variant={Active ? "Bold" : "Outline"} />
                 <span>{item.label}</span>
               </Link>
             );
@@ -162,18 +168,17 @@ function SidebarContent({ onLinkClick }) {
                 className={cn(
                   "flex w-full items-center gap-3 px-3 py-2.5 rounded-lg transition-all justify-between",
                   Active
-                    ? "text-[#3F51B5] dark:text-primary-400 font-medium"
-                    : "text-gray-700 dark:text-dark-text hover:bg-gray-50 dark:hover:bg-dark-field"
+                    ? "text-[#3F51B5] dark:text-dark-title bg-[#E3E7FF] dark:bg-[#E3E5F21F] font-medium"
+                    : "text-gray-700 dark:text-dark-titre hover:bg-gray-50 dark:hover:bg-dark-field"
                 )}
               >
                 <div className="flex gap-2">
-                  <Icon size={22} variant={Active ? "Bold" : "Outline"} color={Active ? "#3F51B5" : "#555"} />
+                  <Icon size={22} variant={Active ? "Bold" : "Outline"} />
                   <span className="flex-1">{item.label}</span>
                 </div>
 
                 <ArrowDown2
                   size={16}
-                  color={Active ? "#3F51B5" : "#555"}
                   className={cn("transition-transform", expanded.includes(item.id) && "rotate-180")}
                 />
               </button>
@@ -190,7 +195,7 @@ function SidebarContent({ onLinkClick }) {
                         className={cn(
                           "flex items-center gap-2 px-3 py-2 rounded-lg text-sm",
                           CActive
-                            ? "bg-[#E3E7FF] dark:bg-primary-900/30 text-[#3F51B5] dark:text-primary-400 font-medium"
+                            ? "text-[#3F51B5] dark:text-dark-title bg-[#E3E7FF] dark:bg-[#E3E5F21F] font-medium"
                             : "text-gray-600 dark:text-dark-text hover:bg-gray-50 dark:hover:bg-dark-field"
                         )}
                       >
@@ -206,7 +211,7 @@ function SidebarContent({ onLinkClick }) {
       </nav>
 
       {/* Logout */}
-      <button className="mt-8 w-full flex items-center gap-3 px-3 py-3 text-gray-700 dark:text-dark-text hover:bg-gray-50 dark:hover:bg-dark-field rounded-lg">
+      <button className="mt-8 w-full flex items-center gap-3 px-3 py-3 text-gray-700 dark:text-dark-titre hover:bg-gray-50 dark:hover:bg-dark-field rounded-lg">
         <LogoutCurve size={22} />
         خروج از حساب کاربری
       </button>

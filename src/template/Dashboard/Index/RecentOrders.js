@@ -46,10 +46,10 @@ const otherOrders = [
 
 export default function RecentOrders() {
   return (
-    <div className="shadow-box rounded-2xl p-3 bg-white">
+    <div className="shadow-box rounded-2xl p-3 bg-white dark:bg-dark-box">
       <div class="">
-        <h3 className="text-gray-800 text-lg">سفارش‌های اخیر</h3>
-        <p className="text-sm text-gray-500 mt-2">آخرین سفارش‌هایی که ثبت کرده‌اید</p>
+        <h3 className="text-gray-800 dark:text-dark-titre text-lg">سفارش‌های اخیر</h3>
+        <p className="text-sm text-gray-500 dark:text-caption mt-2">آخرین سفارش‌هایی که ثبت کرده‌اید</p>
       </div>
       {/* سفارش اخیر با تایم‌لاین */}
       <RecentOrderTimeline order={recentOrderWithTimeline} />
