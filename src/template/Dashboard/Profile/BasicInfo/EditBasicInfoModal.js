@@ -122,39 +122,37 @@ export default function EditBasicInfoModal({ isOpen, onClose, initialData, onSav
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose} dir="rtl">
-      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto dark:bg-dark-box" dir="rtl">
-        <DialogHeader>
-          <div className={"flex-between mt-7"}>
-            <DialogTitle className="text-2xl font-bold text-center text-primary-700 dark:text-dark-title">
+      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto dark:bg-dark-box px-4 sm:px-6" dir="rtl">
+        <DialogHeader className="px-0 sm:px-0">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mt-4 sm:mt-7">
+            <DialogTitle className="text-xl sm:text-2xl font-bold text-center sm:text-right text-primary-700 dark:text-dark-title">
               ویرایش اطلاعات اصلی
             </DialogTitle>
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600 dark:text-dark-text">وضعیت احراز هویت</span>
-                <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-                  تکمیل شده
-                </span>
-              </div>
+            <div className="flex items-center justify-center sm:justify-start gap-2">
+              <span className="text-xs sm:text-sm text-gray-600 dark:text-dark-text">وضعیت احراز هویت</span>
+              <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-md text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                تکمیل شده
+              </span>
             </div>
           </div>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6 py-4">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6 py-4">
           {/* Main Content: Profile Image + Form Fields */}
-          <div className="flex gap-4 ">
-            {/* Right Column: Profile Image - 50% */}
-            <div className="flex flex-col items-center md:items-start max-w-[176px]">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+            {/* Profile Image - Centered on mobile, left on desktop */}
+            <div className="flex flex-col items-center sm:items-start w-full sm:w-auto sm:max-w-[176px] flex-shrink-0">
               <ProfileImageUpload
                 image={formData.profileImage}
                 onImageChange={(image) => handleChange("profileImage", image)}
               />
             </div>
 
-            {/* Left Column: Form Fields - 50% with 2x2 grid */}
-            <div className="grid grid-cols-2 gap-4 w-full">
+            {/* Form Fields - Full width on mobile, grid on desktop */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full">
               {formFields.map((field) => (
                 <div key={field.id} className="space-y-2">
-                  <Label htmlFor={field.id} className="text-sm font-semibold text-gray-700 dark:text-dark-text">
+                  <Label htmlFor={field.id} className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-dark-text">
                     {field.label}
                   </Label>
                   <Input
@@ -163,26 +161,26 @@ export default function EditBasicInfoModal({ isOpen, onClose, initialData, onSav
                     value={formData[field.id]}
                     onChange={(e) => handleChange(field.id, e.target.value)}
                     placeholder={field.placeholder}
-                    className={cn(errors[field.id] ? "border-red-500" : "", filterInputStyles)}
+                    className={cn(errors[field.id] ? "border-red-500" : "", filterInputStyles, "h-10 sm:h-11 text-sm")}
                     dir="rtl"
                     maxLength={field.maxLength}
                   />
-                  {errors[field.id] && <p className="text-sm text-red-500">{errors[field.id]}</p>}
+                  {errors[field.id] && <p className="text-xs sm:text-sm text-red-500">{errors[field.id]}</p>}
                 </div>
               ))}
             </div>
           </div>
 
-          <DialogFooter className="flex-row gap-2 pt-4">
+          <DialogFooter className="flex-col sm:flex-row gap-2 sm:gap-3 pt-4 px-0">
             <Button
               type="button"
               variant="outline"
               onClick={handleClose}
-              className="w-full dark:border-primary-400 border-2 dark:text-primary-400"
+              className="w-full dark:border-primary-400 border-2 dark:text-primary-400 text-sm sm:text-base"
             >
               لغو
             </Button>
-            <Button type="submit" className="bg-primary-600 w-full hover:bg-primary-700 text-white">
+            <Button type="submit" className="bg-primary-600 w-full hover:bg-primary-700 text-white text-sm sm:text-base">
               ذخیره تغییرات
             </Button>
           </DialogFooter>

@@ -7,6 +7,7 @@ import TransactionsFilter from "@/template/Dashboard/Wallet/TransactionsFilter";
 import TransactionsTable from "@/template/Dashboard/Wallet/TransactionsTable";
 import DashboardLayout from "@/layout/DashboardLayout";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
+import ViewAllTable from "@/components/ViewAllTable";
 
 export default function WalletList() {
   const [filters, setFilters] = useState({
@@ -22,7 +23,7 @@ export default function WalletList() {
       <PageHeader title="کیف پول من" description="مدیریت موجودی و تراکنشهای مالی" />
 
       {/* Wallet Balance Section */}
-      <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4  mb-6 mt-6">
+      <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-3 md:p-4  mb-6 mt-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
           <h3 className="text-lg  text-gray-900 dark:text-white">موجودی کیف پول</h3>
 
@@ -49,6 +50,7 @@ export default function WalletList() {
         {/* Transactions Table */}
         <div className="mt-6">
           <TransactionsTable />
+          <ViewAllTable />
         </div>
       </div>
     </DashboardLayout>

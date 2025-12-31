@@ -18,11 +18,11 @@ export default function NewCurrencyRequestPage() {
         />
 
         <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box  mt-8">
-          <h3 className="text-lg md:text-xl  text-gray-900 p-4  dark:text-white mb-6">فرم ثبت سفارش</h3>
+          <h3 className="text-lg md:text-xl  text-gray-900 p-4  dark:text-white md:mb-6">فرم ثبت سفارش</h3>
 
           {/* Service Type Buttons */}
 
-          <div className="mb-6 p-4">
+          <div className="md:mb-6 p-4">
             <ServiceTypeButtons selectedType={selectedServiceType} onTypeChange={setSelectedServiceType} />
           </div>
 

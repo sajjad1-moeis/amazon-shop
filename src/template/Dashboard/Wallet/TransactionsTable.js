@@ -96,7 +96,7 @@ export default function TransactionsTable() {
                   index === transactions.length - 1 && "last:border-b-0"
                 )}
               >
-                <TableCell className="text-sm text-gray-900 dark:text-dark-title py-4 px-4">
+                <TableCell className="text-sm text-gray-900 dark:text-dark-titre py-4 px-4">
                   {getTypeLabel(transaction.type)}
                 </TableCell>
                 <TableCell className={cn("text-sm font-medium py-4 px-4", getAmountColor(transaction.type))}>

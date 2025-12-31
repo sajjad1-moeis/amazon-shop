@@ -69,9 +69,7 @@ export default function CurrencyPaymentForm({ removeDesc }) {
               name="service"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-base font-semibold text-gray-900 dark:text-white mb-2 block">
-                    خدمات
-                  </FormLabel>
+                  <FormLabel className="text-base text-gray-900 dark:text-white mb-2 block">خدمات</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="h-[51px] bg-gray-50 dark:bg-dark-field border-2 border-gray-200 dark:border-dark-stroke rounded-xl text-right">
@@ -94,7 +92,7 @@ export default function CurrencyPaymentForm({ removeDesc }) {
             {/* Amount Section */}
             <div>
               <div class="flex-between mb-2">
-                <label className="text-base font-semibold text-gray-900 dark:text-white block">مبلغ</label>
+                <label className="text-base text-gray-900 dark:text-white block">مبلغ</label>
                 <div>
                   <div className="inline-flex items-center bg-[#B3B3FF3D] text-primary-400 dark:text-dark-title dark:border-dark-stroke px-3 py-1 rounded-lg text-xs font-medium">
                     {exchangeRate.toLocaleString("fa-IR")} تومان : USD
@@ -167,9 +165,7 @@ export default function CurrencyPaymentForm({ removeDesc }) {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-base font-semibold text-gray-900 dark:text-white mb-2 block">
-                    توضیحات
-                  </FormLabel>
+                  <FormLabel className="text-base text-gray-900 dark:text-white mb-2 block">توضیحات</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="اگر توضیحاتی نیاز هست وارد کنید...."

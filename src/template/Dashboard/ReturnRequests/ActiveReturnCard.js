@@ -51,34 +51,39 @@ export default function ActiveReturnCard({ returnData, onCancel }) {
       <div className="bg-[#E5E8F566] border border-primary-200 dark:border-caption dark:bg-dark-gray-primary rounded-xl p-3 mb-6">
         <div className="flex flex-col  w-full  md:gap-6">
           {/* Product Details */}
-          <div className="flex gap-3">
-            <div className="relative w-full md:size-14 bg-gray-200 dark:bg-dark-titre rounded-lg overflow-hidden flex-shrink-0">
-              <Image
-                src={returnData.product.image}
-                alt={returnData.product.name}
-                fill
-                className="object-cover"
-                sizes="192px"
-              />
+          <div className="flex max-md:flex-col gap-3">
+            <div class="flex gap-2">
+              <div className="relative w-full max-md:h-10 max-md:max-w-10 md:size-14 bg-gray-200 dark:bg-dark-titre rounded-lg overflow-hidden">
+                <Image
+                  src={returnData.product.image}
+                  alt={returnData.product.name}
+                  fill
+                  className="object-cover"
+                  sizes="192px"
+                />
+              </div>
+              <h3 className="text-sm text-neutral-800 dark:text-dark-titre md:hidden">{returnData.product.name}</h3>
             </div>
             <div className="flex-1 space-y-3">
-              <h3 className="text-base text-neutral-800 dark:text-dark-titre">{returnData.product.name}</h3>
+              <h3 className="text-base text-neutral-800 dark:text-dark-titre max-md:hidden">
+                {returnData.product.name}
+              </h3>
 
-              <div className="flex-between text-sm w-full">
+              <div className="flex-between gap-4 text-sm w-full">
                 <div>
                   <span className="text-gray-600 dark:text-dark-text">شماره درخواست : </span>
                   <span className="font-medium text-gray-900 dark:text-dark-titre">{returnData.id}</span>
                 </div>
-                <div>
-                  <span className="text-gray-600 dark:text-dark-text">تاریخ ثبت : </span>
+                <div className="max-md:hidden">
+                  <span className="text-gray-600 dark:text-dark-text ">تاریخ ثبت : </span>
                   <span className="font-medium text-gray-900 dark:text-dark-titre">{returnData.date}</span>
                 </div>
-                <div>
-                  <span className="text-gray-600 dark:text-dark-text">علت مرجوعی : </span>
+                <div className="max-md:hidden">
+                  <span className="text-gray-600 dark:text-dark-text ">علت مرجوعی : </span>
                   <span className="font-medium text-gray-900 dark:text-dark-titre">{returnData.reason}</span>
                 </div>
                 <div>
-                  <span className="text-gray-600 dark:text-dark-text">وضعیت : </span>
+                  <span className="text-gray-600 dark:text-dark-text max-md:hidden">وضعیت : </span>
                   <StatusBadge status={returnData.status} />
                 </div>
               </div>
@@ -90,9 +95,11 @@ export default function ActiveReturnCard({ returnData, onCancel }) {
 
         {/* Timeline */}
         <div className="mt-6 pt-6 border-t border-gray-200 dark:border-dark-stroke">
-          <div className="mb-4">
+          <div className="mb-4 ">
             <h4 className=" text-primary-500 dark:text-dark-text mb-4">روند مرجوعی</h4>
-            <Timeline currentStep={returnData.currentStep} steps={returnSteps} />
+            <div class="max-xl:overflow-auto">
+              <Timeline className={"max-xl:min-w-[900px]"} currentStep={returnData.currentStep} steps={returnSteps} />
+            </div>
           </div>
         </div>
 
@@ -101,7 +108,7 @@ export default function ActiveReturnCard({ returnData, onCancel }) {
           <Button
             variant="outline"
             onClick={() => onCancel(returnData.id)}
-            className="border-primary-700 text-primary-700 h-10 rounded-lg px-10 bg-transparent border-2 hover:bg-primary-50 dark:border-primary-300 dark:text-primary-300 dark:hover:bg-primary-900/20"
+            className="border-primary-700 max-md:w-full text-primary-700 h-10 rounded-lg px-10 bg-transparent border-2 hover:bg-primary-50 dark:border-primary-300 dark:text-primary-300 dark:hover:bg-primary-900/20"
           >
             لغو درخواست
           </Button>

@@ -16,7 +16,7 @@ export default function RecentViewCard({ product, onDelete }) {
       style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
     >
       {/* Product Image */}
-      <div className="relative w-full h-48 bg-gray-100 dark:bg-dark-field">
+      <div className="relative w-full h-40 sm:h-48 bg-gray-100 dark:bg-dark-field">
         <Image
           src={product.image}
           alt={product.title}
@@ -25,56 +25,69 @@ export default function RecentViewCard({ product, onDelete }) {
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
         />
 
-        <button onClick={onDelete} className="absolute top-4 left-4 z-10 " title="حذف">
-          <Trash size={28} className="text-red-500" />
+        <button onClick={onDelete} className="absolute top-2 sm:top-4 left-2 sm:left-4 z-10" title="حذف">
+          <Trash size={20} className="sm:w-7 sm:h-7 text-red-500" />
         </button>
 
         {!product.inStock && (
-          <div className="absolute top-2 right-2 z-10 bg-red-100 text-red-800 px-3 py-1 rounded-md text-xs ">
+          <div className="absolute top-2 right-2 z-10 bg-red-100 text-red-800 px-2 sm:px-3 py-1 rounded-md text-[10px] sm:text-xs">
             ناموجود
           </div>
         )}
       </div>
 
-      <div className="p-3">
+      <div className="p-2 sm:p-3">
         {/* Title */}
-        <p className="text-sm text-gray-800 dark:text-dark-titre leading-6 mb-3">{product.title}</p>
+        <p className="text-xs sm:text-sm text-gray-800 dark:text-dark-titre leading-5 sm:leading-6 mb-2 sm:mb-3 line-clamp-2">
+          {product.title}
+        </p>
 
         {/* Price */}
-        <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <p className="text-xs text-gray-500 dark:text-caption ">قیمت فعلی (تومان)</p>
-          <p className="text-sm  text-gray-700 dark:text-dark-titre">{product.price}</p>
+        <div className="mb-2 sm:mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2">
+          <p className="text-[10px] sm:text-xs text-gray-500 dark:text-caption">قیمت فعلی (تومان)</p>
+          <p className="text-xs sm:text-sm text-gray-700 dark:text-dark-titre">{product.price}</p>
         </div>
 
         {/* 3 Boxes Row */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          {/* Purchase Date */}
-
+        <div className="flex flex-wrap gap-2 mb-3 sm:mb-4">
           {/* Amount */}
-          <div className="text-xs bg-gray-50 dark:bg-dark-field rounded-xl p-2 text-center flex-1">
-            <div className=" text-gray-900 dark:text-dark-titre">{product.viewCount} مرتبه</div>
-            <div className=" text-gray-500 dark:text-caption mt-3 mb-1">تعداد بازدید</div>
+          <div className="text-[10px] sm:text-xs bg-gray-50 dark:bg-dark-field rounded-xl p-1.5 sm:p-2 text-center flex-1 min-w-[calc(50%-4px)]">
+            <div className="text-xs sm:text-sm text-gray-900 dark:text-dark-titre">{product.viewCount} مرتبه</div>
+            <div className="text-[10px] sm:text-xs text-gray-500 dark:text-caption mt-1 sm:mt-2 mb-1">
+              تعداد بازدید
+            </div>
           </div>
 
-          <div className="text-xs bg-gray-50 dark:bg-dark-field rounded-xl p-2 text-center flex-1">
-            <div className=" text-gray-900 dark:text-dark-titre">{product.lastViewed}</div>
-            <div className=" text-gray-500 dark:text-caption mt-3 mb-1">آخرین بازدید</div>
+          <div className="text-[10px] sm:text-xs bg-gray-50 dark:bg-dark-field rounded-xl p-1.5 sm:p-2 text-center flex-1 min-w-[calc(50%-4px)]">
+            <div className="text-xs sm:text-sm text-gray-900 dark:text-dark-titre">{product.lastViewed}</div>
+            <div className="text-[10px] sm:text-xs text-gray-500 dark:text-caption mt-1 sm:mt-2 mb-1">
+              آخرین بازدید
+            </div>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="p-2 bg-gray-200 dark:bg-dark-field" title="مقایسه">
-            <Maximize size={18} className="text-[#292D32] dark:text-dark-titre" />
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="p-1.5 sm:p-2 bg-gray-200 dark:bg-dark-field flex-shrink-0"
+            title="مقایسه"
+          >
+            <Maximize size={16} className="sm:w-[18px] sm:h-[18px] text-[#292D32] dark:text-dark-titre" />
           </Button>
           <Button
             variant="outline"
             size="sm"
-            className={cn("flex-1 gap-2", "bg-yellow-400 hover:bg-yellow-500 text-primary-800 border-yellow-500")}
+            className={cn(
+              "flex-1 gap-1 sm:gap-2 text-xs sm:text-sm",
+              "bg-yellow-400 hover:bg-yellow-500 text-primary-800 border-yellow-500"
+            )}
             disabled={!product.inStock}
           >
-            <ShoppingCart className="h-4 w-4" />
-            افزودن به سبد خرید
+            <ShoppingCart className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">افزودن به سبد خرید</span>
+            <span className="sm:hidden">افزودن</span>
           </Button>
         </div>
       </div>

@@ -109,7 +109,7 @@ export default function PriceLockList() {
         </Button>
       </PageHeader>
 
-      <div className="mt-6">
+      <div className="mt-4 sm:mt-6">
         <PriceLockTabs
           activeTab={activeTab}
           onTabChange={setActiveTab}

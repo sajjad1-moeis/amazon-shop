@@ -146,7 +146,7 @@ export default function TicketDetail() {
         {" "}
         <Button className="bg-yellow-500 hover:bg-yellow-600 text-primary-800 max-md:hidden">بستن تیکت</Button>
       </PageHeader>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
         <div className="lg:col-span-2">
           <TicketChat
             ticketData={ticket}

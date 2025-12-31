@@ -19,16 +19,37 @@ export default function CurrencyServicesPage() {
     searchQuery: "",
   });
 
+  const handleFiltersChange = (key, value) => {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: value === "all" ? "" : value,
+    }));
+  };
+
+  const CurrencyBtn = () => (
+    <Link href="/dashboard/currency-services/new-request" className="w-full">
+      <Button className="bg-yellow-500 w-full hover:bg-yellow-600 text-gray-800 gap-2">
+        ثبت درخواست جدید
+        <Add size={20} />
+      </Button>
+    </Link>
+  );
+
   return (
     <DashboardLayout>
       {/* Top Section: Header */}
-      <PageHeader title="خدمات ارزی" description="مدیریت درخواستها و ثبت خدمات ارزی">
-        <Link href="/dashboard/currency-services/new-request">
-          <Button className="bg-yellow-500 hover:bg-yellow-600 text-gray-800 gap-2">
-            ثبت درخواست جدید
-            <Add size={20} />
-          </Button>
-        </Link>
+      <PageHeader
+        actionButton={
+          <div class="md:hidden">
+            <CurrencyBtn />
+          </div>
+        }
+        title="خدمات ارزی"
+        description="مدیریت درخواستها و ثبت خدمات ارزی"
+      >
+        <div class="max-md:hidden">
+          <CurrencyBtn />
+        </div>
       </PageHeader>
 
       {/* Identity Verification */}
@@ -37,13 +58,13 @@ export default function CurrencyServicesPage() {
       </div>
 
       {/* Requests Section */}
-      <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4">
-        <h2 className="text-lg md:text-xl text-gray-900 dark:text-white mb-6">تاریخچه درخواست‌ها</h2>
+      <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-3 sm:p-4">
+        <h2 className="text-base sm:text-lg md:text-xl text-gray-900 dark:text-white mb-4 sm:mb-6">
+          تاریخچه درخواست‌ها
+        </h2>
 
         {/* Filters */}
-        <div className="mb-6">
-          <RequestsFilter filters={filters} onFiltersChange={setFilters} />
-        </div>
+        <RequestsFilter filters={filters} onFiltersChange={handleFiltersChange} />
 
         {/* Requests Table */}
         <RequestsTable requests={initialRequests} />

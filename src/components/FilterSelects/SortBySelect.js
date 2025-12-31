@@ -11,16 +11,19 @@ export default function SortBySelect({
   placeholder = "مرتب سازی",
   includeAll = false,
   includePrice = false,
+  isInDrawer = false,
 }) {
   return (
     <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
-        <div className="flex items-center gap-2">
-          <Sort size={20} className="md:hidden text-gray-400" />
-          <div className="max-md:hidden">
-            <SelectValue placeholder={placeholder} />
+      <SelectTrigger className={isInDrawer ? "w-full " + filterSelectTriggerStyles : filterSelectTriggerStyles} dir="rtl">
+        {isInDrawer ? (
+          <SelectValue placeholder={placeholder} />
+        ) : (
+          <div className="flex items-center gap-2 w-full">
+            <Sort size={20} className="md:hidden text-gray-400 flex-shrink-0" />
+            <SelectValue placeholder={placeholder} className="flex-1" />
           </div>
-        </div>
+        )}
       </SelectTrigger>
       <SelectContent className={filterSelectContentStyles} dir="rtl">
         {includeAll && <SelectItem value="all">همه</SelectItem>}

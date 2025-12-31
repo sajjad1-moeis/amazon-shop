@@ -133,9 +133,7 @@ export default function ConnectedDevicesModal({ isOpen, onClose }) {
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
-                        <p className="text-base font-semibold text-gray-900 dark:text-dark-title mb-1">
-                          {device.name}
-                        </p>
+                        <p className="text-base font-semibold text-gray-900 dark:text-dark-title mb-1">{device.name}</p>
                         <div className="space-y-1 text-sm text-gray-600 dark:text-dark-text">
                           <p>
                             <span className="font-medium">سیستم عامل:</span> {device.os}
@@ -185,20 +183,12 @@ export default function ConnectedDevicesModal({ isOpen, onClose }) {
           )}
 
           {devices.length === 0 && (
-            <div className="text-center py-8 text-gray-500 dark:text-dark-text">
-              هیچ دستگاهی یافت نشد
-            </div>
+            <div className="text-center py-8 text-gray-500 dark:text-dark-text">هیچ دستگاهی یافت نشد</div>
           )}
         </div>
 
         <DialogFooter className="flex gap-3 sm:gap-0">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleUpdateList}
-            disabled={isUpdating}
-            className="gap-2"
-          >
+          <Button type="button" variant="outline" onClick={handleUpdateList} disabled={isUpdating} className="gap-2">
             <Refresh size={16} className={isUpdating ? "animate-spin" : ""} />
             به‌روزرسانی لیست دستگاه‌ها
           </Button>
@@ -210,4 +200,3 @@ export default function ConnectedDevicesModal({ isOpen, onClose }) {
     </Dialog>
   );
 }
-

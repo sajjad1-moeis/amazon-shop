@@ -13,7 +13,6 @@ import { Add } from "iconsax-reactjs";
 
 export default function ReturnRequestsList() {
   const [returns, setReturns] = useState(initialReturns);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [filters, setFilters] = useState({
     sortBy: "",
     status: "",
@@ -27,40 +26,14 @@ export default function ReturnRequestsList() {
     }
   };
 
-  // Filter and sort returns based on filters
-  const filteredReturns = React.useMemo(() => {
-    let filtered = [...returns];
-
-    // Search filter
-    if (filters.searchQuery) {
-      const query = filters.searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (returnItem) =>
-          returnItem.id.toLowerCase().includes(query) ||
-          returnItem.product.name.toLowerCase().includes(query) ||
-          returnItem.reason.toLowerCase().includes(query)
-      );
-    }
-
-    // Status filter
-    if (filters.status && filters.status !== "all") {
-      filtered = filtered.filter((returnItem) => returnItem.status === filters.status);
-    }
-
-    // Sort
-    if (filters.sortBy === "newest") {
-      filtered.sort((a, b) => {
-        // Simple date comparison (assuming Persian date format)
-        return b.date.localeCompare(a.date);
-      });
-    } else if (filters.sortBy === "oldest") {
-      filtered.sort((a, b) => {
-        return a.date.localeCompare(b.date);
-      });
-    }
-
-    return filtered;
-  }, [returns, filters]);
+  const ReturnBtn = () => (
+    <Link href="/dashboard/return-requests/new">
+      <Button className="bg-yellow-500 hover:bg-yellow-600 text-primary-800 gap-2 max-md:w-full">
+        ثبت درخواست جدید
+        <Add size={20} />
+      </Button>
+    </Link>
+  );
 
   return (
     <DashboardLayout>
@@ -68,18 +41,20 @@ export default function ReturnRequestsList() {
       <PageHeader
         title="درخواستهای مرجوعی"
         description="تمام درخواستهایی که برای مرجوعی کالا ثبت کرده اید در این بخش قابل مشاهده و پیگیری هستند"
+        actionButton={
+          <div class="md:hidden">
+            <ReturnBtn />
+          </div>
+        }
       >
-        <Link href="/dashboard/return-requests/new">
-          <Button className="bg-yellow-500 hover:bg-yellow-600 text-primary-800 gap-2">
-            ثبت درخواست جدید
-            <Add size={20} />
-          </Button>
-        </Link>
+        <div class="max-md:hidden">
+          <ReturnBtn />
+        </div>
       </PageHeader>
 
       {/* Filters Section with New Request Button */}
 
-      <ReturnRequestsFilter filters={filters} onFiltersChange={setFilters} onCreateNew={() => setIsModalOpen(true)} />
+      <ReturnRequestsFilter filters={filters} onFiltersChange={setFilters} />
 
       {/* Active Return Status Section */}
       {activeReturn && (
@@ -92,7 +67,7 @@ export default function ReturnRequestsList() {
 
       <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4">
         <h2 className="text-lg  text-gray-900 dark:text-white mb-6">لیست درخواستهای مرجوعی</h2>
-        <ReturnsTable returns={filteredReturns} onCancel={handleCancelReturn} />
+        <ReturnsTable returns={returns} onCancel={handleCancelReturn} />
       </div>
     </DashboardLayout>
   );

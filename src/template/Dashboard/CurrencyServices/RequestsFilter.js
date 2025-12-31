@@ -1,80 +1,63 @@
 "use client";
 
 import React from "react";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { SearchNormal1 } from "iconsax-reactjs";
-import { filterInputStyles, filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
+import DateFilterSelect from "@/components/FilterSelects/DateFilterSelect";
+import StatusSelect from "@/components/FilterSelects/StatusSelect";
+import FilterSearchInput from "@/components/FilterSelects/FilterSearchInput";
+import FilterSection from "@/components/FilterSection";
 
-export default function RequestsFilter({ filters, onFiltersChange }) {
-  const handleFilterChange = (key, value) => {
-    onFiltersChange((prev) => ({
-      ...prev,
-      [key]: value === "all" ? "" : value,
-    }));
+const transactionTypeOptions = [
+  { value: "charge", label: "پرداخت سرویس خارجی" },
+  { value: "withdraw", label: "انتقال حواله" },
+];
+
+const transactionStatusOptions = [
+  { value: "reviewing", label: "در حال بررسی" },
+  { value: "answered", label: "پاسخ داده شده" },
+  { value: "completed", label: "تکمیل شده" },
+];
+
+export default function TransactionsFilter({ filters, onFiltersChange }) {
+  const handleFilterChange = (name, value) => {
+    onFiltersChange((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      {/* Search */}
-      <div className="w-full md:max-w-80 md:flex-1 relative">
-        <SearchNormal1 size={20} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-        <Input
-          type="text"
-          placeholder="جستجو بر اساس کد درخواست..."
+    <div className="mb-4 sm:mb-6">
+      <FilterSection>
+        {/* Search */}
+        <FilterSearchInput
           value={filters.searchQuery || ""}
-          onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
-          className={`pr-10 ${filterInputStyles}`}
+          onChange={(value) => handleFilterChange("searchQuery", value)}
+          placeholder="جستجو بر اساس عنوان یا شماره تیکت..."
         />
-      </div>
 
-      <div className="flex flex-wrap gap-2">
-        {/* Service Type */}
-        <Select
-          value={filters.serviceType || undefined}
-          onValueChange={(value) => handleFilterChange("serviceType", value)}
-        >
-          <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
-            <SelectValue placeholder="نوع خدمت" />
-          </SelectTrigger>
-          <SelectContent className={filterSelectContentStyles} dir="rtl">
-            <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="transfer">انتقال حواله</SelectItem>
-            <SelectItem value="payment">پرداخت سرویس خارجی</SelectItem>
-            <SelectItem value="exchange">تبدیل ارز</SelectItem>
-          </SelectContent>
-        </Select>
+        {/* Transaction Type */}
+        <StatusSelect
+          value={filters.transactionType || undefined}
+          onValueChange={(value) => handleFilterChange("transactionType", value)}
+          placeholder="نوع خدمت"
+          options={transactionTypeOptions}
+          includeAll={true}
+        />
+
         {/* Status */}
-        <Select value={filters.status || undefined} onValueChange={(value) => handleFilterChange("status", value)}>
-          <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
-            <SelectValue placeholder="وضعیت" />
-          </SelectTrigger>
-          <SelectContent className={filterSelectContentStyles} dir="rtl">
-            <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="reviewing">در حال بررسی</SelectItem>
-            <SelectItem value="successful">موفق</SelectItem>
-            <SelectItem value="failed">ناموفق</SelectItem>
-            <SelectItem value="pending">در انتظار</SelectItem>
-          </SelectContent>
-        </Select>
+        <StatusSelect
+          value={filters.status || undefined}
+          onValueChange={(value) => handleFilterChange("status", value)}
+          placeholder="وضعیت"
+          options={transactionStatusOptions}
+          includeAll={true}
+        />
 
         {/* Date Range */}
-        <Select
+        <DateFilterSelect
           value={filters.dateRange || undefined}
           onValueChange={(value) => handleFilterChange("dateRange", value)}
-        >
-          <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
-            <SelectValue placeholder="بازه تاریخ" />
-          </SelectTrigger>
-          <SelectContent className={filterSelectContentStyles} dir="rtl">
-            <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="today">امروز</SelectItem>
-            <SelectItem value="week">این هفته</SelectItem>
-            <SelectItem value="month">این ماه</SelectItem>
-            <SelectItem value="year">امسال</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+          placeholder="بازه تاریخ"
+          includeAll={true}
+        />
+      </FilterSection>
     </div>
   );
 }

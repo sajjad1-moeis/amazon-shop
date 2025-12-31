@@ -10,7 +10,7 @@ const walletData = {
 
 export default function WalletOverviewCards() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+    <div className="flex flex-col-reverse md:grid md:grid-cols-3 gap-4 mt-6">
       {/* Total Balance - Dark Blue */}
 
       <div className="bg-primary-600 dark:bg-dark-blue text-center rounded-xl p-6 text-white">

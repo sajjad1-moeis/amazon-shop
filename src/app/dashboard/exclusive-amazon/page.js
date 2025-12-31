@@ -56,7 +56,7 @@ export default function ExclusiveAmazonList() {
 
       <InfoCardsSection />
 
-      <div className="mt-6">
+      <div className="mt-4 sm:mt-6">
         <ExclusiveAmazonTabs
           activeTab={activeTab}
           onTabChange={setActiveTab}

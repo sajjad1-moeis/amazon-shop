@@ -16,7 +16,7 @@ const serviceTypes = [
 
 export default function ServiceTypeButtons({ selectedType, onTypeChange }) {
   return (
-    <div className="flex flex-wrap  gap-2">
+    <div className="flex flex-nowrap overflow-auto  gap-2">
       {serviceTypes.map((type) => {
         const Icon = type.icon;
         const isSelected = selectedType === type.id;

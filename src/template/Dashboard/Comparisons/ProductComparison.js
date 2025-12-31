@@ -81,23 +81,23 @@ export default function ProductComparison() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <PageHeader
         title="مقایسه محصولات - کنترلر پلی استیشن"
         description={
-          <p className="text-gray-600 dark:text-dark-text">
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-dark-text">
             دسته بندی :{" "}
-            <span className="px-2 py-1  dark:bg-dark-blue dark:text-primary-300 bg-primary-100 text-primary-800 rounded-md text-sm">
+            <span className="px-2 py-1 dark:bg-dark-blue dark:text-primary-300 bg-primary-100 text-primary-800 rounded-md text-xs sm:text-sm">
               {category}
             </span>
           </p>
         }
       >
-        <div class="flex-center gap-2">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2 w-full sm:w-auto">
           <Button
             variant="destructive"
             onClick={handleDeleteComparison}
-            className="gap-2 bg-gray-200 text-red-600 dark:text-red-400 hover:text-white dark:bg-dark-field"
+            className="gap-1 sm:gap-2 bg-gray-200 text-red-600 dark:text-red-400 hover:text-white dark:bg-dark-field text-xs sm:text-sm w-full sm:w-auto"
             disabled={products.length === 0}
           >
             حذف
@@ -105,7 +105,7 @@ export default function ProductComparison() {
           <Button
             variant="ghost"
             onClick={handleSaveComparison}
-            className="bg-yellow-500 text-primary-800  font-medium"
+            className="bg-yellow-500 text-primary-800 font-medium text-xs sm:text-sm w-full sm:w-auto"
           >
             ذخیره مقایسه
           </Button>
@@ -113,11 +113,11 @@ export default function ProductComparison() {
       </PageHeader>
 
       {/* Products Grid */}
-      <div class="flex gap-6">
-        <div class="max-w-48">
+      <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
+        <div className="w-full lg:max-w-48">
           <AddProductColumn onAdd={handleAddProduct} />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 flex-1">
           {products.map((product) => (
             <ProductComparisonColumn
               key={product.id}
@@ -125,8 +125,6 @@ export default function ProductComparison() {
               onRemove={() => handleRemoveProduct(product.id)}
             />
           ))}
-
-          {/* Add Product Column */}
         </div>
       </div>
 

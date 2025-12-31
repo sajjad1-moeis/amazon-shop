@@ -12,12 +12,12 @@ export default function ProfilePage() {
       <PageHeader title="پروفایل کاربری" description="مدیریت اطلاعات شخصی، امنیت و تنظیمات حساب" />
 
       {/* Bottom Section: Profile Cards */}
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {/* Basic Information - First */}
         <BasicInfoCard />
 
         {/* Security & Financial - Side by Side */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <SecurityCard />
           <FinancialInfoCard />
         </div>

@@ -27,7 +27,7 @@ export default function InvoiceDetailPage({ params }) {
         <InvoiceDetailHeader invoice={invoice} onDownload={handleDownload} />
 
         {/* Order Timeline and Recipient Info - کنار هم */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-4 sm:mb-6">
           {/* Order Timeline - Takes 2 columns */}
           <div className="lg:col-span-2">
             <RecipientInfoCard recipient={invoice.recipient} />
@@ -43,7 +43,7 @@ export default function InvoiceDetailPage({ params }) {
         <ProductsTable products={invoice.products} />
 
         {/* Payment Info and Tracking Codes - کنار هم */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 my-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 my-4 sm:my-6">
           <PaymentInfoCard paymentInfo={invoice.paymentInfo} />
           <TrackingCodesCard trackingCodes={invoice.trackingCodes} />
         </div>

@@ -38,7 +38,11 @@ export default function RecentOrderTimeline({ order }) {
 
       {/* Timeline */}
       <div className="pt-2 sm:pt-4 pb-4 sm:pb-8 w-full max-lg:overflow-auto ">
-        <Timeline currentStep={order.timeline.currentStepIndex} steps={order.timeline.steps} />
+        <Timeline
+          className={"max-lg:min-w-[900px]"}
+          currentStep={order.timeline.currentStepIndex}
+          steps={order.timeline.steps}
+        />
         <ViewAllTable />
       </div>
     </div>

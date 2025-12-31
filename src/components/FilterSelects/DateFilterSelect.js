@@ -4,10 +4,19 @@ import React from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
 
-export default function DateFilterSelect({ value, onValueChange, placeholder = "تاریخ", includeAll = false }) {
+export default function DateFilterSelect({
+  value,
+  onValueChange,
+  placeholder = "تاریخ",
+  includeAll = false,
+  isInDrawer = false,
+}) {
   return (
     <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
+      <SelectTrigger
+        className={isInDrawer ? "w-full " + filterSelectTriggerStyles : filterSelectTriggerStyles}
+        dir="rtl"
+      >
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent className={filterSelectContentStyles} dir="rtl">

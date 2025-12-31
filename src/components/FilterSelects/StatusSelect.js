@@ -18,10 +18,11 @@ export default function StatusSelect({
   placeholder = "وضعیت",
   options = [],
   includeAll = true,
+  isInDrawer = false,
 }) {
   return (
     <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
+      <SelectTrigger className={isInDrawer ? "w-full " + filterSelectTriggerStyles : filterSelectTriggerStyles} dir="rtl">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent className={filterSelectContentStyles} dir="rtl">

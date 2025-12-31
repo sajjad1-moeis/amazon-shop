@@ -62,11 +62,11 @@ export default function ComparisonsList() {
 
       {/* Comparisons Grid */}
       {comparisons.length === 0 ? (
-        <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-8 text-center">
-          <p className="text-gray-500 dark:text-dark-text">هیچ مقایسه‌ای ذخیره نشده است</p>
+        <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-6 sm:p-8 text-center">
+          <p className="text-sm sm:text-base text-gray-500 dark:text-dark-text">هیچ مقایسه‌ای ذخیره نشده است</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {comparisons.map((comparison) => (
             <ComparisonCard key={comparison.id} comparison={comparison} onDelete={() => handleDelete(comparison.id)} />
           ))}

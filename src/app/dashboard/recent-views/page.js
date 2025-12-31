@@ -85,23 +85,25 @@ export default function RecentViewsList() {
       <RecentViewFilter filters={filters} onFiltersChange={() => {}} />
 
       {/* Product List Header */}
-      <div className="flex items-center justify-between my-8">
-        <h2 className="text-lg md:text-xl font-bold text-primary-700 dark:text-dark-title">لیست محصولات</h2>
-        <div className="text-sm text-gray-500 dark:text-dark-text">
-          تعداد بازدیدها: <span className="font-semibold text-yellow-600 ">{products.length}</span>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4 my-4 sm:my-6 md:my-8">
+        <h2 className="text-base sm:text-lg md:text-xl font-bold text-primary-700 dark:text-dark-title">
+          لیست محصولات
+        </h2>
+        <div className="text-xs sm:text-sm text-gray-500 dark:text-dark-text">
+          تعداد بازدیدها: <span className="font-semibold text-yellow-600">{products.length}</span>
         </div>
       </div>
 
       {/* Products Grid */}
       {products.length === 0 ? (
         <div
-          className="bg-white dark:bg-dark-box rounded-2xl shadow-md p-8 text-center mb-6"
+          className="bg-white dark:bg-dark-box rounded-2xl shadow-md p-6 sm:p-8 text-center mb-4 sm:mb-6"
           style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
         >
-          <p className="text-gray-500 dark:text-dark-text">هیچ بازدید اخیری وجود ندارد</p>
+          <p className="text-sm sm:text-base text-gray-500 dark:text-dark-text">هیچ بازدید اخیری وجود ندارد</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4  mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
           {products.map((product) => (
             <RecentViewCard key={product.id} product={product} onDelete={() => handleDelete(product.id)} />
           ))}

@@ -21,7 +21,7 @@ export default function AddressCard({
             <Button
               variant="gray"
               onClick={() => onSetDefault(address.id)}
-              className="text-xs md:text-sm text-primary-600 bg-gray-200 dark:bg-dark-stroke dark:text-primary-300 px-1 md:px-3 max-md:h-8 md:py-1 rounded-md"
+              className="text-xs md:text-sm text-primary-600 bg-gray-200 dark:bg-dark-stroke dark:text-primary-300 px-1 md:px-3 max-md:h-6 md:py-1 rounded-md"
             >
               انتخاب به عنوان پیش‌فرض
             </Button>

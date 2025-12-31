@@ -162,15 +162,17 @@ export default function NotificationsList() {
           حذف همه اعلانها
         </Button>
       </PageHeader>
-      <div className="bg-white dark:bg-dark-box p-4 rounded-xl">
-        <div className="mb-6">
+      <div className="bg-white dark:bg-dark-box p-3 sm:p-4 rounded-xl">
+        <div className="mb-4 sm:mb-6">
           {/* Section Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-            {notifications.length > 0 && <h2 className="text-lg  text-gray-700 dark:text-dark-titre">لیست اعلانها</h2>}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-3 sm:mb-4">
+            {notifications.length > 0 && (
+              <h2 className="text-base sm:text-lg text-gray-700 dark:text-dark-titre">لیست اعلانها</h2>
+            )}
             <Button
               variant="ghost"
               onClick={handleMarkAllAsRead}
-              className="gap-2 h-7 p-1 text-primary-700 bg-transparent dark:text-primary-300"
+              className="gap-1 sm:gap-2 h-7 p-1 text-xs sm:text-sm text-primary-700 bg-transparent dark:text-primary-300 w-full sm:w-auto"
             >
               علامت گذاری همه به عنوان خوانده شده
             </Button>
@@ -181,13 +183,13 @@ export default function NotificationsList() {
 
         {notifications.length === 0 ? (
           <div
-            className="bg-white dark:bg-dark-box  rounded-2xl shadow-md p-8 text-center mt-6"
+            className="bg-white dark:bg-dark-box rounded-2xl shadow-md p-6 sm:p-8 text-center mt-4 sm:mt-6"
             style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
           >
-            <p className="text-gray-500 dark:text-dark-text">هیچ اعلانی وجود ندارد</p>
+            <p className="text-sm sm:text-base text-gray-500 dark:text-dark-text">هیچ اعلانی وجود ندارد</p>
           </div>
         ) : (
-          <div className="space-y-4  mt-6">
+          <div className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
             {notifications.map((notification) => (
               <NotificationCard
                 key={notification.id}

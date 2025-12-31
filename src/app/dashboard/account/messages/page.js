@@ -36,11 +36,11 @@ export default function MessagesList() {
       <MessagesFilter filters={filters} onFiltersChange={setFilters} />
 
       {/* Messages List */}
-      <div className="bg-white dark:bg-dark-box rounded-xl border dark:border-0 border-gray-200 p-3 mt-8">
-        <div className="space-y-4">
+      <div className="bg-white dark:bg-dark-box rounded-xl border dark:border-0 border-gray-200 p-3 sm:p-4 mt-6 sm:mt-8">
+        <div className="space-y-3 sm:space-y-4">
           {messages.length === 0 ? (
-            <div className="p-8 text-center">
-              <p className="text-gray-500 dark:text-dark-text">هیچ پیامی وجود ندارد</p>
+            <div className="p-6 sm:p-8 text-center">
+              <p className="text-sm sm:text-base text-gray-500 dark:text-dark-text">هیچ پیامی وجود ندارد</p>
             </div>
           ) : (
             messages.map((message) => <MessageCard key={message.id} message={message} />)
