@@ -22,7 +22,7 @@ export default function CommentsPage() {
       <PageHeader title="نظرات من" description="نظراتی که روی محصولات ثبت کرده اید و وضعیت بررسی آنها." />
 
       {/* Filters and Count Section */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
+      <div className="flex-between gap-3 sm:gap-4 mb-6 sm:mb-8">
         <CommentsFilter filters={filters} onFiltersChange={setFilters} />
         {/* Total Reviews Count */}
         <div className="text-xs sm:text-sm text-gray-700 dark:text-dark-text whitespace-nowrap">

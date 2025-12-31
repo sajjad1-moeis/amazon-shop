@@ -11,7 +11,7 @@ export default function RecipientInfoCard({ recipient = {} }) {
   ];
 
   return (
-    <div className="bg-white h-full dark:bg-dark-box rounded-xl border border-gray-200 dark:border-0 p-3">
+    <div className="bg-white dark:border-dark-stroke h-full dark:bg-dark-box rounded-xl border border-gray-200  p-3">
       <h3 className="text-lg  text-gray-800 dark:text-dark-titre mb-6">اطلاعات گیرنده</h3>
 
       {/* Main Info */}

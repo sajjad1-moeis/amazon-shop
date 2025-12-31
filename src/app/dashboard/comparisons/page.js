@@ -33,29 +33,40 @@ export default function ComparisonsList() {
     route.push("/dashboard/compare");
   };
 
+  const ActionBtns = () => (
+    <div class="flex-center">
+      <Button
+        variant="ghost"
+        onClick={handleDeleteAll}
+        className="gap-2 text-red-600 max-md:w-full dark:text-red-400 hover:bg-gray-100 dark:hover:bg-dark-field"
+        disabled={comparisons.length === 0}
+      >
+        <Trash size={18} />
+        حذف همه
+      </Button>
+      <Button
+        onClick={handleCreateNew}
+        className="bg-yellow-500 max-md:w-full hover:bg-yellow-600 text-primary-800 font-medium gap-2"
+      >
+        ایجاد مقایسه جدید
+        <Add size={20} />
+      </Button>
+    </div>
+  );
+
   return (
     <DashboardLayout>
       <PageHeader
         title="مقایسه های ذخیره شده"
         description="مقایسه هایی که ذخیره کرده اید را اینجا ببینید و دوباره بررسی کنید."
+        actionButton={
+          <div class="md:hidden">
+            <ActionBtns />
+          </div>
+        }
       >
-        <div class="flex-center">
-          <Button
-            variant="ghost"
-            onClick={handleDeleteAll}
-            className="gap-2 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-dark-field"
-            disabled={comparisons.length === 0}
-          >
-            <Trash size={18} />
-            حذف همه
-          </Button>
-          <Button
-            onClick={handleCreateNew}
-            className="bg-yellow-500 hover:bg-yellow-600 text-primary-800 font-medium gap-2"
-          >
-            ایجاد مقایسه جدید
-            <Add size={20} />
-          </Button>
+        <div class="max-md:hidden">
+          <ActionBtns />
         </div>
       </PageHeader>
       <div class="mb-8" />

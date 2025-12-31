@@ -94,7 +94,7 @@ export default function FavoriteCard({ product }) {
             تنظیم هشدار قیمت
           </Button>
 
-          <Button className="w-9 md:w-full h-9 bg-[#F6F7FB] dark:bg-dark-stroke text-red-500 hover:bg-red-50 font-medium text-sm py-2 rounded-lg ">
+          <Button className="w-9 md:w-full h-9 bg-[#F6F7FB] dark:bg-dark-stroke dark:text-red-300 text-red-500 hover:bg-red-50 font-medium text-sm py-2 rounded-lg ">
             <span className="max-md:hidden">حذف</span>
             <Trash className="md:hidden" />
           </Button>

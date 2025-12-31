@@ -1,62 +1,54 @@
 "use client";
 
 import React from "react";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { SearchNormal1 } from "iconsax-reactjs";
-import { filterInputStyles, filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
+import DateFilterSelect from "@/components/FilterSelects/DateFilterSelect";
+import StatusSelect from "@/components/FilterSelects/StatusSelect";
+import FilterSearchInput from "@/components/FilterSelects/FilterSearchInput";
+import SortBySelect from "@/components/FilterSelects/SortBySelect";
+import FilterSection from "@/components/FilterSection";
+
+const messageTypeOptions = [
+  { value: "support", label: "پشتیبانی" },
+  { value: "payment", label: "پرداخت" },
+  { value: "order", label: "سفارشات" },
+];
 
 export default function MessagesFilter({ filters, onFiltersChange }) {
-  const handleFilterChange = (key, value) => {
-    onFiltersChange((prev) => ({
-      ...prev,
-      [key]: value === "all" ? "" : value,
-    }));
-  };
-
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      {/* Search */}
-      <div className="w-full md:flex-1 md:max-w-[500px] relative">
-        <SearchNormal1 size={20} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-        <Input
-          type="text"
-          placeholder="جستجو بر اساس عنوان پیام ..."
+    <div className="mt-6 sm:mt-8 md:mt-10">
+      <FilterSection>
+        {/* Search Input */}
+        <FilterSearchInput
           value={filters.searchQuery || ""}
-          onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
-          className={`pr-10 ${filterInputStyles}`}
+          onChange={(value) => onFiltersChange("searchQuery", value)}
+          placeholder="جستجو بر اساس عنوان پیام..."
         />
-      </div>
-
-      <div className="flex flex-wrap items-center gap-2">
-        {/* Sort By Filter */}
 
         {/* Message Type Filter */}
-        <Select
-          value={filters.messageType || undefined}
-          onValueChange={(value) => handleFilterChange("messageType", value)}
-        >
-          <SelectTrigger className={filterSelectTriggerStyles}>
-            <SelectValue placeholder="نوع پیام" />
-          </SelectTrigger>
-          <SelectContent className={filterSelectContentStyles}>
-            <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="support">پشتیبانی</SelectItem>
-            <SelectItem value="payment">پرداخت</SelectItem>
-            <SelectItem value="order">سفارشات</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={filters.sortBy || undefined} onValueChange={(value) => handleFilterChange("sortBy", value)}>
-          <SelectTrigger className={filterSelectTriggerStyles}>
-            <SelectValue placeholder="مرتب سازی" />
-          </SelectTrigger>
-          <SelectContent className={filterSelectContentStyles}>
-            <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="newest">جدیدترین</SelectItem>
-            <SelectItem value="oldest">قدیمی‌ترین</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+        <StatusSelect
+          value={filters.messageType || ""}
+          onValueChange={(value) => onFiltersChange("messageType", value)}
+          placeholder="نوع پیام"
+          options={messageTypeOptions}
+          includeAll={true}
+        />
+
+        {/* Date Range Filter */}
+        <DateFilterSelect
+          value={filters.dateRange || ""}
+          onValueChange={(value) => onFiltersChange("dateRange", value)}
+          placeholder="بازه زمانی"
+          includeAll={true}
+        />
+
+        {/* Sort By Filter */}
+        <SortBySelect
+          value={filters.sortBy || ""}
+          onValueChange={(value) => onFiltersChange("sortBy", value)}
+          placeholder="مرتب سازی"
+          includeAll={true}
+        />
+      </FilterSection>
     </div>
   );
 }

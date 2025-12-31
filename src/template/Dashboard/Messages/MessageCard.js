@@ -48,7 +48,7 @@ export default function MessageCard({ message }) {
 
               {/* Right: Badge */}
               <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
-                <div className="hidden sm:block">{getTypeBadge(message.type)}</div>
+                <div>{getTypeBadge(message.type)}</div>
                 <ArrowDown2
                   size={18}
                   className="sm:w-5 sm:h-5 text-gray-600 dark:text-dark-text transition-transform duration-200 group-data-[state=open]:rotate-180 flex-shrink-0"

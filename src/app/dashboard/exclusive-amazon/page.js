@@ -7,6 +7,7 @@ import { Add } from "iconsax-reactjs";
 import InfoCardsSection from "@/template/Dashboard/ExclusiveAmazon/InfoCardsSection";
 import ExclusiveAmazonTabs from "@/template/Dashboard/ExclusiveAmazon/ExclusiveAmazonTabs";
 import DashboardLayout from "@/layout/DashboardLayout";
+import { useRouter } from "next/navigation";
 
 const INITIAL_ORDERS = [
   {
@@ -32,26 +33,48 @@ const INITIAL_ORDERS = [
 export default function ExclusiveAmazonList() {
   const [activeTab, setActiveTab] = useState("orders");
   const [orders] = useState(INITIAL_ORDERS);
+  const router = useRouter();
   const [filters, setFilters] = useState({
     searchQuery: "",
     timeRange: "",
     status: "",
   });
 
-  const handleNewOrder = () => {
-    window.location.href = "/dashboard/exclusive-amazon/new-order";
+  const handleFilterChange = (key, value) => {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: value === "all" ? "" : value,
+    }));
   };
+
+  const handleNewOrder = () => {
+    router.push("/dashboard/exclusive-amazon/new-order");
+  };
+
+  const ActionBtn = () => (
+    <Button
+      onClick={handleNewOrder}
+      className="bg-yellow-500 max-md:w-full hover:bg-yellow-600 text-primary-800  font-medium gap-2"
+    >
+      ثبت سفارش جدید
+      <Add size={20} />
+    </Button>
+  );
 
   return (
     <DashboardLayout dir="rtl">
-      <PageHeader title="خرید اختصاصی از آمازون" description="دسترسی ویژه برای سفارش کالاهای خاص و غیر عمومی">
-        <Button
-          onClick={handleNewOrder}
-          className="bg-yellow-500 hover:bg-yellow-600 text-primary-800  font-medium gap-2"
-        >
-          ثبت سفارش جدید
-          <Add size={20} />
-        </Button>
+      <PageHeader
+        actionButton={
+          <div class="md:hidden">
+            <ActionBtn />
+          </div>
+        }
+        title="خرید اختصاصی از آمازون"
+        description="دسترسی ویژه برای سفارش کالاهای خاص و غیر عمومی"
+      >
+        <div class="max-md:hidden">
+          <ActionBtn />
+        </div>
       </PageHeader>
 
       <InfoCardsSection />
@@ -62,7 +85,7 @@ export default function ExclusiveAmazonList() {
           onTabChange={setActiveTab}
           orders={orders}
           filters={filters}
-          onFiltersChange={setFilters}
+          onFiltersChange={handleFilterChange}
         />
       </div>
     </DashboardLayout>

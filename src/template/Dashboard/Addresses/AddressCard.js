@@ -59,7 +59,7 @@ export default function AddressCard({
       <div className="flex-between w-full">
         <h4 className="max-md:text-sm text-primary-500 font-medium dark:text-dark-title">{address.name}</h4>
         {hasPhone && (
-          <div className={`flex items-center gap-2 ${hasPhone || "max-md:hidden"}`}>
+          <div className={`flex items-center gap-2 ${hasPhone && "max-md:hidden"}`}>
             <span className="text-xs text-gray-500 dark:text-dark-text">شماره تماس:</span>
             <span className="text-sm text-gray-700 dark:text-dark-titre ">{address.mobile || address.phone}</span>
           </div>

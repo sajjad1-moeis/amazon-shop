@@ -3,13 +3,14 @@
 import React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import ViewAllTable from "@/components/ViewAllTable";
 
 export default function ProductsTable({ products }) {
   return (
     <div className="bg-white dark:bg-dark-box rounded-xl border border-gray-200 dark:border-dark-stroke p-3">
       <h3 className="text-lg text-gray-800 dark:text-dark-titre mb-6">لیست کالاها</h3>
 
-      <div className="border border-gray-200 dark:border-dark-stroke rounded-lg overflow-hidden">
+      <div className="border border-gray-200 dark:border-dark-stroke rounded-lg overflow-hidden mb-8">
         <Table>
           <TableHeader className="bg-gray-50 dark:bg-dark-stroke text-gray-500 dark:text-dark-titre">
             <TableRow className="border-b border-gray-200 dark:border-dark-stroke">
@@ -59,6 +60,7 @@ export default function ProductsTable({ products }) {
           </TableBody>
         </Table>
       </div>
+      <ViewAllTable />
     </div>
   );
 }

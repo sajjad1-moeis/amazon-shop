@@ -6,15 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { Eye } from "iconsax-reactjs";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 export default function ComparisonCard({ comparison, onDelete, onView }) {
   const firstProduct = comparison.products?.[0];
   const secondProduct = comparison.products?.[1];
+  const navigate = useRouter();
 
   return (
     <div className="bg-white dark:bg-dark-box border border-gray-200 dark:border-0 rounded-xl p-2.5 sm:p-3">
       {/* Header - Category Tag and Title */}
-      <div className="mb-3 sm:mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+      <div className="mb-3 sm:mb-5 flex-between gap-2 sm:gap-4">
         <h3 className="text-sm sm:text-base text-gray-800 dark:text-dark-titre line-clamp-2">{comparison.title}</h3>
         <div className="flex items-center gap-2 flex-shrink-0">
           <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-md text-[10px] sm:text-xs font-medium bg-blue-100 text-blue-700 dark:bg-dark-blue dark:text-primary-300">
@@ -24,11 +26,11 @@ export default function ComparisonCard({ comparison, onDelete, onView }) {
       </div>
 
       {/* Products Comparison - VS Layout */}
-      <div className="flex items-center justify-between gap-2 sm:gap-3 mb-3 sm:mb-5">
+      <div className="flex items-center justify-between gap-3 mb-3 sm:mb-5">
         {/* First Product */}
         {firstProduct && (
-          <div className="flex-1 flex flex-col items-center gap-1 sm:gap-2">
-            <div className="relative w-full aspect-square max-h-24 sm:max-h-32 bg-gray-100 dark:bg-dark-field rounded-lg overflow-hidden">
+          <div className="flex-1 flex-center gap-1 sm:gap-2">
+            <div className="relative w-full aspect-square max-md:max-w-10 sm:max-h-32 bg-gray-100 dark:bg-dark-field rounded-lg overflow-hidden">
               <Image
                 src={firstProduct.image || "/image/Home/product.png"}
                 alt={firstProduct.title}
@@ -62,18 +64,18 @@ export default function ComparisonCard({ comparison, onDelete, onView }) {
 
         {/* Second Product */}
         {secondProduct && (
-          <div className="flex-1 flex flex-col items-center gap-1 sm:gap-2">
-            <div className="relative w-full aspect-square max-h-24 sm:max-h-32 bg-gray-100 dark:bg-dark-field rounded-lg overflow-hidden">
+          <div className="flex-1 flex-center gap-1 sm:gap-2">
+            <div className="relative w-full aspect-square max-md:max-w-10 sm:max-h-32 bg-gray-100 dark:bg-dark-field rounded-lg overflow-hidden">
               <Image
-                src={secondProduct.image || "/image/Home/product.png"}
-                alt={secondProduct.title}
+                src={firstProduct.image || "/image/Home/product.png"}
+                alt={firstProduct.title}
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 33vw"
               />
             </div>
             <p className="text-[10px] sm:text-xs text-gray-600 dark:text-dark-text text-center line-clamp-2">
-              {secondProduct.title}
+              {firstProduct.title}
             </p>
           </div>
         )}
@@ -104,7 +106,7 @@ export default function ComparisonCard({ comparison, onDelete, onView }) {
           حذف
         </Button>
         <Button
-          onClick={() => onView?.(comparison.id)}
+          onClick={() => navigate.push("/dashboard/compare")}
           className="flex-1 bg-primary-700 dark:bg-dark-primary hover:bg-primary-600 text-white gap-1 sm:gap-2 rounded-lg text-xs sm:text-sm"
         >
           مشاهده مقایسه

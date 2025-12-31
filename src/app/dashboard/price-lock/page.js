@@ -9,7 +9,7 @@ import PriceLockDetailModal from "@/template/Dashboard/PriceLock/PriceLockDetail
 import PriceLockTabs from "@/template/Dashboard/PriceLock/PriceLockTabs";
 import DashboardLayout from "@/layout/DashboardLayout";
 
-const ACTIVE_LOCKS = [
+export const ACTIVE_LOCKS = [
   {
     id: 1,
     productName: "Apple AirPods Pro (2nd Generation)",
@@ -68,6 +68,13 @@ export default function PriceLockList() {
     status: "",
   });
 
+  const handleFilterChange = (key, value) => {
+    setHistoryFilters((prev) => ({
+      ...prev,
+      [key]: value === "all" ? "" : value,
+    }));
+  };
+
   const filteredHistory = useMemo(() => {
     return historyLocks.filter((item) => {
       if (historyFilters.searchQuery && !item.productName.includes(historyFilters.searchQuery)) {
@@ -100,13 +107,30 @@ export default function PriceLockList() {
     setIsDetailModalOpen(true);
   };
 
+  const ActionBtn = () => (
+    <Button
+      onClick={handleNewLock}
+      className="bg-yellow-500 max-md:w-full hover:bg-yellow-600 text-gray-900  font-medium gap-2"
+    >
+      <Lock size={20} />
+      قفل قیمت جدید
+    </Button>
+  );
+
   return (
     <DashboardLayout>
-      <PageHeader title="قفل قیمت" description="قیمت برخی محصولات را برای مدت محدود ثابت نگه دارید">
-        <Button onClick={handleNewLock} className="bg-yellow-500 hover:bg-yellow-600 text-gray-900  font-medium gap-2">
-          <Lock size={20} />
-          قفل قیمت جدید
-        </Button>
+      <PageHeader
+        actionButton={
+          <div class="md:hidden">
+            <ActionBtn />
+          </div>
+        }
+        title="قفل قیمت"
+        description="قیمت برخی محصولات را برای مدت محدود ثابت نگه دارید"
+      >
+        <div class="max-md:hidden">
+          <ActionBtn />
+        </div>
       </PageHeader>
 
       <div className="mt-4 sm:mt-6">
@@ -118,7 +142,7 @@ export default function PriceLockList() {
           onViewDetails={handleViewDetails}
           filteredHistory={filteredHistory}
           historyFilters={historyFilters}
-          onFiltersChange={setHistoryFilters}
+          onFiltersChange={handleFilterChange}
         />
       </div>
 

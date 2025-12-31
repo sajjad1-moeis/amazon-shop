@@ -100,6 +100,7 @@ export default function AddressesList({ isModalOpen, setIsModalOpen, editingAddr
         <div className="space-y-4">
           {addresses.map((address) => (
             <AddressCard
+              hasPhone
               key={address.id}
               address={address}
               onEdit={() => handleEditClick(address.id)}

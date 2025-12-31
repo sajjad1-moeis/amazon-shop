@@ -15,7 +15,15 @@ export default function MessagesList() {
     sortBy: "",
     messageType: "",
     searchQuery: "",
+    dateRange: "",
   });
+
+  const handleFilterChange = (key, value) => {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: value === "all" ? "" : value,
+    }));
+  };
 
   const handleRefresh = () => {
     // Handle refresh logic
@@ -33,7 +41,7 @@ export default function MessagesList() {
       </PageHeader>
 
       {/* Filters Section */}
-      <MessagesFilter filters={filters} onFiltersChange={setFilters} />
+      <MessagesFilter filters={filters} onFiltersChange={handleFilterChange} />
 
       {/* Messages List */}
       <div className="bg-white dark:bg-dark-box rounded-xl border dark:border-0 border-gray-200 p-3 sm:p-4 mt-6 sm:mt-8">

@@ -39,26 +39,26 @@ export default function NewPriceLockModal({ open, onOpenChange }) {
     <Dialog open={open} onOpenChange={onOpenChange} dir="rtl">
       <DialogContent className="max-w-3xl rounded-2xl p-0 overflow-hidden dark:bg-dark-box" dir="rtl">
         {/* Header */}
-        <DialogHeader className="relative px-6 py-4">
-          <DialogTitle className="text-center font-thin text-2xl text-primary-700 dark:text-dark-title">
+        <DialogHeader className="relative px-4 sm:px-6 py-3 sm:py-4">
+          <DialogTitle className="text-center font-thin text-xl sm:text-2xl text-primary-700 dark:text-dark-title">
             قفل قیمت جدید
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6 p-3">
+        <div className="space-y-4 sm:space-y-6 p-3 sm:p-4 md:p-6">
           {/* Product search */}
           <div className="space-y-2">
-            <Label className="text-sm text-gray-700 dark:text-dark-text">محصول</Label>
-            <div className="flex gap-2">
+            <Label className="text-xs sm:text-sm text-gray-700 dark:text-dark-text">محصول</Label>
+            <div className="flex  gap-2">
               <Input
                 value={search}
-                className={cn("bg-gray-50 border border-gray-200", filterInputStyles)}
+                className={cn("bg-gray-50 border border-gray-200 flex-1", filterInputStyles, "text-xs sm:text-sm")}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Sony PlayStation 5 Slim – Advanced Edition Gaming Console"
               />
               <Button
                 onClick={handleSearch}
-                className="bg-primary-600 hover:bg-primary-700 text-white dark:bg-primary-500 dark:hover:bg-primary-600"
+                className="bg-primary-600 hover:bg-primary-700 text-white dark:bg-dark-primary dark:hover:bg-primary-600 w-auto text-xs sm:text-sm h-10 sm:h-11"
               >
                 جستجو
               </Button>
@@ -68,7 +68,9 @@ export default function NewPriceLockModal({ open, onOpenChange }) {
           {/* Product Card */}
           {selectedProduct && (
             <div>
-              <Label className="mb-3 block text-sm text-gray-500 dark:text-dark-text">محصول وارد شده</Label>
+              <Label className="mb-2 sm:mb-3 block text-xs sm:text-sm text-gray-500 dark:text-dark-text">
+                محصول وارد شده
+              </Label>
 
               <ProductPreviewCard product={selectedProduct} />
             </div>
@@ -76,26 +78,34 @@ export default function NewPriceLockModal({ open, onOpenChange }) {
 
           {/* Duration */}
           {selectedProduct && (
-            <div className="space-y-3 w-full">
-              <Label className="text-sm text-gray-700 dark:text-dark-text">مدت اعتبار هشدار</Label>
+            <div className="space-y-2 sm:space-y-3 w-full">
+              <Label className="text-xs sm:text-sm text-gray-700 dark:text-dark-text">مدت اعتبار هشدار</Label>
               <RadioGroup value={duration} onValueChange={setDuration} className="gap-2 grid grid-cols-2">
                 <div
                   className={cn(
-                    "flex items-center gap-2 p-3 rounded-lg border-2 transition-colors cursor-pointer bg-gray-100 dark:bg-dark-field border-gray-200 dark:border-dark-stroke hover:border-gray-300"
+                    "flex items-center gap-2 p-2 sm:p-3 rounded-lg border-2 transition-colors cursor-pointer bg-gray-100 dark:bg-dark-field border-gray-200 dark:border-dark-stroke hover:border-gray-300"
                   )}
                 >
-                  <RadioGroupItem value="12" id="12h" className="dark:text-primary-400 accent-primary-300" />
-                  <Label htmlFor="12h" className="text-gray-700 dark:text-dark-text cursor-pointer">
+                  <RadioGroupItem
+                    value="12"
+                    id="12h"
+                    className="dark:text-primary-400 accent-primary-300 w-4 h-4 sm:w-5 sm:h-5"
+                  />
+                  <Label htmlFor="12h" className="text-xs sm:text-sm text-gray-700 dark:text-dark-text cursor-pointer">
                     ۱۲ ساعت
                   </Label>
                 </div>
                 <div
                   className={cn(
-                    "flex items-center gap-2 p-3 rounded-lg border-2 transition-colors cursor-pointer bg-gray-100 dark:bg-dark-field border-gray-200 dark:border-dark-stroke hover:border-gray-300"
+                    "flex items-center gap-2 p-2 sm:p-3 rounded-lg border-2 transition-colors cursor-pointer bg-gray-100 dark:bg-dark-field border-gray-200 dark:border-dark-stroke hover:border-gray-300"
                   )}
                 >
-                  <RadioGroupItem value="24" id="24h" className="dark:text-primary-400 accent-primary-300" />
-                  <Label htmlFor="24h" className="text-gray-700 dark:text-dark-text cursor-pointer">
+                  <RadioGroupItem
+                    value="24"
+                    id="24h"
+                    className="dark:text-primary-400 accent-primary-300 w-4 h-4 sm:w-5 sm:h-5"
+                  />
+                  <Label htmlFor="24h" className="text-xs sm:text-sm text-gray-700 dark:text-dark-text cursor-pointer">
                     ۲۴ ساعت
                   </Label>
                 </div>
@@ -109,17 +119,19 @@ export default function NewPriceLockModal({ open, onOpenChange }) {
               <Checkbox
                 checked={accepted}
                 onCheckedChange={setAccepted}
-                className="dark:border-dark-stroke dark:bg-dark-field data-[state=checked]:dark:bg-primary-300"
+                className="dark:border-dark-stroke dark:bg-dark-field data-[state=checked]:dark:bg-primary-300 w-4 h-4 sm:w-5 sm:h-5"
               />
-              <Label className="text-sm text-gray-700 dark:text-dark-text">قوانین قفل قیمت را می‌پذیرم</Label>
+              <Label className="text-xs sm:text-sm text-gray-700 dark:text-dark-text">
+                قوانین قفل قیمت را می‌پذیرم
+              </Label>
             </div>
           )}
 
           {/* Payment summary */}
-          <div className="grid grid-cols-2 items-center gap-4">
-            <div className="rounded-lg text-sm text-gray-700 dark:text-dark-text">
+          <div className="flex flex-col sm:grid sm:grid-cols-2 items-start sm:items-center gap-3 sm:gap-4">
+            <div className="rounded-lg text-xs sm:text-sm text-gray-700 dark:text-dark-text w-full sm:w-auto">
               مبلغ پیش‌پرداخت محاسبه شده :
-              <span className="mr-1 text-lg text-primary-500 dark:text-primary-300">
+              <span className="mr-1 text-base sm:text-lg text-primary-500 dark:text-primary-300">
                 {selectedProduct?.downPayment || 0} تومان
               </span>
             </div>
@@ -127,7 +139,7 @@ export default function NewPriceLockModal({ open, onOpenChange }) {
             {/* Submit */}
             <Button
               disabled={!accepted}
-              className="w-full rounded-lg bg-primary-700 py-3 text-white hover:bg-primary-800 dark:bg-primary-500 dark:hover:bg-primary-600 disabled:opacity-50"
+              className="w-full rounded-lg bg-primary-700 py-2.5 sm:py-3 text-white hover:bg-primary-800 dark:bg-dark-primary dark:hover:bg-primary-600 disabled:opacity-50 text-xs sm:text-sm sm:text-base h-10 sm:h-12"
             >
               پرداخت و فعال‌سازی قفل
             </Button>

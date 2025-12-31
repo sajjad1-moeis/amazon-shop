@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import ViewAllTable from "@/components/ViewAllTable";
 import { initialRequests } from "@/data";
 import DashboardLayout from "@/layout/DashboardLayout";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
@@ -68,6 +69,8 @@ export default function CurrencyServicesPage() {
 
         {/* Requests Table */}
         <RequestsTable requests={initialRequests} />
+        <div class="mb-6 lg:hidden"></div>
+        <ViewAllTable />
       </div>
     </DashboardLayout>
   );

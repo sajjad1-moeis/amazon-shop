@@ -1,61 +1,52 @@
 "use client";
 
 import React from "react";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { SearchNormal1 } from "iconsax-reactjs";
-import { filterInputStyles, filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
+import DateFilterSelect from "@/components/FilterSelects/DateFilterSelect";
+import StatusSelect from "@/components/FilterSelects/StatusSelect";
+import FilterSearchInput from "@/components/FilterSelects/FilterSearchInput";
+import FilterSection from "@/components/FilterSection";
+
+const statusOptions = [
+  { value: "active", label: "فعال" },
+  { value: "inactive", label: "غیر فعال" },
+];
 
 export default function HistoryFilter({ filters, onFiltersChange }) {
-  const handleFilterChange = (name, value) => {
-    onFiltersChange((prev) => ({ ...prev, [name]: value }));
+  const handleFilterChange = (key, value) => {
+    onFiltersChange((prev) => ({
+      ...prev,
+      [key]: value === "all" ? "" : value,
+    }));
   };
 
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      {/* Search - Right */}
-      <div className="flex-1 md:flex-initial min-w-[200px] md:min-w-[300px]">
-        <div className="relative">
-          <SearchNormal1 size={20} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <Input
-            type="text"
-            value={filters.searchQuery || ""}
-            onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
-            placeholder="جستجو نام محصول ..."
-            className={`pr-10 pl-4 ${filterInputStyles}`}
-            dir="rtl"
-          />
-        </div>
-      </div>
+    <FilterSection>
+      {/* Search Input */}
+      <FilterSearchInput
+        value={filters.searchQuery || ""}
+        onChange={(value) => handleFilterChange("searchQuery", value)}
+        placeholder="جستجو نام محصول..."
+      />
 
-      {/* Filters - Left */}
-      <div className="flex flex-wrap items-center gap-2 ">
-        {/* Time Range */}
-        <Select value={filters.timeRange || ""} onValueChange={(value) => handleFilterChange("timeRange", value)}>
-          <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
-            <SelectValue placeholder="بازه زمانی" />
-          </SelectTrigger>
-          <SelectContent className={filterSelectContentStyles}>
-            <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="today">امروز</SelectItem>
-            <SelectItem value="week">این هفته</SelectItem>
-            <SelectItem value="month">این ماه</SelectItem>
-            <SelectItem value="year">امسال</SelectItem>
-          </SelectContent>
-        </Select>
+      {/* Time Range Filter */}
+      <DateFilterSelect
+        value={filters.timeRange || filters.dateRange || ""}
+        onValueChange={(value) => {
+          handleFilterChange("timeRange", value);
+          handleFilterChange("dateRange", value);
+        }}
+        placeholder="بازه زمانی"
+        includeAll={true}
+      />
 
-        {/* Status */}
-        <Select value={filters.status || ""} onValueChange={(value) => handleFilterChange("status", value)}>
-          <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
-            <SelectValue placeholder="وضعیت" />
-          </SelectTrigger>
-          <SelectContent className={filterSelectContentStyles}>
-            <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="active">فعال</SelectItem>
-            <SelectItem value="inactive">غیر فعال</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-    </div>
+      {/* Status Filter */}
+      <StatusSelect
+        value={filters.status || ""}
+        onValueChange={(value) => handleFilterChange("status", value)}
+        placeholder="وضعیت"
+        options={statusOptions}
+        includeAll={true}
+      />
+    </FilterSection>
   );
 }

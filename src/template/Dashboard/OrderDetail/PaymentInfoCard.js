@@ -27,7 +27,7 @@ export default function PaymentInfoCard({ paymentInfo }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
         {/* Right Column */}
         <div>
-          <Row label="مبلغ کالاها:" value={`${paymentInfo.itemsPrice.toLocaleString("fa-IR")} تومان`} />
+          <Row label="مبلغ کالاها:" value={`${paymentInfo.itemsPrice?.toLocaleString("fa-IR")} تومان`} />
 
           <Row label="وزن کل سفارش:" value={`${paymentInfo.totalWeight} kg`} />
 
@@ -36,7 +36,7 @@ export default function PaymentInfoCard({ paymentInfo }) {
             value={`${paymentInfo.shippingCostDubai.toLocaleString("fa-IR")} تومان`}
           />
 
-          <Row label="هزینه ارسال داخلی:" value={`${paymentInfo.domesticShipping.toLocaleString("fa-IR")} تومان`} />
+          <Row label="هزینه ارسال داخلی:" value={`${paymentInfo.domesticShipping?.toLocaleString("fa-IR")} تومان`} />
 
           <Row
             label="طرح اعتماد (اقساط):"
@@ -50,24 +50,24 @@ export default function PaymentInfoCard({ paymentInfo }) {
         <div>
           <Row
             label="تخفیف‌ها:"
-            value={`${paymentInfo.discount.toLocaleString("fa-IR")} تومان`}
+            value={`${paymentInfo.discount?.toLocaleString("fa-IR")} تومان`}
             valueClass="text-green-600 dark:text-green-400"
           />
 
           <Row label="نوع حمل:" value={paymentInfo.shippingType} />
 
-          <Row label="مالیات / خدمات:" value={`${paymentInfo.tax.toLocaleString("fa-IR")} تومان`} />
+          <Row label="مالیات / خدمات:" value={`${paymentInfo.tax?.toLocaleString("fa-IR")} تومان`} />
 
           <Row
             label="مبلغ نهایی:"
-            value={`${paymentInfo.finalAmount.toLocaleString("fa-IR")} تومان`}
+            value={`${paymentInfo.finalAmount?.toLocaleString("fa-IR")} تومان`}
             bold
             border={false}
           />
 
           <Row
             label="مبلغ پرداخت شده:"
-            value={`${paymentInfo.paidPercentage}% ${paymentInfo.paidAmount.toLocaleString("fa-IR")} تومان`}
+            value={`${paymentInfo.paidPercentage}% ${paymentInfo.paidAmount?.toLocaleString("fa-IR")} تومان`}
             border={false}
             valueClass="text-primary-600 dark:text-primary-400"
           />

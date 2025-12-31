@@ -1490,7 +1490,7 @@ export const initialMessages = [
       "متن پیام: سفارش شما با شماره ۴۵۲۳۱# با موفقیت تحویل داده شد. در صورت نیاز میتوانید جزئیات سفارش را مشاهده کنید.",
     actionButton: {
       label: "مشاهده سفارش",
-      href: "#",
+      href: "/dashboard/orders/1",
     },
   },
   {

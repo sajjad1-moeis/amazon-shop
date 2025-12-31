@@ -134,7 +134,7 @@ export default function RulesTab() {
       <div className="space-y-6">
         {RULES_SECTIONS.map((section, index) => (
           <div key={index}>
-            <h3 className="text-lg  text-gray-700 dark:text-dark-titre mb-2">{section.title}</h3>
+            <h3 className="md:text-lg  text-gray-700 dark:text-dark-titre mb-2">{section.title}</h3>
             {section.content}
           </div>
         ))}

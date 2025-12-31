@@ -13,7 +13,7 @@ export default function CommentsFilter({ filters, onFiltersChange }) {
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-4">
+    <div className="flex gap-2 md:gap-4">
       {/* Status Filter - Right */}
       <Select value={filters.status || undefined} onValueChange={(value) => handleFilterChange("status", value)}>
         <SelectTrigger className={filterSelectTriggerStyles}>
