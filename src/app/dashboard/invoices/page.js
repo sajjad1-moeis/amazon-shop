@@ -1,5 +1,6 @@
 "use client";
 
+import ViewAllTable from "@/components/ViewAllTable";
 import { initialInvoices } from "@/data";
 import DashboardLayout from "@/layout/DashboardLayout";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
@@ -17,56 +18,6 @@ export default function InvoicesPage() {
     searchQuery: "",
   });
 
-  // Filter invoices based on filters
-  const filteredInvoices = useMemo(() => {
-    let result = [...initialInvoices];
-
-    // Filter by search query
-    if (filters.searchQuery) {
-      const query = filters.searchQuery.toLowerCase();
-      result = result.filter(
-        (invoice) =>
-          (invoice.invoiceNumber || invoice.id || "").toLowerCase().includes(query) ||
-          (invoice.orderNumber || "").toLowerCase().includes(query)
-      );
-    }
-
-    // Filter by status
-    if (filters.status && filters.status !== "all") {
-      result = result.filter((invoice) => invoice.status === filters.status);
-    }
-
-    // Sort invoices
-    if (filters.sortBy) {
-      switch (filters.sortBy) {
-        case "newest":
-          result.sort((a, b) => {
-            const dateA = a.issueDate || a.date || "";
-            const dateB = b.issueDate || b.date || "";
-            return dateB.localeCompare(dateA, "fa-IR");
-          });
-          break;
-        case "oldest":
-          result.sort((a, b) => {
-            const dateA = a.issueDate || a.date || "";
-            const dateB = b.issueDate || b.date || "";
-            return dateA.localeCompare(dateB, "fa-IR");
-          });
-          break;
-        case "amount-high":
-          result.sort((a, b) => b.amountNumber - a.amountNumber);
-          break;
-        case "amount-low":
-          result.sort((a, b) => a.amountNumber - b.amountNumber);
-          break;
-        default:
-          break;
-      }
-    }
-
-    return result;
-  }, [filters]);
-
   const handleView = (invoiceId) => {
     router.push(`/dashboard/invoices/${invoiceId}`);
   };
@@ -82,14 +33,15 @@ export default function InvoicesPage() {
 
         {/* Invoices Table Section */}
         <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4 md:p-6 mt-8">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+          <div className="flex-between gap-4 mb-6">
             <h2 className="text-lg md:text-xl text-primary-700 dark:text-dark-titre">لیست فاکتورها</h2>
-            <p className="text-gray-600 dark:text-dark-text">
+            <p className="text-gray-600 max-md:text-sm dark:text-dark-text">
               تعداد کل فاکتورها:{" "}
-              <span className="text-yellow-600 dark:text-yellow-400 font-semibold">{filteredInvoices.length}</span>
+              <span className="text-yellow-600 dark:text-yellow-400 font-semibold">{initialInvoices.length}</span>
             </p>
           </div>
-          <InvoicesTable invoices={filteredInvoices} onView={handleView} />
+          <InvoicesTable invoices={initialInvoices} onView={handleView} />
+          <ViewAllTable />
         </div>
       </div>
     </DashboardLayout>

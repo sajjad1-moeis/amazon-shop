@@ -41,7 +41,7 @@ export default function PaymentInfoCard({ paymentInfo }) {
           <Row
             label="طرح اعتماد (اقساط):"
             value={paymentInfo.installmentPlan || "غیرفعال"}
-            valueClass="text-green-600 dark:text-green-400 bg-primary-100 text-primary-800 px-2.5 py-0.5 rounded"
+            valueClass="text-green-600 dark:text-green-400 bg-primary-100 dark:bg-dark-green text-primary-800 px-2.5 py-0.5 rounded"
             border={false}
           />
         </div>

@@ -18,31 +18,31 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
   return (
     <div className="bg-white dark:bg-dark-box dark:border dark:border-dark-stroke rounded-xl shadow-box p-4">
       {/* Order Summary - بالا با border */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-3 mb-6 pb-6 border-b border-gray-200 dark:border-dark-stroke">
+      <div className="grid grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-y-3 mb-6 pb-6 border-b border-gray-200 dark:border-dark-stroke">
         <div>
-          <span className="text-sm text-gray-600 dark:text-caption ">شماره سفارش: </span>
+          <span className="text-xs md:text-sm text-gray-600 dark:text-caption ">شماره سفارش: </span>
           <span className="text-sm font-medium text-gray-900 dark:text-dark-titre">{order.orderNumber}</span>
         </div>
-        <div>
-          <span className="text-sm text-gray-600 dark:text-caption ">تعداد محصول: </span>
+        <div className="max-xl:mr-auto">
+          <span className="text-xs md:text-sm text-gray-600 dark:text-caption ">تعداد محصول: </span>
           <span className="text-sm font-medium px-1 rounded text-primary-500 bg-primary-100 dark:bg-dark-blue dark:text-dark-title">
             {order.itemsCount}
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600 dark:text-caption ">وضعیت:</span>
+          <span className="text-xs md:text-sm text-gray-600 dark:text-caption ">وضعیت:</span>
           <StatusBadge status={order.status} />
         </div>
-        <div>
-          <span className="text-sm text-gray-600 dark:text-caption ">مبلغ کل: </span>
+        <div className="max-xl:mr-auto">
+          <span className="text-xs md:text-sm text-gray-600 dark:text-caption ">مبلغ کل: </span>
           <span className="text-sm font-medium text-gray-900 dark:text-dark-titre">{order.totalAmount} تومان</span>
         </div>
         <div>
-          <span className="text-sm text-gray-600 dark:text-caption ">تاریخ سفارش: </span>
+          <span className="text-xs md:text-sm text-gray-600 dark:text-caption ">تاریخ سفارش: </span>
           <span className="text-sm font-medium text-gray-900 dark:text-dark-titre">{order.orderDate}</span>
         </div>
-        <div>
-          <span className="text-sm text-gray-600 dark:text-caption ">درصد پرداختی: </span>
+        <div className="max-xl:mr-auto">
+          <span className="text-xs md:text-sm text-gray-600 dark:text-caption ">درصد پرداختی: </span>
           <span className="text-sm font-medium text-green-600 dark:text-dark-title">{order.paymentStatus}</span>
         </div>
       </div>
@@ -90,7 +90,7 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-2 text-xs text-gray-600 dark:text-dark-text ">
+                <div className="flex flex-col xl:flex-row gap-2 text-xs text-gray-600 dark:text-dark-text ">
                   <div className="bg-gray-200 dark:bg-dark-box  rounded-lg p-2 flex-between  flex-1">
                     قیمت کالا (تومان):{" "}
                     <span className="font-medium text-gray-900 dark:text-dark-titre">

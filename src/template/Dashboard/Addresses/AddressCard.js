@@ -11,6 +11,7 @@ export default function AddressCard({
   onSetDefault,
   showBottomBorder = true,
   removeHandler,
+  hasPhone,
 }) {
   const BtsHandler = () => (
     <div className="flex items-center md:gap-3 min-w-[56px]">
@@ -55,12 +56,14 @@ export default function AddressCard({
       }`}
     >
       {/* MAIN INFO */}
-      <div className="flex-between">
+      <div className="flex-between w-full">
         <h4 className="max-md:text-sm text-primary-500 font-medium dark:text-dark-title">{address.name}</h4>
-        <div className="flex items-center gap-2 max-md:hidden">
-          <span className="text-xs text-gray-500 dark:text-dark-text">شماره تماس:</span>
-          <span className="text-sm text-gray-700 dark:text-dark-titre ">{address.mobile || address.phone}</span>
-        </div>
+        {hasPhone && (
+          <div className={`flex items-center gap-2 ${hasPhone || "max-md:hidden"}`}>
+            <span className="text-xs text-gray-500 dark:text-dark-text">شماره تماس:</span>
+            <span className="text-sm text-gray-700 dark:text-dark-titre ">{address.mobile || address.phone}</span>
+          </div>
+        )}
         <div className="flex items-center gap-2 max-md:hidden">
           <span className="text-xs text-gray-500 dark:text-dark-text">استان/شهر:</span>
           <span className="text-sm text-gray-700 dark:text-dark-titre ">
@@ -74,18 +77,18 @@ export default function AddressCard({
           <span className="text-sm text-gray-700 dark:text-dark-titre ">{address.postalCode}</span>
         </div>
 
-        <div class="flex gap-3">
-          {removeHandler ||
-            (address.isDefault && (
+        {removeHandler ||
+          (address.isDefault && (
+            <div class="flex gap-3 ">
               <button
                 className="text-xs max-md:absolute max-md:w-max left-1/2 max-md:-translate-x-1/2 -top-3  font-medium px-3 py-1 rounded-md border border-primary-400 text-[#1E429F] dark:text-dark-title bg-primary-100 dark:bg-dark-blue"
                 disabled
               >
                 آدرس پیش فرض
               </button>
-            ))}
-          <div class="md:hidden">{removeHandler || <BtsHandler />}</div>
-        </div>
+              <div class="md:hidden">{removeHandler || <BtsHandler />}</div>
+            </div>
+          ))}
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-4 pt-4 border-t border-gray-200 dark:border-dark-stroke">

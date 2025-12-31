@@ -61,7 +61,7 @@ export default function ProductListSection({ products, title = "لیست محص�
                 {/* Product Details */}
                 <div className="space-y-2 text-xs text-gray-600 dark:text-dark-text">
                   {product.color && (
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <div className="flex-between gap-2">
                       <span className="dark:text-caption">رنگ:</span>
                       <div className="flex items-center justify-center gap-2">
                         <div
@@ -72,7 +72,7 @@ export default function ProductListSection({ products, title = "لیست محص�
                       </div>
                     </div>
                   )}
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex-between ">
                     <span className="dark:text-caption">تعداد: </span>
                     <span className="font-medium text-gray-900 dark:text-dark-titre">{product.quantity} عدد</span>
                   </div>

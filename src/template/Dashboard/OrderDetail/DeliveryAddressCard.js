@@ -32,7 +32,7 @@ export default function DeliveryAddressCard({ address, showEditButton = false, o
 
   return (
     <div className="bg-white dark:bg-dark-box rounded-xl border border-gray-200 dark:border-dark-stroke p-3">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+      <div className="flex-between gap-3 mb-4">
         <h3 className="text-lg text-gray-900 dark:text-dark-titre">آدرس تحویل</h3>
         {showEditButton && (
           <Button
@@ -42,14 +42,14 @@ export default function DeliveryAddressCard({ address, showEditButton = false, o
             className="text-primary-600 hover:text-primary-700 dark:text-primary-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 gap-2 text-sm"
           >
             <Location size={18} />
-            <span className="hidden sm:inline">تغییر آدرس</span>
-            <span className="sm:hidden">تغییر</span>
+            <span>تغییر آدرس</span>
           </Button>
         )}
       </div>
 
       <AddressCard
         removeHandler
+        hasPhone
         key={displayAddress?.id}
         address={displayAddress}
         onEdit={() => handleEditClick(displayAddress?.id)}
