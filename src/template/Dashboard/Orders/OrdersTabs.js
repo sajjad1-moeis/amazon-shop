@@ -15,13 +15,13 @@ const tabs = [
 
 export default function OrdersTabs({ activeTab, onTabChange }) {
   return (
-    <div className="flex flex-wrap  bg-white dark:bg-dark-box rounded-lg  overflow-hidden">
+    <div className="flex flex-nowrap overflow-auto  bg-white dark:bg-dark-box rounded-lg">
       {tabs.map((tab) => (
         <button
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
           className={cn(
-            "px-4 py-3 text-sm font-medium border-b-2 transition-all flex-1",
+            "px-4 py-3 text-sm font-medium border-b-2 transition-all flex-none",
             activeTab === tab.id
               ? "bg-primary-50 border-primary-500 dark:bg-dark-blue dark:border-dark-title dark:text-dark-title"
               : "border-transparent text-gray-500 dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-600"

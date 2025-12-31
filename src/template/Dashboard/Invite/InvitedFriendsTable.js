@@ -2,6 +2,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
+import ViewAllTable from "@/components/ViewAllTable";
 
 const getRegistrationStatusBadge = (status) => {
   if (status === "completed") {
@@ -95,6 +96,7 @@ export default function InvitedFriendsTable({ friends = [] }) {
           </tbody>
         </table>
       </div>
+      <ViewAllTable />
     </div>
   );
 }
