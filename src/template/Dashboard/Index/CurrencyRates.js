@@ -28,9 +28,9 @@ const currencies = [
 export default function CurrencyRates() {
   return (
     <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-3 mb-6">
-      <div className="mb-4 md:mb-8">
-        <h3 className="text-lg text-gray-700 dark:text-dark-titre mb-1">نرخ لحظه ای ارز</h3>
-        <p className="text-sm  text-gray-600 dark:text-dark-text">به روز رسانی هر ۵ دقیقه</p>
+      <div className="mb-6 md:mb-8">
+        <h3 className="text-sm md:text-lg text-gray-700 dark:text-dark-titre mb-1">نرخ لحظه ای ارز</h3>
+        <p className="text-xs md:text-sm  text-gray-600 dark:text-dark-text">به روز رسانی هر ۵ دقیقه</p>
       </div>
 
       <div className="space-y-4">
@@ -39,7 +39,7 @@ export default function CurrencyRates() {
             key={currency.id}
             className={cn(
               "flex items-center justify-between  border-gray-200 dark:border-dark-stroke hover:bg-gray-50 dark:hover:bg-dark-field/50 transition-colors",
-              currencies.length == index + 1 || " pb-4"
+              currencies.length == index + 1 || " pb-4 border-b"
             )}
           >
             <div className="flex items-center gap-3">

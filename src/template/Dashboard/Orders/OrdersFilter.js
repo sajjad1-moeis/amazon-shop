@@ -1,83 +1,63 @@
 "use client";
 
 import React from "react";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { SearchNormal1 } from "iconsax-reactjs";
-import { filterInputStyles, filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
+import DateFilterSelect from "@/components/FilterSelects/DateFilterSelect";
+import StatusSelect from "@/components/FilterSelects/StatusSelect";
+import FilterSearchInput from "@/components/FilterSelects/FilterSearchInput";
+import FilterSection from "@/components/FilterSection";
+
+const orderStatusOptions = [
+  { value: "processing", label: "در حال پردازش" },
+  { value: "to-dubai", label: "در مسیر دبی" },
+  { value: "to-iran", label: "در مسیر ایران" },
+  { value: "clearance", label: "ترخیص" },
+  { value: "delivered", label: "تحویل شده" },
+  { value: "returned", label: "مرجوعی" },
+];
+
+const paymentStatusOptions = [
+  { value: "full", label: "پرداخت کامل" },
+  { value: "partial", label: "پرداخت جزئی" },
+  { value: "pending", label: "در انتظار پرداخت" },
+];
 
 export default function OrdersFilter({ filters, onFiltersChange }) {
-  const handleFilterChange = (key, value) => {
-    onFiltersChange((prev) => ({
-      ...prev,
-      [key]: value === "all" ? "" : value,
-    }));
-  };
-
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-10">
-      {/* Search */}
-      <div className="md:min-w-80 relative flex-1 md:flex-initial">
-        <SearchNormal1 size={20} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-        <Input
-          type="text"
-          placeholder="جستجو بر اساس شماره سفارش یا نام محصول..."
+    <div className="mt-6 sm:mt-8 md:mt-10">
+      <FilterSection>
+        {/* Search */}
+        <FilterSearchInput
           value={filters.searchQuery || ""}
-          onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
-          className={`pr-10 ${filterInputStyles}`}
+          onChange={(value) => onFiltersChange("searchQuery", value)}
+          placeholder="جستجو بر اساس شماره سفارش یا نام محصول..."
         />
-      </div>
 
-      <div className="flex flex-wrap items-center justify-center md:justify-end gap-2">
         {/* Time Range Filter */}
-        <Select
-          value={filters.timeRange || undefined}
-          onValueChange={(value) => handleFilterChange("timeRange", value)}
-        >
-          <SelectTrigger className={filterSelectTriggerStyles}>
-            <SelectValue placeholder="بازه زمانی" />
-          </SelectTrigger>
-          <SelectContent className={filterSelectContentStyles}>
-            <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="today">امروز</SelectItem>
-            <SelectItem value="week">این هفته</SelectItem>
-            <SelectItem value="month">این ماه</SelectItem>
-            <SelectItem value="year">امسال</SelectItem>
-          </SelectContent>
-        </Select>
+        <DateFilterSelect
+          value={filters.timeRange || ""}
+          onValueChange={(value) => onFiltersChange("timeRange", value)}
+          placeholder="بازه زمانی"
+          includeAll={true}
+        />
 
         {/* Status Filter */}
-        <Select value={filters.status || undefined} onValueChange={(value) => handleFilterChange("status", value)}>
-          <SelectTrigger className={filterSelectTriggerStyles}>
-            <SelectValue placeholder="وضعیت" />
-          </SelectTrigger>
-          <SelectContent className={filterSelectContentStyles}>
-            <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="processing">در حال پردازش</SelectItem>
-            <SelectItem value="to-dubai">در مسیر دبی</SelectItem>
-            <SelectItem value="to-iran">در مسیر ایران</SelectItem>
-            <SelectItem value="clearance">ترخیص</SelectItem>
-            <SelectItem value="delivered">تحویل شده</SelectItem>
-            <SelectItem value="returned">مرجوعی</SelectItem>
-          </SelectContent>
-        </Select>
+        <StatusSelect
+          value={filters.status || ""}
+          onValueChange={(value) => onFiltersChange("status", value)}
+          placeholder="وضعیت"
+          options={orderStatusOptions}
+          includeAll={true}
+        />
 
         {/* Payment Status Filter */}
-        <Select
-          value={filters.paymentStatus || undefined}
-          onValueChange={(value) => handleFilterChange("paymentStatus", value)}
-        >
-          <SelectTrigger className={filterSelectTriggerStyles}>
-            <SelectValue placeholder="وضعیت پرداخت" />
-          </SelectTrigger>
-          <SelectContent className={filterSelectContentStyles}>
-            <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="full">پرداخت کامل</SelectItem>
-            <SelectItem value="partial">پرداخت جزئی</SelectItem>
-            <SelectItem value="pending">در انتظار پرداخت</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+        <StatusSelect
+          value={filters.paymentStatus || ""}
+          onValueChange={(value) => onFiltersChange("paymentStatus", value)}
+          placeholder="وضعیت پرداخت"
+          options={paymentStatusOptions}
+          includeAll={true}
+        />
+      </FilterSection>
     </div>
   );
 }

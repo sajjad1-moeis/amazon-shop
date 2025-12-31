@@ -7,6 +7,7 @@ import { Eye, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import StatusBadge from "@/components/StatusBadge";
+import ViewAllTable from "@/components/ViewAllTable";
 
 export default function TicketTable({ tickets, onDelete }) {
   const handleDelete = (ticketId) => {
@@ -106,6 +107,7 @@ export default function TicketTable({ tickets, onDelete }) {
           </TableBody>
         </Table>
       </div>
+      <ViewAllTable />
     </div>
   );
 }

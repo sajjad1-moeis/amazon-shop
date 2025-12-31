@@ -6,6 +6,8 @@ import { Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
 import RecentOrderTimeline from "./RecentOrderTimeline";
 import { TickCircle, CardTick1, Shop, BoxTick, Send2, Truck, TickSquare } from "iconsax-reactjs";
+import ViewAllTable from "@/components/ViewAllTable";
+import Link from "next/link";
 
 // داده نمونه برای سفارش اخیر با تایم‌لاین کامل
 const recentOrderWithTimeline = {
@@ -48,16 +50,19 @@ export default function RecentOrders() {
   return (
     <div className="shadow-box rounded-2xl p-3 bg-white dark:bg-dark-box">
       <div class="">
-        <h3 className="text-gray-800 dark:text-dark-titre text-lg">سفارش‌های اخیر</h3>
-        <p className="text-sm text-gray-500 dark:text-caption mt-2">آخرین سفارش‌هایی که ثبت کرده‌اید</p>
+        <h3 className="text-gray-800 dark:text-dark-titre md:text-lg">سفارش‌های اخیر</h3>
+        <p className="text-xs md:text-sm text-gray-500 dark:text-caption mt-2">آخرین سفارش‌هایی که ثبت کرده‌اید</p>
       </div>
       {/* سفارش اخیر با تایم‌لاین */}
       <RecentOrderTimeline order={recentOrderWithTimeline} />
 
       {/* جدول سفارش‌های دیگر */}
-      <div className="bg-white dark:bg-dark-box rounded-2xl p-3 mb-6">
-        <div className="mb-4 md:mb-6">
-          <h3 className="text-lg text-gray-700  dark:text-dark-titre mb-2">دیگر سفارش‌ها</h3>
+      <div className="bg-white dark:bg-dark-box rounded-2xl p-3">
+        <div class="flex-between mb-4 md:mb-6">
+          <h3 className="text-sm md:text-lg text-gray-700  dark:text-dark-titre">دیگر سفارش‌ها</h3>
+          <Link href={"/dashboard/orders"} className="max-md:text-sm text-yellow-600">
+            مشاهده همه سفارش ها
+          </Link>
         </div>
 
         {/* Desktop Table */}
@@ -126,6 +131,7 @@ export default function RecentOrders() {
           </table>
         </div>
       </div>
+      <ViewAllTable />
     </div>
   );
 }

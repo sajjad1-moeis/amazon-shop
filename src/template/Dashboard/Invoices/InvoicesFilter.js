@@ -1,10 +1,23 @@
 "use client";
 
 import React from "react";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { SearchNormal1 } from "iconsax-reactjs";
-import { filterInputStyles, filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
+import DateFilterSelect from "@/components/FilterSelects/DateFilterSelect";
+import SortBySelect from "@/components/FilterSelects/SortBySelect";
+import StatusSelect from "@/components/FilterSelects/StatusSelect";
+import FilterSearchInput from "@/components/FilterSelects/FilterSearchInput";
+import FilterSection from "@/components/FilterSection";
+
+const invoiceStatusOptions = [
+  { value: "paid", label: "پرداخت شده" },
+  { value: "pending", label: "در انتظار پرداخت" },
+];
+
+const invoiceSortOptions = [
+  { value: "newest", label: "جدیدترین" },
+  { value: "oldest", label: "قدیمی‌ترین" },
+  { value: "amount-high", label: "بیشترین مبلغ" },
+  { value: "amount-low", label: "کمترین مبلغ" },
+];
 
 export default function InvoicesFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
@@ -15,61 +28,39 @@ export default function InvoicesFilter({ filters, onFiltersChange }) {
   };
 
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <FilterSection>
       {/* Search */}
-      <div className=" md:min-w-80 relative ">
-        <SearchNormal1 size={20} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-        <Input
-          type="text"
-          placeholder="جستجو بر اساس شماره فاکتور..."
-          value={filters.searchQuery || ""}
-          onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
-          className={`pr-10 ${filterInputStyles}`}
-        />
-      </div>
-      <div className="flex flex-wrap items-center justify-center md:justify-end gap-2">
-        {/* Status Filter */}
-        <Select value={filters.status || undefined} onValueChange={(value) => handleFilterChange("status", value)}>
-          <SelectTrigger className={filterSelectTriggerStyles}>
-            <SelectValue placeholder="وضعیت پرداخت" />
-          </SelectTrigger>
-          <SelectContent className={filterSelectContentStyles}>
-            <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="paid">پرداخت شده</SelectItem>
-            <SelectItem value="pending">در انتظار پرداخت</SelectItem>
-          </SelectContent>
-        </Select>
+      <FilterSearchInput
+        value={filters.searchQuery || ""}
+        onChange={(value) => handleFilterChange("searchQuery", value)}
+        placeholder="جستجو بر اساس شماره فاکتور..."
+      />
 
-        {/* Date Range Filter */}
-        <Select
-          value={filters.dateRange || undefined}
-          onValueChange={(value) => handleFilterChange("dateRange", value)}
-        >
-          <SelectTrigger className={filterSelectTriggerStyles}>
-            <SelectValue placeholder="بازه تاریخ" />
-          </SelectTrigger>
-          <SelectContent className={filterSelectContentStyles}>
-            <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="today">امروز</SelectItem>
-            <SelectItem value="week">این هفته</SelectItem>
-            <SelectItem value="month">این ماه</SelectItem>
-            <SelectItem value="year">امسال</SelectItem>
-          </SelectContent>
-        </Select>
+      {/* Status Filter */}
+      <StatusSelect
+        value={filters.status || undefined}
+        onValueChange={(value) => handleFilterChange("status", value)}
+        placeholder="وضعیت پرداخت"
+        options={invoiceStatusOptions}
+        includeAll={true}
+      />
 
-        {/* Sort By Filter */}
-        <Select value={filters.sortBy || undefined} onValueChange={(value) => handleFilterChange("sortBy", value)}>
-          <SelectTrigger className={filterSelectTriggerStyles}>
-            <SelectValue placeholder="مرتب‌سازی" />
-          </SelectTrigger>
-          <SelectContent className={filterSelectContentStyles}>
-            <SelectItem value="newest">جدیدترین</SelectItem>
-            <SelectItem value="oldest">قدیمی‌ترین</SelectItem>
-            <SelectItem value="amount-high">بیشترین مبلغ</SelectItem>
-            <SelectItem value="amount-low">کمترین مبلغ</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-    </div>
+      {/* Date Range Filter */}
+      <DateFilterSelect
+        value={filters.dateRange || undefined}
+        onValueChange={(value) => handleFilterChange("dateRange", value)}
+        placeholder="بازه تاریخ"
+        includeAll={true}
+      />
+
+      {/* Sort By Filter - استفاده از StatusSelect با options سفارشی */}
+      <StatusSelect
+        value={filters.sortBy || undefined}
+        onValueChange={(value) => handleFilterChange("sortBy", value)}
+        placeholder="مرتب‌سازی"
+        options={invoiceSortOptions}
+        includeAll={false}
+      />
+    </FilterSection>
   );
 }

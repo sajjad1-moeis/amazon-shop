@@ -94,7 +94,9 @@ export default function AddressesList({ isModalOpen, setIsModalOpen, editingAddr
         className="bg-white dark:bg-dark-box rounded-2xl shadow-md p-4 md:p-6"
         style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
       >
-        <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-dark-titre mb-4">لیست آدرسهای ثبت شده</h2>
+        <h2 className="text-lg md:text-xl  text-gray-900 dark:text-dark-titre mb-4 max-md:mb-7">
+          لیست آدرسهای ثبت شده
+        </h2>
         <div className="space-y-4">
           {addresses.map((address) => (
             <AddressCard

@@ -16,19 +16,28 @@ export default function FavoritesPage() {
     brand: "",
     searchQuery: "",
   });
-
+  s;
   return (
     <DashboardLayout>
       {/* Top Section: Header */}
-      <PageHeader title="علاقه مندی ها" description="لیست محصولاتی که ذخیره کرده اید.">
-        <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-5">
-          <p className="text-gray-500">
+      <PageHeader
+        actionButton={
+          <Button className="bg-yellow-500 w-full hover:bg-yellow-600 text-primary-800 lg:hidden">
+            افزودن علاقه‌مندی جدید
+            <Add size={24} />
+          </Button>
+        }
+        title="علاقه مندی ها"
+        description="لیست محصولاتی که ذخیره کرده اید."
+      >
+        <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-5 max-md:text-xs">
+          <p className="text-gray-500 dark:text-dark-text">
             تعداد محصولات: : <span className="text-yellow-600">4</span>
           </p>
-          <p className="text-gray-500">
+          <p className="text-gray-500 dark:text-dark-text">
             کاهش قیمت اخیر: <span className="text-yellow-600">3 مورد</span>
           </p>
-          <Button className="bg-yellow-500 hover:bg-yellow-600 text-primary-800">
+          <Button className="bg-yellow-500 hover:bg-yellow-600 text-primary-800 max-lg:hidden">
             افزودن علاقه‌مندی جدید
             <Add size={24} />
           </Button>

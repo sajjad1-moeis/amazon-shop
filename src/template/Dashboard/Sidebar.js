@@ -99,7 +99,7 @@ function SidebarContent({ onLinkClick }) {
   return (
     <div
       dir="rtl"
-      className=" md:w-60 bg-white dark:bg-dark-box md:border-2 md:sticky top-0 border-primary-200 dark:border-dark-stroke p-3 rounded-2xl max-md:h-full overflow-y-auto"
+      className=" lg:w-60 bg-white dark:bg-dark-box lg:border-2 lg:sticky top-0 border-primary-200 dark:border-dark-stroke p-3 rounded-2xl max-lg:h-full overflow-y-auto"
     >
       <Link href={"/dashboard/wallet"} onClick={handleLinkClick}>
         {/* Wallet Card */}
@@ -223,14 +223,14 @@ export default function DashboardSidebar({ isMobileOpen, setIsMobileOpen }) {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden md:block md:static">
+      <aside className="hidden lg:block lg:static">
         <SidebarContent />
       </aside>
 
       {/* Mobile Drawer Overlay */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity duration-300"
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
@@ -239,7 +239,7 @@ export default function DashboardSidebar({ isMobileOpen, setIsMobileOpen }) {
       <aside
         dir="rtl"
         className={cn(
-          "fixed top-0 right-0 h-full w-[280px] bg-white dark:bg-dark-box border-l-2 border-primary-200 dark:border-dark-stroke z-50 md:hidden transition-transform duration-300 ease-in-out shadow-xl",
+          "fixed top-0 right-0 h-full w-[280px] bg-white dark:bg-dark-box border-l-2 border-primary-200 dark:border-dark-stroke z-50 lg:hidden transition-transform duration-300 ease-in-out shadow-xl",
           isMobileOpen ? "translate-x-0" : "translate-x-full"
         )}
       >

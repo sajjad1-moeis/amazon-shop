@@ -9,6 +9,7 @@ import OrdersTabs from "@/template/Dashboard/Orders/OrdersTabs";
 import OrdersFilter from "@/template/Dashboard/Orders/OrdersFilter";
 import OrderCard from "@/template/Dashboard/Orders/OrderCard";
 import { initialOrders } from "@/data";
+import { useFilterParams } from "@/hooks/useFilterParams";
 
 const DEFAULT_TIMELINE = {
   currentStepIndex: 1,
@@ -28,12 +29,16 @@ const PAYMENT_STATUS_MAP = {
 
 export default function OrdersPage() {
   const [activeTab, setActiveTab] = useState("all");
-  const [filters, setFilters] = useState({
+  const { filters, updateFilter } = useFilterParams({
     searchQuery: "",
     timeRange: "",
     status: "",
     paymentStatus: "",
   });
+
+  const handleFilterChange = (key, value) => {
+    updateFilter(key, value === "all" ? "" : value);
+  };
 
   const orders = useMemo(() => {
     return initialOrders.map((order) => ({
@@ -74,7 +79,7 @@ export default function OrdersPage() {
         {/* Tabs */}
         <OrdersTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-        <OrdersFilter filters={filters} onFiltersChange={setFilters} />
+        <OrdersFilter filters={filters} onFiltersChange={handleFilterChange} />
 
         {/* Orders List */}
         {filteredOrders.length === 0 ? (

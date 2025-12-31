@@ -1,10 +1,22 @@
 "use client";
 
 import React from "react";
-import { SearchNormal1 } from "iconsax-reactjs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { filterInputStyles, filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
+import SortBySelect from "@/components/FilterSelects/SortBySelect";
+import StatusSelect from "@/components/FilterSelects/StatusSelect";
+import FilterSearchInput from "@/components/FilterSelects/FilterSearchInput";
+import FilterSection from "@/components/FilterSection";
+
+const categoryOptions = [
+  { value: "electronics", label: "الکترونیک" },
+  { value: "clothing", label: "پوشاک" },
+  { value: "home", label: "خانه و آشپزخانه" },
+];
+
+const returnStatusOptions = [
+  { value: "reviewing", label: "در حال بررسی" },
+  { value: "approved", label: "تأیید شده" },
+  { value: "rejected", label: "رد شده" },
+];
 
 export default function ReturnRequestsFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (name, value) => {
@@ -12,62 +24,39 @@ export default function ReturnRequestsFilter({ filters, onFiltersChange }) {
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+    <FilterSection>
       {/* Search Input */}
-      <div className="w-full md:w-1/2 relative">
-        <SearchNormal1 size={20} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
-        <Input
-          type="text"
-          value={filters.searchQuery || ""}
-          onChange={(e) => onFiltersChange((prev) => ({ ...prev, searchQuery: e.target.value }))}
-          placeholder="جستجو بر اساس شماره درخواست یا نام کالا...."
-          className={`pr-10 ${filterInputStyles}`}
-          dir="rtl"
-        />
-      </div>
+      <FilterSearchInput
+        value={filters.searchQuery || ""}
+        onChange={(value) => handleFilterChange("searchQuery", value)}
+        placeholder="جستجو بر اساس شماره درخواست یا نام کالا...."
+      />
 
-      <div className="flex flex-wrap gap-2">
-        {/* Sort By */}
-        <Select value={filters.category || undefined} onValueChange={(value) => handleFilterChange("category", value)}>
-          <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
-            <SelectValue placeholder="دسته بندی" />
-          </SelectTrigger>
-          <SelectContent className={filterSelectContentStyles}>
-            <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="electronics">الکترونیک</SelectItem>
-            <SelectItem value="clothing">پوشاک</SelectItem>
-            <SelectItem value="home">خانه و آشپزخانه</SelectItem>
-          </SelectContent>
-        </Select>
+      {/* Category */}
+      <StatusSelect
+        value={filters.category || undefined}
+        onValueChange={(value) => handleFilterChange("category", value)}
+        placeholder="دسته بندی"
+        options={categoryOptions}
+        includeAll={true}
+      />
 
-        {/* Status */}
-        <Select value={filters.status || undefined} onValueChange={(value) => handleFilterChange("status", value)}>
-          <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
-            <SelectValue placeholder="وضعیت" />
-          </SelectTrigger>
-          <SelectContent className={filterSelectContentStyles}>
-            <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="reviewing">در حال بررسی</SelectItem>
-            <SelectItem value="approved">تأیید شده</SelectItem>
-            <SelectItem value="rejected">رد شده</SelectItem>
-          </SelectContent>
-        </Select>
+      {/* Status */}
+      <StatusSelect
+        value={filters.status || undefined}
+        onValueChange={(value) => handleFilterChange("status", value)}
+        placeholder="وضعیت"
+        options={returnStatusOptions}
+        includeAll={true}
+      />
 
-        <Select value={filters.sortBy || undefined} onValueChange={(value) => handleFilterChange("sortBy", value)}>
-          <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
-            <SelectValue placeholder="مرتب سازی" />
-          </SelectTrigger>
-          <SelectContent className={filterSelectContentStyles}>
-            <SelectItem value="all">همه</SelectItem>
-            <SelectItem value="newest">جدیدترین</SelectItem>
-            <SelectItem value="oldest">قدیمی‌ترین</SelectItem>
-          </SelectContent>
-        </Select>
-
-        {/* Category */}
-      </div>
-
-      {/* New Request Button */}
-    </div>
+      {/* Sort By */}
+      <SortBySelect
+        value={filters.sortBy || undefined}
+        onValueChange={(value) => handleFilterChange("sortBy", value)}
+        placeholder="مرتب سازی"
+        includeAll={true}
+      />
+    </FilterSection>
   );
 }

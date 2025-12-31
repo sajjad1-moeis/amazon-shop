@@ -1,10 +1,21 @@
 "use client";
 
 import React from "react";
-import { SearchNormal1 } from "iconsax-reactjs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { filterInputStyles, filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
+import SortBySelect from "@/components/FilterSelects/SortBySelect";
+import StatusSelect from "@/components/FilterSelects/StatusSelect";
+import FilterSearchInput from "@/components/FilterSelects/FilterSearchInput";
+import FilterSection from "@/components/FilterSection";
+
+const brandOptions = [
+  { value: "sony", label: "SONY" },
+  { value: "microsoft", label: "Microsoft" },
+  { value: "nintendo", label: "Nintendo" },
+];
+
+const trackingStatusOptions = [
+  { value: "active", label: "فعال" },
+  { value: "inactive", label: "غیرفعال" },
+];
 
 export default function FavoritesFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (name, value) => {
@@ -12,60 +23,39 @@ export default function FavoritesFilter({ filters, onFiltersChange }) {
   };
 
   return (
-    <div>
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div className="flex-1 md:flex-initial min-w-[200px] md:min-w-[300px]">
-          <div className="relative">
-            <SearchNormal1 size={20} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <Input
-              type="text"
-              value={filters.searchQuery}
-              onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
-              placeholder="جستجو بر اساس نام محصول ..."
-              className={`pr-10 pl-4 ${filterInputStyles}`}
-              dir="rtl"
-            />
-          </div>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          {/* Sort By */}
-          {/* Search */}
-          {/* Brand */}
-          <Select value={filters.brand} onValueChange={(value) => handleFilterChange("brand", value)}>
-            <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
-              <SelectValue placeholder="برند" />
-            </SelectTrigger>
-            <SelectContent className={filterSelectContentStyles}>
-              <SelectItem value="sony">SONY</SelectItem>
-              <SelectItem value="microsoft">Microsoft</SelectItem>
-              <SelectItem value="nintendo">Nintendo</SelectItem>
-            </SelectContent>
-          </Select>
+    <FilterSection>
+      {/* Search */}
+      <FilterSearchInput
+        value={filters.searchQuery || ""}
+        onChange={(value) => handleFilterChange("searchQuery", value)}
+        placeholder="جستجو بر اساس نام محصول ..."
+      />
 
-          {/* Tracking Status */}
-          <Select value={filters.trackingStatus} onValueChange={(value) => handleFilterChange("trackingStatus", value)}>
-            <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
-              <SelectValue placeholder="وضعیت ردیابی" />
-            </SelectTrigger>
-            <SelectContent className={filterSelectContentStyles}>
-              <SelectItem value="active">فعال</SelectItem>
-              <SelectItem value="inactive">غیرفعال</SelectItem>
-            </SelectContent>
-          </Select>
+      {/* Brand */}
+      <StatusSelect
+        value={filters.brand}
+        onValueChange={(value) => handleFilterChange("brand", value)}
+        placeholder="برند"
+        options={brandOptions}
+        includeAll={false}
+      />
 
-          <Select value={filters.sortBy} onValueChange={(value) => handleFilterChange("sortBy", value)}>
-            <SelectTrigger className={filterSelectTriggerStyles} dir="rtl">
-              <SelectValue placeholder="مرتب سازی" />
-            </SelectTrigger>
-            <SelectContent className={filterSelectContentStyles}>
-              <SelectItem value="newest">جدیدترین</SelectItem>
-              <SelectItem value="oldest">قدیمی‌ترین</SelectItem>
-              <SelectItem value="price-high">قیمت: بالا به پایین</SelectItem>
-              <SelectItem value="price-low">قیمت: پایین به بالا</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-    </div>
+      {/* Tracking Status */}
+      <StatusSelect
+        value={filters.trackingStatus}
+        onValueChange={(value) => handleFilterChange("trackingStatus", value)}
+        placeholder="وضعیت ردیابی"
+        options={trackingStatusOptions}
+        includeAll={false}
+      />
+
+      {/* Sort By */}
+      <SortBySelect
+        value={filters.sortBy}
+        onValueChange={(value) => handleFilterChange("sortBy", value)}
+        placeholder="مرتب سازی"
+        includePrice={true}
+      />
+    </FilterSection>
   );
 }

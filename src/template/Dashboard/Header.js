@@ -15,7 +15,7 @@ export default function DashboardHeader({ onMenuClick }) {
   const userName = user?.fullName || user?.firstName || "محمد داوری";
 
   return (
-    <header className="py-4 z-50 w-full bg-primary-500 dark:bg-dark-box/35 border-b dark:border-0 border-[#2a4a6f]">
+    <header className="py-2 md:py-4 z-50 w-full bg-primary-500 dark:bg-dark-box/35 border-b dark:border-0 border-[#2a4a6f]">
       <div className="flex items-center justify-between h-16 px-3 sm:px-4 md:px-6 lg:px-8 gap-2 md:gap-10">
         {/* Left: Mobile Menu Button & Page Title */}
         <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">

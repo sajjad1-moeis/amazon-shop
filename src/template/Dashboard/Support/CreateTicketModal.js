@@ -131,7 +131,10 @@ export default function CreateTicketModal({ isOpen, onClose, onSubmit }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto dark:bg-dark-box" dir="rtl">
+      <DialogContent
+        className="max-w-sm rounded-xl md:max-w-2xl max-h-[90vh] overflow-y-auto dark:bg-dark-box"
+        dir="rtl"
+      >
         <DialogHeader>
           <DialogTitle>ایجاد تیکت جدید</DialogTitle>
           <DialogDescription>لطفاً اطلاعات تیکت را تکمیل کنید</DialogDescription>

@@ -121,6 +121,13 @@ function Page() {
     }
   };
 
+  const TicketBtn = () => (
+    <Button onClick={() => setIsModalOpen(true)} className="bg-yellow-500 w-full hover:bg-yellow-600 text-primary-800">
+      ایجاد تیکت جدید
+      <Add size={24} />
+    </Button>
+  );
+
   return (
     <DashboardLayout>
       <>
@@ -128,12 +135,16 @@ function Page() {
         <PageHeader
           title="تیکت و پشتیبانی"
           description="تمام تیکت‌های پشتیبانی شما در این بخش قابل مشاهده و پیگیری هستند"
+          actionButton={
+            <div className=" md:hidden">
+              <TicketBtn />
+            </div>
+          }
         >
           {" "}
-          <Button onClick={() => setIsModalOpen(true)} className="bg-yellow-500 hover:bg-yellow-600 text-primary-800">
-            ایجاد تیکت جدید
-            <Add size={24} />
-          </Button>
+          <div class="max-md:hidden">
+            <TicketBtn />
+          </div>
         </PageHeader>
 
         <TicketsFilter filters={filters} onFiltersChange={setFilters} />
