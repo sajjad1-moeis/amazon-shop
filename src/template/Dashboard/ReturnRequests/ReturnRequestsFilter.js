@@ -24,39 +24,41 @@ export default function ReturnRequestsFilter({ filters, onFiltersChange }) {
   };
 
   return (
-    <FilterSection>
-      {/* Search Input */}
-      <FilterSearchInput
-        value={filters.searchQuery || ""}
-        onChange={(value) => handleFilterChange("searchQuery", value)}
-        placeholder="جستجو بر اساس شماره درخواست یا نام کالا...."
-      />
+    <div className="mb-4 sm:mb-6">
+      <FilterSection>
+        {/* Search Input */}
+        <FilterSearchInput
+          value={filters.searchQuery || ""}
+          onChange={(value) => handleFilterChange("searchQuery", value)}
+          placeholder="جستجو بر اساس شماره درخواست یا نام کالا..."
+        />
 
-      {/* Category */}
-      <StatusSelect
-        value={filters.category || undefined}
-        onValueChange={(value) => handleFilterChange("category", value)}
-        placeholder="دسته بندی"
-        options={categoryOptions}
-        includeAll={true}
-      />
+        {/* Category */}
+        <StatusSelect
+          value={filters.category || undefined}
+          onValueChange={(value) => handleFilterChange("category", value)}
+          placeholder="دسته بندی"
+          options={categoryOptions}
+          includeAll={true}
+        />
 
-      {/* Status */}
-      <StatusSelect
-        value={filters.status || undefined}
-        onValueChange={(value) => handleFilterChange("status", value)}
-        placeholder="وضعیت"
-        options={returnStatusOptions}
-        includeAll={true}
-      />
+        {/* Status */}
+        <StatusSelect
+          value={filters.status || undefined}
+          onValueChange={(value) => handleFilterChange("status", value)}
+          placeholder="وضعیت"
+          options={returnStatusOptions}
+          includeAll={true}
+        />
 
-      {/* Sort By */}
-      <SortBySelect
-        value={filters.sortBy || undefined}
-        onValueChange={(value) => handleFilterChange("sortBy", value)}
-        placeholder="مرتب سازی"
-        includeAll={true}
-      />
-    </FilterSection>
+        {/* Sort By */}
+        <SortBySelect
+          value={filters.sortBy || undefined}
+          onValueChange={(value) => handleFilterChange("sortBy", value)}
+          placeholder="مرتب سازی"
+          includeAll={true}
+        />
+      </FilterSection>
+    </div>
   );
 }

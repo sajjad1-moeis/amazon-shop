@@ -69,8 +69,10 @@ export default function DashboardHeader({ onMenuClick }) {
 
           {/* Mobile: Only Icons */}
           <div className="sm:hidden flex items-center gap-2 text-white dark:text-primary-100">
-            <Notification className="h-5 w-5" />
-            <User className="h-5 w-5" />
+            <Link href={"/dashboard/notifications"}>
+              <Notification />
+            </Link>
+            <User />
           </div>
         </div>
       </div>

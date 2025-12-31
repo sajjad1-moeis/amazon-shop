@@ -2,18 +2,14 @@
 
 import React, { useState } from "react";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
-import ReturnReasonForm from "./ReturnReasonForm";
-import FileUploadSection from "./FileUploadSection";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import ReturnReasonForm from "../ReturnReasonForm";
+import FileUploadSection from "../FileUploadSection";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { MessageText } from "iconsax-reactjs";
-import Link from "next/link";
-import OrderProductSelector from "./OrderProductSelector";
-import OrderFilters from "./OrderFilters";
 import { mockOrders } from "@/data";
+import OrderSelectorSection from "./OrderSelectorSection";
+import TermsAndSupportSection from "./TermsAndSupportSection";
+import BottomActions from "./BottomActions";
 
 export default function NewReturnRequest() {
   const router = useRouter();
@@ -29,7 +25,6 @@ export default function NewReturnRequest() {
   });
 
   // Handle selection from OrderProductSelector
-
   const handleItemSelect = ({ orderId, productId }) => {
     const order = mockOrders.find((o) => o.id === orderId);
     if (order) {
@@ -136,14 +131,11 @@ export default function NewReturnRequest() {
         description="برای ثبت درخواست مرجوعی سفارش خود اطلاعات زیر را تکمیل کنید"
       />
 
-      <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+      <form onSubmit={handleSubmit} className="mt-6">
         {/* Main Card */}
         <div>
           {/* Order Selector */}
-          <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4">
-            <OrderFilters orders={mockOrders} selectedItem={selectedItem} onSelect={handleItemSelect} />
-            <OrderProductSelector orders={mockOrders} selectedItem={selectedItem} onSelect={handleItemSelect} />
-          </div>
+          <OrderSelectorSection orders={mockOrders} selectedItem={selectedItem} onSelect={handleItemSelect} />
 
           {/* Reason & Files Sections */}
           {selectedProductId && (
@@ -160,55 +152,17 @@ export default function NewReturnRequest() {
 
           {/* Terms & Support */}
           {selectedProductId && (
-            <div className="mt-4 pt-4 flex-between">
-              <div className="flex items-start gap-3">
-                <Checkbox
-                  id="terms"
-                  checked={formData.termsAccepted}
-                  onCheckedChange={(checked) => handleFormChange("termsAccepted", checked)}
-                />
-                <Label
-                  htmlFor="terms"
-                  className="text-sm text-gray-700 dark:text-dark-text cursor-pointer leading-relaxed"
-                >
-                  اطلاعات وارد شده صحیح است و <span className="text-yellow-500">شرایط مرجوعی</span> را مطالعه کرده‌ام.
-                </Label>
-              </div>
-
-              <div className="flex items-center justify-between gap-2 text-sm">
-                <span className="text-gray-600 dark:text-dark-text">نیاز به بررسی فوری دارید ؟</span>
-                <Link href="/dashboard/support">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="rounded-lg flex items-center gap-2 text-primary-700 border-primary-700 bg-transparent border-2 hover:bg-primary-50 dark:border-primary-300 dark:text-primary-300 dark:bg-transparent dark:hover:bg-primary-900/20"
-                  >
-                    <MessageText size={16} />
-                    گفت‌وگو با پشتیبان
-                  </Button>
-                </Link>
-              </div>
-            </div>
+            <TermsAndSupportSection
+              termsAccepted={formData.termsAccepted}
+              onTermsChange={(checked) => handleFormChange("termsAccepted", checked)}
+            />
           )}
         </div>
 
         {/* Bottom Sticky Actions */}
-        {selectedProductId && (
-          <div className="flex gap-3">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => router.push("/dashboard/return-requests")}
-              className="md:w-48 h-11 bg-gray-200 dark:bg-dark-field"
-            >
-              انصراف
-            </Button>
-            <Button type="submit" className=" h-11 bg-yellow-500 text-gray-800 hover:bg-yellow-600  text-sm ">
-              ثبت درخواست مرجوعی
-            </Button>
-          </div>
-        )}
+        {selectedProductId && <BottomActions />}
       </form>
     </div>
   );
 }
+

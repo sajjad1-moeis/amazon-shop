@@ -7,7 +7,7 @@ import { SearchNormal1, InfoCircle } from "iconsax-reactjs";
 import { mockOrders } from "@/data";
 import { filterInputStyles, filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
 
-export default function OrderFilters({ selectedOrder, onOrderSelect }) {
+export default function OrderFilters({ orders = mockOrders, selectedOrder, onOrderSelect, onFiltersChange }) {
   const [filters, setFilters] = useState({
     searchQuery: "",
     sortBy: "",
@@ -21,7 +21,7 @@ export default function OrderFilters({ selectedOrder, onOrderSelect }) {
 
   // Filter and sort orders based on filters
   const filteredOrders = React.useMemo(() => {
-    let filtered = [...mockOrders];
+    let filtered = [...orders];
 
     // Search filter
     if (filters.searchQuery) {
@@ -50,7 +50,14 @@ export default function OrderFilters({ selectedOrder, onOrderSelect }) {
     }
 
     return filtered;
-  }, [filters]);
+  }, [filters, orders]);
+
+  // Notify parent component about filter changes
+  React.useEffect(() => {
+    if (onFiltersChange) {
+      onFiltersChange(filteredOrders);
+    }
+  }, [filteredOrders, onFiltersChange]);
 
   return (
     <div>

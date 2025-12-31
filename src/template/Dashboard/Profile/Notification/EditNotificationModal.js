@@ -88,25 +88,25 @@ export default function EditNotificationModal({ isOpen, onClose, onSave }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose} dir="rtl">
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto dark:bg-dark-box" dir="rtl">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold ">ویرایش تنظیمات نوتیفیکیشن</DialogTitle>
-          <DialogDescription className="text-sm text-gray-600 dark:text-dark-text">
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto dark:bg-dark-box px-4 sm:px-6" dir="rtl">
+        <DialogHeader className="px-0">
+          <DialogTitle className="text-xl sm:text-2xl font-bold text-center sm:text-right">ویرایش تنظیمات نوتیفیکیشن</DialogTitle>
+          <DialogDescription className="text-xs sm:text-sm text-gray-600 dark:text-dark-text text-center sm:text-right">
             تنظیمات اعلان‌های خود را تغییر دهید
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6 py-4">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6 py-4">
           {/* Notification Types */}
           <div className="space-y-2">
-            <Label className="text-sm font-semibold">نوع اعلان ها</Label>
+            <Label className="text-xs sm:text-sm font-semibold">نوع اعلان ها</Label>
             <div className="space-y-2">
               {["orders", "tickets", "payments", "promotions"].map((type) => (
                 <div
                   key={type}
-                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-stroke rounded-lg"
+                  className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 dark:bg-dark-stroke rounded-lg"
                 >
-                  <Label htmlFor={type} className="text-sm cursor-pointer">
+                  <Label htmlFor={type} className="text-xs sm:text-sm cursor-pointer">
                     {getNotificationTypeLabel(type)}
                   </Label>
                   <Switch
@@ -117,19 +117,19 @@ export default function EditNotificationModal({ isOpen, onClose, onSave }) {
                 </div>
               ))}
             </div>
-            {errors.notificationTypes && <p className="text-sm text-red-500">{errors.notificationTypes}</p>}
+            {errors.notificationTypes && <p className="text-xs sm:text-sm text-red-500">{errors.notificationTypes}</p>}
           </div>
 
           {/* Notification Methods */}
           <div className="space-y-2">
-            <Label className="text-sm font-semibold">روش دریافت نوتیفیکیشن</Label>
+            <Label className="text-xs sm:text-sm font-semibold">روش دریافت نوتیفیکیشن</Label>
             <div className="space-y-2">
               {["sms", "email", "push"].map((method) => (
                 <div
                   key={method}
-                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-stroke rounded-lg"
+                  className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 dark:bg-dark-stroke rounded-lg"
                 >
-                  <Label htmlFor={method} className="text-sm cursor-pointer">
+                  <Label htmlFor={method} className="text-xs sm:text-sm cursor-pointer">
                     {getNotificationMethodLabel(method)}
                   </Label>
                   <Switch
@@ -140,13 +140,13 @@ export default function EditNotificationModal({ isOpen, onClose, onSave }) {
                 </div>
               ))}
             </div>
-            {errors.notificationMethods && <p className="text-sm text-red-500">{errors.notificationMethods}</p>}
+            {errors.notificationMethods && <p className="text-xs sm:text-sm text-red-500">{errors.notificationMethods}</p>}
           </div>
 
           {/* Telegram Connection */}
-          <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-stroke rounded-lg">
-            <div className="flex-1">
-              <Label htmlFor="telegram" className="text-sm font-semibold block mb-1">
+          <div className="flex items-center justify-between p-3 sm:p-4 bg-gray-50 dark:bg-dark-stroke rounded-lg">
+            <div className="flex-1 pr-2 sm:pr-3">
+              <Label htmlFor="telegram" className="text-xs sm:text-sm font-semibold block mb-1">
                 اتصال به تلگرام
               </Label>
               <p className="text-xs text-gray-600 dark:text-dark-text">دریافت اعلان‌ها از طریق ربات تلگرام</p>
@@ -158,16 +158,16 @@ export default function EditNotificationModal({ isOpen, onClose, onSave }) {
             />
           </div>
 
-          <DialogFooter className="flex-row gap-2">
+          <DialogFooter className="flex-col sm:flex-row gap-2 sm:gap-3 px-0">
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
-              className="w-full dark:border-primary-400 border-2 dark:text-primary-400"
+              className="w-full dark:border-primary-400 border-2 dark:text-primary-400 text-sm sm:text-base"
             >
               لغو
             </Button>
-            <Button type="submit" className="bg-primary-600 w-full hover:bg-primary-700 text-white">
+            <Button type="submit" className="bg-primary-600 w-full hover:bg-primary-700 text-white text-sm sm:text-base">
               ذخیره تغییرات
             </Button>
           </DialogFooter>

@@ -53,44 +53,57 @@ const getNotificationConfig = (type) => NOTIFICATION_CONFIG[type] || NOTIFICATIO
 export default function NotificationCard({ notification, onDelete, onPinToggle }) {
   const { icon: Icon, colors } = getNotificationConfig(notification.type);
 
+  const PinBtn = () => (
+    <button onClick={() => onPinToggle(notification.id)} className=" text-primary-600 dark:text-primary-300">
+      <Pin size={18} />
+    </button>
+  );
+
   return (
     <div className={cn("group relative w-full rounded-xl border p-3 sm:p-4", colors.card)}>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3">
-        <div className={cn("flex items-center gap-2", colors.title)}>
-          <Icon size={16} className="sm:w-[18px] sm:h-[18px]" variant="Bold" className={colors.icon} />
-          <span className={cn("text-sm sm:text-base", colors.icon)}>{notification.title}</span>
-        </div>
-
-        <div className="flex items-center gap-2 sm:gap-3">
-          <div className="flex items-center gap-1 text-xs text-gray-400 dark:text-caption">
-            <Calendar size={16} className="sm:w-[18px] sm:h-[18px]" variant="Bold" />
-            <span>{notification.time}</span>
+        <div class="flex-between w-full">
+          <div className={cn("flex items-center gap-2", colors.title)}>
+            <Icon size={16} className="sm:w-[18px] sm:h-[18px]" variant="Bold" />
+            <span className={cn("text-sm sm:text-base", colors.icon)}>{notification.title}</span>
           </div>
+          <div class="flex gap-2 ">
+            <div className="flex items-center gap-1 text-xs text-gray-400 dark:text-caption">
+              <Calendar size={16} className="sm:w-[18px] sm:h-[18px]" variant="Bold" />
+              <span>{notification.time}</span>
+            </div>
 
-          <button
-            onClick={() => onPinToggle(notification.id)}
-            className="text-primary-600 dark:text-primary-300 flex-shrink-0"
-          >
-            <Pin size={16} className="sm:w-[18px] sm:h-[18px]" />
-          </button>
+            <div class="max-md:hidden">
+              <PinBtn />
+            </div>
+          </div>
         </div>
+
+        <div className="flex items-center gap-2 sm:gap-3"></div>
       </div>
 
       {/* Content */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mt-3 sm:mt-4">
         <p className="text-xs sm:text-sm text-gray-600 dark:text-dark-text flex-1">{notification.description}</p>
 
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-4 sm:gap-3">
           <button
             onClick={onDelete}
-            className="opacity-0 group-hover:opacity-100 transition-opacity text-red-500 flex-shrink-0"
+            className="md:opacity-0 group-hover:opacity-100 transition-opacity text-red-500 flex-shrink-0"
           >
-            <Trash size={16} className="sm:w-[18px] sm:h-[18px]" />
+            <Trash size={18} />
           </button>
 
-          <Link href={notification.actionUrl} className="flex-shrink-0">
-            <Button size="sm" variant="outline" className={cn("rounded-lg text-xs sm:text-sm", colors.actionBtn)}>
+          <div class="md:hidden flex-center">
+            <PinBtn />
+          </div>
+          <Link href={notification.actionUrl} className=" max-md:w-full">
+            <Button
+              size="sm"
+              variant="outline"
+              className={cn("rounded-lg text-xs sm:text-sm w-full", colors.actionBtn)}
+            >
               {notification.actionText}
             </Button>
           </Link>

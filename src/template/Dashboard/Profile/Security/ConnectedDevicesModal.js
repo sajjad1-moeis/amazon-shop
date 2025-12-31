@@ -76,26 +76,26 @@ export default function ConnectedDevicesModal({ isOpen, onClose }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose} dir="rtl">
-      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto dark:bg-dark-box" dir="rtl">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">دستگاه‌های متصل</DialogTitle>
-          <DialogDescription className="text-sm text-gray-600 dark:text-dark-text">
+      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto dark:bg-dark-box px-4 sm:px-6" dir="rtl">
+        <DialogHeader className="px-0">
+          <DialogTitle className="text-xl sm:text-2xl font-bold text-center sm:text-right">دستگاه‌های متصل</DialogTitle>
+          <DialogDescription className="text-xs sm:text-sm text-gray-600 dark:text-dark-text text-center sm:text-right">
             مدیریت دستگاه‌هایی که به حساب کاربری شما متصل هستند
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6 py-4">
+        <div className="space-y-4 sm:space-y-6 py-4">
           {/* Current Device */}
           {currentDevice && (
-            <div className="space-y-3">
-              <h4 className="text-sm font-semibold text-gray-700 dark:text-dark-text">دستگاه فعلی</h4>
-              <div className="border border-gray-200 dark:border-dark-stroke rounded-lg p-4 bg-gray-50 dark:bg-dark-box/50">
-                <div className="flex items-start justify-between mb-3">
+            <div className="space-y-2 sm:space-y-3">
+              <h4 className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-dark-text">دستگاه فعلی</h4>
+              <div className="border border-gray-200 dark:border-dark-stroke rounded-lg p-3 sm:p-4 bg-gray-50 dark:bg-dark-box/50">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-3">
                   <div className="flex-1">
-                    <p className="text-base font-semibold text-gray-900 dark:text-dark-title mb-1">
+                    <p className="text-sm sm:text-base font-semibold text-gray-900 dark:text-dark-title mb-1 sm:mb-2">
                       {currentDevice.name}
                     </p>
-                    <div className="space-y-1 text-sm text-gray-600 dark:text-dark-text">
+                    <div className="space-y-1 text-xs sm:text-sm text-gray-600 dark:text-dark-text">
                       <p>
                         <span className="font-medium">سیستم عامل:</span> {currentDevice.os}
                       </p>
@@ -113,7 +113,7 @@ export default function ConnectedDevicesModal({ isOpen, onClose }) {
                       </p>
                     </div>
                   </div>
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                  <span className="inline-flex items-center justify-center sm:justify-start px-2 sm:px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 w-fit">
                     دستگاه فعلی
                   </span>
                 </div>
@@ -123,18 +123,18 @@ export default function ConnectedDevicesModal({ isOpen, onClose }) {
 
           {/* Other Devices */}
           {otherDevices.length > 0 && (
-            <div className="space-y-3">
-              <h4 className="text-sm font-semibold text-gray-700 dark:text-dark-text">سایر دستگاه‌ها</h4>
+            <div className="space-y-2 sm:space-y-3">
+              <h4 className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-dark-text">سایر دستگاه‌ها</h4>
               <div className="space-y-3">
                 {otherDevices.map((device) => (
                   <div
                     key={device.id}
-                    className="border border-gray-200 dark:border-dark-stroke rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-dark-box/50 transition-colors"
+                    className="border border-gray-200 dark:border-dark-stroke rounded-lg p-3 sm:p-4 hover:bg-gray-50 dark:hover:bg-dark-box/50 transition-colors"
                   >
-                    <div className="flex items-start justify-between mb-3">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-3">
                       <div className="flex-1">
-                        <p className="text-base font-semibold text-gray-900 dark:text-dark-title mb-1">{device.name}</p>
-                        <div className="space-y-1 text-sm text-gray-600 dark:text-dark-text">
+                        <p className="text-sm sm:text-base font-semibold text-gray-900 dark:text-dark-title mb-1 sm:mb-2">{device.name}</p>
+                        <div className="space-y-1 text-xs sm:text-sm text-gray-600 dark:text-dark-text">
                           <p>
                             <span className="font-medium">سیستم عامل:</span> {device.os}
                           </p>
@@ -156,10 +156,11 @@ export default function ConnectedDevicesModal({ isOpen, onClose }) {
                         variant="outline"
                         size="sm"
                         onClick={() => handleLogoutDevice(device.id)}
-                        className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+                        className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 w-full sm:w-auto text-xs sm:text-sm"
                       >
-                        <LogoutCurve size={16} />
-                        خروج از این دستگاه
+                        <LogoutCurve size={14} className="sm:w-4 sm:h-4" />
+                        <span className="hidden sm:inline">خروج از این دستگاه</span>
+                        <span className="sm:hidden">خروج</span>
                       </Button>
                     </div>
                   </div>
@@ -174,25 +175,27 @@ export default function ConnectedDevicesModal({ isOpen, onClose }) {
               <Button
                 variant="outline"
                 onClick={handleLogoutAll}
-                className="w-full gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+                className="w-full gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 text-xs sm:text-sm"
               >
-                <LogoutCurve size={18} />
-                خروج از تمام دستگاه‌ها (به جز دستگاه فعلی)
+                <LogoutCurve size={16} className="sm:w-[18px] sm:h-[18px]" />
+                <span className="hidden sm:inline">خروج از تمام دستگاه‌ها (به جز دستگاه فعلی)</span>
+                <span className="sm:hidden">خروج از تمام دستگاه‌ها</span>
               </Button>
             </div>
           )}
 
           {devices.length === 0 && (
-            <div className="text-center py-8 text-gray-500 dark:text-dark-text">هیچ دستگاهی یافت نشد</div>
+            <div className="text-center py-8 text-sm sm:text-base text-gray-500 dark:text-dark-text">هیچ دستگاهی یافت نشد</div>
           )}
         </div>
 
-        <DialogFooter className="flex gap-3 sm:gap-0">
-          <Button type="button" variant="outline" onClick={handleUpdateList} disabled={isUpdating} className="gap-2">
-            <Refresh size={16} className={isUpdating ? "animate-spin" : ""} />
-            به‌روزرسانی لیست دستگاه‌ها
+        <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:gap-3 px-0">
+          <Button type="button" variant="outline" onClick={handleUpdateList} disabled={isUpdating} className="gap-2 w-full sm:w-auto text-xs sm:text-sm">
+            <Refresh size={14} className={isUpdating ? "animate-spin" : ""} />
+            <span className="hidden sm:inline">به‌روزرسانی لیست دستگاه‌ها</span>
+            <span className="sm:hidden">به‌روزرسانی</span>
           </Button>
-          <Button type="button" variant="outline" onClick={onClose} className="flex-1 sm:flex-initial">
+          <Button type="button" variant="outline" onClick={onClose} className="w-full sm:flex-initial text-xs sm:text-sm">
             بستن
           </Button>
         </DialogFooter>

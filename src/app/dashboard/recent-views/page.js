@@ -16,7 +16,7 @@ const initialProducts = [
     price: "۱۲۰,۴۵۰,۰۰۰",
     image: "/image/Home/product.png",
     retailer: "amazon",
-    lastViewed: "۱۴۰۳/۱۰/۲۴ - ۱۴:۲۱",
+    lastViewed: "۱۴۰۳/۱۰/۲۴",
     viewCount: 3,
     inStock: true,
   },
@@ -26,7 +26,7 @@ const initialProducts = [
     price: "۱۲۰,۴۵۰,۰۰۰",
     image: "/image/Home/product.png",
     retailer: "amazon",
-    lastViewed: "۱۴۰۳/۱۰/۲۴ - ۱۴:۲۰",
+    lastViewed: "۱۴۰۳/۱۰/۲۴",
     viewCount: 2,
     inStock: false,
   },
@@ -36,7 +36,7 @@ const initialProducts = [
     price: "۱۲۰,۴۵۰,۰۰۰",
     image: "/image/Home/product.png",
     retailer: "amazon",
-    lastViewed: "۱۴۰۳/۱۰/۲۴ - ۱۴:۱۹",
+    lastViewed: "۱۴۰۳/۱۰/۲۴",
     viewCount: 1,
     inStock: true,
   },
@@ -46,7 +46,7 @@ const initialProducts = [
     price: "۱۲۰,۴۵۰,۰۰۰",
     image: "/image/Home/product.png",
     retailer: "amazon",
-    lastViewed: "۱۴۰۳/۱۰/۲۴ - ۱۴:۱۸",
+    lastViewed: "۱۴۰۳/۱۰/۲۴",
     viewCount: 1,
     inStock: true,
   },
@@ -65,30 +65,36 @@ export default function RecentViewsList() {
     setProducts(products.filter((p) => p.id !== productId));
   };
 
-  const handleClearAll = () => {
-    if (confirm("آیا از پاک کردن تمام بازدیدهای اخیر اطمینان دارید؟")) {
-      setProducts([]);
-    }
-  };
+  const RecentBtn = () => (
+    <Button variant="ghost" className="max-md:w-full bg-gray-200 dark:bg-dark-field text-red-600 dark:text-red-400">
+      <Trash />
+      حذف همه بازدید‌ها
+    </Button>
+  );
 
   return (
     <DashboardLayout>
       {/* Top Section: Header with Count */}
 
-      <PageHeader title="بازدیدهای اخیر" description="محصولاتی که اخیراً مشاهده کرده‌اید">
-        <Button variant="ghost" className="bg-gray-200 dark:bg-dark-field text-red-600 dark:text-red-400">
-          <Trash />
-          حذف همه بازدید‌ها
-        </Button>
+      <PageHeader
+        actionButton={
+          <div className="md:hidden">
+            <RecentBtn />
+          </div>
+        }
+        title="بازدیدهای اخیر"
+        description="محصولاتی که اخیراً مشاهده کرده‌اید"
+      >
+        <div className="max-md:hidden">
+          <RecentBtn />
+        </div>
       </PageHeader>
 
-      <RecentViewFilter filters={filters} onFiltersChange={() => {}} />
+      <RecentViewFilter filters={filters} onFiltersChange={setFilters} />
 
       {/* Product List Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4 my-4 sm:my-6 md:my-8">
-        <h2 className="text-base sm:text-lg md:text-xl font-bold text-primary-700 dark:text-dark-title">
-          لیست محصولات
-        </h2>
+      <div className="flex items-center justify-between gap-2 sm:gap-4 my-4 sm:my-6 md:my-8">
+        <h2 className="text-base sm:text-lg md:text-xl text-primary-700 dark:text-dark-title">لیست محصولات</h2>
         <div className="text-xs sm:text-sm text-gray-500 dark:text-dark-text">
           تعداد بازدیدها: <span className="font-semibold text-yellow-600">{products.length}</span>
         </div>
@@ -103,7 +109,7 @@ export default function RecentViewsList() {
           <p className="text-sm sm:text-base text-gray-500 dark:text-dark-text">هیچ بازدید اخیری وجود ندارد</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
+        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
           {products.map((product) => (
             <RecentViewCard key={product.id} product={product} onDelete={() => handleDelete(product.id)} />
           ))}

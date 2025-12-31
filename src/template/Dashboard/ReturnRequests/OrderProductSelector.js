@@ -103,16 +103,16 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
                           <div class="w-full">
                             <div class="flex gap-2">
                               {/* Image */}
-                              <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100 dark:bg-dark-field flex-shrink-0">
+                              <div className="relative size-10  md:size-20 rounded-lg overflow-hidden bg-gray-100 dark:bg-dark-field flex-shrink-0">
                                 <Image src={item.image} alt={item.name} fill className="object-cover" sizes="80px" />
                               </div>
 
                               {/* Info */}
                               <div className="flex-1 space-y-1">
-                                <h4 className="text-sm font-semibold line-clamp-2">{item.name}</h4>
+                                <h4 className="text-sm  line-clamp-2">{item.name}</h4>
                               </div>
                             </div>
-                            <div class="grid grid-cols-2 mt-2 gap-3">
+                            <div class="grid md:grid-cols-2 mt-2 gap-3">
                               <div
                                 className={cn(
                                   "text-xs flex-between text-gray-500 dark:text-dark-titre p-2 rounded-lg",

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import NotificationsFilter from "./NotificationsFilter";
 import NotificationCard from "./NotificationCard";
 import { Button } from "@/components/ui/button";
-import { Trash, TickCircle } from "iconsax-reactjs";
+import { Trash } from "iconsax-reactjs";
 import { toast } from "sonner";
 import PageHeader from "../Common/PageHeader";
 
@@ -32,17 +32,7 @@ const initialNotifications = [
     isRead: false,
     isPinned: false,
   },
-  {
-    id: 3,
-    type: "order",
-    title: "سفارش شما در حال آماده‌سازی است",
-    description: "سفارش شماره #12346 در حال بسته‌بندی و آماده‌سازی برای ارسال است.",
-    time: "۱ روز پیش",
-    actionUrl: "/dashboard/orders/12346",
-    actionText: "مشاهده سفارش",
-    isRead: true,
-    isPinned: false,
-  },
+
   {
     id: 4,
     type: "wallet",
@@ -144,6 +134,17 @@ export default function NotificationsList() {
     });
   };
 
+  const NotificationBtn = () => (
+    <Button
+      variant="outline"
+      onClick={handleDeleteAll}
+      className="gap-2 max-md:w-full text-red-600 dark:bg-dark-field dark:border-0 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-900/20 border-red-500 dark:border-red-400"
+    >
+      <Trash size={18} />
+      حذف همه اعلانها
+    </Button>
+  );
+
   return (
     <div dir="rtl">
       {/* Header Section: Title and Action Buttons */}
@@ -152,29 +153,29 @@ export default function NotificationsList() {
         description={
           "تمام اعلان‌های مربوط به سفارش‌ها، تیکت‌ها، کیف پول و فعالیت‌های حساب شما در این بخش نمایش داده می‌شوند."
         }
+        actionButton={
+          <div class="md:hidden">
+            <NotificationBtn />
+          </div>
+        }
       >
-        <Button
-          variant="outline"
-          onClick={handleDeleteAll}
-          className="gap-2 text-red-600 dark:bg-dark-field dark:border-0 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-900/20 border-red-500 dark:border-red-400"
-        >
-          <Trash size={18} />
-          حذف همه اعلانها
-        </Button>
+        <div class="max-md:hidden">
+          <NotificationBtn />
+        </div>
       </PageHeader>
       <div className="bg-white dark:bg-dark-box p-3 sm:p-4 rounded-xl">
         <div className="mb-4 sm:mb-6">
           {/* Section Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-3 sm:mb-4">
+          <div className="flex-between gap-3 sm:gap-4 mb-3 sm:mb-4">
             {notifications.length > 0 && (
               <h2 className="text-base sm:text-lg text-gray-700 dark:text-dark-titre">لیست اعلانها</h2>
             )}
             <Button
               variant="ghost"
               onClick={handleMarkAllAsRead}
-              className="gap-1 sm:gap-2 h-7 p-1 text-xs sm:text-sm text-primary-700 bg-transparent dark:text-primary-300 w-full sm:w-auto"
+              className="gap-1 sm:gap-2 h-7 p-1 text-xs sm:text-sm text-primary-700 bg-transparent dark:text-primary-300"
             >
-              علامت گذاری همه به عنوان خوانده شده
+              علامت گذاری همه <span className="max-md:hidden">به عنوان خوانده شده</span>
             </Button>
           </div>
         </div>

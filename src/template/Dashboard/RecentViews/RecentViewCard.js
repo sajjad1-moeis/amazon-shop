@@ -10,7 +10,7 @@ export default function RecentViewCard({ product, onDelete }) {
   return (
     <div
       className={cn(
-        "bg-white dark:bg-dark-box rounded-2xl shadow-md hover:shadow-lg transition-shadow overflow-hidden relative",
+        "bg-white dark:bg-dark-box rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-shadow overflow-hidden relative",
         !product.inStock && "border-2 border-red-300"
       )}
       style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
@@ -53,16 +53,12 @@ export default function RecentViewCard({ product, onDelete }) {
           {/* Amount */}
           <div className="text-[10px] sm:text-xs bg-gray-50 dark:bg-dark-field rounded-xl p-1.5 sm:p-2 text-center flex-1 min-w-[calc(50%-4px)]">
             <div className="text-xs sm:text-sm text-gray-900 dark:text-dark-titre">{product.viewCount} مرتبه</div>
-            <div className="text-[10px] sm:text-xs text-gray-500 dark:text-caption mt-1 sm:mt-2 mb-1">
-              تعداد بازدید
-            </div>
+            <div className="text-[10px] sm:text-xs text-gray-500 dark:text-caption mt-1 sm:mt-2 mb-1">تعداد بازدید</div>
           </div>
 
           <div className="text-[10px] sm:text-xs bg-gray-50 dark:bg-dark-field rounded-xl p-1.5 sm:p-2 text-center flex-1 min-w-[calc(50%-4px)]">
             <div className="text-xs sm:text-sm text-gray-900 dark:text-dark-titre">{product.lastViewed}</div>
-            <div className="text-[10px] sm:text-xs text-gray-500 dark:text-caption mt-1 sm:mt-2 mb-1">
-              آخرین بازدید
-            </div>
+            <div className="text-[10px] sm:text-xs text-gray-500 dark:text-caption mt-1 sm:mt-2 mb-1">آخرین بازدید</div>
           </div>
         </div>
 
@@ -71,7 +67,7 @@ export default function RecentViewCard({ product, onDelete }) {
           <Button
             variant="outline"
             size="sm"
-            className="p-1.5 sm:p-2 bg-gray-200 dark:bg-dark-field flex-shrink-0"
+            className="p-1.5 sm:p-2 max-md:hidden bg-gray-200 dark:bg-dark-field flex-shrink-0"
             title="مقایسه"
           >
             <Maximize size={16} className="sm:w-[18px] sm:h-[18px] text-[#292D32] dark:text-dark-titre" />
@@ -85,9 +81,7 @@ export default function RecentViewCard({ product, onDelete }) {
             )}
             disabled={!product.inStock}
           >
-            <ShoppingCart className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-            <span className="hidden sm:inline">افزودن به سبد خرید</span>
-            <span className="sm:hidden">افزودن</span>
+            <span>افزودن به سبد خرید</span>
           </Button>
         </div>
       </div>
