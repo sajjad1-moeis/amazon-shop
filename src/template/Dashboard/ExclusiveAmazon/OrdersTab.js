@@ -19,7 +19,7 @@ export default function OrdersTab({ orders, filters, onFiltersChange }) {
 
       <div className="mt-6 space-y-7">
         <ExclusiveAmazonTable orders={orders} />
-        <ViewAllTable />
+        <ViewAllTable className={"lg:hidden"} />
       </div>
     </div>
   );

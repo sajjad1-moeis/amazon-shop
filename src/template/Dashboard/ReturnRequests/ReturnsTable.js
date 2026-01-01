@@ -45,7 +45,7 @@ export default function ReturnsTable({ returns, onCancel }) {
                 <TableCell className="whitespace-nowrap text-sm text-gray-900 dark:text-dark-text py-4 px-4">
                   {returnItem.id}
                 </TableCell>
-                <TableCell className="whitespace-nowrap py-4 px-4">
+                <TableCell className="whitespace-nowrap py-4 px-4 max-w-56">
                   <div className="flex items-center gap-3">
                     <div className="relative w-12 h-12 bg-gray-100 dark:bg-dark-field rounded-lg overflow-hidden flex-shrink-0">
                       <Image

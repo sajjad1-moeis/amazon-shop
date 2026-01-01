@@ -26,7 +26,7 @@ export default function SupportCard({ hasTicket }) {
   return (
     <div className="bg-white dark:bg-dark-box rounded-xl border border-gray-200 dark:border-dark-stroke p-3">
       <div class="md:flex-between  mb-4 md:mb-8">
-        <h3 className="text-lg text-gray-800 dark:text-dark-title">پشتیبانی و تیکت</h3>
+        <h3 className="text-lg text-gray-800 dark:text-dark-titre">پشتیبانی و تیکت</h3>
         <div class="max-md:hidden">
           <SupportBtn />
         </div>

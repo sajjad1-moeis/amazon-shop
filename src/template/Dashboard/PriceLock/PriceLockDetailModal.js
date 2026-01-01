@@ -20,11 +20,11 @@ export default function PriceLockDetailModal({ lock, open, onOpenChange, onCance
   return (
     <Dialog open={open} onOpenChange={onOpenChange} dir="rtl">
       <DialogContent
-        className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl dark:bg-dark-box px-4 sm:px-6"
+        className="max-w-2xl lg:max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl dark:bg-dark-box px-4 sm:px-6"
         dir="rtl"
       >
         <DialogHeader className="relative px-0">
-          <DialogTitle className="text-lg sm:text-xl font-bold text-primary-700 dark:text-dark-titre text-center mb-0">
+          <DialogTitle className="text-lg sm:text-xl font-bold text-primary-700 dark:text-dark-title text-center mb-0">
             جزئیات قفل قیمت
           </DialogTitle>
         </DialogHeader>
@@ -33,7 +33,7 @@ export default function PriceLockDetailModal({ lock, open, onOpenChange, onCance
         {/* Action Buttons */}
         <div className="border p-2 rounded-xl border-gray-200  dark:bg-dark-field dark:border-dark-stroke pt-3 sm:pt-4">
           <h4 className="text-sm sm:text-base  text-gray-900 dark:text-dark-titre mb-4">جزئیات بیشتر</h4>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             {/* First Row */}
             <div className="flex flex-col gap-1">
               <span className="text-xs sm:text-sm text-gray-600 dark:text-dark-text">قیمت نهایی</span>

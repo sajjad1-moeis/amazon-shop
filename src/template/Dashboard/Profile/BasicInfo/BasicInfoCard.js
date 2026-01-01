@@ -51,7 +51,7 @@ export default function BasicInfoCard() {
           )}
         </div>
       </div>
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-5">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-5 xl:gap-0">
         {/* Avatar */}
         <div className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3">
           <div className="size-16 max-md:hidden rounded-lg overflow-hidden border border-gray-200 dark:border-dark-stroke bg-gray-100 dark:bg-dark-field flex items-center justify-center flex-shrink-0">
@@ -96,7 +96,7 @@ export function Row({ label, value, mono, className }) {
       >
         {value}
       </p>
-      <p className="text-gray-400 dark:text-caption text-xs">{label}</p>
+      <p className="text-gray-400 dark:text-caption text-xs ">{label}</p>
     </div>
   );
 }

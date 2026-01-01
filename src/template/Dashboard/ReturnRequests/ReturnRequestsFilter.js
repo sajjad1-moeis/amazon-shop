@@ -18,7 +18,7 @@ const returnStatusOptions = [
   { value: "rejected", label: "رد شده" },
 ];
 
-export default function ReturnRequestsFilter({ filters, onFiltersChange }) {
+export default function ReturnRequestsFilter({ filters, onFiltersChange, placeholder }) {
   const handleFilterChange = (name, value) => {
     onFiltersChange((prev) => ({ ...prev, [name]: value === "all" ? "" : value }));
   };
@@ -30,7 +30,7 @@ export default function ReturnRequestsFilter({ filters, onFiltersChange }) {
         <FilterSearchInput
           value={filters.searchQuery || ""}
           onChange={(value) => handleFilterChange("searchQuery", value)}
-          placeholder="جستجو بر اساس شماره درخواست یا نام کالا..."
+          placeholder={placeholder || "جستجو بر اساس شماره درخواست یا نام کالا..."}
         />
 
         {/* Category */}

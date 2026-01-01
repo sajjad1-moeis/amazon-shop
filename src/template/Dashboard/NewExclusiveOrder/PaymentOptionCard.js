@@ -52,7 +52,7 @@ export default function PaymentOptionCard({ option, isSelected, onSelect }) {
 
             <h4
               className={cn(
-                "",
+                "max-lg:text-sm",
                 isSelected ? "text-primary-500 dark:text-dark-title" : "text-gray-900 dark:text-dark-titre"
               )}
             >
@@ -61,7 +61,7 @@ export default function PaymentOptionCard({ option, isSelected, onSelect }) {
           </div>
 
           {/* Description */}
-          <p className="text-sm text-gray-400 dark:text-dark-text mt-2">{option.description}</p>
+          <p className="text-xs lg:text-sm text-gray-400 dark:text-dark-text mt-2">{option.description}</p>
         </div>
       </div>
     </div>

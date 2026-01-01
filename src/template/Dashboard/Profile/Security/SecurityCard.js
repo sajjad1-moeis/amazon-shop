@@ -51,14 +51,14 @@ export default function SecurityCard() {
       <div className=" grid grid-cols-2 xl:flex flex-row sm:items-center sm:justify-between gap-4 sm:gap-5">
         <Row label="رمز عبور" value={securityInfo.password} className="w-full sm:w-auto" />
         <Row label="تأیید دو مرحله ای" value={securityInfo.twoFactorAuthText} className="w-full sm:w-auto" />
-        <div className="py-2 flex flex-col items-start">
+        <div className="flex flex-col items-start">
           <span
             onClick={() => setIsDevicesModalOpen(true)}
-            className="text-xs sm:text-sm md:text-base font-medium text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 p-0 h-auto cursor-pointer"
+            className="text-xs sm:text-sm font-medium text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 p-0 h-auto cursor-pointer"
           >
             {securityInfo.activeDevices} دستگاه متصل
           </span>
-          <p className="text-xs sm:text-sm text-gray-400 dark:text-caption mt-1 sm:mt-2">تعداد دستگاه‌های فعال</p>
+          <p className="text-xs  text-gray-400 dark:text-caption mt-1 sm:mt-2">تعداد دستگاه‌های فعال</p>
         </div>
         <Row label={"آخرین تغییر رمز"} value={securityInfo.lastPasswordChange} className="w-full sm:w-auto" />
       </div>

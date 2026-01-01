@@ -18,12 +18,12 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
   return (
     <div className="bg-white dark:bg-dark-box dark:border dark:border-dark-stroke rounded-xl shadow-box p-4">
       {/* Order Summary - بالا با border */}
-      <div className="grid grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-y-3 mb-6 pb-6 border-b border-gray-200 dark:border-dark-stroke">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-y-3 mb-6 pb-6 border-b border-gray-200 dark:border-dark-stroke">
         <div>
           <span className="text-xs md:text-sm text-gray-600 dark:text-caption ">شماره سفارش: </span>
           <span className="text-sm font-medium text-gray-900 dark:text-dark-titre">{order.orderNumber}</span>
         </div>
-        <div className="max-xl:mr-auto">
+        <div className="max-md:mr-auto">
           <span className="text-xs md:text-sm text-gray-600 dark:text-caption ">تعداد محصول: </span>
           <span className="text-sm font-medium px-1 rounded text-primary-500 bg-primary-100 dark:bg-dark-blue dark:text-dark-title">
             {order.itemsCount}
@@ -33,7 +33,7 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
           <span className="text-xs md:text-sm text-gray-600 dark:text-caption ">وضعیت:</span>
           <StatusBadge status={order.status} />
         </div>
-        <div className="max-xl:mr-auto">
+        <div className="max-md:mr-auto">
           <span className="text-xs md:text-sm text-gray-600 dark:text-caption ">مبلغ کل: </span>
           <span className="text-sm font-medium text-gray-900 dark:text-dark-titre">{order.totalAmount} تومان</span>
         </div>
@@ -41,7 +41,7 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
           <span className="text-xs md:text-sm text-gray-600 dark:text-caption ">تاریخ سفارش: </span>
           <span className="text-sm font-medium text-gray-900 dark:text-dark-titre">{order.orderDate}</span>
         </div>
-        <div className="max-xl:mr-auto">
+        <div className="max-md:mr-auto">
           <span className="text-xs md:text-sm text-gray-600 dark:text-caption ">درصد پرداختی: </span>
           <span className="text-sm font-medium text-green-600 dark:text-dark-title">{order.paymentStatus}</span>
         </div>
@@ -61,7 +61,7 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
         >
           {order.products.map((product) => (
             <SwiperSlide key={product.id} className="flex flex-col">
-              <div className="p-3 rounded-lg bg-gray-100 dark:bg-dark-field">
+              <div className="p-3 rounded-lg bg-gray-100 dark:bg-dark-field w-full">
                 {/* Product Image */}
                 <div className="flex gap-3 flex-grow">
                   <div className="mb-2">

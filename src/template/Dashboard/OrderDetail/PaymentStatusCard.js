@@ -7,7 +7,7 @@ export default function PaymentStatusCard({ paymentStatus }) {
   const { paidPercentage, paidAmount, remainingPercentage, remainingAmount } = paymentStatus;
 
   return (
-    <div className="bg-white dark:bg-dark-box rounded-xl border border-gray-200 dark:border-dark-stroke p-3 w-full max-w-md">
+    <div className="bg-white w-full dark:bg-dark-box rounded-xl border border-gray-200 dark:border-dark-stroke p-3 ">
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <h3 className="text-base font-bold text-gray-900 dark:text-dark-titre">وضعیت پرداخت</h3>

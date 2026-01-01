@@ -53,7 +53,7 @@ export default function ProductPreviewCard({ product }) {
 /* Small helper component */
 function InfoBox({ label, value }) {
   return (
-    <div className="flex-1 bg-gray-100 dark:bg-dark-field px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg sm:rounded-xl flex justify-between items-center">
+    <div className="flex-1 bg-gray-100 dark:bg-dark-stroke px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg sm:rounded-xl flex justify-between items-center">
       <span className="text-gray-600 dark:text-dark-text text-xs sm:text-sm">{label}</span>
       <span className="text-gray-900 dark:text-dark-titre text-xs sm:text-sm">{value}</span>
     </div>

@@ -10,6 +10,7 @@ import DashboardLayout from "@/layout/DashboardLayout";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Add } from "iconsax-reactjs";
+import ViewAllTable from "@/components/ViewAllTable";
 
 export default function ReturnRequestsList() {
   const [returns, setReturns] = useState(initialReturns);
@@ -68,6 +69,8 @@ export default function ReturnRequestsList() {
       <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4">
         <h2 className="text-lg  text-gray-900 dark:text-white mb-6">لیست درخواستهای مرجوعی</h2>
         <ReturnsTable returns={returns} onCancel={handleCancelReturn} />
+
+        <ViewAllTable className={"xl:hidden mt-8"} />
       </div>
     </DashboardLayout>
   );

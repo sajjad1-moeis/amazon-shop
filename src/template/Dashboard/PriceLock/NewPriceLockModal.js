@@ -37,7 +37,7 @@ export default function NewPriceLockModal({ open, onOpenChange }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange} dir="rtl">
-      <DialogContent className="max-w-3xl rounded-2xl p-0 overflow-hidden dark:bg-dark-box" dir="rtl">
+      <DialogContent className="max-w-3xl lg:max-w-4xl rounded-2xl p-0 overflow-hidden dark:bg-dark-box" dir="rtl">
         {/* Header */}
         <DialogHeader className="relative px-4 sm:px-6 py-3 sm:py-4">
           <DialogTitle className="text-center font-thin text-xl sm:text-2xl text-primary-700 dark:text-dark-title">

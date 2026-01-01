@@ -20,7 +20,7 @@ export default function FeatureHighlightCards({ products }) {
 
   return (
     <div class="mt-10">
-      <h6 className="max-md:text-center mb-4">تفاوت های کلیدی</h6>
+      <h6 className="max-md:text-center mb-4 md:hidden">تفاوت های کلیدی</h6>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {highlights.map((highlight, index) => {
           const Icon = highlight.icon;

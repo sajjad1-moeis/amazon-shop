@@ -13,23 +13,23 @@ export default function PriceLockCard({ product, onCancelLock, onViewDetails, re
   return (
     <div
       className={cn(
-        "w-full bg-white dark:bg-dark-box dark:border-dark-stroke rounded-xl  border-gray-200 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4",
+        "w-full bg-white dark:bg-dark-box dark:border-dark-stroke rounded-xl  border-gray-200 flex flex-col lg:flex-row items-stretch md:items-center justify-between gap-4",
         removeBorder || "border p-2 "
       )}
     >
       {/* Product Image */}
-      <div className="w-full md:w-32 h-48 md:h-28 relative flex-shrink-0 rounded-xl overflow-hidden max-md:hidden">
+      <div className="w-full md:w-32 h-48 md:h-28 relative flex-shrink-0 rounded-xl overflow-hidden max-lg:hidden">
         <Image src={"/Home/product.png"} alt={title} fill className="object-cover" />
       </div>
 
       {/* Middle Content */}
-      <div className="flex-1 flex flex-col gap-3">
+      <div className="flex-1 flex flex-col gap-3 md:gap-5 w-full justify-between">
         {/* Title & Countdown */}
         <div class="flex-between gap-2">
-          <div className="size-20 relative flex-shrink-0 rounded-xl overflow-hidden md:hidden">
+          <div className="size-20 relative rounded-xl overflow-hidden lg:hidden">
             <Image src={"/image/Home/product.png"} alt={title} fill className="object-cover" />
           </div>
-          <div class="">
+          <div class="w-full">
             <div className="flex-between">
               <h3 className="text-[15px]  text-gray-900 dark:text-dark-titre leading-6">
                 {title || "Apple AirPods Pro (2nd Generation)"}
@@ -40,7 +40,7 @@ export default function PriceLockCard({ product, onCancelLock, onViewDetails, re
                 {countdown}
               </div>
             </div>
-            <div className="flex items-center gap-2 mt-3 md:hidden">
+            <div className="flex items-center gap-2 mt-3 lg:hidden">
               <span className="text-gray-600 dark:text-dark-text text-sm">وضعیت ردیابی</span>
               <StatusBadge status={status} />
             </div>
@@ -49,14 +49,14 @@ export default function PriceLockCard({ product, onCancelLock, onViewDetails, re
 
         {/* Status */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 w-full">
-          <div className="flex items-center gap-2 max-md:hidden">
+          <div className="flex items-center gap-2 max-lg:hidden">
             <span className="text-gray-600 dark:text-dark-text text-sm">وضعیت ردیابی</span>
             <StatusBadge status={status} />
           </div>
         </div>
 
         {/* Info Boxes */}
-        <div className="w-full flex flex-col lg:flex-row md:flex-wrap  justify-between gap-2">
+        <div className="w-full flex flex-col md:flex-row md:flex-wrap  justify-between gap-2">
           <InfoBox label="قیمت قفل شده (تومان)" value={lockedPrice} />
           <InfoBox label="پیش‌پرداخت" value={downPayment} />
           <InfoBox label="زمان باقی‌مانده" value={timeRemaining} />
@@ -65,7 +65,7 @@ export default function PriceLockCard({ product, onCancelLock, onViewDetails, re
 
       {/* Actions */}
       {!removeHandler && (
-        <div className="flex flex-row md:flex-col gap-1 md:gap-2 w-auto overflow-auto">
+        <div className="flex flex-row lg:flex-col gap-1 md:gap-2 w-full lg:w-auto overflow-auto">
           <Button className="md:w-full max-md:px-3.5 bg-yellow-400 hover:bg-yellow-500 text-gray-900  font-medium text-sm py-2 rounded-lg">
             ادامه خرید با قیمت قفل <span className="max-md:hidden">شده</span>
           </Button>

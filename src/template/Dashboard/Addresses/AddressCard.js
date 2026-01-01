@@ -56,8 +56,8 @@ export default function AddressCard({
       }`}
     >
       {/* MAIN INFO */}
-      <div className="flex-between w-full">
-        <h4 className="max-md:text-sm text-primary-500 font-medium dark:text-dark-title">{address.name}</h4>
+      <div className="flex-between w-full flex-wrap gap-y-4">
+        <h4 className="max-lg:text-sm text-primary-500 font-medium dark:text-dark-title">{address.name}</h4>
         {hasPhone && (
           <div className={`flex items-center gap-2 ${hasPhone && "max-md:hidden"}`}>
             <span className="text-xs text-gray-500 dark:text-dark-text">شماره تماس:</span>

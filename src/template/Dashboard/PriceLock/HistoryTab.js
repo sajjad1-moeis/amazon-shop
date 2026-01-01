@@ -20,7 +20,7 @@ export default function HistoryTab({ filteredHistory, historyFilters, onFiltersC
 
       <div className="mt-6 space-y-6">
         <HistoryTable locks={filteredHistory} />
-        <ViewAllTable />
+        <ViewAllTable className={"lg:hidden"} />
       </div>
     </div>
   );

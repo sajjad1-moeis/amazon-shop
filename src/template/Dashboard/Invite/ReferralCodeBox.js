@@ -11,7 +11,7 @@ export default function ReferralCodeBox({ referralCode, referralLink, onShareCli
     <div className="bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl p-6 shadow-lg">
       <h3 className="text-white text-lg font-bold mb-6">کد دعوت اختصاصی شما</h3>
 
-      <div className="space-y-4">
+      <div className="space-y-4 ">
         {/* Referral Code Input */}
         <div>
           <Label htmlFor="referral-code" className="text-white text-sm mb-2 block">
@@ -68,4 +68,3 @@ export default function ReferralCodeBox({ referralCode, referralLink, onShareCli
     </div>
   );
 }
-

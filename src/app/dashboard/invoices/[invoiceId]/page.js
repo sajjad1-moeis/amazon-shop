@@ -27,14 +27,14 @@ export default function InvoiceDetailPage({ params }) {
       <InvoiceDetailHeader invoice={invoice} onDownload={handleDownload} />
 
       {/* Order Timeline and Recipient Info - کنار هم */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-4 sm:mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 mb-4 sm:mb-6">
         {/* Order Timeline - Takes 2 columns */}
-        <div className="lg:col-span-2">
+        <div className="md:col-span-2">
           <RecipientInfoCard recipient={invoice.recipient} />
         </div>
 
         {/* Recipient Info - Takes 1 column */}
-        <div className="lg:col-span-1">
+        <div>
           <OrderTimelineSection timelineSteps={invoice.timelineSteps} currentStepIndex={2} />
         </div>
       </div>

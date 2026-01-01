@@ -10,6 +10,7 @@ import { mockOrders } from "@/data";
 import OrderSelectorSection from "./OrderSelectorSection";
 import TermsAndSupportSection from "./TermsAndSupportSection";
 import BottomActions from "./BottomActions";
+import ReturnRequestsFilter from "../ReturnRequestsFilter";
 
 export default function NewReturnRequest() {
   const router = useRouter();
@@ -124,6 +125,13 @@ export default function NewReturnRequest() {
     }
   };
 
+  const [filters, setFilters] = useState({
+    sortBy: "",
+    status: "",
+    category: "",
+    searchQuery: "",
+  });
+
   return (
     <div dir="rtl">
       <PageHeader
@@ -135,11 +143,13 @@ export default function NewReturnRequest() {
         {/* Main Card */}
         <div>
           {/* Order Selector */}
+          <ReturnRequestsFilter filters={filters} onFiltersChange={setFilters} placeholder={"جستجو در سفارش‌ها..."} />
+
           <OrderSelectorSection orders={mockOrders} selectedItem={selectedItem} onSelect={handleItemSelect} />
 
           {/* Reason & Files Sections */}
           {selectedProductId && (
-            <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
               <ReturnReasonForm formData={formData} onFormChange={handleFormChange} />
               <FileUploadSection
                 images={formData.images}
@@ -165,4 +175,3 @@ export default function NewReturnRequest() {
     </div>
   );
 }
-

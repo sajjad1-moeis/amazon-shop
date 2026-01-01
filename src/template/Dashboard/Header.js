@@ -23,7 +23,7 @@ export default function DashboardHeader({ onMenuClick }) {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden text-white hover:bg-white dark:bg-dark-box/10 h-9 w-9"
+            className="lg:hidden text-white hover:bg-white dark:bg-dark-box/10 h-9 w-9"
             onClick={onMenuClick}
           >
             <Menu className="h-5 w-5" />

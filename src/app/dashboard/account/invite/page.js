@@ -60,14 +60,16 @@ export default function InvitePage() {
             <h3 className="text-white text-base sm:text-lg mb-4 sm:mb-6">کد دعوت اختصاصی شما</h3>
 
             <div>
-              {/* Referral Code Input */}
-              <div className="bg-white/15 flex items-center justify-between p-2 sm:p-3 rounded-lg mb-2 sm:mb-3 text-xs sm:text-sm text-gray-100">
-                <div>کد دعوت</div>
-                <div className="font-mono text-left break-all">{referralCode}</div>
-              </div>
-              <div className="bg-white/15 flex items-center justify-between p-2 sm:p-3 rounded-lg mb-2 text-xs sm:text-sm text-gray-100">
-                <div>لینک دعوت</div>
-                <div className="font-mono text-left break-all text-[10px] sm:text-xs">{referralLink}</div>
+              <div className="md:grid-cols-2 lg:grid-cols-1 grid gap-2 md:gap-3">
+                {/* Referral Code Input */}
+                <div className="bg-white/15 flex items-center justify-between p-2 sm:p-3 rounded-lg  text-xs sm:text-sm text-gray-100">
+                  <div>کد دعوت</div>
+                  <div className="font-mono text-left break-all">{referralCode}</div>
+                </div>
+                <div className="bg-white/15 flex items-center justify-between p-2 sm:p-3 rounded-lg  text-xs sm:text-sm text-gray-100">
+                  <div>لینک دعوت</div>
+                  <div className="font-mono text-left break-all text-[10px] sm:text-xs">{referralLink}</div>
+                </div>
               </div>
 
               {/* Share Button */}

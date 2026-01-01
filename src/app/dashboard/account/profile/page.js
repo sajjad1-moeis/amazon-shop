@@ -17,7 +17,7 @@ export default function ProfilePage() {
         <BasicInfoCard />
 
         {/* Security & Financial - Side by Side */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+        <div className="flex flex-col-reverse lg:grid  lg:grid-cols-2 gap-4 sm:gap-6">
           <SecurityCard />
           <FinancialInfoCard />
         </div>

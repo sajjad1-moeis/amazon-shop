@@ -15,7 +15,7 @@ const STATUS_CONFIG = {
   },
   completed: {
     label: "تکمیل شده",
-    className: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+    className: "bg-green-100 text-green-700 dark:bg-dark-green dark:text-green-200",
   },
   pending: {
     label: "در انتظار بررسی",

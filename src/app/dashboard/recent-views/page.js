@@ -109,7 +109,7 @@ export default function RecentViewsList() {
           <p className="text-sm sm:text-base text-gray-500 dark:text-dark-text">هیچ بازدید اخیری وجود ندارد</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
           {products.map((product) => (
             <RecentViewCard key={product.id} product={product} onDelete={() => handleDelete(product.id)} />
           ))}

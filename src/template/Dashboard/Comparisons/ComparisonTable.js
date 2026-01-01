@@ -84,7 +84,7 @@ export default function ComparisonTable({ products, features }) {
           </table>
         </div>
       </div>
-      <ViewAllTable />
+      <ViewAllTable className={"lg:hidden"} />
     </>
   );
 }

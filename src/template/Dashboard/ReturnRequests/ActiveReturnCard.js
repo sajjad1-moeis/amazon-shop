@@ -69,7 +69,7 @@ export default function ActiveReturnCard({ returnData, onCancel }) {
                 {returnData.product.name}
               </h3>
 
-              <div className="flex-between gap-4 text-sm w-full">
+              <div className="flex-between flex-wrap gap-4 text-sm w-full">
                 <div>
                   <span className="text-gray-600 dark:text-dark-text">شماره درخواست : </span>
                   <span className="font-medium text-gray-900 dark:text-dark-titre">{returnData.id}</span>

@@ -125,8 +125,8 @@ export default function ProductComparison() {
         </PageHeader>
 
         {/* Products Grid */}
-        <div className="flex flex-col-reverse lg:flex-row gap-4 sm:gap-6">
-          <div className="w-full lg:max-w-48">
+        <div className="flex flex-col-reverse md:flex-row gap-4 sm:gap-6">
+          <div className="w-full md:max-w-48">
             <AddProductColumn onAdd={handleAddProduct} />
           </div>
           <div className="grid grid-cols-2 gap-4 sm:gap-6 flex-1">
