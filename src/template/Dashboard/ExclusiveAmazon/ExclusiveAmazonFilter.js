@@ -22,7 +22,7 @@ export default function ExclusiveAmazonFilter({ filters, onFiltersChange }) {
   };
 
   return (
-    <div className="mt-6 sm:mt-8 md:mt-10">
+    <div className="mb-4 sm:mb-6">
       <FilterSection>
         {/* Search Input */}
         <FilterSearchInput

@@ -2,21 +2,14 @@
 
 import React from "react";
 import DateFilterSelect from "@/components/FilterSelects/DateFilterSelect";
-import SortBySelect from "@/components/FilterSelects/SortBySelect";
 import StatusSelect from "@/components/FilterSelects/StatusSelect";
+import SortBySelect from "@/components/FilterSelects/SortBySelect";
 import FilterSearchInput from "@/components/FilterSelects/FilterSearchInput";
 import FilterSection from "@/components/FilterSection";
 
-const invoiceStatusOptions = [
+const paymentStatusOptions = [
   { value: "paid", label: "پرداخت شده" },
   { value: "pending", label: "در انتظار پرداخت" },
-];
-
-const invoiceSortOptions = [
-  { value: "newest", label: "جدیدترین" },
-  { value: "oldest", label: "قدیمی‌ترین" },
-  { value: "amount-high", label: "بیشترین مبلغ" },
-  { value: "amount-low", label: "کمترین مبلغ" },
 ];
 
 export default function InvoicesFilter({ filters, onFiltersChange }) {
@@ -28,39 +21,40 @@ export default function InvoicesFilter({ filters, onFiltersChange }) {
   };
 
   return (
-    <FilterSection>
-      {/* Search */}
-      <FilterSearchInput
-        value={filters.searchQuery || ""}
-        onChange={(value) => handleFilterChange("searchQuery", value)}
-        placeholder="جستجو بر اساس شماره فاکتور..."
-      />
+    <div className="mb-4 sm:mb-6">
+      <FilterSection>
+        {/* Search Input */}
+        <FilterSearchInput
+          value={filters.searchQuery || ""}
+          onChange={(value) => handleFilterChange("searchQuery", value)}
+          placeholder="جستجو بر اساس شماره فاکتور..."
+        />
 
-      {/* Status Filter */}
-      <StatusSelect
-        value={filters.status || undefined}
-        onValueChange={(value) => handleFilterChange("status", value)}
-        placeholder="وضعیت پرداخت"
-        options={invoiceStatusOptions}
-        includeAll={true}
-      />
+        {/* Payment Status Filter */}
+        <StatusSelect
+          value={filters.status || ""}
+          onValueChange={(value) => handleFilterChange("status", value)}
+          placeholder="وضعیت پرداخت"
+          options={paymentStatusOptions}
+          includeAll={true}
+        />
 
-      {/* Date Range Filter */}
-      <DateFilterSelect
-        value={filters.dateRange || undefined}
-        onValueChange={(value) => handleFilterChange("dateRange", value)}
-        placeholder="بازه تاریخ"
-        includeAll={true}
-      />
+        {/* Date Range Filter */}
+        <DateFilterSelect
+          value={filters.dateRange || ""}
+          onValueChange={(value) => handleFilterChange("dateRange", value)}
+          placeholder="بازه تاریخ"
+          includeAll={true}
+        />
 
-      {/* Sort By Filter - استفاده از StatusSelect با options سفارشی */}
-      <StatusSelect
-        value={filters.sortBy || undefined}
-        onValueChange={(value) => handleFilterChange("sortBy", value)}
-        placeholder="مرتب‌سازی"
-        options={invoiceSortOptions}
-        includeAll={false}
-      />
-    </FilterSection>
+        {/* Sort By Filter */}
+        <SortBySelect
+          value={filters.sortBy || ""}
+          onValueChange={(value) => handleFilterChange("sortBy", value)}
+          placeholder="مرتب‌سازی"
+          includeAll={true}
+        />
+      </FilterSection>
+    </div>
   );
 }

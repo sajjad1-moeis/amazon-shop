@@ -47,7 +47,7 @@ export default function ReturnsTable({ returns, onCancel }) {
                 </TableCell>
                 <TableCell className="whitespace-nowrap py-4 px-4 max-w-56">
                   <div className="flex items-center gap-3">
-                    <div className="relative w-12 h-12 bg-gray-100 dark:bg-dark-field rounded-lg overflow-hidden flex-shrink-0">
+                    <div className="relative size-7  md:size-12 bg-gray-100 dark:bg-dark-field rounded-lg overflow-hidden flex-shrink-0">
                       <Image
                         src={returnItem.product.image}
                         alt={returnItem.product.name}

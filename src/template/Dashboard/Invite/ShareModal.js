@@ -77,7 +77,9 @@ export default function ShareModal({ isOpen, onClose, referralCode, referralLink
               />
             ) : (
               <div className="w-40 h-40 sm:w-48 sm:h-48 border-2 border-gray-200 dark:border-dark-stroke rounded-lg flex items-center justify-center bg-gray-100 dark:bg-dark-field">
-                <p className="text-gray-400 dark:text-dark-text text-xs sm:text-sm text-center px-2">در حال تولید QR Code...</p>
+                <p className="text-gray-400 dark:text-dark-text text-xs sm:text-sm text-center px-2">
+                  در حال تولید QR Code...
+                </p>
               </div>
             )}
           </div>

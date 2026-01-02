@@ -17,6 +17,13 @@ export default function WalletList() {
     transactionType: "",
   });
 
+  const handleFilterChange = (key, value) => {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: value === "all" ? "" : value,
+    }));
+  };
+
   return (
     <DashboardLayout>
       {/* Top Section: Header */}
@@ -45,7 +52,7 @@ export default function WalletList() {
         <h2 className="text-lg  text-gray-900 dark:text-white mb-6">تاریخچه تراکنش ها</h2>
 
         {/* Filter Section */}
-        <TransactionsFilter filters={filters} onFiltersChange={setFilters} />
+        <TransactionsFilter filters={filters} onFiltersChange={handleFilterChange} />
 
         {/* Transactions Table */}
         <div className="mt-6">

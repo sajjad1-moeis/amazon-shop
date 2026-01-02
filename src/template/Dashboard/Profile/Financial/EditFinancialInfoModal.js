@@ -43,8 +43,12 @@ export default function EditFinancialInfoModal({ isOpen, onClose, initialData })
           {/* ===== اطلاعات مالی پایه ===== */}
           <div className="space-y-3 sm:space-y-4">
             <div>
-              <h4 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2 text-primary-700 dark:text-dark-title">اطلاعات مالی پایه</h4>
-              <p className="text-xs sm:text-sm text-gray-500 dark:text-caption">برای واریز وجه، برداشت، بازگشت پول، خدمات ارزی</p>
+              <h4 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2 text-primary-700 dark:text-dark-title">
+                اطلاعات مالی پایه
+              </h4>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-caption">
+                برای واریز وجه، برداشت، بازگشت پول، خدمات ارزی
+              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
@@ -94,8 +98,12 @@ export default function EditFinancialInfoModal({ isOpen, onClose, initialData })
           {/* ===== کارت بانکی ===== */}
           <div className="space-y-3 sm:space-y-4">
             <div>
-              <h4 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2 text-primary-700 dark:text-dark-title">کارت بانکی</h4>
-              <p className="text-xs sm:text-sm text-gray-500 dark:text-caption">برای خرید، پرداخت ریالی، شارژ کیف پول</p>
+              <h4 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2 text-primary-700 dark:text-dark-title">
+                کارت بانکی
+              </h4>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-caption">
+                برای خرید، پرداخت ریالی، شارژ کیف پول
+              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
@@ -155,7 +163,10 @@ export default function EditFinancialInfoModal({ isOpen, onClose, initialData })
             >
               لغو
             </Button>
-            <Button type="submit" className="bg-primary-600 w-full hover:bg-primary-700 text-white text-sm sm:text-base">
+            <Button
+              type="submit"
+              className="bg-primary-600 w-full hover:bg-primary-700 text-white text-sm sm:text-base"
+            >
               ذخیره تغییرات
             </Button>
           </DialogFooter>

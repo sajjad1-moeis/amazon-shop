@@ -49,6 +49,7 @@ export default function DeliveryAddressCard({ address, showEditButton = false, o
 
       <AddressCard
         removeHandler
+        hasMobilePhone
         hasPhone
         key={displayAddress?.id}
         address={displayAddress}

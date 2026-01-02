@@ -1,8 +1,15 @@
 "use client";
 
 import React from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
+import StatusSelect from "@/components/FilterSelects/StatusSelect";
+import SortBySelect from "@/components/FilterSelects/SortBySelect";
+import FilterSection from "@/components/FilterSection";
+
+const statusOptions = [
+  { value: "approved", label: "تأیید شده" },
+  { value: "pending", label: "در حال بررسی" },
+  { value: "rejected", label: "رد شده" },
+];
 
 export default function CommentsFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
@@ -13,30 +20,25 @@ export default function CommentsFilter({ filters, onFiltersChange }) {
   };
 
   return (
-    <div className="flex gap-2 md:gap-4">
-      {/* Status Filter - Right */}
-      <Select value={filters.status || undefined} onValueChange={(value) => handleFilterChange("status", value)}>
-        <SelectTrigger className={filterSelectTriggerStyles}>
-          <SelectValue placeholder="وضعیت" />
-        </SelectTrigger>
-        <SelectContent className={filterSelectContentStyles}>
-          <SelectItem value="all">همه</SelectItem>
-          <SelectItem value="approved">تأیید شده</SelectItem>
-          <SelectItem value="pending">در حال بررسی</SelectItem>
-          <SelectItem value="rejected">رد شده</SelectItem>
-        </SelectContent>
-      </Select>
+    <div className="mb-4 sm:mb-6">
+      <FilterSection>
+        {/* Status Filter */}
+        <StatusSelect
+          value={filters.status || ""}
+          onValueChange={(value) => handleFilterChange("status", value)}
+          placeholder="وضعیت"
+          options={statusOptions}
+          includeAll={true}
+        />
 
-      {/* Sort By Filter - Left */}
-      <Select value={filters.sortBy || undefined} onValueChange={(value) => handleFilterChange("sortBy", value)}>
-        <SelectTrigger className={filterSelectTriggerStyles}>
-          <SelectValue placeholder="مرتب سازی" />
-        </SelectTrigger>
-        <SelectContent className={filterSelectContentStyles}>
-          <SelectItem value="newest">جدیدترین</SelectItem>
-          <SelectItem value="oldest">قدیمی‌ترین</SelectItem>
-        </SelectContent>
-      </Select>
+        {/* Sort By Filter */}
+        <SortBySelect
+          value={filters.sortBy || ""}
+          onValueChange={(value) => handleFilterChange("sortBy", value)}
+          placeholder="مرتب سازی"
+          includeAll={true}
+        />
+      </FilterSection>
     </div>
   );
 }

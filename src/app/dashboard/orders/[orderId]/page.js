@@ -48,20 +48,20 @@ export default function OrderDetail({ params }) {
       {/* Product List Section */}
       <ProductListSection products={order.products} />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 my-6 md:my-8">
-        <div className="md:col-span-2 lg:col-span-3">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 my-8">
+        <div className="lg:col-span-3">
           <DeliveryAddressCard address={order.deliveryAddress} showEditButton={true} onEdit={handleEditAddress} />
         </div>
         <PaymentStatusCard paymentStatus={order.paymentStatus} />
       </div>
 
       {/* Order Documents */}
-      <div className="mb-4 sm:mb-6">
+      <div className="mb-6">
         <OrderDocumentsCard documents={order.documents || []} />
       </div>
 
       {/* Media and Second Payment - کنار هم */}
-      <div className="flex flex-col-reverse md:grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-4 sm:mb-6">
+      <div className="flex flex-col-reverse lg:grid-cols-3 gap-6 mb-6">
         <div className="lg:col-span-2">
           <ProductMediaSlider media={order.media} />
         </div>
@@ -71,12 +71,12 @@ export default function OrderDetail({ params }) {
       </div>
 
       {/* Payment Info and Tracking Codes - کنار هم در بالا */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <PaymentInfoCard paymentInfo={order.paymentInfo} />
         <TrackingCodesCard trackingCodes={order.trackingCodes} />
       </div>
 
-      <div className="my-4 sm:my-6 md:my-8">
+      <div className="my-8">
         <SupportCard hasTicket={order.hasTicket} />
       </div>
     </DashboardLayout>

@@ -23,7 +23,9 @@ export default function RewardConditionsModal({ isOpen, onClose }) {
 
           {/* Section 1 */}
           <div className="bg-gray-50 dark:bg-dark-field rounded-xl p-3 sm:p-4 border border-gray-200 dark:border-0">
-            <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-dark-titre mb-2 text-right">۱. ثبت نام موفق دوست شما</h3>
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-dark-titre mb-2 text-right">
+              ۱. ثبت نام موفق دوست شما
+            </h3>
             <p className="text-gray-700 text-xs sm:text-sm dark:text-dark-text text-right leading-relaxed">
               هر دوست وقتی با لینک دعوت شما ثبت نام کند، شما ۵۰ امتیاز می‌گیرید.
             </p>
@@ -31,7 +33,9 @@ export default function RewardConditionsModal({ isOpen, onClose }) {
 
           {/* Section 2 */}
           <div className="bg-gray-50 dark:bg-dark-field rounded-xl p-3 sm:p-4 md:p-5 border border-gray-200 dark:border-0">
-            <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-dark-titre mb-2 text-right">۲. اولین خرید دوست شما</h3>
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-dark-titre mb-2 text-right">
+              ۲. اولین خرید دوست شما
+            </h3>
             <p className="text-gray-700 text-xs sm:text-sm dark:text-dark-text text-right leading-relaxed">
               اگر او اولین خرید خود را انجام دهد، ۳٪ مبلغ اولین سفارش به عنوان پاداش به شما تعلق می‌گیرد.
             </p>

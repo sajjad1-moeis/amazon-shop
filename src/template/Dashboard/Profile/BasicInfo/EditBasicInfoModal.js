@@ -152,7 +152,10 @@ export default function EditBasicInfoModal({ isOpen, onClose, initialData, onSav
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full">
               {formFields.map((field) => (
                 <div key={field.id} className="space-y-2">
-                  <Label htmlFor={field.id} className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-dark-text">
+                  <Label
+                    htmlFor={field.id}
+                    className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-dark-text"
+                  >
                     {field.label}
                   </Label>
                   <Input
@@ -180,7 +183,10 @@ export default function EditBasicInfoModal({ isOpen, onClose, initialData, onSav
             >
               لغو
             </Button>
-            <Button type="submit" className="bg-primary-600 w-full hover:bg-primary-700 text-white text-sm sm:text-base">
+            <Button
+              type="submit"
+              className="bg-primary-600 w-full hover:bg-primary-700 text-white text-sm sm:text-base"
+            >
               ذخیره تغییرات
             </Button>
           </DialogFooter>

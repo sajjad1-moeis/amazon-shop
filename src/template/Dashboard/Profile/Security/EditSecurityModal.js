@@ -60,7 +60,11 @@ export default function EditSecurityModal({ isOpen, onClose }) {
                 onClick={() => toggle("current")}
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
               >
-                {show.current ? <EyeSlash size={18} className="sm:w-5 sm:h-5" /> : <Eye size={18} className="sm:w-5 sm:h-5" />}
+                {show.current ? (
+                  <EyeSlash size={18} className="sm:w-5 sm:h-5" />
+                ) : (
+                  <Eye size={18} className="sm:w-5 sm:h-5" />
+                )}
               </button>
             </div>
           </div>
@@ -81,7 +85,11 @@ export default function EditSecurityModal({ isOpen, onClose }) {
                   onClick={() => toggle("new")}
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                 >
-                  {show.new ? <EyeSlash size={18} className="sm:w-5 sm:h-5" /> : <Eye size={18} className="sm:w-5 sm:h-5" />}
+                  {show.new ? (
+                    <EyeSlash size={18} className="sm:w-5 sm:h-5" />
+                  ) : (
+                    <Eye size={18} className="sm:w-5 sm:h-5" />
+                  )}
                 </button>
               </div>
             </div>
@@ -100,7 +108,11 @@ export default function EditSecurityModal({ isOpen, onClose }) {
                   onClick={() => toggle("confirm")}
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                 >
-                  {show.confirm ? <EyeSlash size={18} className="sm:w-5 sm:h-5" /> : <Eye size={18} className="sm:w-5 sm:h-5" />}
+                  {show.confirm ? (
+                    <EyeSlash size={18} className="sm:w-5 sm:h-5" />
+                  ) : (
+                    <Eye size={18} className="sm:w-5 sm:h-5" />
+                  )}
                 </button>
               </div>
             </div>
@@ -121,7 +133,10 @@ export default function EditSecurityModal({ isOpen, onClose }) {
             >
               لغو
             </Button>
-            <Button type="submit" className="bg-primary-600 w-full hover:bg-primary-700 text-white text-sm sm:text-base">
+            <Button
+              type="submit"
+              className="bg-primary-600 w-full hover:bg-primary-700 text-white text-sm sm:text-base"
+            >
               ذخیره تغییرات
             </Button>
           </DialogFooter>

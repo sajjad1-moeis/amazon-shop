@@ -18,6 +18,13 @@ export default function InvoicesPage() {
     searchQuery: "",
   });
 
+  const handleFilterChange = (key, value) => {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: value === "all" ? "" : value,
+    }));
+  };
+
   const handleView = (invoiceId) => {
     router.push(`/dashboard/invoices/${invoiceId}`);
   };
@@ -29,7 +36,7 @@ export default function InvoicesPage() {
         <PageHeader title="فاکتورها" description="لیست کامل فاکتورهای خرید شما" />
 
         {/* Filters Section */}
-        <InvoicesFilter filters={filters} onFiltersChange={setFilters} />
+        <InvoicesFilter filters={filters} onFiltersChange={handleFilterChange} />
 
         {/* Invoices Table Section */}
         <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4 md:p-6 mt-8">

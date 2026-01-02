@@ -16,7 +16,14 @@ export default function FavoritesPage() {
     brand: "",
     searchQuery: "",
   });
-  s;
+
+  const handleFilterChange = (key, value) => {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: value === "all" ? "" : value,
+    }));
+  };
+
   return (
     <DashboardLayout>
       {/* Top Section: Header */}
@@ -46,7 +53,7 @@ export default function FavoritesPage() {
 
       <div>
         {/* Filter Section */}
-        <FavoritesFilter filters={filters} onFiltersChange={setFilters} />
+        <FavoritesFilter filters={filters} onFiltersChange={handleFilterChange} />
 
         {/* Products List */}
         <div className="space-y-4 mt-6">

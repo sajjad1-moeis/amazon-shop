@@ -7,29 +7,40 @@ import FilterSearchInput from "@/components/FilterSelects/FilterSearchInput";
 import FilterSection from "@/components/FilterSection";
 
 export default function PurchasesFilter({ filters, onFiltersChange }) {
+  const handleFilterChange = (key, value) => {
+    onFiltersChange((prev) => ({
+      ...prev,
+      [key]: value === "all" ? "" : value,
+    }));
+  };
+
   return (
-    <FilterSection>
-      {/* Search */}
-      <FilterSearchInput
-        value={filters.searchQuery || ""}
-        onChange={(value) => onFiltersChange("searchQuery", value)}
-        placeholder="جستجو بر اساس نام محصول ..."
-      />
+    <div className="mb-4 sm:mb-6">
+      <FilterSection>
+        {/* Search */}
+        <FilterSearchInput
+          value={filters.searchQuery || ""}
+          onChange={(value) => handleFilterChange("searchQuery", value)}
+          placeholder="جستجو بر اساس نام محصول ..."
+        />
 
-      {/* Date Filter */}
-      <DateFilterSelect
-        value={filters.dateFilter || ""}
-        onValueChange={(value) => onFiltersChange("dateFilter", value)}
-        placeholder="تاریخ"
-      />
+        {/* Date Filter */}
+        <DateFilterSelect
+          value={filters.dateFilter || ""}
+          onValueChange={(value) => handleFilterChange("dateFilter", value)}
+          placeholder="تاریخ"
+          includeAll={true}
+        />
 
-      {/* Sort By */}
-      <SortBySelect
-        value={filters.sortBy || ""}
-        onValueChange={(value) => onFiltersChange("sortBy", value)}
-        placeholder="مرتب سازی"
-        includePrice={true}
-      />
-    </FilterSection>
+        {/* Sort By */}
+        <SortBySelect
+          value={filters.sortBy || ""}
+          onValueChange={(value) => handleFilterChange("sortBy", value)}
+          placeholder="مرتب سازی"
+          includePrice={true}
+          includeAll={true}
+        />
+      </FilterSection>
+    </div>
   );
 }

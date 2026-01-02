@@ -27,19 +27,19 @@ const currencies = [
 
 export default function CurrencyRates() {
   return (
-    <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-3 mb-6">
+    <div className="bg-white dark:bg-dark-box  rounded-2xl shadow-box p-3 mb-6">
       <div className="mb-6 md:mb-8">
         <h3 className="text-sm md:text-lg text-gray-700 dark:text-dark-titre mb-1">نرخ لحظه ای ارز</h3>
         <p className="text-xs md:text-sm  text-gray-600 dark:text-dark-text">به روز رسانی هر ۵ دقیقه</p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4  grid max-lg:grid-cols-2 max-md:grid-cols-1">
         {currencies.map((currency, index) => (
           <div
             key={currency.id}
             className={cn(
-              "flex items-center justify-between  border-gray-200 dark:border-dark-stroke hover:bg-gray-50 dark:hover:bg-dark-field/50 transition-colors",
-              currencies.length == index + 1 || " pb-4 border-b"
+              "flex items-center justify-between max-md:pb-4 max-lg:px-4  border-gray-200 dark:border-dark-stroke hover:bg-gray-50 dark:hover:bg-dark-field/50 transition-colors",
+              currencies.length == index + 1 || " max-lg:border-l  max-md:border-b"
             )}
           >
             <div className="flex items-center gap-3">

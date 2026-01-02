@@ -31,16 +31,16 @@ export default function RequestDocumentModal({ isOpen, onClose }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose} dir="rtl">
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto dark:bg-dark-box" dir="rtl">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto" dir="rtl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center text-primary-700 dark:text-dark-title">
+          <DialogTitle className="text-2xl font-bold text-center text-primary-700 dark:text-dark-title dark:text-primary-600">
             درخواست مستند خرید
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6 py-4">
           {/* Introductory Paragraph */}
-          <p className="text-sm text-gray-700   dark:text-dark-text leading-relaxed text-right">
+          <p className="text-sm text-gray-700 dark:text-dark-text dark:bg-white/5 leading-relaxed text-right">
             برای درخواست مستند خرید، لطفا یک اسکرین‌شات از صفحه ثبت سفارش خود در سایت آمازون (یا هر سایت دیگری که از آن
             خرید کرده‌اید) تهیه کنید. این اسکرین‌شات باید شامل اطلاعات زیر باشد:
           </p>
@@ -51,7 +51,7 @@ export default function RequestDocumentModal({ isOpen, onClose }) {
               <Warning2 size={24} className="text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
               <div className="flex-1 space-y-2">
                 {requiredInfo.map((info, index) => (
-                  <p key={index} className="text-sm text-gray-700 dark:text-dark-text text-right">
+                  <p key={index} className="text-sm text-gray-700 dark:text-dark-text dark:bg-white/5 text-right">
                     {info}
                   </p>
                 ))}
@@ -60,19 +60,19 @@ export default function RequestDocumentModal({ isOpen, onClose }) {
           </div>
 
           {/* Concluding Paragraph */}
-          <p className="text-sm text-gray-700  dark:text-dark-text leading-relaxed text-right">
+          <p className="text-sm text-gray-700 dark:text-dark-text dark:bg-white/5 leading-relaxed text-right">
             پس از تهیه اسکرین‌شات، آن را در بخش تیکت‌های پشتیبانی برای ما ارسال کنید. مستند خرید شما حداکثر تا ۲۴ ساعت
             کاری آماده و برای شما ارسال خواهد شد.
           </p>
         </div>
 
-        <DialogFooter className="flex-row gap-2 pt-4">
+        <DialogFooter className="grid grid-cols-2 gap-3 pt-4">
           <Button
             type="button"
             variant="outline"
             onClick={onClose}
             disabled={loading}
-            className="w-full dark:border-primary-400 border-2 dark:text-primary-400"
+            className="border-primary-700 text-primary-700 hover:bg-primary-50 dark:border-primary-600 dark:text-primary-400 dark:hover:bg-primary-900/20 flex-1 sm:flex-initial"
           >
             لغو
           </Button>
@@ -80,7 +80,7 @@ export default function RequestDocumentModal({ isOpen, onClose }) {
             type="button"
             onClick={handleSubmit}
             disabled={loading}
-            className="bg-primary-600 w-full hover:bg-primary-700 text-white dark:bg-primary-500 dark:hover:bg-primary-600"
+            className="bg-primary-700 hover:bg-primary-800 text-white flex-1 sm:flex-initial"
           >
             {loading ? "در حال ثبت..." : "ثبت درخواست مستند خرید"}
           </Button>

@@ -17,7 +17,7 @@ export default function ProductListSection({ products, title = "لیست محص�
       </h2>
 
       <Swiper
-        slidesPerView={1.2}
+        slidesPerView={1.7}
         spaceBetween={16}
         breakpoints={{
           640: {

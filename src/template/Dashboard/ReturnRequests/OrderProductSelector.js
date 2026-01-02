@@ -71,6 +71,11 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
 
               <div className="my-5  border-b border-gray-300 dark:border-dark-stroke"></div>
 
+              <div class="flex-between mb-3">
+                <p className="dark:text-dark-titre text-primary-700">کالاهای داخل سفارش</p>
+                <p className="text-yellow-600">2 کالا</p>
+              </div>
+
               {/* Products */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
                 {order.items && order.items.length > 0 ? (

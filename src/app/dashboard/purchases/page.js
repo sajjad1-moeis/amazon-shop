@@ -5,17 +5,21 @@ import DashboardLayout from "@/layout/DashboardLayout";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
 import PurchaseCard from "@/template/Dashboard/Purchases/PurchaseCard";
 import PurchasesFilter from "@/template/Dashboard/Purchases/PurchasesFilter";
-import { useFilterParams } from "@/hooks/useFilterParams";
+import { useState } from "react";
 
 export default function Page() {
-  const { filters, updateFilter } = useFilterParams({
+  const [filters, setFilters] = useState({
     sortBy: "",
     dateFilter: "",
     searchQuery: "",
+    totalCount: products.length,
   });
 
-  const handleFilterChange = (name, value) => {
-    updateFilter(name, value);
+  const handleFilterChange = (key, value) => {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: value === "all" ? "" : value,
+    }));
   };
 
   return (
@@ -35,8 +39,10 @@ export default function Page() {
       <PurchasesFilter filters={filters} onFiltersChange={handleFilterChange} />
 
       <div className=" mt-8">
+        {/* Filter Section */}
+
         {/* Products Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 mt-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mt-6">
           {products.map((product) => (
             <PurchaseCard key={product.id} product={product} />
           ))}

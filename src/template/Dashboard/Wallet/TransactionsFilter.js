@@ -19,8 +19,11 @@ const transactionStatusOptions = [
 ];
 
 export default function TransactionsFilter({ filters, onFiltersChange }) {
-  const handleFilterChange = (name, value) => {
-    onFiltersChange((prev) => ({ ...prev, [name]: value }));
+  const handleFilterChange = (key, value) => {
+    onFiltersChange((prev) => ({
+      ...prev,
+      [key]: value === "all" ? "" : value,
+    }));
   };
 
   return (
@@ -30,12 +33,12 @@ export default function TransactionsFilter({ filters, onFiltersChange }) {
         <FilterSearchInput
           value={filters.searchQuery || ""}
           onChange={(value) => handleFilterChange("searchQuery", value)}
-          placeholder="جستجو بر اساس عنوان یا شماره تیکت..."
+          placeholder="جستجو بر اساس عنوان یا شماره تراکنش..."
         />
 
         {/* Transaction Type */}
         <StatusSelect
-          value={filters.transactionType || undefined}
+          value={filters.transactionType || ""}
           onValueChange={(value) => handleFilterChange("transactionType", value)}
           placeholder="نوع تراکنش"
           options={transactionTypeOptions}
@@ -44,7 +47,7 @@ export default function TransactionsFilter({ filters, onFiltersChange }) {
 
         {/* Status */}
         <StatusSelect
-          value={filters.status || undefined}
+          value={filters.status || ""}
           onValueChange={(value) => handleFilterChange("status", value)}
           placeholder="وضعیت"
           options={transactionStatusOptions}
@@ -53,7 +56,7 @@ export default function TransactionsFilter({ filters, onFiltersChange }) {
 
         {/* Date Range */}
         <DateFilterSelect
-          value={filters.dateRange || undefined}
+          value={filters.dateRange || ""}
           onValueChange={(value) => handleFilterChange("dateRange", value)}
           placeholder="بازه تاریخ"
           includeAll={true}

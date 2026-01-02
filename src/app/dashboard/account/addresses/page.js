@@ -16,13 +16,27 @@ export default function AddressesPage() {
     setIsModalOpen(true);
   };
 
+  const AdressBtn = () => (
+    <Button onClick={handleAddClick} className="bg-yellow-500 max-md:w-full hover:bg-yellow-600 text-gray-800">
+      افزودن آدرس
+      <Add size={20} />
+    </Button>
+  );
+
   return (
     <DashboardLayout>
-      <PageHeader title="آدرس های من" description="مدیریت آدرسهای ثبت شده برای ارسال سفارش ها">
-        <Button onClick={handleAddClick} className="bg-yellow-500 hover:bg-yellow-600 text-gray-800">
-          افزودن آدرس
-          <Add size={20} />
-        </Button>
+      <PageHeader
+        actionButton={
+          <div class="md:hidden">
+            <AdressBtn />
+          </div>
+        }
+        title="آدرس های من"
+        description="مدیریت آدرسهای ثبت شده برای ارسال سفارش ها"
+      >
+        <div class="max-md:hidden">
+          <AdressBtn />
+        </div>
       </PageHeader>
       <AddressesList />
     </DashboardLayout>

@@ -6,7 +6,7 @@ import StatusSelect from "@/components/FilterSelects/StatusSelect";
 import FilterSearchInput from "@/components/FilterSelects/FilterSearchInput";
 import FilterSection from "@/components/FilterSection";
 
-const orderStatusOptions = [
+const statusOptions = [
   { value: "processing", label: "در حال پردازش" },
   { value: "to-dubai", label: "در مسیر دبی" },
   { value: "to-iran", label: "در مسیر ایران" },
@@ -22,20 +22,27 @@ const paymentStatusOptions = [
 ];
 
 export default function OrdersFilter({ filters, onFiltersChange }) {
+  const handleFilterChange = (key, value) => {
+    onFiltersChange((prev) => ({
+      ...prev,
+      [key]: value === "all" ? "" : value,
+    }));
+  };
+
   return (
-    <div className="mt-6 sm:mt-8 md:mt-10">
+    <div className="mb-4 sm:mb-6 mt-10">
       <FilterSection>
-        {/* Search */}
+        {/* Search Input */}
         <FilterSearchInput
           value={filters.searchQuery || ""}
-          onChange={(value) => onFiltersChange("searchQuery", value)}
+          onChange={(value) => handleFilterChange("searchQuery", value)}
           placeholder="جستجو بر اساس شماره سفارش یا نام محصول..."
         />
 
         {/* Time Range Filter */}
         <DateFilterSelect
           value={filters.timeRange || ""}
-          onValueChange={(value) => onFiltersChange("timeRange", value)}
+          onValueChange={(value) => handleFilterChange("timeRange", value)}
           placeholder="بازه زمانی"
           includeAll={true}
         />
@@ -43,16 +50,16 @@ export default function OrdersFilter({ filters, onFiltersChange }) {
         {/* Status Filter */}
         <StatusSelect
           value={filters.status || ""}
-          onValueChange={(value) => onFiltersChange("status", value)}
+          onValueChange={(value) => handleFilterChange("status", value)}
           placeholder="وضعیت"
-          options={orderStatusOptions}
+          options={statusOptions}
           includeAll={true}
         />
 
         {/* Payment Status Filter */}
         <StatusSelect
           value={filters.paymentStatus || ""}
-          onValueChange={(value) => onFiltersChange("paymentStatus", value)}
+          onValueChange={(value) => handleFilterChange("paymentStatus", value)}
           placeholder="وضعیت پرداخت"
           options={paymentStatusOptions}
           includeAll={true}
