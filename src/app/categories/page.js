@@ -6,7 +6,7 @@ import MicroLessDescription from "@/template/Categories/MicroLessDescription";
 import Image from "next/image";
 import React from "react";
 
-function Page() {
+function CateGoryPage() {
   return (
     <IndexLayout>
       <Image
@@ -32,4 +32,4 @@ function Page() {
   );
 }
 
-export default Page;
+export default CateGoryPage;

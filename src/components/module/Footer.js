@@ -8,6 +8,9 @@ import { Button } from "../ui/button";
 const links = [
   { title: "درباره ما", href: "/about-us" },
   { title: "ارتباط با ما", href: "/contact-us" },
+  { title: "گیفت کارت", href: "/gift-cart" },
+  { title: "خدمات ارزی", href: "/currency-services" },
+  { title: "داشبورد", href: "/dashboard" },
   { title: "تخفیف ویژه", href: "#" },
   { title: "قوانین مرجوع کردن کالا", href: "#" },
   { title: "حریم خصوصی", href: "#" },

@@ -12,7 +12,7 @@ import ViewAllProductsCard from "@/components/ViewAllProductsCard";
 function BestSellingGadgets() {
   return (
     <div className="mt-14 md:mt-22 container categories relative max-md:border-y  dark:border-dark-field  max-md:py-5">
-      <TitleCard title={"پرفروش ترین گجت های دیجیتال"} content={"مشاهده همه محصولات"} className={"mb-8"} />
+      <TitleCard title={"پرفروش ترین گجت های دیجیتال"} content={"مشاهده همه محصولات"} className={"mb-8"} contentHref={"/products"} />
 
       <Swiper
         slidesPerView={1.5}

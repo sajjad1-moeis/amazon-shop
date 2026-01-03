@@ -1,7 +1,11 @@
 import { ArrowLeft2 } from "iconsax-reactjs";
+import Link from "next/link";
 import React from "react";
 
-function TitleCard({ className, title, content, titleClassName }) {
+function TitleCard({ className, title, content, titleClassName, contentHref }) {
+  const ContentLink = contentHref ? Link : React.Fragment;
+  const contentProps = contentHref ? { href: contentHref } : {};
+
   return (
     <div class={`flex-between ${className}`}>
       <div className="">
@@ -30,10 +34,14 @@ function TitleCard({ className, title, content, titleClassName }) {
           />
         </svg>
       </div>
-      <div className="flex-between text-primary-400 dark:text-[#ADB4FF] gap-2 max-md:hidden">
-        <p>{content}</p>
-        {content && <ArrowLeft2 size={20} />}
-      </div>
+      {content && (
+        <ContentLink {...contentProps}>
+          <div className="flex-between text-primary-400 dark:text-[#ADB4FF] gap-2 max-md:hidden cursor-pointer hover:text-primary-500 dark:hover:text-[#B1B1FF] transition-colors">
+            <p>{content}</p>
+            <ArrowLeft2 size={20} />
+          </div>
+        </ContentLink>
+      )}
     </div>
   );
 }

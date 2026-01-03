@@ -3,8 +3,9 @@
 import SwitchButton from "@/components/SwitchButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowDown2, Candle, Element3, RowVertical, Sort, SearchNormal1 } from "iconsax-reactjs";
+import { ArrowDown2, Candle, DiscountShape, Element3, RowVertical, Sort, SearchNormal1 } from "iconsax-reactjs";
 import React from "react";
+import Link from "next/link";
 
 const VIEW_MODES = [
   { id: "grid", icon: Element3 },

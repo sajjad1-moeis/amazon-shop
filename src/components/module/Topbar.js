@@ -8,34 +8,49 @@ import Image from "next/image";
 import Link from "next/link";
 import SwitchButton from "../SwitchButton";
 import DiscountAmazonButton from "../DiscountAmazonButton";
+import MegaMenu from "./MegaMenu";
 
 export default function TopBar() {
+  const categoriesTrigger = (
+    <Button variant="gray" className="flex items-center md:gap-2 gap-0 rounded-xl px-3 py-0 h-9 max-xl:hidden">
+      <MenuIcon size={18} variant="Bulk" />
+      <span className="text-sm">دسته بندی</span>
+      <ArrowDown2 size={18} />
+    </Button>
+  );
+
   return (
     <div className="bg-primary-500 dark:bg-dark-header">
       <div className="bg-primary-800/20 dark:bg-white/5">
         <div className="w-full  xl:container max-xl:px-4  py-3 px-4 flex items-center justify-between text-white">
           {/* Center Section */}
           <div className="flex items-center gap-1 lg:gap-3 ">
-            <Link href={"/categories"} className="max-xl:hidden">
-              <div className="flex items-center gap-3">
-                <Button variant="gray" className="flex items-center md:gap-2 gap-0 rounded-xl px-3 py-1">
-                  <MenuIcon size={18} variant="Bulk" />
-                  <span className="text-sm">دسته بندی</span>
-                  <ArrowDown2 size={18} />
-                </Button>
-              </div>
+            <div className="max-xl:hidden">
+              <MegaMenu trigger={categoriesTrigger} />
+            </div>
+            <Link href={"/currency-services"}>
+              <Button
+                variant="gray"
+                size="sm"
+                className="relative rounded-xl px-3 py-1 flex items-center md:gap-2 max-md:hidden"
+              >
+                <BitcoinConvert size={16} variant="Bulk" />
+                <span className="text-sm">خدمات ارزی</span>
+                <span className="absolute -top-1 -left-3 -rotate-[35deg] bg-yellow-300 text-black text-xs px-1 py-0.5 rounded">
+                  جدید
+                </span>
+              </Button>
             </Link>
-            <Button
-              variant="gray"
-              size="sm"
-              className="relative rounded-xl px-3 py-1 flex items-center md:gap-2 max-md:hidden"
-            >
-              <BitcoinConvert size={16} variant="Bulk" />
-              <span className="text-sm">خدمات ارزی</span>
-              <span className="absolute -top-1 -left-3 -rotate-[35deg] bg-yellow-300 text-black text-xs px-1 py-0.5 rounded">
-                جدید
-              </span>
-            </Button>
+            <Link href={"/gift-cart"}>
+              <Button
+                variant="gray"
+                size="sm"
+                className="rounded-xl px-3 py-1 flex items-center md:gap-2 gap-0 max-md:hidden"
+              >
+                <DiscountShape size={16} variant="Bulk" />
+                <span className="text-sm">گیفت کارت</span>
+              </Button>
+            </Link>
             <Link href={"/shops/ebay"}>
               <Button
                 variant="gray"
@@ -68,10 +83,16 @@ export default function TopBar() {
               </Button>
             </Link>
 
-            <Button variant="ghost" size="sm" className="rounded-xl  px-3 py-1 flex-between max-md:px-0 max-md:text-xs">
-              مشاهده همه
-              <ArrowLeft2 />
-            </Button>
+            <Link href={"/products"}>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="rounded-xl  px-3 py-1 flex-between max-md:px-0 max-md:text-xs"
+              >
+                مشاهده همه
+                <ArrowLeft2 />
+              </Button>
+            </Link>
           </div>
           {/* Left Section */}
           <div className="max-lg:hidden">

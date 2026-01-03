@@ -1,12 +1,13 @@
 import Image from "next/image";
 import React from "react";
 import { Heart, SearchNormal1, ShoppingCart } from "iconsax-reactjs";
-import { HeadphonesIcon, MenuIcon } from "lucide-react";
+import { HeadphonesIcon } from "lucide-react";
 import TopBar from "./Topbar";
 import Link from "next/link";
 import BtnShowLoginModal from "../BtnShowLoginModal";
 import SwitchButton from "../SwitchButton";
 import DiscountAmazonButton from "../DiscountAmazonButton";
+import DrawerMobile from "./DrawerMobile";
 
 function Header() {
   return (
@@ -39,17 +40,8 @@ function Header() {
         <div className="md:flex-between max-2xl:px-3 xl:container gap-10">
           <div className="flex-between max-lg:mb-2">
             <div className="flex-between">
-              <button variant="ghost" className="flex items-center gap-2 rounded-xl px-3 py-1 text-white lg:hidden">
-                <MenuIcon className="size-6" />
-              </button>
-
+              <DrawerMobile />
               <Link href={"/"}>
-                {/* <img
-                  alt="logo img"
-                  src="/image/logo.png"
-                  className=" w-full lg:h-12 h-9 md:min-w-36 lg:min-w-[170px]"
-                /> */}
-
                 <Image
                   alt="لوگو میکروالس"
                   src="/image/logo.png"
@@ -85,16 +77,17 @@ function Header() {
             </div>
           </div>
           <div className="flex-between text-white gap-3 max-md:hidden">
-            <div className="p-3 rounded-lg border-2 dark:border-[#898989] dark:text-[#898989] border-white max-lg:hidden">
-              <Heart />
-            </div>
+            <Link href={"/dashboard/favorites"}>
+              <div className="p-3 rounded-lg border-2 dark:border-[#898989] dark:text-[#898989] border-white max-lg:hidden">
+                <Heart />
+              </div>
+            </Link>
             <Link href={"/cart"}>
               <div className="p-3 rounded-lg border-2 dark:border-[#898989] dark:text-[#898989] border-white relative">
                 <div className="absolute size-5 bg-primary-400 text-white flex-center rounded -top-2 -right-2">0</div>
                 <ShoppingCart />
               </div>
             </Link>
-
             <BtnShowLoginModal />
           </div>
         </div>

@@ -39,7 +39,7 @@ export default function FavoritesPage() {
       >
         <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-5 max-md:text-xs max-lg:text-sm">
           <p className="text-gray-500 dark:text-dark-text">
-            تعداد محصولات: : <span className="text-yellow-600">4</span>
+            تعداد محصولات: <span className="text-yellow-600">4</span>
           </p>
           <p className="text-gray-500 dark:text-dark-text">
             کاهش قیمت اخیر: <span className="text-yellow-600">3 مورد</span>

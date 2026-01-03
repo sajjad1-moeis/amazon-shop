@@ -16,10 +16,91 @@ export default function ProductsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [viewMode, setViewMode] = useState("list");
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [categories, setCategories] = useState([]);
-  const [brands, setBrands] = useState([]);
+
+  // داده‌های تستی
+  const mockProducts = [
+    {
+      id: "1",
+      name: "ساعت مچی مردانه Invicta مدل ۳۶۱ سری Reserve کرونوگراف",
+      title: "ساعت مچی مردانه Invicta مدل ۳۶۱ سری Reserve کرونوگراف",
+      price: 15370000,
+      discountPrice: 12450000,
+      mainImage: "/image/Home/product.png",
+      image: "/image/Home/product.png",
+      rating: 4.7,
+      reviewCount: 235,
+      inStock: true,
+      badges: ["انتخاب آمازون", "ارسال بین المللی"],
+      seller: "amazon",
+      sellerCountry: "🇦🇪",
+    },
+    {
+      id: "2",
+      name: "ساعت مچی مردانه Invicta مدل ۳۶۱ سری Reserve کرونوگراف",
+      title: "ساعت مچی مردانه Invicta مدل ۳۶۱ سری Reserve کرونوگراف",
+      price: 15370000,
+      discountPrice: 12450000,
+      mainImage: "/image/Home/product.png",
+      image: "/image/Home/product.png",
+      rating: 4.7,
+      reviewCount: 235,
+      inStock: true,
+      badges: ["پرفروش ترین", "ارسال بین المللی"],
+      seller: "amazon",
+      sellerCountry: "🇦🇪",
+    },
+    {
+      id: "3",
+      name: "کنترلر پلی استیشن ۵ - DualSense",
+      title: "کنترلر پلی استیشن ۵ - DualSense",
+      price: 5000000,
+      discountPrice: 4500000,
+      mainImage: "/image/Home/product.png",
+      image: "/image/Home/product.png",
+      rating: 4.5,
+      reviewCount: 128,
+      inStock: true,
+      badges: ["ارسال بین المللی"],
+      seller: "amazon",
+      sellerCountry: "🇦🇪",
+    },
+    {
+      id: "4",
+      name: "ساعت هوشمند سامسونگ Galaxy Watch",
+      title: "ساعت هوشمند سامسونگ Galaxy Watch",
+      price: 8000000,
+      discountPrice: 7500000,
+      mainImage: "/image/Home/product.png",
+      image: "/image/Home/product.png",
+      rating: 4.6,
+      reviewCount: 89,
+      inStock: true,
+      badges: ["پرفروش ترین"],
+      seller: "amazon",
+      sellerCountry: "🇦🇪",
+    },
+  ];
+
+  const mockCategories = [
+    { id: "1", name: "کالای دیجیتال" },
+    { id: "2", name: "کنسول بازی" },
+    { id: "3", name: "ساعت هوشمند" },
+    { id: "4", name: "لوازم گیمینگ" },
+    { id: "5", name: "صوتی و تصویری" },
+  ];
+
+  const mockBrands = [
+    { id: "1", name: "Sony" },
+    { id: "2", name: "Samsung" },
+    { id: "3", name: "Logitech" },
+    { id: "4", name: "Razer" },
+    { id: "5", name: "JBL" },
+  ];
+
+  const [products, setProducts] = useState(mockProducts);
+  const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState(mockCategories);
+  const [brands, setBrands] = useState(mockBrands);
   const [filters, setFilters] = useState({
     categoryId: searchParams.get("category") || "",
     brandId: searchParams.get("brand") || "",
@@ -30,89 +111,45 @@ export default function ProductsPage() {
   const [pageNumber, setPageNumber] = useState(parseInt(searchParams.get("page")) || 1);
   const [pageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
+  const [totalCount, setTotalCount] = useState(mockProducts.length);
 
+  // فیلتر کردن محصولات بر اساس فیلترها
   useEffect(() => {
-    fetchCategories();
-    fetchBrands();
-  }, []);
+    let filtered = [...mockProducts];
 
-  const fetchCategories = async () => {
-    try {
-      const response = await productCategoryService.getActive();
-      if (response.success && response.data) {
-        setCategories(response.data || []);
-      }
-    } catch (error) {
-      console.error("Error fetching categories:", error);
+    if (filters.query) {
+      const query = filters.query.toLowerCase();
+      filtered = filtered.filter((p) => p.name.toLowerCase().includes(query) || p.title.toLowerCase().includes(query));
     }
-  };
 
-  const fetchBrands = async () => {
-    try {
-      const response = await productBrandService.getActive();
-      if (response.success && response.data) {
-        setBrands(response.data || []);
-      }
-    } catch (error) {
-      console.error("Error fetching brands:", error);
+    if (filters.categoryId) {
+      // در حالت تستی، همه محصولات را نشان می‌دهیم
     }
-  };
 
-  const fetchProducts = useCallback(async () => {
-    try {
-      setLoading(true);
-      const params = {
-        pageNumber,
-        pageSize,
-        query: filters.query || undefined,
-        categoryId: filters.categoryId || undefined,
-        brandId: filters.brandId || undefined,
-        minPrice: filters.minPrice || undefined,
-        maxPrice: filters.maxPrice || undefined,
-      };
-
-      const response = await productService.search(params);
-
-      if (response.success && response.data) {
-        setProducts(response.data.products || response.data || []);
-        setTotalPages(response.data.totalPages || 1);
-        setTotalCount(response.data.totalCount || 0);
-      } else {
-        toast.error(response.message || "خطا در دریافت محصولات");
-      }
-    } catch (error) {
-      toast.error(error.message || "خطا در دریافت محصولات");
-      console.error("Error fetching products:", error);
-    } finally {
-      setLoading(false);
+    if (filters.brandId) {
+      // در حالت تستی، همه محصولات را نشان می‌دهیم
     }
-  }, [pageNumber, pageSize, filters]);
 
-  useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+    if (filters.minPrice) {
+      filtered = filtered.filter((p) => (p.discountPrice || p.price) >= parseFloat(filters.minPrice));
+    }
+
+    if (filters.maxPrice) {
+      filtered = filtered.filter((p) => (p.discountPrice || p.price) <= parseFloat(filters.maxPrice));
+    }
+
+    setProducts(filtered);
+    setTotalCount(filtered.length);
+  }, [filters]);
 
   const handleFilterChange = (filterType, value) => {
     setFilters((prev) => ({ ...prev, [filterType]: value }));
     setPageNumber(1);
-    const params = new URLSearchParams();
-    if (value) params.set(filterType, value);
-    Object.entries(filters).forEach(([key, val]) => {
-      if (key !== filterType && val) params.set(key, val);
-    });
-    router.push(`/products?${params.toString()}`);
   };
 
   const handleSearch = (query) => {
     setFilters((prev) => ({ ...prev, query }));
     setPageNumber(1);
-    const params = new URLSearchParams();
-    if (query) params.set("search", query);
-    Object.entries(filters).forEach(([key, val]) => {
-      if (key !== "query" && val) params.set(key, val);
-    });
-    router.push(`/products?${params.toString()}`);
   };
 
   const dynamicFilters = [

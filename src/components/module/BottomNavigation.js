@@ -8,10 +8,10 @@ import Link from "next/link";
 
 const navigationItems = [
   { id: "home", label: "خانه", icon: Home, href: "/" },
-  { id: "tracking", label: "پیگیری سفارش", icon: BoxTick, href: "/tracking" },
+  { id: "dashboard", label: "داشبورد", icon: Profile, href: "/dashboard" },
   { id: "cart", label: "سبد خرید", icon: ShoppingCart, href: "/cart" },
-  { id: "login", label: "ورود", icon: Profile, href: "/login" },
-  { id: "currency", label: "خدمات ارزی", icon: BitcoinConvert, href: "/currency" },
+  { id: "tracking", label: "پیگیری سفارش", icon: BoxTick, href: "/tracking" },
+  { id: "currency", label: "خدمات ارزی", icon: BitcoinConvert, href: "/currency-services" },
 ];
 
 export default function BottomNavigation() {
