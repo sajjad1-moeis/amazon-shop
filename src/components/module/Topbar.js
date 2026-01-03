@@ -12,11 +12,13 @@ import MegaMenu from "./MegaMenu";
 
 export default function TopBar() {
   const categoriesTrigger = (
-    <Button variant="gray" className="flex items-center md:gap-2 gap-0 rounded-xl px-3 py-0 h-9 max-xl:hidden">
-      <MenuIcon size={18} variant="Bulk" />
-      <span className="text-sm">دسته بندی</span>
-      <ArrowDown2 size={18} />
-    </Button>
+    <Link href={"/categories"}>
+      <Button variant="gray" className="flex items-center md:gap-2 gap-0 rounded-xl px-3 py-0 h-9 max-xl:hidden">
+        <MenuIcon size={18} variant="Bulk" />
+        <span className="text-sm">دسته بندی</span>
+        <ArrowDown2 size={18} />
+      </Button>
+    </Link>
   );
 
   return (

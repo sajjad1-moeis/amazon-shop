@@ -27,13 +27,13 @@ export default function MegaMenu({ trigger }) {
     : megaMenuData;
 
   return (
-    <NavigationMenu open={true} className="relative z-50" dir="rtl">
+    <NavigationMenu open={true} className="relative z-[5555]" dir="rtl">
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuTrigger className="bg-transparent hover:bg-transparent data-[state=open]:bg-transparent h-auto p-0">
             {trigger}
           </NavigationMenuTrigger>
-          <NavigationMenuContent className="!w-[95vw] max-w-6xl !right-0 !top-full !mt-2 !p-0 !h-auto !z-50" dir="rtl">
+          <NavigationMenuContent className="!w-[95vw] max-w-7xl !right-0 !top-full !mt-2 !p-0 !h-auto !z-50" dir="rtl">
             <div
               className="w-full p-0 bg-white dark:bg-dark-box rounded-xl shadow-xl border border-gray-200 dark:border-dark-stroke relative z-50"
               dir="rtl"

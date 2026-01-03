@@ -7,6 +7,7 @@ import ProductComparisonColumn from "@/template/Dashboard/Comparisons/ProductCom
 import ComparisonTable from "@/template/Dashboard/Comparisons/ComparisonTable";
 import FeatureHighlightCards from "@/template/Dashboard/Comparisons/FeatureHighlightCards";
 import AddProductColumn from "@/template/Dashboard/Comparisons/AddProductColumn";
+import AddFavoriteModal from "@/template/Dashboard/Favorites/AddFavoriteModal";
 
 import IndexLayout from "@/layout/IndexLayout";
 
@@ -58,6 +59,7 @@ const comparisonFeatures = [
 
 export default function ProductComparison() {
   const [products, setProducts] = useState(mockProducts);
+  const [isFavoriteModalOpen, setIsFavoriteModalOpen] = useState(false);
 
   const handleRemoveProduct = (productId) => {
     setProducts(products.filter((p) => p.id !== productId));
@@ -68,15 +70,22 @@ export default function ProductComparison() {
     toast.info("در حال انتقال به انتخاب محصول...");
   };
 
+  const handleSaveComparison = () => {
+    setIsFavoriteModalOpen(true);
+  };
+
   return (
     <IndexLayout>
-      <div className="flex flex-col gap-4 sm:gap-6 ">
+      <div className="flex flex-col gap-4 sm:gap-6  pb-20">
         <div class=" py-4  border-b-2 border-gray-200 dark:border-dark-stroke mb-8">
           <div class="container flex-between">
             <p className="text-gray-500 dark:text-dark-text  max-md:text-sm">
               مقایسه محصولات <span className="text-yellow-600">2 محصول</span>
             </p>
-            <Button variant="ghost" className="bg-yellow-500  text-primary-800 font-medium text-xs sm:text-sm w-auto">
+            <Button
+              variant="ghost"
+              className="bg-yellow-500 hover:bg-yellow-600 text-primary-800 font-medium text-xs sm:text-sm w-auto"
+            >
               ذخیره مقایسه
             </Button>
           </div>
@@ -85,7 +94,7 @@ export default function ProductComparison() {
           {/* Products Grid */}
           <div className="flex flex-col-reverse md:flex-row gap-3 sm:gap-6 mb-6">
             <div className="w-full md:max-w-48">
-              <AddProductColumn onAdd={handleAddProduct} />
+              <AddProductColumn onAdd={handleSaveComparison} />
             </div>
             <div className="grid grid-cols-2 gap-3 sm:gap-6 flex-1">
               {products.map((product) => (
@@ -105,6 +114,9 @@ export default function ProductComparison() {
           {products.length > 0 && <FeatureHighlightCards products={products} />}
         </div>
       </div>
+
+      {/* Add Favorite Modal */}
+      <AddFavoriteModal open={isFavoriteModalOpen} onOpenChange={setIsFavoriteModalOpen} />
     </IndexLayout>
   );
 }

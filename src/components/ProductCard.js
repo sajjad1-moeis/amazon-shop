@@ -36,8 +36,8 @@ function ProductCard({ className, product, badges }) {
     <Link href={`/product/${productId}`}>
       <div
         className={cn(
-          "shadow-box rounded-xl flex flex-col cursor-pointer hover:shadow-lg transition-shadow bg-white",
-          className || "border-gray-200"
+          "shadow-box rounded-xl flex flex-col cursor-pointer hover:shadow-lg transition-shadow bg-white  dark:bg-dark-box ",
+          className || "border-gray-200 dark:border-dark-stroke border"
         )}
         style={{ boxShadow: "0px 2px 4px 0px #0000001A" }}
       >

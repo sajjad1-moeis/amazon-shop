@@ -83,28 +83,20 @@ export default function NewPriceLockModal({ open, onOpenChange }) {
               <RadioGroup value={duration} onValueChange={setDuration} className="gap-2 grid grid-cols-2">
                 <div
                   className={cn(
-                    "flex items-center gap-2 p-2 sm:p-3 rounded-lg border-2 transition-colors cursor-pointer bg-gray-100 dark:bg-dark-field border-gray-200 dark:border-dark-stroke hover:border-gray-300"
+                    "flex items-center gap-2 accent-primary-700 dark:accent-primary-300 p-2 sm:p-3 rounded-lg border-2 transition-colors cursor-pointer bg-gray-100 dark:bg-dark-field border-gray-200 dark:border-dark-stroke hover:border-gray-300"
                   )}
                 >
-                  <RadioGroupItem
-                    value="12"
-                    id="12h"
-                    className="dark:text-primary-400 accent-primary-300 w-4 h-4 sm:w-5 sm:h-5"
-                  />
+                  <RadioGroupItem value="12" id="12h" />
                   <Label htmlFor="12h" className="text-xs sm:text-sm text-gray-700 dark:text-dark-text cursor-pointer">
                     ۱۲ ساعت
                   </Label>
                 </div>
                 <div
                   className={cn(
-                    "flex items-center gap-2 p-2 sm:p-3 rounded-lg border-2 transition-colors cursor-pointer bg-gray-100 dark:bg-dark-field border-gray-200 dark:border-dark-stroke hover:border-gray-300"
+                    "flex items-center gap-2 accent-primary-700 dark:accent-primary-300 p-2 sm:p-3 rounded-lg border-2 transition-colors cursor-pointer bg-gray-100 dark:bg-dark-field border-gray-200 dark:border-dark-stroke hover:border-gray-300"
                   )}
                 >
-                  <RadioGroupItem
-                    value="24"
-                    id="24h"
-                    className="dark:text-primary-400 accent-primary-300 w-4 h-4 sm:w-5 sm:h-5"
-                  />
+                  <RadioGroupItem value="24" id="24h" />
                   <Label htmlFor="24h" className="text-xs sm:text-sm text-gray-700 dark:text-dark-text cursor-pointer">
                     ۲۴ ساعت
                   </Label>

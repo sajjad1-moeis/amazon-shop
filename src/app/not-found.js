@@ -11,7 +11,7 @@ export const metadata = {
 function Notfound() {
   return (
     <div className="bg-[#F4F6F5] dark:bg-dark-bg relative min-h-screen">
-      <div className="lg:absolute pt-32 max-md:pt-40 m-auto inset-x-0 size-max">
+      <div className="lg:absolute pt-32 max-md:pt-40 m-auto inset-x-0 size-max z-50">
         <h1 className="text-[#0448A9] dark:text-blue-400 text-3xl text-center md:text-4xl lg:text-6xl font-bold">
           این صفحه تحویل داده نشد !
         </h1>
@@ -27,7 +27,7 @@ function Notfound() {
           </Link>
         </div>
       </div>
-      <div className="relative w-full ">
+      <div className="relative w-full h-96 lg:h-screen">
         <Image src="/image/404.png" alt="صفحه یافت نشد - خطای 404" fill className=" w-full object-cover" />
       </div>
     </div>

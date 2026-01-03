@@ -6,6 +6,7 @@ import DashboardLayout from "@/layout/DashboardLayout";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
 import FavoriteCard from "@/template/Dashboard/Favorites/FavoriteCard";
 import FavoritesFilter from "@/template/Dashboard/Favorites/FavoritesFilter";
+import AddFavoriteModal from "@/template/Dashboard/Favorites/AddFavoriteModal";
 import { Add } from "iconsax-reactjs";
 import { useState } from "react";
 
@@ -16,6 +17,7 @@ export default function FavoritesPage() {
     brand: "",
     searchQuery: "",
   });
+  const [isAddFavoriteModalOpen, setIsAddFavoriteModalOpen] = useState(false);
 
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({
@@ -29,7 +31,10 @@ export default function FavoritesPage() {
       {/* Top Section: Header */}
       <PageHeader
         actionButton={
-          <Button className="bg-yellow-500 w-full hover:bg-yellow-600 text-primary-800 md:hidden">
+          <Button
+            onClick={() => setIsAddFavoriteModalOpen(true)}
+            className="bg-yellow-500 w-full hover:bg-yellow-600 text-primary-800 md:hidden"
+          >
             افزودن علاقه‌مندی جدید
             <Add size={24} />
           </Button>
@@ -44,7 +49,10 @@ export default function FavoritesPage() {
           <p className="text-gray-500 dark:text-dark-text">
             کاهش قیمت اخیر: <span className="text-yellow-600">3 مورد</span>
           </p>
-          <Button className="bg-yellow-500 hover:bg-yellow-600 text-primary-800 max-md:hidden">
+          <Button
+            onClick={() => setIsAddFavoriteModalOpen(true)}
+            className="bg-yellow-500 hover:bg-yellow-600 text-primary-800 max-md:hidden"
+          >
             افزودن علاقه‌مندی جدید
             <Add size={24} />
           </Button>
@@ -62,6 +70,9 @@ export default function FavoritesPage() {
           ))}
         </div>
       </div>
+
+      {/* Add Favorite Modal */}
+      <AddFavoriteModal open={isAddFavoriteModalOpen} onOpenChange={setIsAddFavoriteModalOpen} />
     </DashboardLayout>
   );
 }
