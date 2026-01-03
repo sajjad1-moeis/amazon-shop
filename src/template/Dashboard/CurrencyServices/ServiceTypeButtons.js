@@ -27,10 +27,10 @@ export default function ServiceTypeButtons({ selectedType, onTypeChange }) {
             type="button"
             onClick={() => onTypeChange(type.id)}
             className={cn(
-              "flex items-center gap-2 py-4 rounded-lg border-b-2 transition-all",
+              "flex items-center gap-2 py-4 rounded-lg border-b-2 transition-all w-full",
               isSelected
                 ? "bg-primary-50 border-primary-500  dark:border-dark-title dark:bg-primary-50/25 text-primary-600 dark:text-dark-title"
-                : "bg-white dark:bg-dark-field text-gray-700 dark:text-dark-text border-gray-200 dark:border-dark-stroke hover:border-gray-300"
+                : "bg-gray-100 dark:bg-dark-field text-gray-700 dark:text-dark-text border-gray-200 dark:border-dark-stroke hover:border-gray-300"
             )}
           >
             <Icon size={20} variant={isSelected ? "Bold" : "Outline"} />

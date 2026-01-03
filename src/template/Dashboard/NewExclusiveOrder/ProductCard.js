@@ -23,7 +23,7 @@ export default function ProductCard({ product, onCancelLock, onViewDetails }) {
       <div className="w-full bg-gray-50 dark:bg-dark-field rounded-xl p-2 border border-gray-200 dark:border-dark-stroke flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
         {/* Product Image */}
         <div className="w-full md:w-32 h-48 md:h-28 relative flex-shrink-0 rounded-xl overflow-hidden max-md:hidden">
-          <Image src={"/Home/product.png"} alt={title} fill className="object-cover" />
+          <Image src={"/image/Home/product.png"} alt={title} fill className="object-cover" />
         </div>
 
         {/* Middle Content */}

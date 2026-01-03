@@ -19,7 +19,7 @@ export default function PriceLockCard({ product, onCancelLock, onViewDetails, re
     >
       {/* Product Image */}
       <div className="w-full md:w-32 h-48 md:h-28 relative flex-shrink-0 rounded-xl overflow-hidden max-lg:hidden">
-        <Image src={"/Home/product.png"} alt={title} fill className="object-cover" />
+        <Image src={"/image/Home/product.png"} alt={title} fill className="object-cover" />
       </div>
 
       {/* Middle Content */}

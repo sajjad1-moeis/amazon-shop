@@ -78,7 +78,11 @@ export default function RechargeModal({ isOpen, onClose }) {
                         : "border-gray-200 dark:border-dark-stroke hover:border-gray-300"
                     )}
                   >
-                    <RadioGroupItem value={method.value} id={method.value} className="mt-1 dark:accent-primary-400" />
+                    <RadioGroupItem
+                      value={method.value}
+                      id={method.value}
+                      className="mt-1 accent-primary-700 dark:accent-primary-400"
+                    />
 
                     <label htmlFor={method.value} className="flex-1 cursor-pointer flex items-start gap-3">
                       <Icon

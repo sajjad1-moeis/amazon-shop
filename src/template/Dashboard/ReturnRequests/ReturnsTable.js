@@ -89,7 +89,7 @@ export default function ReturnsTable({ returns, onCancel }) {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="gap-2 w-1/2 text-white dark:bg-dark-primary bg-primary-700"
+                        className="gap-2 w-1/2 text-white dark:bg-dark-primary bg-primary-700  px-10"
                       >
                         مشاهده فاکتور مرجوعی
                       </Button>

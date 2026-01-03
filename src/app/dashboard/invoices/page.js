@@ -39,7 +39,7 @@ export default function InvoicesPage() {
         <InvoicesFilter filters={filters} onFiltersChange={handleFilterChange} />
 
         {/* Invoices Table Section */}
-        <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4 md:p-6 mt-8">
+        <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-3 mt-8">
           <div className="flex-between gap-4 mb-6">
             <h2 className="text-lg md:text-xl text-primary-700 dark:text-dark-titre">لیست فاکتورها</h2>
             <p className="text-gray-600 max-md:text-sm dark:text-dark-text">

@@ -61,8 +61,8 @@ export default function OrderDetail({ params }) {
       </div>
 
       {/* Media and Second Payment - کنار هم */}
-      <div className="flex flex-col-reverse lg:grid-cols-3 gap-6 mb-6">
-        <div className="lg:col-span-2">
+      <div className="flex flex-col-reverse md:grid md:grid-cols-3 gap-6 mb-6">
+        <div className="md:col-span-2">
           <ProductMediaSlider media={order.media} />
         </div>
         {order.needsSecondPayment && (
@@ -71,7 +71,7 @@ export default function OrderDetail({ params }) {
       </div>
 
       {/* Payment Info and Tracking Codes - کنار هم در بالا */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <PaymentInfoCard paymentInfo={order.paymentInfo} />
         <TrackingCodesCard trackingCodes={order.trackingCodes} />
       </div>

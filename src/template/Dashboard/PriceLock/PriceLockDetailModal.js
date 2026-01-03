@@ -33,7 +33,7 @@ export default function PriceLockDetailModal({ lock, open, onOpenChange, onCance
         {/* Action Buttons */}
         <div className="border p-2 rounded-xl border-gray-200  dark:bg-dark-field dark:border-dark-stroke">
           <h4 className="text-sm sm:text-base  text-gray-900 dark:text-dark-titre mb-4">جزئیات بیشتر</h4>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:flex flex-wrap justify-between gap-3 sm:gap-4">
             {/* First Row */}
             <div className="flex flex-col md:flex-row gap-1">
               <span className="text-xs sm:text-sm text-gray-600 dark:text-dark-text">قیمت نهایی</span>

@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { filterSelectTriggerStyles, filterSelectContentStyles, filterTextareaStyles } from "@/utils/filterStyles";
+import { cn } from "@/lib/utils";
 
 const packagingStatusOptions = [
   { value: "intact", label: "کاملا سالم" },
@@ -32,7 +33,7 @@ export default function ReturnReasonForm({ formData, onFormChange }) {
           <div className="space-y-2">
             <Label className="text-sm ">علت مرجوعی</Label>
             <Select value={formData.returnReason} onValueChange={(value) => onFormChange("returnReason", value)}>
-              <SelectTrigger className={filterSelectTriggerStyles}>
+              <SelectTrigger className={cn("!w-full bg-gray-50 ", filterSelectTriggerStyles)}>
                 <SelectValue placeholder="دلیل مرجوعی این محصول" />
               </SelectTrigger>
               <SelectContent className={filterSelectContentStyles}>
@@ -47,7 +48,7 @@ export default function ReturnReasonForm({ formData, onFormChange }) {
           <div className="space-y-2">
             <Label className="text-sm ">وضعیت بسته بندی</Label>
             <Select value={formData.packagingStatus} onValueChange={(value) => onFormChange("packagingStatus", value)}>
-              <SelectTrigger className={filterSelectTriggerStyles}>
+              <SelectTrigger className={cn("!w-full bg-gray-50 ", filterSelectTriggerStyles)}>
                 <SelectValue placeholder="وضعیت بسته بندی را انتخاب کنید" />
               </SelectTrigger>
               <SelectContent className={filterSelectContentStyles}>
@@ -66,7 +67,7 @@ export default function ReturnReasonForm({ formData, onFormChange }) {
           <Label className="text-sm ">توضیحات بیشتر</Label>
           <Textarea
             value={formData.description}
-            className={`min-h-[100px] ${filterTextareaStyles}`}
+            className={`min-h-[100px] bg-gray-50 ${filterTextareaStyles}`}
             onChange={(e) => onFormChange("description", e.target.value)}
             placeholder="توضیحات اختیاری درباره مشکل..."
             dir="rtl"

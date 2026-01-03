@@ -59,10 +59,10 @@ export default function ProductSuggestions() {
         </div>
         <div class="flex gap-2">
           <button className="next-slide  z-[8888] ">
-            <ArrowCircleRight size={36} variant="Bold" className=" text-gray-600 dark:text-dark-title" />
+            <ArrowCircleRight size={36} variant="Bold" className=" text-primary-600 dark:text-dark-title" />
           </button>
           <button className="prev-slide  z-50 ">
-            <ArrowCircleLeft size={36} variant="Bold" className=" text-gray-600 dark:text-dark-title" />
+            <ArrowCircleLeft size={36} variant="Bold" className=" text-primary-600 dark:text-dark-title" />
           </button>
         </div>
       </div>
@@ -126,7 +126,7 @@ export default function ProductSuggestions() {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="gap-2 max-md:hidden dark:bg-dark-primary dark:border-0"
+                      className="gap-2 max-md:hidden text-white bg-dark-primary dark:border-0"
                     >
                       <Eye className="h-4 w-4" />
                       <span className="hidden sm:inline">مشاهده جزئیات</span>

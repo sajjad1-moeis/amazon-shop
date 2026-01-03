@@ -126,8 +126,8 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
                                     : "bg-gray-100 dark:bg-dark-field"
                                 )}
                               >
-                                <p className="text-gray-600 dark:text-dark-text">تعداد</p>
-                                <div>{item.quantity} عدد</div>
+                                <p className="text-gray-500 dark:text-dark-text">تعداد</p>
+                                <div className="text-gray-700 dark:text-dark-titre">{item.quantity} عدد</div>
                               </div>
                               <div
                                 className={cn(
@@ -137,8 +137,8 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
                                     : "bg-gray-100 dark:bg-dark-field"
                                 )}
                               >
-                                <p className="text-gray-600 dark:text-dark-text">قیمت کالا (تومان)</p>
-                                <div>{item.price} </div>
+                                <p className="text-gray-500 dark:text-dark-text">قیمت کالا (تومان)</p>
+                                <div className="text-gray-700 dark:text-dark-titre">{item.price} </div>
                               </div>
                             </div>
                           </div>

@@ -13,13 +13,8 @@ export default function ComparisonTable({ products, features }) {
   const renderFeatureValue = (value) => {
     if (typeof value === "boolean") {
       return (
-        <td
-          className={cn(
-            "text-center py-4 px-6 ",
-            value ? "bg-green-50 dark:bg-[#0E9F6E14]" : "bg-red-50 dark:bg-red-400/5"
-          )}
-        >
-          <div className="flex items-center gap-2 justify-center ">
+        <td className={cn("py-4 px-6 ", value ? "bg-green-50 dark:bg-[#0E9F6E14]" : "bg-red-50 dark:bg-red-400/5")}>
+          <div className="flex items-center gap-2 ">
             {value ? (
               <>
                 <TickCircle size={20} className="text-green-600" variant="Bold" />
@@ -36,7 +31,7 @@ export default function ComparisonTable({ products, features }) {
       );
     }
     return (
-      <td className={cn("text-center py-4 px-6 dark:bg-dark-box")}>
+      <td className={cn("bg-gray-50  py-4 px-6 dark:bg-dark-box")}>
         <span className="text-sm text-gray-900 dark:text-dark-titre ">{value || "-"}</span>
       </td>
     );

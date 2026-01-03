@@ -122,7 +122,7 @@ export default function NewPriceLockModal({ open, onOpenChange }) {
                 className="dark:border-dark-stroke dark:bg-dark-field data-[state=checked]:dark:bg-primary-300 w-4 h-4 sm:w-5 sm:h-5"
               />
               <Label className="text-xs sm:text-sm text-gray-700 dark:text-dark-text">
-                قوانین قفل قیمت را می‌پذیرم
+                <span className="text-yellow-600">قوانین قفل</span> قیمت را می‌پذیرم
               </Label>
             </div>
           )}
