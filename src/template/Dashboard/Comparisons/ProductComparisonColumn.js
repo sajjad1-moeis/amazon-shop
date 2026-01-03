@@ -8,7 +8,7 @@ import { Star, X } from "lucide-react";
 
 export default function ProductComparisonColumn({ product, onRemove }) {
   return (
-    <div className="rounded-2xl  relative">
+    <div className="rounded-2xl bg-white dark:bg-dark-box border border-gray-200 dark:border-dark-stroke p-3 md:p-4 relative shadow-sm">
       {/* Remove Button */}
       <button
         onClick={onRemove}

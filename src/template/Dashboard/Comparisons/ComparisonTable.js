@@ -44,13 +44,13 @@ export default function ComparisonTable({ products, features }) {
           <table className="w-full">
             <thead className="dark:bg-dark-stroke">
               <tr className="border-b border-gray-200 dark:border-dark-stroke">
-                <th className="text-right py-4 px-6 bg-white dark:bg-dark-bg/50 text-sm font-semibold text-gray-900 dark:text-dark-titre"></th>
+                <th className="text-right py-4 px-6 bg-gray-50 dark:bg-dark-bg/50 text-sm font-semibold text-gray-900 dark:text-dark-titre"></th>
                 {products.map((product, index) => (
                   <th
                     key={product.id}
                     className={cn(
-                      "text-center py-4 px-6 whitespace-nowrap bg-white dark:bg-dark-bg/50 text-sm font-semibold text-gray-900 dark:text-dark-titre",
-                      index === 0 && " border-gray-200 dark:border-dark-stroke"
+                      "text-center py-4 px-6 whitespace-nowrap bg-gray-50 dark:bg-dark-bg/50 text-sm font-semibold text-gray-900 dark:text-dark-titre",
+                      index > 0 && "border-r border-gray-200 dark:border-dark-stroke"
                     )}
                   >
                     {product.title}
@@ -71,7 +71,9 @@ export default function ComparisonTable({ products, features }) {
                     {feature.label}
                   </td>
                   {products.map((product, productIndex) => (
-                    <>{renderFeatureValue(getFeatureValue(product, feature.key))}</>
+                    <React.Fragment key={product.id}>
+                      {renderFeatureValue(getFeatureValue(product, feature.key))}
+                    </React.Fragment>
                   ))}
                 </tr>
               ))}
