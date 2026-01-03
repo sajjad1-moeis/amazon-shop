@@ -24,15 +24,6 @@ export default function MessagesFilter({ filters, onFiltersChange }) {
           placeholder="جستجو بر اساس عنوان پیام..."
         />
 
-        {/* Message Type Filter */}
-        <StatusSelect
-          value={filters.messageType || ""}
-          onValueChange={(value) => onFiltersChange("messageType", value)}
-          placeholder="نوع پیام"
-          options={messageTypeOptions}
-          includeAll={true}
-        />
-
         {/* Date Range Filter */}
         <DateFilterSelect
           value={filters.dateRange || ""}

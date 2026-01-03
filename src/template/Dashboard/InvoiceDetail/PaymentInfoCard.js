@@ -36,7 +36,7 @@ export default function PaymentInfoCard({ paymentInfo = {} }) {
   ].filter((item) => item.value !== undefined && item.value !== null);
 
   return (
-    <div className="bg-white dark:bg-dark-box rounded-xl border border-gray-200 dark:border-0 p-4">
+    <div className="bg-white dark:border-dark-stroke h-full dark:bg-dark-box rounded-xl border border-gray-200  p-3">
       <h3 className="text-lg text-gray-800 dark:text-dark-titre mb-6">اطلاعات پرداخت</h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">

@@ -64,7 +64,7 @@ export default function OrderDetailHeader({ order, onDownloadInvoice, onCancelOr
           <span className="text-xs md:text-sm text-gray-600 dark:text-dark-text">تاریخ سفارش: </span>
           <span className="text-sm font-medium text-gray-900 dark:text-dark-titre">{order.orderDate}</span>
         </div>
-        <div className="max-md:mr-auto">
+        <div className="max-md:mr-auto md:hidden lg:block">
           <span className="text-xs md:text-sm text-gray-600 dark:text-dark-text">تعداد محصول: </span>
           <span className="text-sm font-medium  bg-primary-100 px-1 rounded text-primary-500 dark:text-dark-title dark:bg-dark-blue">
             {order.itemsCount}

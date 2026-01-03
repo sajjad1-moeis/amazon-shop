@@ -90,7 +90,7 @@ export default function OrderCard({ order, onDownloadInvoice, onSecondPayment })
                   </div>
                 </div>
 
-                <div className="flex flex-col xl:flex-row gap-2 text-xs text-gray-600 dark:text-dark-text ">
+                <div className="flex flex-col md:flex-row lg:flex-col xl:flex-row gap-2 text-xs text-gray-600 dark:text-dark-text ">
                   <div className="bg-gray-200 dark:bg-dark-box  rounded-lg p-2 flex-between  flex-1">
                     قیمت کالا (تومان):{" "}
                     <span className="font-medium text-gray-900 dark:text-dark-titre">

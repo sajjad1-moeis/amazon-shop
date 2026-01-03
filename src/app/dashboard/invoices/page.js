@@ -48,7 +48,7 @@ export default function InvoicesPage() {
             </p>
           </div>
           <InvoicesTable invoices={initialInvoices} onView={handleView} />
-          <ViewAllTable />
+          <ViewAllTable className={"xl:hidden"} />
         </div>
       </div>
     </DashboardLayout>

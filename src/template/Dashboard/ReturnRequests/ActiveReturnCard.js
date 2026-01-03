@@ -98,7 +98,7 @@ export default function ActiveReturnCard({ returnData, onCancel }) {
           <div className="mb-4 ">
             <h4 className=" text-primary-500 dark:text-dark-text mb-4">روند مرجوعی</h4>
             <div class="max-xl:overflow-auto">
-              <Timeline className={"max-xl:min-w-[900px]"} currentStep={returnData.currentStep} steps={returnSteps} />
+              <Timeline className={"max-md:min-w-[900px]"} currentStep={returnData.currentStep} steps={returnSteps} />
             </div>
           </div>
         </div>

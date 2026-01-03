@@ -35,7 +35,7 @@ export default function OrderProgressSection({ productsProgress }) {
             {/* Timeline */}
             <div className=" relative max-lg:overflow-auto">
               <Timeline
-                className={"max-lg:min-w-[900px]"}
+                className={"max-md:min-w-[900px]"}
                 currentStep={product.currentStepIndex}
                 steps={product.timelineSteps}
               />

@@ -117,7 +117,7 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
                                 <h4 className="text-sm  line-clamp-2">{item.name}</h4>
                               </div>
                             </div>
-                            <div class="grid md:grid-cols-2 mt-2 gap-3">
+                            <div class="grid lg:grid-cols-2 mt-2 gap-3">
                               <div
                                 className={cn(
                                   "text-xs flex-between text-gray-500 dark:text-dark-titre p-2 rounded-lg",

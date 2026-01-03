@@ -6,7 +6,7 @@ import { DocumentCopy, DocumentText } from "iconsax-reactjs";
 
 export default function TrackingCodesCard({ trackingCodes }) {
   return (
-    <div className="bg-white dark:bg-dark-box rounded-xl border border-gray-200 dark:border-0 p-3 ">
+    <div className="bg-white dark:border-dark-stroke h-full dark:bg-dark-box rounded-xl border border-gray-200  p-3">
       <h3 className="text-lg  text-gray-800 dark:text-dark-titre mb-4">کدهای رهگیری</h3>
 
       <div className="space-y-3">

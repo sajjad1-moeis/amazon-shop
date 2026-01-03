@@ -51,10 +51,10 @@ export default function BasicInfoCard() {
           )}
         </div>
       </div>
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-5 xl:gap-0">
+      <div className="grid grid-cols-2 md:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-5 xl:gap-0">
         {/* Avatar */}
         <div className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3">
-          <div className="size-16 max-md:hidden rounded-lg overflow-hidden border border-gray-200 dark:border-dark-stroke bg-gray-100 dark:bg-dark-field flex items-center justify-center flex-shrink-0">
+          <div className="size-10 lg:size-16 max-md:hidden rounded-lg overflow-hidden border border-gray-200 dark:border-dark-stroke bg-gray-100 dark:bg-dark-field flex items-center justify-center flex-shrink-0">
             {data.avatar ? (
               <Image src={data.avatar} alt="avatar" width={64} height={64} className="object-cover" />
             ) : (
@@ -64,8 +64,8 @@ export default function BasicInfoCard() {
           {/* Fields */}
           <Row className={"sm:mx-0"} label="نام و نام خانوادگی" value={data.fullName} />
         </div>
-        <Row className={"lg:mx-auto sm:mx-0"} label="شماره تماس" value={data.phone} />
-        <Row className={"lg:mx-auto sm:mx-0"} label="ایمیل" value={data.email || "---"} />
+        <Row className={"md:mx-auto sm:mx-0"} label="شماره تماس" value={data.phone} />
+        <Row className={"md:mx-auto sm:mx-0 max-xl:hidden"} label="ایمیل" value={data.email || "---"} />
         <Row className={"xl:mx-auto sm:mx-0"} label="کد ملی" value={data.nationalId} />
         <div className="text-xs sm:text-sm flex flex-col lg:items-center">
           <p className="mb-1 sm:mb-2 px-2 sm:px-3 py-1 w-max rounded-md bg-green-100 dark:bg-green-900/30 dark:text-green-300 text-green-700 text-xs font-medium">
@@ -73,7 +73,7 @@ export default function BasicInfoCard() {
           </p>
           <p className="text-gray-400 dark:text-caption lg:text-center text-xs">وضعیت احراز هویت</p>
         </div>
-        <Row className={"lg:mx-auto sm:mx-0"} label="تاریخ عضویت" value={data.membershipDate} />
+        <Row className={"md:mx-auto sm:mx-0"} label="تاریخ عضویت" value={data.membershipDate} />
       </div>
 
       {/* Modal */}

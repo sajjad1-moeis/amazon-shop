@@ -48,7 +48,7 @@ export default function SecurityCard() {
       </div>
 
       {/* Card Content */}
-      <div className=" grid grid-cols-2 xl:flex flex-row sm:items-center sm:justify-between gap-4 sm:gap-5">
+      <div className=" grid grid-cols-2 md:flex lg:grid xl:flex flex-row sm:items-center sm:justify-between gap-4 sm:gap-5">
         <Row label="رمز عبور" value={securityInfo.password} className="w-full sm:w-auto" />
         <Row label="تأیید دو مرحله ای" value={securityInfo.twoFactorAuthText} className="w-full sm:w-auto" />
         <div className="flex flex-col items-start">

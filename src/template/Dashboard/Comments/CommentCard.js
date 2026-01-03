@@ -12,10 +12,10 @@ export default function CommentCard({ comment, onDelete, onEdit }) {
   const [showReplies, setShowReplies] = useState(false);
 
   return (
-    <div className="bg-white border dark:bg-dark-box dark:border-0 border-gray-200 rounded-xl shadow-sm p-3 sm:p-4 relative">
+    <div className="bg-white dark:border-dark-stroke h-full dark:bg-dark-box rounded-xl border border-gray-200  p-3">
       <div className="space-y-4 sm:space-y-5">
         {/* Product Information */}
-        <div className="flex-between max-md:border-b max-md:pb-4 border-gray-200 dark:border-dark-stroke gap-3 sm:gap-4">
+        <div className="flex-between max-lg:border-b max-lg:pb-4 border-gray-200 dark:border-dark-stroke gap-3 sm:gap-4">
           <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
             <div className="relative aspect-square w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
               <Image src="/image/Home/product.png" alt="تصویر محصول" fill className="object-cover rounded-xl" />

@@ -76,7 +76,7 @@ export default function NewExclusiveOrder() {
             <div className="flex justify-end mt-6 pt-6 border-t border-gray-200 dark:border-dark-stroke">
               <Button
                 onClick={handleSubmit}
-                className="bg-yellow-500 w-full md:w-1/2 ml-auto hover:bg-yellow-600 text-gray-900 font-medium px-8 py-3 rounded-lg"
+                className="bg-yellow-500 w-full lg:w-1/2 ml-auto hover:bg-yellow-600 text-gray-900 font-medium px-8 py-3 rounded-lg"
               >
                 ثبت سفارش اختصاصی
               </Button>

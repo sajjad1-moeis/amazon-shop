@@ -31,23 +31,23 @@ export default function PriceLockDetailModal({ lock, open, onOpenChange, onCance
         <PriceLockCard removeBorder removeHandler />
 
         {/* Action Buttons */}
-        <div className="border p-2 rounded-xl border-gray-200  dark:bg-dark-field dark:border-dark-stroke pt-3 sm:pt-4">
+        <div className="border p-2 rounded-xl border-gray-200  dark:bg-dark-field dark:border-dark-stroke">
           <h4 className="text-sm sm:text-base  text-gray-900 dark:text-dark-titre mb-4">جزئیات بیشتر</h4>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             {/* First Row */}
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col md:flex-row gap-1">
               <span className="text-xs sm:text-sm text-gray-600 dark:text-dark-text">قیمت نهایی</span>
-              <span className="text-xs sm:text-sm  text-blue-600 dark:text-dark-titre">
+              <span className="text-xs sm:text-sm  text-primary-600 dark:text-dark-title">
                 {lock.finalPrice || "۷۲,۵۰۰,۰۰۰ تومان"}
               </span>
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col md:flex-row gap-1">
               <span className="text-xs sm:text-sm text-gray-600 dark:text-dark-text">هزینه حمل</span>
               <span className="text-xs sm:text-sm font-medium text-gray-900 dark:text-dark-titre">
                 {lock.shippingCost || "۱,۲۰۰,۰۰۰ تومان"}
               </span>
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col md:flex-row gap-1">
               <span className="text-xs sm:text-sm text-gray-600 dark:text-dark-text">قیمت پایه</span>
               <span className="text-xs sm:text-sm font-medium text-gray-900 dark:text-dark-titre">
                 {lock.basePrice || "۱,۲۹۹ AED"}
@@ -55,19 +55,19 @@ export default function PriceLockDetailModal({ lock, open, onOpenChange, onCance
             </div>
 
             {/* Second Row */}
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col md:flex-row gap-1">
               <span className="text-xs sm:text-sm text-gray-600 dark:text-dark-text">نرخ تبدیل</span>
               <span className="text-xs sm:text-sm font-medium text-gray-900 dark:text-dark-titre">
                 {lock.conversionRate || "۱۸,۴۰۰"}
               </span>
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col md:flex-row gap-1">
               <span className="text-xs sm:text-sm text-gray-600 dark:text-dark-text">تاریخ ایجاد</span>
               <span className="text-xs sm:text-sm font-medium text-gray-900 dark:text-dark-titre">
                 {lock.creationDate || "۱۳:۰۹ - ۱۴۰۳/۱۰/۰۱"}
               </span>
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col md:flex-row gap-1">
               <span className="text-xs sm:text-sm text-gray-600 dark:text-dark-text">تاریخ پرداخت</span>
               <span className="text-xs sm:text-sm font-medium text-gray-900 dark:text-dark-titre">
                 {lock.paymentDate || "۱۳:۰۹ - ۱۴۰۳/۱۰/۰۱"}

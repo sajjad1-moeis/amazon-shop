@@ -104,24 +104,13 @@ export default function OrdersPage() {
   );
 }
 
-function Section({ children }) {
-  return (
-    <div
-      className="bg-white dark:bg-gray-800 rounded-2xl p-4 md:p-6 mb-6"
-      style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
-    >
-      {children}
-    </div>
-  );
-}
-
 function EmptyState() {
   return (
     <div
-      className="bg-white dark:bg-gray-800 rounded-2xl p-8 text-center mt-6"
+      className="bg-white dark:bg-dark-box rounded-2xl p-8 text-center mt-6"
       style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
     >
-      <p className="text-gray-500 dark:text-gray-400">سفارشی یافت نشد</p>
+      <p className="text-gray-500 dark:text-dark-titre">سفارشی یافت نشد</p>
     </div>
   );
 }

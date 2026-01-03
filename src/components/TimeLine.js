@@ -56,7 +56,7 @@ export default function Timeline({ currentStep = 1, steps = [], className }) {
                 <Icon variant="Bold" className="w-6 h-6" />
               </div>
 
-              <span className="mt-3 text-sm whitespace-nowrap">{label}</span>
+              <span className="mt-3  text-xs lg:text-sm whitespace-nowrap">{label}</span>
             </div>
           );
         })}
