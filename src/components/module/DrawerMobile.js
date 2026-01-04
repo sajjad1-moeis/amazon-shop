@@ -48,6 +48,12 @@ export default function DrawerMobile() {
       <SheetContent
         side="right"
         className="w-[320px] sm:w-[400px] dark:bg-dark-box h-screen overflow-auto px-2"
+        style={{
+          height: "100vh",
+          height: "-webkit-fill-available",
+          paddingTop: "env(safe-area-inset-top, 0px)",
+          paddingBottom: "env(safe-area-inset-bottom, 0px)",
+        }}
         dir="rtl"
       >
         <SheetHeader className="border-b border-gray-200 dark:border-dark-stroke pb-4">

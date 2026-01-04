@@ -21,7 +21,7 @@ const links = [
 export default function Footer() {
   return (
     <footer
-      className="w-full bg-white dark:bg-[#101010] text-gray-700 dark:text-white border-t border-neutral-100 dark:border-gray-800"
+      className="w-full bg-white dark:bg-[#101010] text-gray-700 dark:text-white border-t border-neutral-100 dark:border-gray-800 overflow-x-hidden"
       dir="rtl"
     >
       <div className="px-4 lg:container">

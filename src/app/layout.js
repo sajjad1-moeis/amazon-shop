@@ -18,13 +18,28 @@ export const metadata = {
     "میکروالس پلتفرم مطمئن خرید از آمازون آمریکا و امارات با ارسال سریع به ایران، پشتیبانی واقعی و تضمین اصالت کالا.",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  viewportFit: "cover",
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="fa" suppressHydrationWarning className={iranSans.variable}>
       <body dir="rtl" className="font-sans">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <AuthProvider>
-            <main className="overflow-hidden max-md:pb-20 dark:bg-dark-bg">{children}</main>
+            <main 
+              className="overflow-hidden max-md:pb-20 dark:bg-dark-bg"
+              style={{
+                paddingBottom: "max(env(safe-area-inset-bottom, 0px), 5rem)",
+              }}
+            >
+              {children}
+            </main>
             <Toaster dir="rtl" position="top-right" richColors className={iranSans.variable} />
           </AuthProvider>
         </ThemeProvider>

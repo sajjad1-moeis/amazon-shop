@@ -33,7 +33,7 @@ export default function CurrencyRates() {
         <p className="text-xs md:text-sm  text-gray-600 dark:text-dark-text">به روز رسانی هر ۵ دقیقه</p>
       </div>
 
-      <div className="space-y-4  grid max-lg:grid-cols-2 max-md:grid-cols-1">
+      <div className="space-y-4  grid lg:grid-cols-1 md:grid-cols-2">
         {currencies.map((currency, index) => (
           <div
             key={currency.id}

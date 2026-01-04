@@ -39,7 +39,14 @@ export default function BottomNavigation() {
   }, [activeId, pathname]);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-dark-header z-50 md:hidden">
+    <div 
+      className="fixed bottom-0 left-0 right-0 bg-white dark:bg-dark-header z-50 md:hidden"
+      style={{
+        paddingBottom: "env(safe-area-inset-bottom, 0px)",
+        paddingLeft: "env(safe-area-inset-left, 0px)",
+        paddingRight: "env(safe-area-inset-right, 0px)",
+      }}
+    >
       <div
         className="absolute top-0 transition-all duration-300 ease-out z-[99999] h-1 bg-[#386BF6]"
         style={{ left: offset.left + "px", width: offset.width }}

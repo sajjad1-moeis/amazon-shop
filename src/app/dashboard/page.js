@@ -15,8 +15,8 @@ export default function DashboardPage() {
       {/* Main Content Grid */}
       <RecentOrders />
 
-      <div className="flex flex-col-reverse lg:grid lg:grid-cols-3 gap-3 md:gap-6 mt-8">
-        <div className="lg:col-span-2">
+      <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-6 mt-8">
+        <div className="xl:col-span-2">
           <SupportTickets />
         </div>
         <CurrencyRates />
