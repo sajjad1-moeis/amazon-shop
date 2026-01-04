@@ -1502,3 +1502,46 @@ export const initialMessages = [
     actionButton: null,
   },
 ];
+
+export // داده‌های تستی
+const mockProduct = {
+  id: "1",
+  name: "ساعت مچی مردانه Invicta مدل ۰۳۶۱ سری REC کرونوگراف حرفه ای و لوکس",
+  title: "ساعت مچی مردانه Invicta مدل ۰۳۶۱ سری REC کرونوگراف حرفه ای و لوکس",
+  englishName: "Invicta Men's Watch, Model 0361, Reserve Series - Professional and Luxury Chronograph",
+  price: 15370000,
+  discountPrice: 12450000,
+  mainImage: "/image/Home/product.png",
+  images: [
+    "/image/Home/product.png",
+    "/image/Home/product.png",
+    "/image/Home/product.png",
+    "/image/Home/product.png",
+    "/image/Home/product.png",
+  ],
+  rating: 4.7,
+  reviewCount: 235,
+  inStock: true,
+  categoryName: "ساعت هوشمند",
+  categoryId: "1",
+  parentCategoryName: "کالای دیجیتال",
+  brandName: "Invicta",
+  shortDescription:
+    "طراحی چشم گیر با موتور سوئیسی و بدنه استیل مقاوم مناسب برای استایل رسمی و اسپرت با دقت بالا و عملکرد کرونوگراف چند حالته.",
+  description:
+    "<p>ساعت مچی مردانه Invicta با طراحی لوکس و حرفه‌ای. این ساعت دارای موتور سوئیسی با دقت بالا و بدنه استیل مقاوم است که مناسب برای استایل رسمی و اسپرت می‌باشد.</p>",
+  colors: [
+    { id: "1", value: "white", label: "سفید", name: "سفید" },
+    { id: "2", value: "gold", label: "طلایی", name: "طلایی" },
+    { id: "3", value: "navy", label: "سرمه ای", name: "سرمه ای" },
+  ],
+  attributes: [
+    { name: "رنگ", key: "color", value: "سرمه ای", label: "سرمه ای" },
+    { name: "نوع موتور", key: "movement", value: "سوئیسی", label: "سوئیسی" },
+    { name: "جنس بدنه", key: "material", value: "استیل", label: "استیل" },
+  ],
+  badges: ["پرفروش ترین", "ارسال بین المللی"],
+  seller: "امازون امارات",
+  sellerLogo: "/image/Header/paypal.png",
+  amazonLink: "https://amazon.ae",
+};

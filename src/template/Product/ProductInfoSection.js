@@ -5,25 +5,29 @@ import { Magicpen } from "iconsax-reactjs";
 import { Star } from "lucide-react";
 import SelectColor from "./SelectColor";
 
-export default function ProductInfoSection(props) {
+export default function ProductInfoSection({ product, colors, selectedColor, setSelectedColor }) {
   return (
-    <div className="bg-white dark:bg-gray-800">
+    <div>
       {/* Title */}
-      <h1 className="text-2xl  text-gray-900 dark:text-white mb-2 text-right">
-        ساعت مچی مردانه Invicta مدل 0361 سری REC– کرونوگراف حرفه‌ای و لوکس
+      <h1 className="text-2xl text-gray-900 dark:text-white mb-2 text-right">
+        {product?.name || product?.title || "نام محصول"}
       </h1>
 
-      <p className="text-sm text-gray-400 dark:text-gray-400 mb-4 text-right">
-        Invicta Men's Watch, Model 0361, Reserve Series – Professional and Luxury Chronograph
-      </p>
+      {product?.englishName && (
+        <p className="text-sm text-gray-400 dark:text-gray-400 mb-4 text-right">{product.englishName}</p>
+      )}
 
       {/* Rating */}
-      <div class="flex-between  border-b pb-4">
-        <div className="flex items-center  gap-4">
+      <div className="flex-between border-b pb-4 mb-4">
+        <div className="flex items-center gap-4">
           <div className="flex items-center gap-1">
             <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-            <span className="text-sm font-bold text-gray-900 dark:text-white">۴.۷</span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">(۲۳۵)</span>
+            <span className="text-sm font-bold text-gray-900 dark:text-white">
+              {product?.rating ? product.rating.toFixed(1) : "0.0"}
+            </span>
+            {product?.reviewCount && (
+              <span className="text-sm text-gray-500 dark:text-gray-400">({product.reviewCount})</span>
+            )}
           </div>
 
           <div className="flex gap-2">
@@ -86,51 +90,35 @@ export default function ProductInfoSection(props) {
       </div>
 
       {/* Colors */}
-      <SelectColor {...props} />
+      {colors && colors.length > 0 && (
+        <SelectColor colors={colors} selectedColor={selectedColor} setSelectedColor={setSelectedColor} />
+      )}
 
       {/* Short Description */}
-      <div className="mb-6">
-        <h3 className="text-sm font-bold mb-2 text-right">معرفی کوتاه</h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed text-right">
-          طراحی چشم گیر با موتور سوئیسی و بدنه استیل مقاوم مناسب برای استایل رسمی و اسپرت.
-        </p>
-      </div>
+      {product?.shortDescription && (
+        <div className="mb-6">
+          <h3 className=" mb-2 text-gray-800 md:text-lg text-right">معرفی کوتاه</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed text-right">
+            {product.shortDescription}
+          </p>
+        </div>
+      )}
 
       {/* Features Table */}
-      <div>
-        <h3 className="text-sm font-bold mb-3 text-right">ویژگی ها</h3>
+      {product?.attributes && product.attributes.length > 0 && (
+        <div>
+          <h3 className=" mb-3 text-right text-gray-800 dark:text-white">ویژگی ها</h3>
 
-        <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-          <table className="w-full text-sm">
-            <tbody>
-              <tr>
-                <td className="px-4 py-3 bg-gray-50 dark:bg-gray-900/50">برند</td>
-                <td className="px-4 py-3">Invicta</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-3 bg-gray-50 dark:bg-gray-900/50">مدل</td>
-                <td className="px-4 py-3">Chronograph</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-3 bg-gray-50 dark:bg-gray-900/50">کشور سازنده</td>
-                <td className="px-4 py-3">سوئیس</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-3 bg-gray-50 dark:bg-gray-900/50">جنس بدنه</td>
-                <td className="px-4 py-3">استیل ضدزنگ</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-3 bg-gray-50 dark:bg-gray-900/50">نوع موتور</td>
-                <td className="px-4 py-3">کوارتز</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-3 bg-gray-50 dark:bg-gray-900/50">مقاومت در برابر آب</td>
-                <td className="px-4 py-3">۲۰۰ متر</td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="grid grid-cols-3 gap-4">
+            {product.attributes.map((atr) => (
+              <div className="bg-gray-100 border border-gray-200 p-3 rounded-lg">
+                <p className="text-gray-700">{atr.name}</p>
+                <p className="text-gray-500 text-sm mt-2">{atr.value}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

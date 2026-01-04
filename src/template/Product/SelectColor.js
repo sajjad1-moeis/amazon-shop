@@ -25,12 +25,12 @@ const getColorHex = (colorName) => {
 
 function SelectColor({ colors, selectedColor, setSelectedColor }) {
   return (
-    <div className="mb-6 mt-10">
+    <div className="my-10">
       <label className="text-sm font-bold block mb-3 text-right text-gray-900 dark:text-white">رنگ</label>
       <RadioGroup
         value={selectedColor}
         onValueChange={setSelectedColor}
-        className="flex flex-row-reverse gap-3  flex-wrap"
+        className="flex flex-row-reverse gap-3 justify-end  flex-wrap"
       >
         {colors.map((color) => {
           const isSelected = selectedColor === color.value;

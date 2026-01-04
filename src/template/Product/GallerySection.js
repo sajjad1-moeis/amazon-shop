@@ -5,47 +5,44 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 
 export default function GallerySection({ productImages, selectedImage, setSelectedImage }) {
+  const currentImage = productImages[selectedImage] || productImages[0] || "/image/Home/product.png";
+
   return (
-    <div className="bg-white  dark:bg-gray-800 rounded-lg relative">
-      {/* Share Button */}
-      <div className="absolute left-4 top-4 z-50 shadow-lg rounded-full">
-        <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
-          <Share2 className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-        </button>
-      </div>
+    <div className="bg-white dark:bg-gray-800 rounded-xl  relative">
+      {/* Main Image Container */}
+      <div className="relative aspect-square rounded-md ">
+        <Image src={currentImage} alt={`محصول - تصویر ${selectedImage + 1}`} fill className="object-cover rounded-md" />
 
-      {/* Main Image */}
-      <div className="mb-4">
-        <div className="relative aspect-square">
-          <Image
-            src="/image/Home/product.png"
-            alt={`محصول بازدید شده شماره `}
-            fill
-            className="object-cover rounded-md"
-          />
-        </div>
-      </div>
-
-      {/* Thumbnails */}
-      <div className="space-y-2 absolute flex flex-col top-0 right-0">
-        {productImages.slice(0, 4).map((img, index) => (
-          <button
-            key={index}
-            onClick={() => setSelectedImage(index)}
-            className={cn(
-              " relative  size-14 rounded-lg overflow-hidden border-2 transition-colors bg-white dark:bg-gray-900",
-              selectedImage === index
-                ? "border-primary-600 dark:border-blue-400"
-                : "border-gray-100 dark:border-gray-700"
-            )}
-          >
-            <Image src="/image/Home/product.png" alt={`محصول بازدید شده شماره `} fill className="rounded-md " />
+        {/* Share Button */}
+        <div className="absolute left-4 top-4 z-50">
+          <button className="p-2 bg-white/90 dark:bg-gray-900/90 hover:bg-white dark:hover:bg-gray-900 rounded-full transition-colors shadow-md">
+            <Share2 className="w-5 h-5 text-gray-600 dark:text-gray-400" />
           </button>
-        ))}
+        </div>
 
-        <button className="w-full aspect-square rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-          <span className="text-gray-400 dark:text-gray-600 text-2xl">⋯</span>
-        </button>
+        {/* Thumbnails - Absolute positioned on image */}
+        <div className="absolute top-0 right-0 z-50 flex flex-col gap-2">
+          {productImages.slice(0, 4).map((img, index) => (
+            <button
+              key={index}
+              onClick={() => setSelectedImage(index)}
+              className={cn(
+                "relative size-14 rounded-xl overflow-hidden border-2 transition-all bg-white dark:bg-gray-900",
+                selectedImage === index
+                  ? "border-primary-600 dark:border-blue-400 scale-105"
+                  : "border-gray-200 dark:border-gray-700 opacity-80 hover:opacity-100"
+              )}
+            >
+              <Image src={img} alt={`تصویر ${index + 1}`} fill className="object-cover rounded-md" />
+            </button>
+          ))}
+
+          {productImages.length > 4 && (
+            <button className="relative size-14 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex items-center justify-center shadow-md hover:shadow-lg transition-all opacity-80 hover:opacity-100">
+              <span className="text-gray-400 dark:text-gray-600 text-2xl">⋯</span>
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

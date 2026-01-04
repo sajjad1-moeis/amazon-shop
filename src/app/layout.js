@@ -32,8 +32,8 @@ export default function RootLayout({ children }) {
       <body dir="rtl" className="font-sans">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <AuthProvider>
-            <main 
-              className="overflow-hidden max-md:pb-20 dark:bg-dark-bg"
+            <main
+              className="overflow-hidden  dark:bg-dark-bg"
               style={{
                 paddingBottom: "max(env(safe-area-inset-bottom, 0px), 5rem)",
               }}

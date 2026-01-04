@@ -4,153 +4,171 @@ import { Button } from "@/components/ui/button";
 import { shoppingCartService } from "@/services/shoppingCart/shoppingCartService";
 import { toast } from "sonner";
 import { useState } from "react";
+import { ArrowLeft, ArrowLeft2, InfoCircle, Sms, Truck, TruckFast } from "iconsax-reactjs";
 
-export default function PurchaseSection({ selectedDelivery, setSelectedDelivery, productId, quantity = 1 }) {
+export default function PurchaseSection({ selectedDelivery, setSelectedDelivery, productId, product, quantity = 1 }) {
   const [loading, setLoading] = useState(false);
 
-  const handleAddToCart = async () => {
-    if (!productId) {
-      toast.error("شناسه محصول یافت نشد");
-      return;
-    }
-
+  const addToCart = async () => {
     try {
       setLoading(true);
-      await shoppingCartService.addItem({
-        productId,
-        quantity,
-      });
-      toast.success("محصول به سبد خرید اضافه شد");
-    } catch (error) {
-      toast.error(error.message || "خطا در افزودن به سبد خرید");
-      console.error("Error adding to cart:", error);
+      await shoppingCartService.addItem({ productId, quantity });
+      toast.success("به سبد خرید اضافه شد");
+    } catch {
+      toast.error("خطا در افزودن به سبد خرید");
     } finally {
       setLoading(false);
     }
   };
+
+  const price = product?.discountPrice || product?.price;
+  const discount =
+    product?.price && product?.discountPrice
+      ? Math.round(((product.price - product.discountPrice) / product.price) * 100)
+      : 0;
+
   return (
-    <div className=" space-y-4">
-      {/* Delivery Options */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-        <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-3 text-right">نوع ارسال</h3>
-        <div className="space-y-2">
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input
-              type="radio"
-              name="delivery"
-              value="express"
-              checked={selectedDelivery === "express"}
-              onChange={(e) => setSelectedDelivery(e.target.value)}
-              className="w-4 h-4 text-blue-600 dark:text-blue-500"
-            />
-            <div className="flex-1 flex justify-between">
-              <span className="text-sm font-medium text-gray-900 dark:text-white">ارسال اکسپرس</span>
-              <span className="text-xs text-gray-600 dark:text-gray-400">۲۰ روز کاری</span>
+    <div className="space-y-3">
+      {/* 1️⃣ Delivery type */}
+      <div className="space-y-4 bg-white border border-gray-200 rounded-xl overflow-hidden">
+        {/* 1️⃣ Delivery type */}
+        <div>
+          <div className="grid grid-cols-2">
+            {/* Standard */}
+            <label
+              className={`cursor-pointer p-3 transition flex items-center justify-between
+      ${selectedDelivery === "standard" ? "bg-gray-100 dark:bg-gray-700" : "bg-white dark:bg-gray-800"}`}
+            >
+              <div className="flex items-start gap-2">
+                <input
+                  type="radio"
+                  name="delivery"
+                  value="standard"
+                  checked={selectedDelivery === "standard"}
+                  onChange={() => setSelectedDelivery("standard")}
+                  className="mt-1 accent-primary-600"
+                />
+                <div className="text-right">
+                  <div class="flex-center gap-2">
+                    <div class="bg-gray-600 p-1 rounded-lg">
+                      <Truck size={16} className=" text-white" />
+                    </div>
+
+                    <div className="text-xs">ارسال عادی</div>
+                  </div>
+                  <div className="text-[10px] text-gray-500 mt-2">۳۰ روز کاری</div>
+                </div>
+              </div>
+            </label>
+
+            {/* Express */}
+            <label
+              className={`cursor-pointer p-3 transition flex items-center justify-between
+      ${selectedDelivery === "express" ? "bg-gray-100 dark:bg-gray-700" : "bg-white dark:bg-gray-800"}`}
+            >
+              <div className="flex items-start gap-2">
+                <input
+                  type="radio"
+                  name="delivery"
+                  value="express"
+                  checked={selectedDelivery === "express"}
+                  onChange={() => setSelectedDelivery("express")}
+                  className="mt-1 accent-green-600"
+                />
+                <div className="text-right">
+                  <div class="flex-center gap-2">
+                    <div class="bg-green-500 p-1 rounded-lg">
+                      <TruckFast size={16} className="text-white " />
+                    </div>
+                    <div className="text-xs">ارسال اکسپرس</div>
+                  </div>
+                  <div className="text-[10px] text-gray-500 mt-2">۲۰ روز کاری</div>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        {/* 2️⃣ Price + seller + actions */}
+        <div className="p-2.5 mt-10">
+          {/* Price */}
+          <div>
+            <p className="text-gray-500 text-sm">قیمت :</p>
+            <div className="flex-between gap-2">
+              <div class="">
+                <span className="text-2xl">{Number(price).toLocaleString("fa-IR")}</span>
+                <span className="text-sm">تومان</span>
+              </div>
+              {discount > 0 && <span className="bg-orange-600 text-white text-xs px-2 py-1 rounded">{discount}٪</span>}
             </div>
-          </label>
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input
-              type="radio"
-              name="delivery"
-              value="standard"
-              checked={selectedDelivery === "standard"}
-              onChange={(e) => setSelectedDelivery(e.target.value)}
-              className="w-4 h-4 text-blue-600 dark:text-blue-500"
-            />
-            <div className="flex-1 flex justify-between">
-              <span className="text-sm font-medium text-gray-900 dark:text-white">ارسال عادی</span>
-              <span className="text-xs text-gray-600 dark:text-gray-400">۳۰ روز کاری</span>
+
+            {discount > 0 && (
+              <div className="text-sm text-gray-400 line-through mt-1">
+                {Number(product.price).toLocaleString("fa-IR")} تومان
+              </div>
+            )}
+
+            <button className="text-xs text-primary-300 mt-4 mb-6 flex items-center gap-1">
+              <InfoCircle size={16} variant="Bold" />
+              جزئیات محاسبه قیمت
+            </button>
+          </div>
+
+          {/* Seller */}
+          <div class="flex-between">
+            <p className="text-gray-500 text-sm">قیمت :</p>
+            <div className="flex-center gap-1">
+              <div className="text-sm text-gray-400">آمازون امارات</div>
+              <img src="/image/amazonLogo.png" className="w-10 h-max" />
             </div>
-          </label>
-        </div>
-      </div>
-
-      {/* Price */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="text-2xl font-bold text-gray-900 dark:text-white">۱۲,۴۵۰,۰۰۰</span>
-          <span className="text-sm text-gray-600 dark:text-gray-400">تومان</span>
-        </div>
-        <div className="flex items-center gap-2 mb-3">
-          <span className="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-bold px-2 py-1 rounded">
-            ۱۹٪
-          </span>
-          <span className="text-sm text-gray-400 dark:text-gray-500 line-through">۱۲,۴۵۰,۰۰۰ تومان</span>
-        </div>
-      </div>
-
-      {/* Seller */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-        <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-3 text-right">فروشگاه</h3>
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-orange-100 dark:bg-orange-900/30 rounded flex items-center justify-center">
-            <span className="text-orange-600 dark:text-orange-400 text-xs font-bold">amazon</span>
           </div>
-          <div className="flex-1 text-right">
-            <div className="text-sm font-medium text-gray-900 dark:text-white">امازون امارات</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">amazon</div>
+
+          {/* Buttons */}
+          <div className="space-y-2 mt-3">
+            <Button onClick={addToCart} variant="ghost" className="w-full  bg-yellow-400  text-black rounded-lg">
+              افزودن به سبد خرید
+            </Button>
+
+            <Button variant="ghost" className="w-full rounded-lg bg-gray-200 text-gray-600">
+              افزودن به علاقه‌مندی‌ها
+            </Button>
           </div>
-          <div className="w-6 h-4 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
-            <span className="text-xs">🇦🇪</span>
-          </div>
+
+          <button className="text-[10px] text-gray-400 flex gap-1 mt-4   items-center">
+            <InfoCircle size={16} variant="Bold" />
+            شامل هزینه حمل و گمرک
+          </button>
         </div>
       </div>
 
-      {/* Action Buttons */}
-      <div className="space-y-2">
-        <Button
-          className="w-full h-12 bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-600 text-gray-900 font-bold rounded-lg"
-          onClick={handleAddToCart}
-          disabled={loading}
-        >
-          {loading ? "در حال افزودن..." : "افزودن به سبد خرید"}
-        </Button>
-        <Button
-          variant="outline"
-          className="w-full h-10 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg"
-        >
-          افزودن به علاقه مندی ها
-        </Button>
+      <div className=" flex-between p-2.5 text-sm bg-white border text-gray-500 border-gray-200 rounded-xl overflow-hidden">
+        <p>فرایند قیمت گذاری محصولات</p>
+        <ArrowLeft2 size={18} />
       </div>
-
-      {/* Shipping Info */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-        <div className="flex items-start gap-2 text-xs text-gray-600 dark:text-gray-400 text-right">
-          <span className="mt-0.5">ℹ️</span>
-          <span>شامل هزینه حمل و گمرک</span>
-        </div>
-      </div>
-
-      {/* Pricing Process */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-        <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-2 text-right">فرایند قیمت گذاری محصولات</h3>
-        <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed text-right">
-          قیمت‌های نمایش داده شده شامل تمام هزینه‌های حمل و نقل و گمرکی می‌باشد.
-        </p>
-      </div>
-
-      {/* Payment Services */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border-2 border-blue-200 dark:border-blue-800 p-4">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-bold px-2 py-0.5 rounded">
+      {/* 3️⃣ Service */}
+      <div className=" p-2.5 text-sm relative bg-white border text-gray-500 border-gray-200 rounded-xl ">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="bg-yellow-400 text-secondary-700 absolute -rotate-[25deg] top-0 -left-2 text-xs p-2 py-1 rounded-md">
             جدید
           </span>
-          <h3 className="text-sm font-bold text-gray-900 dark:text-white text-right">خدمات ارزی میکرولس پی</h3>
+          <div class="flex gap-2">
+            <img src="/image/coins.png" className="w-5 h-max" />
+
+            <span className="text-sm text-primary-700">خدمات ارزی میکرولس پی</span>
+          </div>
         </div>
-        <p className="text-xs text-gray-600 dark:text-gray-400 mb-3 text-right">
-          پرداخت های ارزی شما با ویزا و مستر کارت و پیبال
-        </p>
-        <Button variant="outline" className="w-full h-8 text-xs">
+
+        <p className="text-xs text-gray-500 my-2">پرداخت‌های ارزی شما با ویزا، مسترکارت و پی‌پال</p>
+
+        <Button variant="ghost" className=" text-white px-3  rounded-lg h-8 text-xs bg-primary-700">
           مشاهده
+          <ArrowLeft2 />
         </Button>
       </div>
-
-      {/* Report Issue */}
-      <div className="text-center">
-        <button className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
-          گزارش مشکل
-        </button>
-      </div>
+      <button className="text-xs text-gray-400 flex gap-1 mt-4   items-center">
+        <Sms size={18} variant="Bold" />
+        گزارش مشکل
+      </button>
     </div>
   );
 }
