@@ -202,6 +202,19 @@
     width: 100%;
     max-width: 100vw;
   }
+
+  /* رفع مشکل container overflow */
+  .container,
+  [class*="container"] {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* رفع مشکل flex items در Safari */
+  .flex,
+  [class*="flex"] {
+    min-width: 0;
+  }
 }
 
 /* رفع مشکل touch action در iOS */
@@ -238,14 +251,36 @@ textarea {
   }
 }
 
+/* رفع مشکل container در Safari */
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
 /* رفع مشکل image در Safari */
 img {
   max-width: 100%;
   height: auto;
+  display: block;
+}
+
+/* رفع مشکل flexbox در Safari */
+.flex,
+[class*="flex"] {
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-box-pack: center;
 }
 
 /* رفع مشکل horizontal scroll در Safari */
 @media screen and (max-width: 768px) {
+  * {
+    max-width: 100%;
+  }
+
   img,
   video,
   iframe {

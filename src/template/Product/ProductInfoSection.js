@@ -9,36 +9,42 @@ export default function ProductInfoSection({ product, colors, selectedColor, set
   return (
     <div>
       {/* Title */}
-      <h1 className="text-2xl text-gray-900 dark:text-white mb-2 text-right">
+      <h1 className="md:text-2xl text-gray-900 dark:text-dark-titre mb-2 text-right">
         {product?.name || product?.title || "نام محصول"}
       </h1>
 
       {product?.englishName && (
-        <p className="text-sm text-gray-400 dark:text-gray-400 mb-4 text-right">{product.englishName}</p>
+        <p className="text-xs md:text-sm text-gray-400 dark:text-caption mb-4 text-right">{product.englishName}</p>
       )}
 
       {/* Rating */}
       <div className="flex-between border-b pb-4 mb-4">
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1">
-            <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-            <span className="text-sm font-bold text-gray-900 dark:text-white">
+          <div className="flex items-center gap-1 text-xs md:text-sm">
+            <Star className="w-5 h-5 fill-yellow-400 text-yellow-400 flex-none" />
+            <span className=" font-bold text-gray-900 dark:text-white">
               {product?.rating ? product.rating.toFixed(1) : "0.0"}
             </span>
             {product?.reviewCount && (
-              <span className="text-sm text-gray-500 dark:text-gray-400">({product.reviewCount})</span>
+              <span className=" text-graty-500 dark:text-gray-400">
+                (<span className="text-primary-500 dark:text-dark-title">{product.reviewCount}</span>)
+              </span>
             )}
           </div>
 
           <div className="flex gap-2">
-            <Button variant="ghost" size="sm" className="h-8 text-sm bg-primary-50 text-primary-400">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 text-xs px-2 md:text-sm bg-primary-50 text-primary-400 dark:text-dark-titre dark:bg-[#4C537D]"
+            >
               <Magicpen />
-              خلاصه نظرات
+              <span className=" max-md:hidden">خلاصه نظرات</span>
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              className="h-8 text-sm text-[#FF9900] bg-[#FF99000A] border border-[#FF9900]"
+              className="h-8 text-sm px-2 text-[#FF9900] bg-[#FF99000A] border border-[#FF9900]"
             >
               <svg
                 className="fill-[#FF9900]"
@@ -51,12 +57,12 @@ export default function ProductInfoSection({ product, colors, selectedColor, set
                 <path d="M12.7109 3.69231C12.7109 3.30996 12.3926 3 12 3C11.6074 3 11.2891 3.30996 11.2891 3.69231V4.23031C10.6439 4.26914 10.0011 4.36089 9.36781 4.50556C6.85551 5.07947 4.89389 6.98986 4.30458 9.43653C3.89847 11.1226 3.89847 12.8773 4.30458 14.5634C4.89389 17.0101 6.85551 18.9205 9.36781 19.4944C10.0011 19.6391 10.6439 19.7308 11.2891 19.7697V20.3077C11.2891 20.69 11.6074 21 12 21C12.3926 21 12.7109 20.69 12.7109 20.3077V3.69231Z" />
                 <path d="M14.6321 4.50557C14.2499 4.41825 13.8673 4.64924 13.7777 5.02148C13.688 5.39373 13.9252 5.76628 14.3074 5.8536C16.294 6.30742 17.8451 7.81805 18.3111 9.75275C18.6672 11.2308 18.6672 12.7691 18.3111 14.2472C17.8451 16.1819 16.294 17.6925 14.3074 18.1464C13.9252 18.2337 13.688 18.6062 13.7777 18.9785C13.8673 19.3507 14.2499 19.5817 14.6321 19.4944C17.1444 18.9205 19.106 17.0101 19.6953 14.5634C20.1014 12.8773 20.1014 11.1226 19.6953 9.43655C19.106 6.98987 17.1444 5.07948 14.6321 4.50557Z" />
               </svg>
-              مقایسه کالا
+              <span className=" max-md:hidden">مقایسه کالا</span>
             </Button>
           </div>
         </div>
         <div class="flex-center gap-2">
-          <p className="text-yellow-700 text-xs">مشاهده در آمازون</p>
+          <p className="text-yellow-700 dark:text-yellow-600 text-xs">مشاهده در آمازون</p>
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#clip0_170_5987)">
               <path
@@ -97,10 +103,8 @@ export default function ProductInfoSection({ product, colors, selectedColor, set
       {/* Short Description */}
       {product?.shortDescription && (
         <div className="mb-6">
-          <h3 className=" mb-2 text-gray-800 md:text-lg text-right">معرفی کوتاه</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed text-right">
-            {product.shortDescription}
-          </p>
+          <h3 className=" mb-2 text-gray-800 dark:text-dark-titre md:text-lg text-right">معرفی کوتاه</h3>
+          <p className="text-sm text-gray-600 leading-relaxed text-right">{product.shortDescription}</p>
         </div>
       )}
 
@@ -109,11 +113,11 @@ export default function ProductInfoSection({ product, colors, selectedColor, set
         <div>
           <h3 className=" mb-3 text-right text-gray-800 dark:text-white">ویژگی ها</h3>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {product.attributes.map((atr) => (
-              <div className="bg-gray-100 border border-gray-200 p-3 rounded-lg">
-                <p className="text-gray-700">{atr.name}</p>
-                <p className="text-gray-500 text-sm mt-2">{atr.value}</p>
+              <div className="bg-gray-100 border dark:bg-dark-field dark:border-0 border-gray-200 p-2 rounded-lg">
+                <p className="text-gray-700 dark:text-dark-titre max-md:text-sm">{atr.name}</p>
+                <p className="text-gray-500 text-sm dark:text-dark-text max-md:text-xs mt-2">{atr.value}</p>
               </div>
             ))}
           </div>

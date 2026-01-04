@@ -13,6 +13,8 @@ import ProductReviewsSection from "@/template/Product/ProductReviewsSection";
 import RelatedSlider from "@/template/Product/RelatedSlider";
 import AccessoriesSlider from "@/template/Product/AccessoriesSlider";
 import { mockProduct } from "@/data";
+import BreadCrump from "@/template/Product/BreadCrump";
+import { Button } from "@/components/ui/button";
 
 export default function ProductDetailPage({ params }) {
   const productId = params?.productId;
@@ -54,46 +56,17 @@ export default function ProductDetailPage({ params }) {
 
   return (
     <IndexLayout>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900" dir="rtl">
+      <div className="min-h-screen bg-gray-50 dark:bg-transparent" dir="rtl">
         {/* Breadcrumb Navigation */}
-        <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-          <div className="container px-4 py-3">
-            <nav className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-              <Link href="/" className="hover:text-gray-900 dark:hover:text-white transition-colors">
-                خانه
-              </Link>
-              <ChevronLeft className="w-4 h-4 text-gray-400 rotate-180" />
-              {product.parentCategoryName && (
-                <>
-                  <Link
-                    href={`/categories?category=${product.categoryId}`}
-                    className="hover:text-gray-900 dark:hover:text-white transition-colors"
-                  >
-                    {product.parentCategoryName}
-                  </Link>
-                  <ChevronLeft className="w-4 h-4 text-gray-400 rotate-180" />
-                </>
-              )}
-              {product.categoryName && (
-                <>
-                  <Link
-                    href={`/categories?category=${product.categoryId}`}
-                    className="hover:text-gray-900 dark:hover:text-white transition-colors"
-                  >
-                    {product.categoryName}
-                  </Link>
-                  <ChevronLeft className="w-4 h-4 text-gray-400 rotate-180" />
-                </>
-              )}
-              <span className="text-gray-900 dark:text-white font-medium">{product.name || product.title}</span>
-            </nav>
-          </div>
-        </div>
 
-        <div className="container px-4 py-6">
+        <BreadCrump
+          items={[{ label: "کالای دیجیتال", href: "/" }, { label: "ساعت هوشمند", href: "/" }, { label: product.title }]}
+        />
+
+        <div className="xl:container px-4 py-6">
           <div className="grid grid-cols-12 gap-6">
             {/* Right Side: Product Images */}
-            <div className="col-span-12 lg:col-span-4 order-1 lg:order-1">
+            <div className="col-span-12 lg:col-span-3 xl:col-span-4 order-1 lg:order-1">
               <div className="sticky top-4">
                 <GallerySection
                   productImages={productImages}
@@ -104,14 +77,16 @@ export default function ProductDetailPage({ params }) {
             </div>
 
             {/* Center: Product Information */}
-            <div className="col-span-12 lg:col-span-5 order-2 lg:order-2 space-y-6">
+            <div className="col-span-12 lg:col-span-6 xl:col-span-5 order-2 lg:order-2 space-y-6">
               <ProductInfoSection
                 product={product}
                 colors={colors}
                 selectedColor={selectedColor}
                 setSelectedColor={setSelectedColor}
               />
-              <ProductDetailsAccordion />
+              <div class="max-md:hidden">
+                <ProductDetailsAccordion />
+              </div>
             </div>
 
             {/* Left Sidebar: Pricing and Purchase */}
@@ -122,13 +97,16 @@ export default function ProductDetailPage({ params }) {
                 productId={productId}
                 product={product}
               />
+              <div class="md:hidden">
+                <ProductDetailsAccordion />
+              </div>
             </div>
           </div>
 
           {/* Product Details Accordion */}
 
           {/* Product Reviews Section */}
-          <div class="grid grid-cols-5">
+          <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
             <div class="md:col-span-4">
               <ProductReviewsSection />
 
@@ -138,7 +116,12 @@ export default function ProductDetailPage({ params }) {
               {/* Accessories Slider */}
               <AccessoriesSlider />
             </div>
-            <div class="asda">sdads</div>
+            <div class="asda max-md:hidden p-2 border rounded-lg border-gray-200 dark:bg-dark-box dark:border-dark-stroke bg-white h-max sticky top-10">
+              <p>۱۲,۴۵۰,۰۰۰ تومان</p>
+              <Button variant="ghost" className="w-full mt-6 bg-yellow-400  text-black rounded-lg">
+                افزودن به سبد خرید
+              </Button>
+            </div>
           </div>
         </div>
       </div>

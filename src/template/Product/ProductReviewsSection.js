@@ -42,24 +42,19 @@ const totalReviews = 24;
 
 export default function ProductReviewsSection() {
   return (
-    <div
-      style={{
-        boxShadow: "0px 1px 5px -1px #0000001F",
-      }}
-      className="w-full mt-20 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 md:p-8"
-    >
+    <div className="w-full mt-20 bg-transparent md:bg-white dark:bg-transparent rounded-2xl md:shadow-box md:border border-gray-200 dark:border-gray-700 md:p-6 lg:p-8">
       {/* Header */}
-      <h2 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-white text-right">
+      <h2 className="text-xl md:text-2xl  text-gray-800 dark:text-dark-title text-right">
         امتیاز و نظرات کاربران دیگر
       </h2>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-6">
         {/* Right Column - Overall Rating and Call to Action */}
         <div className="lg:col-span-1 space-y-6">
           {/* Overall Rating Box */}
-          <div className="bg-primary-50 dark:bg-indigo-50/30 rounded-2xl p-6">
+          <div className="bg-primary-50 dark:bg-dark-box  rounded-2xl p-6">
             <div className="text-center">
               {/* Rating Number */}
-              <div className="text-5xl md:text-6xl font-bold text-dark-primary dark:text-blue-500 mb-3">
+              <div className="text-5xl md:text-6xl font-bold text-dark-primary dark:text-dark-titre mb-3">
                 {overallRating}
               </div>
 
@@ -77,7 +72,7 @@ export default function ProductReviewsSection() {
           </div>
 
           {/* Call to Action Text */}
-          <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 leading-relaxed text-right mt-8 mb-6">
+          <p className="text-xs md:text-sm text-gray-500 dark:text-caption leading-relaxed text-right mt-8 mb-6">
             نظر شما میتونه به بقیه کمک کنه تا انتخاب بهتری داشته باشن خوشحال میشیم اگر تجربه تون از این محصول رو با ما
             به اشتراک بذارید!
           </p>
@@ -85,7 +80,7 @@ export default function ProductReviewsSection() {
           {/* Submit Comment Button */}
           <Button
             variant="outline"
-            className="w-full border-2 border-primary-700 text-primary-700 dark:border-blue-500 dark:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 font-semibold  rounded-lg bg-white dark:bg-gray-800"
+            className="w-full border-2 border-primary-700 text-primary-700 dark:border-primary-300 dark:text-primary-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 font-semibold  rounded-lg bg-white dark:bg-transparent"
           >
             ثبت دیدگاه
           </Button>
@@ -111,7 +106,7 @@ export default function ProductReviewsSection() {
               </div>
 
               {/* Review Text */}
-              <p className="text-sm md:text-base text-gray-500 dark:text-gray-400 leading-relaxed mb-4 text-right">
+              <p className="text-sm md:text-base text-gray-500 dark:text-dark-text leading-relaxed mb-4 text-right">
                 {review.comment}
               </p>
 

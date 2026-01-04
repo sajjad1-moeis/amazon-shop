@@ -27,7 +27,7 @@ export default function GallerySection({ productImages, selectedImage, setSelect
               key={index}
               onClick={() => setSelectedImage(index)}
               className={cn(
-                "relative size-14 rounded-xl overflow-hidden border-2 transition-all bg-white dark:bg-gray-900",
+                "relative size-10 xl:size-14 rounded-lg xl:rounded-xl overflow-hidden border-2 transition-all bg-white dark:bg-gray-900",
                 selectedImage === index
                   ? "border-primary-600 dark:border-blue-400 scale-105"
                   : "border-gray-200 dark:border-gray-700 opacity-80 hover:opacity-100"
@@ -38,7 +38,7 @@ export default function GallerySection({ productImages, selectedImage, setSelect
           ))}
 
           {productImages.length > 4 && (
-            <button className="relative size-14 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex items-center justify-center shadow-md hover:shadow-lg transition-all opacity-80 hover:opacity-100">
+            <button className="relative size-10 xl:size-14 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex items-center justify-center shadow-md hover:shadow-lg transition-all opacity-80 hover:opacity-100">
               <span className="text-gray-400 dark:text-gray-600 text-2xl">⋯</span>
             </button>
           )}

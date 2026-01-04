@@ -45,8 +45,8 @@ function SelectColor({ colors, selectedColor, setSelectedColor }) {
                   "flex items-center gap-2 px-4 py-2 rounded-lg border-2 cursor-pointer transition-all",
                   "hover:border-gray-400 dark:hover:border-gray-500",
                   isSelected
-                    ? "border-primary-300 dark:border-blue-500 bg-primary-50 dark:bg-blue-900/20"
-                    : "border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
+                    ? "border-primary-300 dark:bg-dark-field dark:border-[#B3B3FF99] bg-primary-50 "
+                    : "border-gray-300 dark:bg-transparent bg-white dark:border-dark-stroke"
                 )}
               >
                 {/* Color Circle */}

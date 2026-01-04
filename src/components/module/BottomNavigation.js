@@ -39,7 +39,7 @@ export default function BottomNavigation() {
   }, [activeId, pathname]);
 
   return (
-    <div 
+    <div
       className="fixed bottom-0 left-0 right-0 bg-white dark:bg-dark-header z-50 md:hidden"
       style={{
         paddingBottom: "env(safe-area-inset-bottom, 0px)",

@@ -30,14 +30,14 @@ export default function PurchaseSection({ selectedDelivery, setSelectedDelivery,
   return (
     <div className="space-y-3">
       {/* 1️⃣ Delivery type */}
-      <div className="space-y-4 bg-white border border-gray-200 rounded-xl overflow-hidden">
+      <div className="space-y-4 bg-white dark:bg-dark-box dark:border-dark-stroke border border-gray-200 rounded-xl overflow-hidden">
         {/* 1️⃣ Delivery type */}
         <div>
           <div className="grid grid-cols-2">
             {/* Standard */}
             <label
               className={`cursor-pointer p-3 transition flex items-center justify-between
-      ${selectedDelivery === "standard" ? "bg-gray-100 dark:bg-gray-700" : "bg-white dark:bg-gray-800"}`}
+      ${selectedDelivery === "standard" ? "bg-gray-100 dark:bg-dark-box " : "bg-white dark:bg-dark-field"}`}
             >
               <div className="flex items-start gap-2">
                 <input
@@ -64,7 +64,7 @@ export default function PurchaseSection({ selectedDelivery, setSelectedDelivery,
             {/* Express */}
             <label
               className={`cursor-pointer p-3 transition flex items-center justify-between
-      ${selectedDelivery === "express" ? "bg-gray-100 dark:bg-gray-700" : "bg-white dark:bg-gray-800"}`}
+      ${selectedDelivery === "express" ? "bg-gray-100 dark:bg-dark-box " : "bg-white dark:bg-dark-field"}`}
             >
               <div className="flex items-start gap-2">
                 <input
@@ -129,7 +129,10 @@ export default function PurchaseSection({ selectedDelivery, setSelectedDelivery,
               افزودن به سبد خرید
             </Button>
 
-            <Button variant="ghost" className="w-full rounded-lg bg-gray-200 text-gray-600">
+            <Button
+              variant="ghost"
+              className="w-full rounded-lg bg-gray-200 dark:bg-dark-stroke dark:text-dark-titre text-gray-600"
+            >
               افزودن به علاقه‌مندی‌ها
             </Button>
           </div>
@@ -141,12 +144,12 @@ export default function PurchaseSection({ selectedDelivery, setSelectedDelivery,
         </div>
       </div>
 
-      <div className=" flex-between p-2.5 text-sm bg-white border text-gray-500 border-gray-200 rounded-xl overflow-hidden">
+      <div className=" flex-between max-md:hidden p-2.5 text-sm dark:bg-dark-box dark:border-dark-stroke bg-white border text-gray-500 dark:text-dark-titre border-gray-200 rounded-xl overflow-hidden">
         <p>فرایند قیمت گذاری محصولات</p>
         <ArrowLeft2 size={18} />
       </div>
       {/* 3️⃣ Service */}
-      <div className=" p-2.5 text-sm relative bg-white border text-gray-500 border-gray-200 rounded-xl ">
+      <div className="max-md:hidden p-2.5 dark:bg-dark-box dark:border-dark-stroke text-sm relative bg-white border text-gray-500 border-gray-200 rounded-xl ">
         <div className="flex items-center gap-2 mb-1">
           <span className="bg-yellow-400 text-secondary-700 absolute -rotate-[25deg] top-0 -left-2 text-xs p-2 py-1 rounded-md">
             جدید
@@ -154,18 +157,18 @@ export default function PurchaseSection({ selectedDelivery, setSelectedDelivery,
           <div class="flex gap-2">
             <img src="/image/coins.png" className="w-5 h-max" />
 
-            <span className="text-sm text-primary-700">خدمات ارزی میکرولس پی</span>
+            <span className="text-sm text-primary-700 dark:text-dark-title">خدمات ارزی میکرولس پی</span>
           </div>
         </div>
 
-        <p className="text-xs text-gray-500 my-2">پرداخت‌های ارزی شما با ویزا، مسترکارت و پی‌پال</p>
+        <p className="text-xs text-gray-500 my-2 dark:text-caption">پرداخت‌های ارزی شما با ویزا، مسترکارت و پی‌پال</p>
 
         <Button variant="ghost" className=" text-white px-3  rounded-lg h-8 text-xs bg-primary-700">
           مشاهده
           <ArrowLeft2 />
         </Button>
       </div>
-      <button className="text-xs text-gray-400 flex gap-1 mt-4   items-center">
+      <button className="text-xs max-md:hidden text-gray-400 flex gap-1 mt-4   items-center">
         <Sms size={18} variant="Bold" />
         گزارش مشکل
       </button>

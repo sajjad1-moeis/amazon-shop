@@ -36,7 +36,7 @@ const sheetVariants = cva(
           "inset-x-0 bottom-0 border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
         left: "inset-y-0 left-0 h-full w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm",
         right:
-          "inset-y-0 right-0 h-full w-3/4 border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm",
+          "inset-y-0 right-0 h-full w-3/4  border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm",
       },
     },
     defaultVariants: {
@@ -45,45 +45,18 @@ const sheetVariants = cva(
   }
 );
 
-const SheetContent = React.forwardRef(({ side = "right", className, children, style, ...props }, ref) => {
-  const safeAreaStyle = React.useMemo(() => {
-    const baseStyle = {
-      height: "100vh",
-      height: "-webkit-fill-available",
-      ...style,
-    };
-    
-    if (side === "top") {
-      baseStyle.paddingTop = "env(safe-area-inset-top, 0px)";
-    } else if (side === "bottom") {
-      baseStyle.paddingBottom = "env(safe-area-inset-bottom, 0px)";
-    } else if (side === "left") {
-      baseStyle.paddingLeft = "env(safe-area-inset-left, 0px)";
-    } else if (side === "right") {
-      baseStyle.paddingRight = "env(safe-area-inset-right, 0px)";
-    }
-    
-    return baseStyle;
-  }, [side, style]);
-
-  return (
-    <SheetPortal>
-      <SheetOverlay />
-      <SheetPrimitive.Content 
-        ref={ref} 
-        className={cn(sheetVariants({ side }), className)} 
-        style={safeAreaStyle}
-        {...props}
-      >
-        {children}
-        <SheetPrimitive.Close className="absolute left-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
-          <X className="h-4 w-4" />
-          <span className="sr-only">Close</span>
-        </SheetPrimitive.Close>
-      </SheetPrimitive.Content>
-    </SheetPortal>
-  );
-});
+const SheetContent = React.forwardRef(({ side = "right", className, children, ...props }, ref) => (
+  <SheetPortal>
+    <SheetOverlay />
+    <SheetPrimitive.Content ref={ref} className={cn(sheetVariants({ side }), className)} {...props}>
+      {children}
+      <SheetPrimitive.Close className="absolute left-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+        <X className="h-4 w-4" />
+        <span className="sr-only">Close</span>
+      </SheetPrimitive.Close>
+    </SheetPrimitive.Content>
+  </SheetPortal>
+));
 SheetContent.displayName = SheetPrimitive.Content.displayName;
 
 const SheetHeader = ({ className, ...props }) => (
