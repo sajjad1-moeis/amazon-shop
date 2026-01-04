@@ -42,13 +42,15 @@ export default function FavoritesPage() {
         title="علاقه مندی ها"
         description="لیست محصولاتی که ذخیره کرده اید."
       >
-        <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-5 max-md:text-xs max-lg:text-sm">
-          <p className="text-gray-500 dark:text-dark-text">
-            تعداد محصولات: <span className="text-yellow-600">4</span>
-          </p>
-          <p className="text-gray-500 dark:text-dark-text">
-            کاهش قیمت اخیر: <span className="text-yellow-600">3 مورد</span>
-          </p>
+        <div className="flex flex-col sm:flex-row items-center gap-3 lg:gap-4 max-md:text-xs max-xl:text-sm">
+          <div class="flex xl:flex-row flex-col gap-3 lg:gap-4">
+            <p className="text-gray-500 dark:text-dark-text">
+              تعداد محصولات: <span className="text-yellow-600">4</span>
+            </p>
+            <p className="text-gray-500 dark:text-dark-text">
+              کاهش قیمت اخیر: <span className="text-yellow-600">3 مورد</span>
+            </p>
+          </div>
           <Button
             onClick={() => setIsAddFavoriteModalOpen(true)}
             className="bg-yellow-500 hover:bg-yellow-600 text-primary-800 max-md:hidden"
