@@ -18,12 +18,12 @@ export const DotBg = ({ className }) => {
 export default function CurrencyServices() {
   return (
     <IndexLayout>
-      <div class="bg-gray-50 dark:bg-dark-bg">
+      <div className="bg-gray-50 dark:bg-dark-bg">
         <TabsSection />
-        <div class="relative">
+        <div className="relative">
           <DotBg className="liner-currency-white dark:hidden" />
           <DotBg className={"hidden dark:block liner-currency-dark"} />
-          <div class="container relative">
+          <div className="container relative">
             <Benefits />
             <ServicesList />
           </div>
@@ -31,7 +31,7 @@ export default function CurrencyServices() {
         <PaymentSteps />
         <Testimonials />
         <FAQSection />
-        <div class="pb-10 md:pb-20" />
+        <div className="pb-10 md:pb-20" />
       </div>
     </IndexLayout>
   );

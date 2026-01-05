@@ -63,9 +63,7 @@ export default function AccordionDemo() {
                   <span className="text-sm font-medium dark:text-caption text-gray-600 text-right flex-1">
                     {spec.label}
                   </span>
-                  <span className="text-sm text-gray-900 dark:text-white  dark:text-dark-titre flex-1">
-                    {spec.value}
-                  </span>
+                  <span className="text-sm text-gray-900 dark:text-dark-titre flex-1">{spec.value}</span>
                 </div>
               ))}
             </div>
@@ -73,7 +71,7 @@ export default function AccordionDemo() {
         </AccordionItem>
       </Accordion>
       <div className="text-center mt-6">
-        <div class="flex-center gap-3">
+        <div className="flex-center gap-3">
           <div className="border-b w-full dark:border-dark-stroke border-gray-200" />
           <button className="text-primary-600 flex-none dark:text-primary-300 hover:text-primary-700 dark:hover:text-primary-300 font-medium text-sm transition-colors">
             {"نمایش کمتر"}

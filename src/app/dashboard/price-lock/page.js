@@ -121,14 +121,14 @@ export default function PriceLockList() {
     <DashboardLayout>
       <PageHeader
         actionButton={
-          <div class="md:hidden">
+          <div className="md:hidden">
             <ActionBtn />
           </div>
         }
         title="قفل قیمت"
         description="قیمت برخی محصولات را برای مدت محدود ثابت نگه دارید"
       >
-        <div class="max-md:hidden">
+        <div className="max-md:hidden">
           <ActionBtn />
         </div>
       </PageHeader>

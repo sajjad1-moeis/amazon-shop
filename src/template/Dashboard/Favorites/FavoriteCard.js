@@ -42,7 +42,7 @@ export default function FavoriteCard({ product }) {
         <div className="max-md:!max-w-22 max-lg:max-w-32 w-full md:h-32 lg:w-36 lg:h-40 relative overflow-hidden">
           <Image src={product.image} alt={product.title} fill className="object-cover" />
         </div>
-        <div class="p-3 lg:hidden w-full space-y-4">
+        <div className="p-3 lg:hidden w-full space-y-4">
           <h3 className="text-sm  text-gray-900 dark:text-dark-titre leading-6 ">{product.title}</h3>
           <div className="flex-between gap-3  mt-3">
             {/* Brand Logo */}
@@ -58,7 +58,7 @@ export default function FavoriteCard({ product }) {
               </span>
             </div>
           </div>
-          <div class="max-md:hidden">
+          <div className="max-md:hidden">
             <InfosCard />
           </div>
         </div>
@@ -68,7 +68,7 @@ export default function FavoriteCard({ product }) {
         {/* Middle Content */}
         <div className="flex-1 lg:flex flex-col justify-between max-md:mb-4">
           {/* Product Title */}
-          <div class="">
+          <div className="">
             <h3 className=" text-base xl:text-lg  text-gray-900 dark:text-dark-titre leading-6 max-lg:hidden">
               {product.title}
             </h3>
@@ -89,7 +89,7 @@ export default function FavoriteCard({ product }) {
           </div>
 
           {/* Three Gray Boxes Row */}
-          <div class="lg:block md:hidden">
+          <div className="lg:block md:hidden">
             <InfosCard />
           </div>
         </div>

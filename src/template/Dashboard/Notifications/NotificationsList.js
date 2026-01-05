@@ -154,12 +154,12 @@ export default function NotificationsList() {
           "تمام اعلان‌های مربوط به سفارش‌ها، تیکت‌ها، کیف پول و فعالیت‌های حساب شما در این بخش نمایش داده می‌شوند."
         }
         actionButton={
-          <div class="md:hidden">
+          <div className="md:hidden">
             <NotificationBtn />
           </div>
         }
       >
-        <div class="max-md:hidden">
+        <div className="max-md:hidden">
           <NotificationBtn />
         </div>
       </PageHeader>

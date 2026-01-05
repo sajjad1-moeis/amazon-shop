@@ -31,7 +31,7 @@ function Page() {
 
           {tabs.map((tab) => (
             <TabsContent key={tab.value} value={tab.value} className="pt-5 dark:m-0 dark:bg-white/10">
-              <div class="pt-0 p-4">
+              <div className="pt-0 p-4">
                 <p className="text-gray-600 mb-2  dark:text-dark-text">
                   به وب‌سایت میکرولس خوش آمدید. استفاده از خدمات و محتوای این وب‌سایت به منزله‌ی پذیرش کامل قوانین و
                   مقررات زیر است. لطفاً پیش از ثبت سفارش یا استفاده از خدمات، این موارد را با دقت مطالعه کنید.

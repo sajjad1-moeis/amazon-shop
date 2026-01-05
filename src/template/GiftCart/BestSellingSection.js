@@ -49,7 +49,7 @@ function Categories() {
           </SwiperSlide>
         ))}
         <div
-          class="absolute size-full inset-0"
+          className="absolute size-full inset-0"
           style={{
             background:
               "linear-gradient(90deg, #FAFAFA 2.72%, rgba(250, 250, 250, 0) 24.52%, rgba(250, 250, 250, 0) 76.18%, #FAFAFA 97.21%)",

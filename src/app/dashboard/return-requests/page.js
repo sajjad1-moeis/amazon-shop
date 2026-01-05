@@ -43,12 +43,12 @@ export default function ReturnRequestsList() {
         title="درخواستهای مرجوعی"
         description="تمام درخواستهایی که برای مرجوعی کالا ثبت کرده اید در این بخش قابل مشاهده و پیگیری هستند"
         actionButton={
-          <div class="md:hidden">
+          <div className="md:hidden">
             <ReturnBtn />
           </div>
         }
       >
-        <div class="max-md:hidden">
+        <div className="max-md:hidden">
           <ReturnBtn />
         </div>
       </PageHeader>

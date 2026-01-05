@@ -25,11 +25,11 @@ export default function PriceLockCard({ product, onCancelLock, onViewDetails, re
       {/* Middle Content */}
       <div className="flex-1 flex flex-col gap-3 md:gap-5 w-full justify-between">
         {/* Title & Countdown */}
-        <div class="flex-between gap-2">
+        <div className="flex-between gap-2">
           <div className="size-20 relative rounded-xl overflow-hidden lg:hidden">
             <Image src={"/image/Home/product.png"} alt={title} fill className="object-cover" />
           </div>
-          <div class="w-full">
+          <div className="w-full">
             <div className="flex-between">
               <h3 className="text-[15px]  text-gray-900 dark:text-dark-titre leading-6">
                 {title || "Apple AirPods Pro (2nd Generation)"}

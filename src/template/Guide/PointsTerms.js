@@ -21,7 +21,7 @@ export default function PointsTerms() {
       <div className="mt-8 md:mt-12 pt-8 md:pt-12 border-t-2 border-gray-200 dark:border-dark-field">
         <TitreCard title={"چطور از امتیازها استفاده کنیم؟"} />
 
-        <div class="text-gray-600 dark:text-dark-text">
+        <div className="text-gray-600 dark:text-dark-text">
           <p className="leading-7">امتیازات جمع‌آوری‌شده می‌تواند برای کاهش قیمت برخی سفارش‌ها استفاده شود.</p>
           <p className="leading-7">
             در زمان ثبت سفارش جدید، اگر امتیاز کافی در حساب شما وجود داشته باشد، سیستم گزینه «استفاده از امتیاز» را

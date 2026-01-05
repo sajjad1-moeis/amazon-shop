@@ -71,7 +71,7 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
 
               <div className="my-5  border-b border-gray-300 dark:border-dark-stroke"></div>
 
-              <div class="flex-between mb-3">
+              <div className="flex-between mb-3">
                 <p className="dark:text-dark-titre text-primary-700">کالاهای داخل سفارش</p>
                 <p className="text-yellow-600">2 کالا</p>
               </div>
@@ -105,8 +105,8 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
                                 : "border-gray-300 text-gray-300 hover:border-primary-400 focus:ring-primary-500"
                             )}
                           />
-                          <div class="w-full">
-                            <div class="flex gap-2">
+                          <div className="w-full">
+                            <div className="flex gap-2">
                               {/* Image */}
                               <div className="relative size-10  md:size-20 rounded-lg overflow-hidden bg-gray-100 dark:bg-dark-field flex-shrink-0">
                                 <Image src={item.image} alt={item.name} fill className="object-cover" sizes="80px" />
@@ -117,7 +117,7 @@ export default function OrderProductSelector({ orders = [], selectedItem, onSele
                                 <h4 className="text-sm  line-clamp-2">{item.name}</h4>
                               </div>
                             </div>
-                            <div class="grid lg:grid-cols-2 mt-2 gap-3">
+                            <div className="grid lg:grid-cols-2 mt-2 gap-3">
                               <div
                                 className={cn(
                                   "text-xs flex-between text-gray-500 dark:text-dark-titre p-2 rounded-lg",

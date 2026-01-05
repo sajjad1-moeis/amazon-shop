@@ -91,7 +91,7 @@ export default function CurrencyPaymentForm({ removeDesc }) {
 
             {/* Amount Section */}
             <div>
-              <div class="flex-between mb-2">
+              <div className="flex-between mb-2">
                 <label className="text-base text-gray-900 dark:text-white block">مبلغ</label>
                 <div>
                   <div className="inline-flex items-center bg-[#B3B3FF3D] text-primary-400 dark:text-dark-title dark:border-dark-stroke px-3 py-1 rounded-lg text-xs font-medium">
@@ -121,7 +121,7 @@ export default function CurrencyPaymentForm({ removeDesc }) {
                     </FormItem>
                   )}
                 />
-                <div class="absolute top-0 left-0">
+                <div className="absolute top-0 left-0">
                   <FormField
                     control={form.control}
                     name="currency"

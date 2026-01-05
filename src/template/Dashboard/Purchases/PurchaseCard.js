@@ -11,7 +11,7 @@ export default function PurchaseCard({ product }) {
         <Image src={product.image} alt={product.title} fill className="object-cover" />
       </div>
 
-      <div class="p-2 md:p-3">
+      <div className="p-2 md:p-3">
         {/* Title */}
         <p className="text-xs md:text-sm text-gray-800 dark:text-dark-titre leading-6 mb-3">{product.title}</p>
 

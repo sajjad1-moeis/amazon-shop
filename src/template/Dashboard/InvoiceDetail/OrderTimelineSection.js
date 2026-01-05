@@ -36,7 +36,7 @@ export default function OrderTimelineSection({ timelineSteps }) {
               <div key={step.id} className="relative flex items-center justify-between">
                 {/* Circle - بک‌گراند سفید برای همه */}
 
-                <div class="flex-center gap-3">
+                <div className="flex-center gap-3">
                   <div
                     style={{ boxShadow: "0px 1px 5px -1px #0000001F" }}
                     className={cn(

@@ -61,7 +61,7 @@ export default function ProductInfoSection({ product, colors, selectedColor, set
             </Button>
           </div>
         </div>
-        <div class="flex-center gap-2">
+        <div className="flex-center gap-2">
           <p className="text-yellow-700 dark:text-yellow-600 text-xs">مشاهده در آمازون</p>
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#clip0_170_5987)">

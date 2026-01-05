@@ -148,7 +148,7 @@ export default function PlayStationGiftCardForm() {
               type="button"
               className="flex max-md:flex-col md:items-center gap-1 md:gap-2 max-md:text-sm text-gray-700 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium text-sm transition-colors"
             >
-              <div class="flex items-center justify-start gap-1">
+              <div className="flex items-center justify-start gap-1">
                 <DocumentUpload variant="Bold" className="text-primary-400 dark:text-dark-title" size={18} />
                 <span className="dark:text-dark-titre">افزودن فایل</span>
               </div>

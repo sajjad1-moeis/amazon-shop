@@ -34,7 +34,7 @@ export default function ComparisonsList() {
   };
 
   const ActionBtns = () => (
-    <div class="flex-center">
+    <div className="flex-center">
       <Button
         variant="ghost"
         onClick={handleDeleteAll}
@@ -60,16 +60,16 @@ export default function ComparisonsList() {
         title="مقایسه های ذخیره شده"
         description="مقایسه هایی که ذخیره کرده اید را اینجا ببینید و دوباره بررسی کنید."
         actionButton={
-          <div class="md:hidden">
+          <div className="md:hidden">
             <ActionBtns />
           </div>
         }
       >
-        <div class="max-md:hidden">
+        <div className="max-md:hidden">
           <ActionBtns />
         </div>
       </PageHeader>
-      <div class="mb-8" />
+      <div className="mb-8" />
 
       {/* Comparisons Grid */}
       {comparisons.length === 0 ? (

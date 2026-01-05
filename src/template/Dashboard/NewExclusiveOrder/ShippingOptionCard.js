@@ -27,9 +27,9 @@ export default function ShippingOptionCard({ option, isSelected, onSelect }) {
             {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-primary-500 dark:bg-primary-400"></div>}
           </div>
         </div>
-        <div class="">
+        <div className="">
           {/* Icon */}
-          <div class="flex gap-2">
+          <div className="flex gap-2">
             <div className={cn(" text-white p-1 rounded-md", isSelected ? option.iconColor : "bg-gray-500")}>
               <Truck size={16} />
             </div>

@@ -6,11 +6,11 @@ import LinerBg from "@/components/LinerBg";
 
 function HeroSection() {
   return (
-    <div class="">
-      <div class="relative bg-[url(/image/GiftCart/playstionGiftBg.png)] bg-cover py-14">
+    <div className="">
+      <div className="relative bg-[url(/image/GiftCart/playstionGiftBg.png)] bg-cover py-14">
         <LinerBg />
-        <div class="grid lg:grid-cols-2 items-center container gap-10 xl:gap-40 relative">
-          <div class="">
+        <div className="grid lg:grid-cols-2 items-center container gap-10 xl:gap-40 relative">
+          <div className="">
             <h1 className="text-primary-50 text-xl md:text-3xl lg:text-4xl max-md:w-4/6 max-md:text-center max-md:mx-auto">
               گیفت کارت پلی‌استیشن با تحویل لحظه‌ای
             </h1>
@@ -19,7 +19,7 @@ function HeroSection() {
               کارت‌های معتبر و اصل.
             </p>
           </div>
-          <div class="max-lg:w-3/4 max-md:!w-full mx-auto">
+          <div className="max-lg:w-3/4 max-md:!w-full mx-auto">
             <PlayStationGiftCardForm />
           </div>
         </div>

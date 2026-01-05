@@ -21,9 +21,9 @@ export default function ShopsLayout({ children, src, title, direct, removeStepBu
       <div className="bg-[#FBFBFB] dark:bg-dark-bg">
         <div className={cn("relative aspect-square max-h-72 md:max-h-[450px] lg:max-h-[450px] w-full", imgClassName)}>
           {" "}
-          <div class="absolute bottom-0 w-full h-2/4 dark:hidden liner-shop-bg-white z-[50]" />
-          <div class="absolute bottom-0 w-full h-2/4 hidden dark:block liner-shop-bg-dark z-[50]" />
-          <div class="absolute top-5 right-5 w-full z-50 max-md:hidden">
+          <div className="absolute bottom-0 w-full h-2/4 dark:hidden liner-shop-bg-white z-[50]" />
+          <div className="absolute bottom-0 w-full h-2/4 hidden dark:block liner-shop-bg-dark z-[50]" />
+          <div className="absolute top-5 right-5 w-full z-50 max-md:hidden">
             <Breadcrumb>
               <BreadcrumbList className="dark:text-white text-primary-700">
                 {/* آیتم خانه ثابت */}

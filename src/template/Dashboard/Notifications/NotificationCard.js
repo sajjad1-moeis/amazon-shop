@@ -63,18 +63,18 @@ export default function NotificationCard({ notification, onDelete, onPinToggle }
     <div className={cn("group relative w-full rounded-xl border p-3 sm:p-4", colors.card)}>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3">
-        <div class="flex-between w-full">
+        <div className="flex-between w-full">
           <div className={cn("flex items-center gap-2", colors.title)}>
             <Icon size={16} className="sm:w-[18px] sm:h-[18px]" variant="Bold" />
             <span className={cn("text-sm sm:text-base", colors.icon)}>{notification.title}</span>
           </div>
-          <div class="flex gap-2 ">
+          <div className="flex gap-2 ">
             <div className="flex items-center gap-1 text-xs text-gray-400 dark:text-caption">
               <Calendar size={16} className="sm:w-[18px] sm:h-[18px]" variant="Bold" />
               <span>{notification.time}</span>
             </div>
 
-            <div class="max-md:hidden">
+            <div className="max-md:hidden">
               <PinBtn />
             </div>
           </div>
@@ -95,7 +95,7 @@ export default function NotificationCard({ notification, onDelete, onPinToggle }
             <Trash size={18} />
           </button>
 
-          <div class="md:hidden flex-center">
+          <div className="md:hidden flex-center">
             <PinBtn />
           </div>
           <Link href={notification.actionUrl} className=" max-md:w-full">

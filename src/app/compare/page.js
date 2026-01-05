@@ -77,8 +77,8 @@ export default function ProductComparison() {
   return (
     <IndexLayout>
       <div className="flex flex-col gap-4 sm:gap-6  pb-20">
-        <div class=" py-4  border-b-2 border-gray-200 dark:border-dark-stroke mb-8">
-          <div class="container flex-between">
+        <div className=" py-4  border-b-2 border-gray-200 dark:border-dark-stroke mb-8">
+          <div className="container flex-between">
             <p className="text-gray-500 dark:text-dark-text  max-md:text-sm">
               مقایسه محصولات <span className="text-yellow-600">2 محصول</span>
             </p>
@@ -90,7 +90,7 @@ export default function ProductComparison() {
             </Button>
           </div>
         </div>
-        <div class="container">
+        <div className="container">
           {/* Products Grid */}
           <div className="flex flex-col-reverse md:flex-row gap-3 sm:gap-6 mb-6">
             <div className="w-full md:max-w-48">

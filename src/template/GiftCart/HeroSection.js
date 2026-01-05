@@ -5,11 +5,11 @@ import LinerBg from "@/components/LinerBg";
 
 function HeroSection() {
   return (
-    <div class="">
-      <div class="relative bg-[url(/image/GiftCart/giftCartBg.png)] bg-cover max-md:py-20">
+    <div className="">
+      <div className="relative bg-[url(/image/GiftCart/giftCartBg.png)] bg-cover max-md:py-20">
         <LinerBg />
 
-        <div class="md:absolute md:size-max inset-y-0 my-auto z-50  text-white px-10 ">
+        <div className="md:absolute md:size-max inset-y-0 my-auto z-50  text-white px-10 ">
           <h1 className="text-primary-50 text-xl md:text-3xl lg:text-5xl ">
             گیفت کارت‌های معتبر جهانی با تحویل لحظه‌ای
           </h1>
@@ -23,8 +23,8 @@ function HeroSection() {
         </div>
         <img src="/image/GiftCart/giftCartBg.png" className="max-h-[701px] max-md:hidden w-full" alt="" />
       </div>
-      <div class="container  -mt-[5%] md:-mt-[10%] relative">
-        <div class="bg-white dark:bg-dark-box max-w-5xl rounded-2xl pt-4 mx-auto">
+      <div className="container  -mt-[5%] md:-mt-[10%] relative">
+        <div className="bg-white dark:bg-dark-box max-w-5xl rounded-2xl pt-4 mx-auto">
           <CurrencyPaymentForm removeDesc />
         </div>
       </div>

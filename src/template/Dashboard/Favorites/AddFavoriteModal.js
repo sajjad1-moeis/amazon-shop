@@ -81,7 +81,7 @@ export default function NewPriceLockModal({ open, onOpenChange }) {
           {/* Duration */}
           {selectedProduct && (
             <>
-              <div class="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-3">
                   <Label className="text-xs sm:text-sm text-gray-600 dark:text-dark-text mb-3">
                     گزینه های دریافت هشدار

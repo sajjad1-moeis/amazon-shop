@@ -84,7 +84,7 @@ export default function ProductDetailPage({ params }) {
                 selectedColor={selectedColor}
                 setSelectedColor={setSelectedColor}
               />
-              <div class="max-md:hidden">
+              <div className="max-md:hidden">
                 <ProductDetailsAccordion />
               </div>
             </div>
@@ -97,7 +97,7 @@ export default function ProductDetailPage({ params }) {
                 productId={productId}
                 product={product}
               />
-              <div class="md:hidden">
+              <div className="md:hidden">
                 <ProductDetailsAccordion />
               </div>
             </div>
@@ -106,8 +106,8 @@ export default function ProductDetailPage({ params }) {
           {/* Product Details Accordion */}
 
           {/* Product Reviews Section */}
-          <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-            <div class="md:col-span-4">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div className="md:col-span-4">
               <ProductReviewsSection />
 
               {/* Related Products Slider */}
@@ -116,7 +116,7 @@ export default function ProductDetailPage({ params }) {
               {/* Accessories Slider */}
               <AccessoriesSlider />
             </div>
-            <div class="asda max-md:hidden p-2 border rounded-lg border-gray-200 dark:bg-dark-box dark:border-dark-stroke bg-white h-max sticky top-10">
+            <div className="asda max-md:hidden p-2 border rounded-lg border-gray-200 dark:bg-dark-box dark:border-dark-stroke bg-white h-max sticky top-10">
               <p>۱۲,۴۵۰,۰۰۰ تومان</p>
               <Button variant="ghost" className="w-full mt-6 bg-yellow-400  text-black rounded-lg">
                 افزودن به سبد خرید

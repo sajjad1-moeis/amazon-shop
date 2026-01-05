@@ -7,7 +7,7 @@ import React from "react";
 function HeaderSection() {
   return (
     <div className="px-4 md:px-20 py-5 flex-between bg-white dark:bg-dark-field">
-      <div class="hidden">
+      <div className="hidden">
         <SwitchButton />
       </div>
       <Image alt="logo img" src="/image/logo-blue.png" className="dark:hidden" width={120} height={30} />

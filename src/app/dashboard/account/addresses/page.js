@@ -27,14 +27,14 @@ export default function AddressesPage() {
     <DashboardLayout>
       <PageHeader
         actionButton={
-          <div class="md:hidden">
+          <div className="md:hidden">
             <AdressBtn />
           </div>
         }
         title="آدرس های من"
         description="مدیریت آدرسهای ثبت شده برای ارسال سفارش ها"
       >
-        <div class="max-md:hidden">
+        <div className="max-md:hidden">
           <AdressBtn />
         </div>
       </PageHeader>

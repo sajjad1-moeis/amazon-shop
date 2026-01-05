@@ -43,7 +43,7 @@ export default function FavoritesPage() {
         description="لیست محصولاتی که ذخیره کرده اید."
       >
         <div className="flex flex-col sm:flex-row items-center gap-3 lg:gap-4 max-md:text-xs max-xl:text-sm">
-          <div class="flex xl:flex-row flex-col gap-3 lg:gap-4">
+          <div className="flex xl:flex-row flex-col gap-3 lg:gap-4">
             <p className="text-gray-500 dark:text-dark-text">
               تعداد محصولات: <span className="text-yellow-600">4</span>
             </p>

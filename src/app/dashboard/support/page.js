@@ -142,7 +142,7 @@ function Page() {
           }
         >
           {" "}
-          <div class="max-md:hidden">
+          <div className="max-md:hidden">
             <TicketBtn />
           </div>
         </PageHeader>

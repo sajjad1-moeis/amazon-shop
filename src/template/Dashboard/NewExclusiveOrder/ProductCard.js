@@ -29,7 +29,7 @@ export default function ProductCard({ product, onCancelLock, onViewDetails }) {
         {/* Middle Content */}
         <div className="flex-1 flex flex-col gap-3">
           {/* Title & Countdown */}
-          <div class="flex-between gap-2 w-full">
+          <div className="flex-between gap-2 w-full">
             <div className="size-20 relative flex-shrink-0 rounded-xl overflow-hidden md:hidden">
               <Image src={"/image/Home/product.png"} alt={title} fill className="object-cover" />
             </div>
@@ -43,7 +43,7 @@ export default function ProductCard({ product, onCancelLock, onViewDetails }) {
                   موجود در آمازون امارات
                 </div>
               </div>
-              <div class="flex-between  mt-3">
+              <div className="flex-between  mt-3">
                 <div className="flex items-center gap-2">
                   <span className="text-gray-600 dark:text-dark-text text-xs">برند:</span>
                   <p className="text-primary-500 dark:text-dark-title">SONY</p>

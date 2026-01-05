@@ -29,7 +29,7 @@ export const amazonSteps = [
 export default function AmazonShoppingGuide() {
   return (
     <div className="space-y-2 max-md:text-sm">
-      <div class="space-y-2 text-gray-600 dark:text-dark-text">
+      <div className="space-y-2 text-gray-600 dark:text-dark-text">
         <p>
           خرید از آمازون برای بسیاری از کاربران ایرانی یکی از بهترین روش‌ها برای دسترسی به محصولات اصلی و متنوع جهانی
           است. با این حال، به دلیل محدودیت‌های پرداخت بین‌المللی، قوانین گمرکی و پیچیدگی‌های ارسال، انجام این خرید
@@ -47,7 +47,7 @@ export default function AmazonShoppingGuide() {
       </div>
       <div className=" mt-12 pt-12 ">
         <TitreCard title={"آموزش کامل خرید از آمازون از طریق میکرولس"} />
-        <div class="space-y-2 text-gray-700 dark:text-dark-text">
+        <div className="space-y-2 text-gray-700 dark:text-dark-text">
           <p className="leading-7 ">
             خرید از آمازون با استفاده از خدمات میکرولس بسیار ساده است. ابتدا لینک محصول مورد نظر را در سایت آمازون پیدا
             می‌کنید و آن را در بخش «درخواست خرید» یا «محاسبه‌گر قیمت» میکرولس وارد می‌کنید. سیستم به‌صورت خودکار قیمت

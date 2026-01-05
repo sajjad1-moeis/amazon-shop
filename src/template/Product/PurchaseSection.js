@@ -49,8 +49,8 @@ export default function PurchaseSection({ selectedDelivery, setSelectedDelivery,
                   className="mt-1 accent-primary-600"
                 />
                 <div className="text-right">
-                  <div class="flex-center gap-2">
-                    <div class="bg-gray-600 p-1 rounded-lg">
+                  <div className="flex-center gap-2">
+                    <div className="bg-gray-600 p-1 rounded-lg">
                       <Truck size={16} className=" text-white" />
                     </div>
 
@@ -76,8 +76,8 @@ export default function PurchaseSection({ selectedDelivery, setSelectedDelivery,
                   className="mt-1 accent-green-600"
                 />
                 <div className="text-right">
-                  <div class="flex-center gap-2">
-                    <div class="bg-green-500 p-1 rounded-lg">
+                  <div className="flex-center gap-2">
+                    <div className="bg-green-500 p-1 rounded-lg">
                       <TruckFast size={16} className="text-white " />
                     </div>
                     <div className="text-xs">ارسال اکسپرس</div>
@@ -95,7 +95,7 @@ export default function PurchaseSection({ selectedDelivery, setSelectedDelivery,
           <div>
             <p className="text-gray-500 text-sm">قیمت :</p>
             <div className="flex-between gap-2">
-              <div class="">
+              <div className="">
                 <span className="text-2xl">{Number(price).toLocaleString("fa-IR")}</span>
                 <span className="text-sm">تومان</span>
               </div>
@@ -115,7 +115,7 @@ export default function PurchaseSection({ selectedDelivery, setSelectedDelivery,
           </div>
 
           {/* Seller */}
-          <div class="flex-between">
+          <div className="flex-between">
             <p className="text-gray-500 text-sm">قیمت :</p>
             <div className="flex-center gap-1">
               <div className="text-sm text-gray-400">آمازون امارات</div>
@@ -154,7 +154,7 @@ export default function PurchaseSection({ selectedDelivery, setSelectedDelivery,
           <span className="bg-yellow-400 text-secondary-700 absolute -rotate-[25deg] top-0 -left-2 text-xs p-2 py-1 rounded-md">
             جدید
           </span>
-          <div class="flex gap-2">
+          <div className="flex gap-2">
             <img src="/image/coins.png" className="w-5 h-max" />
 
             <span className="text-sm text-primary-700 dark:text-dark-title">خدمات ارزی میکرولس پی</span>

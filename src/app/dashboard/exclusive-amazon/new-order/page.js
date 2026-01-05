@@ -59,7 +59,7 @@ export default function NewExclusiveOrder() {
       <PageHeader title="ثبت سفارش جدید" description="برای ثبت سفارش خرید اختصاصی از آمازون اطلاعات زیر را وارد کنید" />
 
       <div className="mt-6 space-y-6">
-        <div class="shadow-box p-4 rounded-xl bg-white dark:bg-dark-box">
+        <div className="shadow-box p-4 rounded-xl bg-white dark:bg-dark-box">
           <ProductInputSection
             productLink={productLink}
             onProductLinkChange={setProductLink}
@@ -69,7 +69,7 @@ export default function NewExclusiveOrder() {
         </div>
 
         {selectedProduct && (
-          <div class="shadow-box p-4 rounded-xl bg-white dark:bg-dark-box">
+          <div className="shadow-box p-4 rounded-xl bg-white dark:bg-dark-box">
             <PriceCalculationDetails product={selectedProduct} />
             <ShippingMethodSection selectedMethod={shippingMethod} onMethodChange={setShippingMethod} />
             <PaymentMethodSection selectedMethod={paymentMethod} onMethodChange={setPaymentMethod} />

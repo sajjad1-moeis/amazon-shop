@@ -22,7 +22,7 @@ export default function TicketChat({
       {/* Title */}
       <div className="mb-6 flex-between border-b-2 border-gray-200 dark:border-dark-stroke pb-4">
         <h2 className="text-lg  text-gray-700 dark:text-dark-title">تاریخچه پیام ها</h2>
-        <div class="flex items-center gap-4 text-xs">
+        <div className="flex items-center gap-4 text-xs">
           <div className="text-gray-400  flex gap-2">
             <UserSquare variant="Bold" size={20} />
             پاسخ داده شده توسط :
@@ -60,7 +60,7 @@ export default function TicketChat({
                     </span>
                   </div>
 
-                  <div class="flex-center gap-2">
+                  <div className="flex-center gap-2">
                     <p
                       className={cn(
                         " rounded-lg p-3 text-sm text-gray-700 dark:text-dark-text dark:bg-white/5",

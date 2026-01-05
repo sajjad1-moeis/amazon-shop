@@ -53,11 +53,11 @@ const products = [
 export default function ProductSuggestions() {
   return (
     <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-3 mb-6 product-suggestions relative">
-      <div class="flex-between mb-4 md:mb-6">
+      <div className="flex-between mb-4 md:mb-6">
         <div className="">
           <h3 className="text-lg text-gray-900 dark:text-dark-titre mb-2">پیشنهادهای مشابه برای شما</h3>
         </div>
-        <div class="flex gap-2">
+        <div className="flex gap-2">
           <button className="next-slide  z-[8888] ">
             <ArrowCircleRight size={36} variant="Bold" className=" text-primary-600 dark:text-dark-title" />
           </button>

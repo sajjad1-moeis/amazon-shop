@@ -42,7 +42,7 @@ export default function BasicInfoCard() {
       </div>
 
       {/* Main Info */}
-      <div class="mb-3  md:hidden">
+      <div className="mb-3  md:hidden">
         <div className="size-16 rounded-lg overflow-hidden border border-gray-200 dark:border-dark-stroke bg-gray-100 dark:bg-dark-field flex items-center justify-center flex-shrink-0">
           {data.avatar ? (
             <Image src={data.avatar} alt="avatar" width={64} height={64} className="object-cover" />

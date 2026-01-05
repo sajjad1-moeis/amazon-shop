@@ -6,9 +6,9 @@ import React from "react";
 function Page() {
   return (
     <IndexLayout>
-      <div class="bg-gray-50 dark:bg-dark-bg   pb-20">
+      <div className="bg-gray-50 dark:bg-dark-bg   pb-20">
         <HeroSection />
-        <div class="max-md:px-4">
+        <div className="max-md:px-4">
           <div
             className="rounded-2xl border border-gray-200  bg-white dark:bg-dark-box shadow-sm container
             dark:border-[#7B7F86] py-4 px-6 mt-20 lg:mt-36 max-md:text-sm dark:text-dark-text text-gray-600 "

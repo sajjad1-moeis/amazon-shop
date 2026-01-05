@@ -36,7 +36,7 @@ export default function ProductComparisonColumn({ product, onRemove }) {
       {/* Retailer Badge */}
 
       {/* Rating */}
-      <div class="flex-between">
+      <div className="flex-between">
         <div className="flex items-center gap-2 mb-3">
           <div className="flex items-center gap-1">
             <Star size={16} className="text-yellow-500 fill-yellow-500" variant="Bold" />

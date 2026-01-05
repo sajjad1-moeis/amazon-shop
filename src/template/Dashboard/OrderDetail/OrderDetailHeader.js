@@ -35,7 +35,7 @@ export default function OrderDetailHeader({ order, onDownloadInvoice, onCancelOr
     <div className=" mb-6 pb-4 md:border-b-2 border-gray-200 dark:border-dark-stroke">
       {/* Order Information */}
 
-      <div class="md:hidden">
+      <div className="md:hidden">
         <PageHeader
           description={"تاریخچه و وضعیت تمام سفارش‌های شما"}
           title={

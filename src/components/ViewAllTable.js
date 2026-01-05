@@ -11,7 +11,7 @@ function ViewAllTable({ className }) {
       )}
     >
       <p>برای مشاهده کامل، بکشید</p>
-      <div class="flex">
+      <div className="flex">
         <ArrowLeft2 size={20} />
         <ArrowLeft2 size={20} className="-mr-3" />
       </div>

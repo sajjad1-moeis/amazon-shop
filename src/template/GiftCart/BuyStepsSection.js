@@ -29,7 +29,7 @@ const giftCardSteps = [
 
 export default function GiftCardStepsSection() {
   return (
-    <div class="my-20">
+    <div className="my-20">
       <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white text-center mb-8">
         مراحل خرید گیفت کارت
       </h2>

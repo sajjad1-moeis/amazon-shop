@@ -41,14 +41,14 @@ export default function CurrencyServicesPage() {
       {/* Top Section: Header */}
       <PageHeader
         actionButton={
-          <div class="md:hidden">
+          <div className="md:hidden">
             <CurrencyBtn />
           </div>
         }
         title="خدمات ارزی"
         description="مدیریت درخواستها و ثبت خدمات ارزی"
       >
-        <div class="max-md:hidden">
+        <div className="max-md:hidden">
           <CurrencyBtn />
         </div>
       </PageHeader>
@@ -69,7 +69,7 @@ export default function CurrencyServicesPage() {
 
         {/* Requests Table */}
         <RequestsTable requests={initialRequests} />
-        <div class="mb-6 lg:hidden"></div>
+        <div className="mb-6 lg:hidden"></div>
         <ViewAllTable />
       </div>
     </DashboardLayout>

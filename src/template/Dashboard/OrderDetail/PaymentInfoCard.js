@@ -41,7 +41,7 @@ export default function PaymentInfoCard({ paymentInfo }) {
           <Row
             label="طرح اعتماد (اقساط):"
             value={paymentInfo.installmentPlan || "غیرفعال"}
-            valueClass="text-green-600 dark:text-green-400 bg-primary-100 dark:bg-dark-green text-primary-800 px-2.5 py-0.5 rounded"
+            valueclassName="text-green-600 dark:text-green-400 bg-primary-100 dark:bg-dark-green text-primary-800 px-2.5 py-0.5 rounded"
             border={false}
           />
         </div>
@@ -51,7 +51,7 @@ export default function PaymentInfoCard({ paymentInfo }) {
           <Row
             label="تخفیف‌ها:"
             value={`${paymentInfo.discount?.toLocaleString("fa-IR")} تومان`}
-            valueClass="text-green-600 dark:text-green-400"
+            valueclassName="text-green-600 dark:text-green-400"
           />
 
           <Row label="نوع حمل:" value={paymentInfo.shippingType} />
@@ -69,7 +69,7 @@ export default function PaymentInfoCard({ paymentInfo }) {
             label="مبلغ پرداخت شده:"
             value={`${paymentInfo.paidPercentage}% ${paymentInfo.paidAmount?.toLocaleString("fa-IR")} تومان`}
             border={false}
-            valueClass="text-primary-600 dark:text-primary-400"
+            valueclassName="text-primary-600 dark:text-primary-400"
           />
         </div>
       </div>

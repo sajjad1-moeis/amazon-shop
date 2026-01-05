@@ -134,7 +134,7 @@ function SidebarContent({ onLinkClick }) {
         </div>
       </div>
 
-      <div class="my-4 border-b dark:border-dark-stroke border-gray-200" />
+      <div className="my-4 border-b dark:border-dark-stroke border-gray-200" />
 
       {/* Navigation */}
       <nav className="space-y-2">

@@ -9,11 +9,11 @@ function Page() {
     "data-[state=active]:text-primary-600 data-[state=active]:dark:text-dark-title text-gray-500 px-4 py-3 rounded-none transition";
 
   return (
-    <div class="">
-      <div class="relative max-md:bg-[url(/image/CurrencyServices/CurrencyServicesBg.png)] bg-cover max-md:py-20">
+    <div className="">
+      <div className="relative max-md:bg-[url(/image/CurrencyServices/CurrencyServicesBg.png)] bg-cover max-md:py-20">
         <LinerBg />
 
-        <div class="md:absolute md:size-max md:inset-0 m-auto z-50 md:-translate-y-full  text-white text-center">
+        <div className="md:absolute md:size-max md:inset-0 m-auto z-50 md:-translate-y-full  text-white text-center">
           <h1 className="text-primary-50 text-xl md:text-3xl lg:text-5xl">خدمات ارزی سریع و مطمئن</h1>
           <p className="text-white/60 text-xs md:text-lg lg:text-xl mt-1 md:mt-3 w-1/2 lg:w-2/3 mx-auto">
             پرداخت ارزی، شارژ حساب، خرید کالا، پرداخت آمازون و تسویه بین‌المللی با کمترین کارمزد از طریق سیستم امن ما.
@@ -25,7 +25,7 @@ function Page() {
           alt=""
         />
       </div>
-      <div class="max-md:p-4">
+      <div className="max-md:p-4">
         <div className="mb-20 max-w-5xl mx-auto -mt-[10%] md:-mt-[20%]  relative rounded-xl">
           <Tabs
             dir="rtl"

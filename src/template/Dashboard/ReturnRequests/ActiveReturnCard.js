@@ -52,7 +52,7 @@ export default function ActiveReturnCard({ returnData, onCancel }) {
         <div className="flex flex-col  w-full  md:gap-6">
           {/* Product Details */}
           <div className="flex max-md:flex-col gap-3">
-            <div class="flex gap-2">
+            <div className="flex gap-2">
               <div className="relative w-full max-md:h-10 max-md:max-w-10 md:size-14 bg-gray-200 dark:bg-dark-titre rounded-lg overflow-hidden">
                 <Image
                   src={returnData.product.image}
@@ -97,7 +97,7 @@ export default function ActiveReturnCard({ returnData, onCancel }) {
         <div className="mt-6 pt-6 border-t border-gray-200 dark:border-dark-stroke">
           <div className="mb-4 ">
             <h4 className=" text-primary-500 dark:text-dark-text mb-4">روند مرجوعی</h4>
-            <div class="max-xl:overflow-auto">
+            <div className="max-xl:overflow-auto">
               <Timeline className={"max-md:min-w-[900px]"} currentStep={returnData.currentStep} steps={returnSteps} />
             </div>
           </div>

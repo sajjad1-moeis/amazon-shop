@@ -114,12 +114,12 @@ export default function ProductComparison() {
             </p>
           }
           actionButton={
-            <div class="md:hidden">
+            <div className="md:hidden">
               <ActionBtns />
             </div>
           }
         >
-          <div class="max-md:hidden">
+          <div className="max-md:hidden">
             <ActionBtns />
           </div>
         </PageHeader>

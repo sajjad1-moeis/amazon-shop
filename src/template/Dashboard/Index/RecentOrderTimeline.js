@@ -16,7 +16,7 @@ export default function RecentOrderTimeline({ order }) {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <h3 className=" text-gray-800 dark:text-dark-titre">سفارش شماره {order.orderNumber}</h3>
-        <div class="flex gap-4 flex-wrap">
+        <div className="flex gap-4 flex-wrap">
           <p className="text-sm text-gray-500 dark:text-dark-text">
             تاریخ سفارش: <span className="text-sm  text-gray-700 dark:text-dark-titre">{order.orderDate}</span>
           </p>

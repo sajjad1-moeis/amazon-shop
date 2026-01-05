@@ -80,7 +80,7 @@ export default function AddressCard({
 
         {removeHandler ||
           (address.isDefault && (
-            <div class="flex gap-3 ">
+            <div className="flex gap-3 ">
               <button
                 className="text-xs max-md:absolute max-md:w-max left-1/2 max-md:-translate-x-1/2 -top-3  font-medium px-3 py-1 rounded-md border border-primary-400 text-[#1E429F] dark:text-dark-title bg-primary-100 dark:bg-dark-blue"
                 disabled
@@ -89,7 +89,7 @@ export default function AddressCard({
               </button>
             </div>
           ))}
-        <div class="md:hidden">{removeHandler || <BtsHandler />}</div>
+        <div className="md:hidden">{removeHandler || <BtsHandler />}</div>
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-4 pt-4 border-t border-gray-200 dark:border-dark-stroke">
@@ -98,7 +98,7 @@ export default function AddressCard({
           <span className="text-gray-500 dark:text-dark-text flex-none">آدرس :</span>
           <span className="text-gray-800 dark:text-dark-titre ">{address.address}</span>
         </div>
-        <div class="max-md:hidden">{removeHandler || <BtsHandler />}</div>
+        <div className="max-md:hidden">{removeHandler || <BtsHandler />}</div>
       </div>
     </div>
   );

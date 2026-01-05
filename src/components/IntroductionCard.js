@@ -14,8 +14,8 @@ function IntroductionCard({ items = [], title, desc = "" }) {
     <div className="relative bg-[url(/image/BgIntroduction.png)] py-8 flex items-center justify-center flex-col">
       {/* Breadcrumb */}
 
-      <div class="absolute liner-introduction-white size-full inset-0 dark:hidden" />
-      <div class="absolute liner-introduction-dark hidden dark:block size-full inset-0" />
+      <div className="absolute liner-introduction-white size-full inset-0 dark:hidden" />
+      <div className="absolute liner-introduction-dark hidden dark:block size-full inset-0" />
 
       <div className="absolute top-4 right-6">
         <Breadcrumb>
@@ -50,7 +50,7 @@ function IntroductionCard({ items = [], title, desc = "" }) {
       </div>
 
       {/* عنوان */}
-      <div class="relative">
+      <div className="relative">
         <p className="text-2xl md:text-3xl lg:text-4xl text-primary-700 dark:text-dark-title font-bold  max-lg:mt-5 text-center">
           {title}
         </p>

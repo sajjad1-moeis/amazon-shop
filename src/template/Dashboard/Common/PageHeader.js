@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 export default function PageHeader({ title, description, actionButton, children }) {
   return (
-    <div class="mb-4 border-b-2 border-gray-200 dark:border-dark-box pb-4">
+    <div className="mb-4 border-b-2 border-gray-200 dark:border-dark-box pb-4">
       <div className=" flex justify-between ">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex-1">

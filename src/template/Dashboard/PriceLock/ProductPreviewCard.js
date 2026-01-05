@@ -7,11 +7,11 @@ export default function ProductPreviewCard({ product }) {
   return (
     <div className="w-full bg-gray-50 dark:bg-dark-field border border-gray-200 dark:border-dark-stroke rounded-xl sm:rounded-2xl p-2 sm:p-3 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 sm:gap-4 shadow-sm">
       {/* Product Image */}
-      <div class="flex gap-2">
+      <div className="flex gap-2">
         <div className=" size-16 md:w-36  sm:h-48 md:h-28 relative flex-shrink-0 rounded-lg sm:rounded-xl overflow-hidden bg-gray-100 dark:bg-dark-box">
           <Image src={product.image} alt={product.title} fill className="object-cover" />
         </div>
-        <div class="md:hidden">
+        <div className="md:hidden">
           <h3 className="text-sm mb-3 text-gray-900 dark:text-dark-titre leading-5 sm:leading-6">{product.title}</h3>
 
           {/* Brand + Status */}

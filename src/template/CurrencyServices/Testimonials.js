@@ -15,7 +15,7 @@ const CommentBox = ({ t }) => {
       key={t.id}
       className=" bg-white dark:bg-dark-box rounded-2xl border border-gray-200 dark:border-dark-field p-3 flex flex-col"
     >
-      <div class="flex border-b pb-3 mb-3 dark:border-dark-stroke">
+      <div className="flex border-b pb-3 mb-3 dark:border-dark-stroke">
         <div className="relative aspect-square size-8 rounded-full">
           <Image
             src="/image/GiftCart/bestSellingBanner.png"
@@ -50,7 +50,7 @@ export default function Testimonials() {
           ))}
         </div>
 
-        <div class="lg:hidden">
+        <div className="lg:hidden">
           <Swiper
             slidesPerView={1.5}
             spaceBetween={10}

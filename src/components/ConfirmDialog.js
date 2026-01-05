@@ -36,7 +36,7 @@ export default function ConfirmDialog({
       >
         <DialogHeader>
           <DialogTitle className={isDashboard ? "text-gray-900 dark:text-dark-title" : ""}>{title}</DialogTitle>
-          <div class="mt-3" />
+          <div className="mt-3" />
           <DialogDescription className={isDashboard ? "text-gray-600 dark:text-dark-text" : "text-gray-400"}>
             {description}
           </DialogDescription>

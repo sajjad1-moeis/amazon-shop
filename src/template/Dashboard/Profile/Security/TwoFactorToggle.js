@@ -16,7 +16,7 @@ export default function TwoFactorToggle({ enabled, onToggle }) {
           checked={enabled}
           onCheckedChange={onToggle}
         />
-        <div class="">
+        <div className="">
           <Label htmlFor="twoFactor" className="text-base  text-gray-700 dark:text-dark-titre cursor-pointer">
             ورود دو مرحله ای
           </Label>

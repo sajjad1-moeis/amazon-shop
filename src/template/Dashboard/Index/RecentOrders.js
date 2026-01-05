@@ -49,7 +49,7 @@ const otherOrders = [
 export default function RecentOrders() {
   return (
     <div className="shadow-box rounded-2xl p-3 bg-white dark:bg-dark-box">
-      <div class="">
+      <div className="">
         <h3 className="text-gray-800 dark:text-dark-titre md:text-lg">سفارش‌های اخیر</h3>
         <p className="text-xs md:text-sm text-gray-500 dark:text-caption mt-2">آخرین سفارش‌هایی که ثبت کرده‌اید</p>
       </div>
@@ -58,7 +58,7 @@ export default function RecentOrders() {
 
       {/* جدول سفارش‌های دیگر */}
       <div className="bg-white dark:bg-dark-box rounded-2xl p-3">
-        <div class="flex-between mb-4 md:mb-6">
+        <div className="flex-between mb-4 md:mb-6">
           <h3 className="text-sm md:text-lg text-gray-700  dark:text-dark-titre">دیگر سفارش‌ها</h3>
           <Link href={"/dashboard/orders"} className="max-md:text-sm text-yellow-600">
             مشاهده همه سفارش ها
