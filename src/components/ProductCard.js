@@ -95,13 +95,13 @@ function ProductCard({ className, product, badges }) {
           <div className="flex flex-col gap-1.5">
             <div className="flex-between">
               <div className="flex items-center gap-2">
-                <span className="font-bold dark:text-dark-titre text-gray-900 max-lg:text-sm text-base">
+                <span className="dark:text-dark-titre text-gray-900 max-lg:text-sm max-md:text-xs text-base">
                   {formatPrice(discountPrice || price)}
                 </span>
               </div>
               {discount > 0 && (
                 <div className="flex items-center gap-2">
-                  <span className="bg-orange-600 text-white text-xs px-2 py-0.5 rounded">{discount}%</span>
+                  <span className="bg-orange-600 text-white text-xs px-1 md:px-2 py-0.5 rounded">{discount}%</span>
                 </div>
               )}
             </div>

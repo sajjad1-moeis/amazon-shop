@@ -247,14 +247,14 @@ export default function DashboardSidebar({ isMobileOpen, setIsMobileOpen }) {
       >
         <div className="relative h-full overflow-y-auto">
           <div class="flex-between px-2 mt-1">
-            <SwitchButton />
+            <SwitchButton clssBtn={"max-sm:text-gray-800"} />
             <button onClick={() => setIsMobileOpen(false)}>
               <CloseCircle />
             </button>
           </div>
 
           <div className="flex-1 my-2  flex items-center justify-center px-2">
-            <div className="bg-gray-50 dark:bg-[#8989893D] dark:border-dark-stroke dark:border w-full rounded-lg p-1 flex-between">
+            <div className="bg-gray-100 dark:bg-[#8989893D] dark:border-dark-stroke dark:border w-full rounded-lg p-1 flex-between">
               <input
                 type="text"
                 className="px-2 outline-none placeholder:max-md:text-xs bg-transparent"

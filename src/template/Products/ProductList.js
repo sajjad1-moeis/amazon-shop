@@ -21,22 +21,31 @@ export default function ProductList({ viewMode, products = [], totalCount = 0 })
   };
 
   return (
-    <div>
-      {viewMode === "list" ? (
-        <div className="w-full flex flex-col gap-4 bg-white dark:bg-transparent">
-          {products.map((product) => (
-            <Link key={product.id} href={`/product/${product.id}`}>
-              <ProductRowCard />
-            </Link>
-          ))}
-        </div>
-      ) : (
+    <>
+      <div className="max-md:hidden">
+        {viewMode === "list" ? (
+          <div className="w-full flex flex-col gap-4 bg-white dark:bg-transparent">
+            {products.map((product) => (
+              <Link key={product.id} href={`/product/${product.id}`}>
+                <ProductRowCard />
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} badges={product.badges} />
+            ))}
+          </div>
+        )}
+      </div>
+      <div class="md:hidden">
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} badges={product.badges} />
           ))}
         </div>
-      )}
-    </div>
+      </div>
+    </>
   );
 }

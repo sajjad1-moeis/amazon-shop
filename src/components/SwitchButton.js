@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { Button } from "./ui/button";
 import { Moon, Sun } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-export default function SwitchButton() {
+export default function SwitchButton({ clssBtn }) {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -28,7 +29,10 @@ export default function SwitchButton() {
     <Button
       variant="ghost"
       onClick={toggleTheme}
-      className="flex items-center gap-2 rounded-xl px-3 py-1 text-white max-sm:text-gray-800 max-md:hover:bg-gray-100 dark:text-white hover:bg-white/10 dark:hover:bg-white/10 transition-colors"
+      className={cn(
+        "flex items-center gap-2 rounded-xl px-3 py-1 text-white  max-md:hover:bg-gray-100 dark:text-white hover:bg-white/10  transition-colors",
+        clssBtn
+      )}
     >
       {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
       <span className="text-sm">{theme === "dark" ? "روشن" : "تاریک"}</span>
