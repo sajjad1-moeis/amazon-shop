@@ -1,7 +1,0 @@
-{
-  "platform": "next",
-  "build": {
-    "command": "rm -f package-lock.json || true && npm run liara-build"
-  }
-}
-
