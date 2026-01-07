@@ -21,7 +21,9 @@ import {
   LogoutCurve,
   CloseCircle,
   Lock,
+  SearchNormal1,
 } from "iconsax-reactjs";
+import SwitchButton from "@/components/SwitchButton";
 
 const items = [
   { id: "dashboard", label: "داشبورد", href: "/dashboard", icon: Element4 },
@@ -99,7 +101,7 @@ function SidebarContent({ onLinkClick }) {
   return (
     <div
       dir="rtl"
-      className=" lg:w-60 bg-white dark:bg-dark-box lg:border-2 lg:sticky top-0 border-primary-200 dark:border-dark-stroke p-3 rounded-2xl max-lg:h-full overflow-y-auto"
+      className=" lg:w-60 bg-white dark:bg-dark-box lg:border-2 lg:sticky top-0 border-primary-200 dark:border-dark-stroke p-2 md:p-3 rounded-2xl max-lg:h-full overflow-y-auto"
     >
       <Link href={"/dashboard/wallet"} onClick={handleLinkClick}>
         {/* Wallet Card */}
@@ -244,6 +246,25 @@ export default function DashboardSidebar({ isMobileOpen, setIsMobileOpen }) {
         )}
       >
         <div className="relative h-full overflow-y-auto">
+          <div class="flex-between px-2 mt-1">
+            <SwitchButton />
+            <button onClick={() => setIsMobileOpen(false)}>
+              <CloseCircle />
+            </button>
+          </div>
+
+          <div className="flex-1 my-2  flex items-center justify-center px-2">
+            <div className="bg-white dark:bg-[#8989893D] dark:border-dark-stroke dark:border w-full rounded-lg p-1 flex-between">
+              <input
+                type="text"
+                className="px-2 outline-none placeholder:max-md:text-xs bg-transparent"
+                placeholder="جستجو در داشبورد"
+              />
+              <button className="bg-yellow-500 hover:bg-yellow-600 py-1.5 text-primary-800 gap-2 flex-between rounded-lg p-2 ">
+                <SearchNormal1 className="max-lg:size-6" /> <span className="max-lg:hidden">جستجو</span>
+              </button>
+            </div>
+          </div>
           <SidebarContent onLinkClick={() => setIsMobileOpen(false)} />
         </div>
       </aside>

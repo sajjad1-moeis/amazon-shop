@@ -46,7 +46,7 @@ export default function DashboardHeader({ onMenuClick }) {
             <input
               type="text"
               className="px-2 outline-none placeholder:max-md:text-xs bg-transparent"
-              placeholder="جستجو در امارت و آمریکا"
+              placeholder="جستجو در داشبورد"
             />
             <button className="bg-yellow-500 hover:bg-yellow-600 text-primary-800 gap-2 flex-between rounded-lg p-2 md:px-3 py-2">
               <SearchNormal1 className="max-lg:size-6" /> <span className="max-lg:hidden">جستجو</span>
