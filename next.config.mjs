@@ -2,6 +2,10 @@
 const nextConfig = {
   reactCompiler: true,
 
+  // Enable standalone output only for Docker (not for Vercel)
+  // Vercel handles deployment automatically, standalone is not needed
+  ...(process.env.VERCEL ? {} : { output: "standalone" }),
+
   // Image optimization
   images: {
     formats: ["image/avif", "image/webp"],
