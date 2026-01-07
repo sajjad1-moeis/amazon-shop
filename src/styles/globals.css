@@ -267,13 +267,7 @@ img {
   display: block;
 }
 
-/* رفع مشکل flexbox در Safari */
-.flex,
-[class*="flex"] {
-  display: flex;
-  -webkit-box-align: center;
-  -webkit-box-pack: center;
-}
+/* رفع مشکل flexbox در Safari - حذف شد چون با Tailwind CSS تداخل دارد */
 
 /* رفع مشکل horizontal scroll در Safari */
 @media screen and (max-width: 768px) {
@@ -288,8 +282,8 @@ img {
     height: auto;
   }
 
-  /* جلوگیری از overflow در tables */
-  table {
+  /* جلوگیری از overflow در tables - فقط برای جداول با عرض زیاد */
+  table.table-scroll {
     display: block;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
