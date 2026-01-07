@@ -254,7 +254,7 @@ export default function DashboardSidebar({ isMobileOpen, setIsMobileOpen }) {
           </div>
 
           <div className="flex-1 my-2  flex items-center justify-center px-2">
-            <div className="bg-white dark:bg-[#8989893D] dark:border-dark-stroke dark:border w-full rounded-lg p-1 flex-between">
+            <div className="bg-gray-50 dark:bg-[#8989893D] dark:border-dark-stroke dark:border w-full rounded-lg p-1 flex-between">
               <input
                 type="text"
                 className="px-2 outline-none placeholder:max-md:text-xs bg-transparent"
