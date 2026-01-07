@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import PageHeaderWithSearch from "@/template/Admin/PageHeaderWithSearch";
 import ProductsTable from "@/template/Admin/products/list/ProductsTable";
 import ProductsFilters from "@/template/Admin/products/list/ProductsFilters";
 import DeleteProductDialog from "@/template/Admin/products/list/DeleteProductDialog";
@@ -17,12 +16,10 @@ export default function ProductsListPage() {
   const categoryParam = searchParams.get("category");
   const statusParam = searchParams.get("status");
   const brandParam = searchParams.get("brand");
-  const searchParam = searchParams.get("search");
   const pageParam = searchParams.get("page");
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState(searchParam || "");
   const [pageNumber, setPageNumber] = useState(pageParam ? parseInt(pageParam) : 1);
   const [pageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
@@ -42,15 +39,13 @@ export default function ProductsListPage() {
     } else {
       setPageNumber(1);
     }
-    const search = searchParams.get("search");
-    if (search !== null) {
-      setSearchTerm(search);
-    }
   }, [searchParams]);
 
   const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
+      const searchParam = searchParams.get("search");
+      const searchTerm = searchParam || "";
       const response = await productService.getPaginated({
         pageNumber,
         pageSize,
@@ -73,13 +68,14 @@ export default function ProductsListPage() {
     } finally {
       setLoading(false);
     }
-  }, [pageNumber, pageSize, filterCategory, filterBrand, filterStatus, searchTerm]);
+  }, [pageNumber, pageSize, filterCategory, filterBrand, filterStatus, searchParams]);
 
   useEffect(() => {
-    if (searchTerm) {
+    const search = searchParams.get("search");
+    if (search) {
       setPageNumber(1);
     }
-  }, [searchTerm]);
+  }, [searchParams]);
 
   useEffect(() => {
     fetchProducts();
@@ -127,29 +123,13 @@ export default function ProductsListPage() {
     router.push(`/admin/products/list?${params.toString()}`);
   };
 
-  const handleSearchChange = (value) => {
-    setSearchTerm(value);
-    const params = new URLSearchParams(searchParams.toString());
-    if (value) {
-      params.set("search", value);
-    } else {
-      params.delete("search");
-    }
-    params.delete("page");
-    router.push(`/admin/products/list?${params.toString()}`);
-  };
-
   return (
     <div className="space-y-6">
       <div className="">
-        <PageHeaderWithSearch
-          title="لیست محصولات"
-          searchPlaceholder="جستجو محصول..."
-          onSearchChange={handleSearchChange}
-          searchValue={searchTerm}
-        >
+        <div className="mb-5">
+          <h1 className="text-lg md:text-xl text-gray-100 mb-4">لیست محصولات</h1>
           <ProductsFilters />
-        </PageHeaderWithSearch>
+        </div>
 
         {loading ? (
           <div className="p-8 text-center text-gray-400">

@@ -6,10 +6,7 @@ import IndexLayout from "@/layout/IndexLayout";
 import FiltersSection from "@/components/module/FiltersSection";
 import HeaderSection from "@/template/Products/HeaderSection";
 import ProductList from "@/template/Products/ProductList";
-import { productService } from "@/services/product/productService";
-import { productCategoryService } from "@/services/product/productCategoryService";
-import { productBrandService } from "@/services/product/productBrandService";
-import { toast } from "sonner";
+
 import { Spinner } from "@/components/ui/spinner";
 
 export default function ProductsPage() {

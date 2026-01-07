@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
       <body dir="rtl" className="font-sans">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <AuthProvider>
-            <main className="overflow-hidden  dark:bg-dark-bg max-md:pb-14">{children}</main>
+            <main className="overflow-hidden  dark:bg-dark-bg">{children}</main>
             <Toaster dir="rtl" position="top-right" richColors className={iranSans.variable} />
           </AuthProvider>
         </ThemeProvider>

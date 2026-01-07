@@ -2,16 +2,13 @@
 
 import React from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
+import {
+  filterSelectTriggerStyles,
+  filterSelectContentStyles,
+  adminFilterSelectTriggerStyles,
+  adminFilterSelectContentStyles,
+} from "@/utils/filterStyles";
 
-/**
- * سلکت وضعیت - قابل استفاده مجدد با options مختلف
- * @param {string} value - مقدار انتخاب شده
- * @param {function} onValueChange - تابع تغییر مقدار
- * @param {string} placeholder - متن placeholder (پیش‌فرض: "وضعیت")
- * @param {array} options - آرایه options به صورت [{value: "value", label: "label"}, ...]
- * @param {boolean} includeAll - آیا گزینه "همه" را شامل شود (پیش‌فرض: true)
- */
 export default function StatusSelect({
   value,
   onValueChange,
@@ -19,13 +16,23 @@ export default function StatusSelect({
   options = [],
   includeAll = true,
   isInDrawer = false,
+  isAdmin,
 }) {
   return (
     <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger className={isInDrawer ? "w-full " + filterSelectTriggerStyles : filterSelectTriggerStyles} dir="rtl">
+      <SelectTrigger
+        className={
+          isAdmin
+            ? adminFilterSelectTriggerStyles
+            : isInDrawer
+            ? "w-full " + filterSelectTriggerStyles
+            : filterSelectTriggerStyles
+        }
+        dir="rtl"
+      >
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent className={filterSelectContentStyles} dir="rtl">
+      <SelectContent className={isAdmin ? adminFilterSelectContentStyles : filterSelectContentStyles} dir="rtl">
         {includeAll && <SelectItem value="all">همه</SelectItem>}
         {options.map((option) => (
           <SelectItem key={option.value} value={option.value}>
@@ -36,4 +43,3 @@ export default function StatusSelect({
     </Select>
   );
 }
-

@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import PageHeaderWithSearch from "@/template/Admin/PageHeaderWithSearch";
 import ReturnRequestsTable from "@/template/Admin/returnRequests/ReturnRequestsTable";
+import ReturnRequestsFilters from "@/template/Admin/returnRequests/ReturnRequestsFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import ConfirmDialog from "@/components/ConfirmDialog";
@@ -15,7 +15,8 @@ export default function ReturnRequestsPage() {
   const statusParam = searchParams.get("status");
   const [returnRequests, setReturnRequests] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
+  const searchParam = searchParams.get("search");
+  const searchTerm = searchParam || "";
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
@@ -60,11 +61,11 @@ export default function ReturnRequestsPage() {
 
   useEffect(() => {
     fetchReturnRequests();
-  }, [pageNumber, searchTerm, statusParam]);
+  }, [pageNumber, searchParams, statusParam]);
 
   useEffect(() => {
     setPageNumber(1);
-  }, [searchTerm, statusParam]);
+  }, [searchParams, statusParam]);
 
   const handleApprove = async (id) => {
     try {
@@ -121,11 +122,10 @@ export default function ReturnRequestsPage() {
   return (
     <div className="space-y-6">
       <div className="">
-        <PageHeaderWithSearch
-          title="درخواست‌های مرجوعی"
-          searchPlaceholder="جستجو شماره درخواست یا مشتری"
-          onSearchChange={setSearchTerm}
-        />
+        <div className="mb-5">
+          <h1 className="text-lg md:text-xl text-gray-100 mb-4">درخواست‌های مرجوعی</h1>
+          <ReturnRequestsFilters />
+        </div>
 
         {loading ? (
           <div className="p-8 text-center text-gray-400">

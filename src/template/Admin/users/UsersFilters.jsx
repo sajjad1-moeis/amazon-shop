@@ -2,22 +2,22 @@
 
 import React from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import StatusSelect from "@/components/FilterSelects/StatusSelect";
+import FilterSection from "@/components/FilterSection";
+import FilterSearchInput from "@/components/FilterSelects/FilterSearchInput";
 
 const ROLE_OPTIONS = [
-  { value: "all", label: "همه نقش‌ها" },
   { value: "Admin", label: "ادمین" },
   { value: "Student", label: "دانشجو" },
   { value: "User", label: "کاربر" },
 ];
 
 const STATUS_OPTIONS = [
-  { value: "all", label: "همه" },
   { value: "active", label: "فعال" },
   { value: "banned", label: "بن شده" },
 ];
 
-export default function UsersFilters() {
+export default function UsersFilters({ isInDrawer = false }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -46,32 +46,27 @@ export default function UsersFilters() {
   };
 
   return (
-    <div className="flex gap-2">
-      <Select value={filterRole} onValueChange={handleRoleChange}>
-        <SelectTrigger className="bg-gray-700 border-gray-600 text-white h-[43px] w-fit gap-5">
-          <SelectValue placeholder="نقش" />
-        </SelectTrigger>
-        <SelectContent className="bg-gray-800 border-gray-700">
-          {ROLE_OPTIONS.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+    <FilterSection isAdmin>
+      <FilterSearchInput isAdmin placeholder="جستجو نام" />
 
-      <Select value={filterStatus} onValueChange={handleStatusChange}>
-        <SelectTrigger className="bg-gray-700 border-gray-600 text-white h-[43px] w-fit gap-5">
-          <SelectValue placeholder="وضعیت" />
-        </SelectTrigger>
-        <SelectContent className="bg-gray-800 border-gray-700">
-          {STATUS_OPTIONS.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
+      <StatusSelect
+        value={filterRole}
+        onValueChange={handleRoleChange}
+        placeholder="وضعیت"
+        options={ROLE_OPTIONS}
+        includeAll={true}
+        isInDrawer={isInDrawer}
+        isAdmin
+      />
+      <StatusSelect
+        isAdmin
+        value={filterStatus}
+        onValueChange={handleStatusChange}
+        placeholder="وضعیت"
+        options={STATUS_OPTIONS}
+        includeAll={true}
+        isInDrawer={isInDrawer}
+      />
+    </FilterSection>
   );
 }

@@ -57,7 +57,16 @@ function SelectColor({ colors, selectedColor, setSelectedColor }) {
                   )}
                   style={{ backgroundColor: colorHex }}
                 >
-                  {isSelected && <Check className="w-3 h-3 text-white stroke-[3]" />}
+                  {isSelected && (
+                    <Check
+                      className={cn(
+                        "w-3 h-3 stroke-[3]",
+                        colorHex === "#ffffff" || colorHex === "#fff" || colorHex.toLowerCase() === "white"
+                          ? "text-gray-800"
+                          : "text-white"
+                      )}
+                    />
+                  )}
                 </div>
 
                 {/* Color Label */}

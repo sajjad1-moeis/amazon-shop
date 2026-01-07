@@ -3,22 +3,12 @@
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import FilterDrawerContent from "@/components/FilterDrawer/FilterDrawerContent";
 import { Candle } from "iconsax-reactjs";
+import { adminFilterBtn, adminFilterDrawer } from "@/utils/filterStyles";
 
-/**
- * کامپوننت wrapper برای سکشن فیلتر - ریسپانسیو با Drawer در موبایل
- * @param {React.ReactNode} children - محتوای فیلترها (اولین child جستجو، بقیه سلکت‌ها)
- * @param {string} className - کلاس‌های اضافی
- */
-export default function FilterSection({ children, className }) {
+export default function FilterSection({ children, isAdmin, className }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   // تبدیل children به آرایه برای دسترسی بهتر
   const childrenArray = React.Children.toArray(children);
@@ -33,21 +23,34 @@ export default function FilterSection({ children, className }) {
         {/* Desktop: نمایش فیلترها */}
         <div className="hidden md:flex items-center gap-2 md:gap-3">{filterSelects}</div>
 
-        {/* Mobile: دکمه فیلتر برای باز کردن Drawer */}
         {filterSelects.length > 0 && (
           <Drawer open={drawerOpen} onOpenChange={setDrawerOpen} direction="rtl">
             <DrawerTrigger asChild>
               <Button
                 variant="outline"
-                className="md:hidden p-2.5 dark:bg-dark-field rounded-lg dark:border-dark-stroke border flex items-center justify-center"
+                className={
+                  isAdmin
+                    ? adminFilterBtn
+                    : "md:hidden p-2.5 dark:bg-dark-field rounded-lg dark:border-dark-stroke border flex items-center justify-center"
+                }
               >
                 <Candle size={20} />
                 <span className="mr-2">فیلتر ها</span>
               </Button>
             </DrawerTrigger>
-            <DrawerContent className="max-h-[85vh] dark:bg-dark-box" dir="rtl">
-              <DrawerHeader className="border-b border-gray-200 dark:border-dark-stroke pb-4">
-                <DrawerTitle className="text-lg font-semibold text-gray-900 dark:text-dark-titre text-right">
+            <DrawerContent className={isAdmin ? adminFilterDrawer : "max-h-[85vh] dark:bg-dark-box"} dir="rtl">
+              <DrawerHeader
+                className={
+                  isAdmin ? "border-b border-gray-700 pb-4" : "border-b border-gray-200 dark:border-dark-stroke pb-4"
+                }
+              >
+                <DrawerTitle
+                  className={
+                    isAdmin
+                      ? "text-lg font-semibold text-white text-right"
+                      : "text-lg font-semibold text-gray-900 dark:text-dark-titre text-right"
+                  }
+                >
                   فیلترها
                 </DrawerTitle>
               </DrawerHeader>

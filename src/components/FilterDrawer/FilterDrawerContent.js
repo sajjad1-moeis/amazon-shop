@@ -8,14 +8,14 @@ import React from "react";
  */
 export default function FilterDrawerContent({ filterSelects }) {
   return (
-    <div className="space-y-4 p-4 w-full">
+    <div className="flex flex-col gap-3 p-4 w-full">
       {filterSelects.map((filter, index) => {
         const clonedFilter = React.cloneElement(filter, {
           ...filter.props,
           isInDrawer: true,
         });
 
-        return <div className="!w-full">{clonedFilter}</div>;
+        return <div>{clonedFilter}</div>;
       })}
     </div>
   );

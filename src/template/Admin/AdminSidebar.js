@@ -8,7 +8,7 @@ import { ADMIN_SIDEBAR_ITEMS } from "@/data/adminSidebarData";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
-export const SideBarContent = () => {
+export const SideBarContent = ({ onLinkClick }) => {
   const pathname = usePathname();
   const [defaultValue, setDefaultValue] = useState("");
   const keyLocation = pathname?.split("/admin/")[1] || "index";
@@ -29,7 +29,7 @@ export const SideBarContent = () => {
   };
 
   return (
-    <div className="h-full lg:bg-gray-800 lg:bg-opacity-50 border-0 lg:!border-l lg:border-gray-700 backdrop-blur-md lg:p-4 flex flex-col lg:shadow-lg max-lg:h-auto max-lg:bg-transparent max-lg:backdrop-blur-none max-lg:p-0 max-lg:min-h-0 max-lg:w-full">
+    <div className="h-full lg:bg-gray-800 lg:bg-opacity-50 border-0 lg:!border-l lg:border-gray-700 backdrop-blur-md lg:p-4 flex flex-col lg:shadow-lg">
       <Link href="/" className="flex flex-col items-center max-lg:hidden">
         <Image
           src="/image/logo.png"
@@ -69,6 +69,7 @@ export const SideBarContent = () => {
                         <li key={child.href}>
                           <Link
                             href={child.href}
+                            onClick={onLinkClick}
                             className={cn(
                               "block p-2 text-sm font-medium rounded-lg cursor-pointer hover:bg-gray-700 transition-colors text-white",
                               pathname === child.href && "bg-gray-700"
@@ -85,7 +86,7 @@ export const SideBarContent = () => {
             }
 
             return (
-              <Link key={item.href} href={item.href} className="block mb-2">
+              <Link key={item.href} href={item.href} onClick={onLinkClick} className="block mb-2">
                 <div
                   className={cn(
                     "flex items-center gap-2 p-2 px-3 font-medium rounded-lg hover:bg-gray-700 transition-colors text-white",

@@ -1,16 +1,17 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import StatusSelect from "@/components/FilterSelects/StatusSelect";
+import FilterSection from "@/components/FilterSection";
+import FilterSearchInput from "@/components/FilterSelects/FilterSearchInput";
 import { roleService } from "@/services/role/roleService";
 
 const STATUS_OPTIONS = [
-  { value: "all", label: "همه" },
   { value: "active", label: "فعال" },
   { value: "inactive", label: "غیرفعال" },
 ];
 
-export default function RolesFilters({ onFilterChange, filters }) {
+export default function RolesFilters({ onFilterChange, filters, isInDrawer = false }) {
   const [roles, setRoles] = useState([]);
   const [loadingRoles, setLoadingRoles] = useState(false);
 
@@ -43,37 +44,42 @@ export default function RolesFilters({ onFilterChange, filters }) {
     });
   };
 
-  return (
-    <div className="flex gap-2">
-      <Select value={filters.roleName || "all"} onValueChange={handleRoleChange} disabled={loadingRoles}>
-        <SelectTrigger className="bg-gray-700 border-gray-600 text-white w-fit gap-5 h-auto">
-          <SelectValue placeholder="نقش" />
-        </SelectTrigger>
-        <SelectContent className="bg-gray-800 border-gray-700">
-          <SelectItem value="all">همه نقش‌ها</SelectItem>
-          {roles.map((role) => (
-            <SelectItem key={role.id} value={role.name}>
-              {role.name}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+  const roleOptions = roles.map((role) => ({
+    value: role.name,
+    label: role.name,
+  }));
 
-      <Select
+  const handleSearchChange = (value) => {
+    onFilterChange({ ...filters, searchTerm: value });
+  };
+
+  return (
+    <FilterSection isAdmin>
+      <FilterSearchInput
+        value={filters.searchTerm || ""}
+        onChange={handleSearchChange}
+        isAdmin
+        placeholder="جستجو نام"
+      />
+
+      <StatusSelect
+        value={filters.roleName || "all"}
+        onValueChange={handleRoleChange}
+        placeholder="نقش"
+        options={roleOptions}
+        includeAll={true}
+        isInDrawer={isInDrawer}
+        isAdmin
+      />
+      <StatusSelect
         value={filters.isActive === null ? "all" : filters.isActive ? "active" : "inactive"}
         onValueChange={handleStatusChange}
-      >
-        <SelectTrigger className="bg-gray-700 border-gray-600 text-white w-fit gap-5 h-auto">
-          <SelectValue placeholder="وضعیت" />
-        </SelectTrigger>
-        <SelectContent className="bg-gray-800 border-gray-700">
-          {STATUS_OPTIONS.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
+        placeholder="وضعیت"
+        options={STATUS_OPTIONS}
+        includeAll={true}
+        isInDrawer={isInDrawer}
+        isAdmin
+      />
+    </FilterSection>
   );
 }

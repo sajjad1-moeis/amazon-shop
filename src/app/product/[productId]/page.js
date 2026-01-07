@@ -15,6 +15,7 @@ import AccessoriesSlider from "@/template/Product/AccessoriesSlider";
 import { mockProduct } from "@/data";
 import BreadCrump from "@/template/Product/BreadCrump";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export default function ProductDetailPage({ params }) {
   const productId = params?.productId;
@@ -94,6 +95,7 @@ export default function ProductDetailPage({ params }) {
               <PurchaseSection
                 selectedDelivery={selectedDelivery}
                 setSelectedDelivery={setSelectedDelivery}
+                selectedColor={selectedColor}
                 productId={productId}
                 product={product}
               />
@@ -118,7 +120,11 @@ export default function ProductDetailPage({ params }) {
             </div>
             <div className="asda max-md:hidden p-2 border rounded-lg border-gray-200 dark:bg-dark-box dark:border-dark-stroke bg-white h-max sticky top-10">
               <p>۱۲,۴۵۰,۰۰۰ تومان</p>
-              <Button variant="ghost" className="w-full mt-6 bg-yellow-400  text-black rounded-lg">
+              <Button
+                onClick={() => toast.info("افزودن به سبد خرید")}
+                variant="ghost"
+                className="w-full mt-6 bg-yellow-400  text-black rounded-lg"
+              >
                 افزودن به سبد خرید
               </Button>
             </div>

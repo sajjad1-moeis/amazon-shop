@@ -3,18 +3,20 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import PageHeaderWithSearch from "@/template/Admin/PageHeaderWithSearch";
 import BlogCommentsTable from "@/template/Admin/blog/comments/BlogCommentsTable";
+import BlogCommentsFilters from "@/template/Admin/blog/comments/BlogCommentsFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { blogCommentService } from "@/services/blog/blogCommentService";
 
 export default function BlogCommentsPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [comments, setComments] = useState([]);
   const [allComments, setAllComments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
+  const searchParam = searchParams.get("search");
+  const searchTerm = searchParam || "";
   const [statusFilter, setStatusFilter] = useState("1");
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize] = useState(20);
@@ -53,13 +55,19 @@ export default function BlogCommentsPage() {
   }, [statusFilter]);
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
+    const search = searchParams.get("search");
+    if (search !== null) {
+      const timeoutId = setTimeout(() => {
+        fetchComments();
+        setPageNumber(1);
+      }, 500);
+
+      return () => clearTimeout(timeoutId);
+    } else {
       fetchComments();
       setPageNumber(1);
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
-  }, [searchTerm]);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const startIndex = (pageNumber - 1) * pageSize;
@@ -126,7 +134,7 @@ export default function BlogCommentsPage() {
     <div className="space-y-6">
       <div className="">
         <div className="mb-5 flex items-center justify-between max-md:flex-col max-md:items-start max-md:gap-4">
-          <h1 className="text-xl text-gray-100">مدیریت نظرات بلاگ</h1>
+          <h1 className="text-lg md:text-xl text-gray-100">مدیریت نظرات بلاگ</h1>
           <div className="flex items-center gap-3">
             <select
               value={statusFilter}
@@ -139,7 +147,9 @@ export default function BlogCommentsPage() {
                 </option>
               ))}
             </select>
-            <PageHeaderWithSearch title="" searchPlaceholder="جستجو..." onSearchChange={setSearchTerm} />
+            <div className="mb-5">
+              <BlogCommentsFilters />
+            </div>
           </div>
         </div>
 

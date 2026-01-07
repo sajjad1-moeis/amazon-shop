@@ -3,10 +3,10 @@
 import React, { useState, useEffect } from "react";
 import { SearchNormal1 } from "iconsax-reactjs";
 import { Input } from "@/components/ui/input";
-import { filterInputStyles } from "@/utils/filterStyles";
+import { adminFilterInputStyles, filterInputStyles } from "@/utils/filterStyles";
 import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
 
-export default function FilterSearchInput({ value = "", onChange, placeholder = "جستجو..." }) {
+export default function FilterSearchInput({ value = "", isAdmin, onChange, placeholder = "جستجو..." }) {
   // State محلی برای نمایش فوری در input
   const [searchValue, setSearchValue] = useState(value);
   const [popoverSearchValue, setPopoverSearchValue] = useState(value);
@@ -28,12 +28,6 @@ export default function FilterSearchInput({ value = "", onChange, placeholder = 
     debouncedSearch(val);
   };
 
-  const handlePopoverChange = (e) => {
-    const val = e.target.value;
-    setPopoverSearchValue(val);
-    debouncedSearch(val);
-  };
-
   return (
     <>
       {/* دسکتاپ: اینپوت عادی */}
@@ -44,7 +38,7 @@ export default function FilterSearchInput({ value = "", onChange, placeholder = 
           value={searchValue}
           onChange={handleChange}
           placeholder={placeholder}
-          className={`pr-10 pl-4   ${filterInputStyles}`}
+          className={`pr-10 pl-4   ${isAdmin ? adminFilterInputStyles : filterInputStyles}`}
           dir="rtl"
         />
       </div>

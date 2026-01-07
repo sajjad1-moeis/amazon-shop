@@ -1,18 +1,21 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import PageHeaderWithSearch from "@/template/Admin/PageHeaderWithSearch";
 import RateLimitsTable from "@/template/Admin/reports/rateLimits/RateLimitsTable";
+import RateLimitsFilters from "@/template/Admin/reports/rateLimits/RateLimitsFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { rateLimitService } from "@/services/rateLimit/rateLimitService";
 
 export default function RateLimitsPage() {
+  const searchParams = useSearchParams();
   const [rateLimits, setRateLimits] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
+  const searchParam = searchParams.get("search");
+  const searchTerm = searchParam || "";
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
@@ -42,14 +45,15 @@ export default function RateLimitsPage() {
   };
 
   useEffect(() => {
-    if (searchTerm) {
+    const search = searchParams.get("search");
+    if (search) {
       setPageNumber(1);
     }
-  }, [searchTerm]);
+  }, [searchParams]);
 
   useEffect(() => {
     fetchRateLimits();
-  }, [pageNumber, searchTerm]);
+  }, [pageNumber, searchParams]);
 
   const handleReset = (id) => {
     setSelectedRateLimitId(id);
@@ -78,7 +82,10 @@ export default function RateLimitsPage() {
   return (
     <div className="space-y-6">
       <div className="">
-        <PageHeaderWithSearch title="گزارشات Rate Limit" searchPlaceholder="جستجو..." onSearchChange={setSearchTerm} />
+        <div className="mb-5">
+          <h1 className="text-lg md:text-xl text-gray-100 mb-4">گزارشات Rate Limit</h1>
+          <RateLimitsFilters />
+        </div>
 
         {loading ? (
           <div className="p-8 text-center text-gray-400">

@@ -2,18 +2,19 @@
 
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import StatusSelect from "@/components/FilterSelects/StatusSelect";
+import FilterSection from "@/components/FilterSection";
+import FilterSearchInput from "@/components/FilterSelects/FilterSearchInput";
 import { productCategoryService } from "@/services/product/productCategoryService";
 import { productBrandService } from "@/services/product/productBrandService";
 
 const STATUS_OPTIONS = [
-  { value: "all", label: "همه" },
   { value: "1", label: "فعال" },
   { value: "2", label: "غیرفعال" },
   { value: "3", label: "ناموجود" },
 ];
 
-export default function ProductsFilters() {
+export default function ProductsFilters({ isInDrawer = false }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [categories, setCategories] = useState([]);
@@ -74,48 +75,60 @@ export default function ProductsFilters() {
     updateURL({ category: filterCategory, status: filterStatus, brand: value });
   };
 
+  const categoryOptions = categories.map((cat) => ({
+    value: cat.id.toString(),
+    label: cat.name,
+  }));
+
+  const brandOptions = brands.map((brand) => ({
+    value: brand.id.toString(),
+    label: brand.name,
+  }));
+
+  const searchValue = searchParams.get("search") || "";
+
+  const handleSearchChange = (value) => {
+    const newParams = new URLSearchParams(searchParams.toString());
+    if (value) {
+      newParams.set("search", value);
+    } else {
+      newParams.delete("search");
+    }
+    newParams.delete("page");
+    router.push(`/admin/products/list?${newParams.toString()}`);
+  };
+
   return (
-    <div className="flex gap-2">
-      <Select value={filterCategory} onValueChange={handleCategoryChange} disabled={loading}>
-        <SelectTrigger className="bg-gray-700 border-gray-600 text-white h-[43px] w-[140px]">
-          <SelectValue placeholder="دسته‌بندی" />
-        </SelectTrigger>
-        <SelectContent className="bg-gray-800 border-gray-700">
-          <SelectItem value="all">همه</SelectItem>
-          {categories.map((cat) => (
-            <SelectItem key={cat.id} value={cat.id.toString()}>
-              {cat.name}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+    <FilterSection isAdmin>
+      <FilterSearchInput value={searchValue} onChange={handleSearchChange} isAdmin placeholder="جستجو محصول..." />
 
-      <Select value={filterBrand} onValueChange={handleBrandChange} disabled={loading}>
-        <SelectTrigger className="bg-gray-700 border-gray-600 text-white h-[43px] w-[140px]">
-          <SelectValue placeholder="برند" />
-        </SelectTrigger>
-        <SelectContent className="bg-gray-800 border-gray-700">
-          <SelectItem value="all">همه</SelectItem>
-          {brands.map((brand) => (
-            <SelectItem key={brand.id} value={brand.id.toString()}>
-              {brand.name}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-
-      <Select value={filterStatus} onValueChange={handleStatusChange}>
-        <SelectTrigger className="bg-gray-700 border-gray-600 text-white h-[43px] w-[140px]">
-          <SelectValue placeholder="وضعیت" />
-        </SelectTrigger>
-        <SelectContent className="bg-gray-800 border-gray-700">
-          {STATUS_OPTIONS.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
+      <StatusSelect
+        value={filterCategory}
+        onValueChange={handleCategoryChange}
+        placeholder="دسته‌بندی"
+        options={categoryOptions}
+        includeAll={true}
+        isInDrawer={isInDrawer}
+        isAdmin
+      />
+      <StatusSelect
+        value={filterBrand}
+        onValueChange={handleBrandChange}
+        placeholder="برند"
+        options={brandOptions}
+        includeAll={true}
+        isInDrawer={isInDrawer}
+        isAdmin
+      />
+      <StatusSelect
+        value={filterStatus}
+        onValueChange={handleStatusChange}
+        placeholder="وضعیت"
+        options={STATUS_OPTIONS}
+        includeAll={true}
+        isInDrawer={isInDrawer}
+        isAdmin
+      />
+    </FilterSection>
   );
 }

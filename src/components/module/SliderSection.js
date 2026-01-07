@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 
 function SliderSection({ title, content, breakpoints, className }) {
   return (
-    <div className={cn("mt-22 container categories relative max-md:border-y  dark:border-dark-field  max-md:py-5")}>
+    <div className={cn("mt-22 md:container categories relative max-md:border-y  dark:border-dark-field  max-md:py-5")}>
       <TitleCard title={title} content={content} className={"mb-8"} />
 
       <Swiper

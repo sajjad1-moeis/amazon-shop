@@ -12,7 +12,7 @@ export default function PageHeaderWithSearch({
 }) {
   return (
     <div className="mb-5 flex items-center justify-between max-md:flex-col max-md:items-start max-md:gap-4">
-      <h1 className="text-xl text-gray-100">{title}</h1>
+      <h1 className="text-lg md:text-xl text-gray-100">{title}</h1>
       <SearchBarTopTable
         placeholder={searchPlaceholder}
         onInput={onSearchChange}

@@ -3,9 +3,20 @@
 import { Share2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { toast } from "sonner";
 
 export default function GallerySection({ productImages, selectedImage, setSelectedImage }) {
   const currentImage = productImages[selectedImage] || productImages[0] || "/image/Home/product.png";
+
+  const handleShare = async () => {
+    try {
+      const url = window.location.href;
+      await navigator.clipboard.writeText(url);
+      toast.success("لینک صفحه کپی شد");
+    } catch {
+      toast.error("خطا در کپی کردن لینک");
+    }
+  };
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl  relative">
@@ -15,8 +26,12 @@ export default function GallerySection({ productImages, selectedImage, setSelect
 
         {/* Share Button */}
         <div className="absolute left-4 top-4 z-50">
-          <button className="p-2 bg-white/90 dark:bg-gray-900/90 hover:bg-white dark:hover:bg-gray-900 rounded-full transition-colors shadow-md">
-            <Share2 className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          <button
+            onClick={handleShare}
+            type="button"
+            className="p-2 bg-white/90 dark:bg-dark-stroke hover:bg-white dark:hover:bg-gray-900 rounded-full transition-colors shadow-md"
+          >
+            <Share2 className="w-5 h-5 text-gray-600 dark:text-dark-titre" />
           </button>
         </div>
 
@@ -37,11 +52,11 @@ export default function GallerySection({ productImages, selectedImage, setSelect
             </button>
           ))}
 
-          {productImages.length > 4 && (
+          {/* {productImages.length > 4 && (
             <button className="relative size-10 xl:size-14 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex items-center justify-center shadow-md hover:shadow-lg transition-all opacity-80 hover:opacity-100">
               <span className="text-gray-400 dark:text-gray-600 text-2xl">⋯</span>
             </button>
-          )}
+          )} */}
         </div>
       </div>
     </div>

@@ -3,12 +3,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
-import PageHeaderWithSearch from "@/template/Admin/PageHeaderWithSearch";
 import UsersTable from "@/template/Admin/users/UsersTable";
 import UsersFilters from "@/template/Admin/users/UsersFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import { userService } from "@/services/user/userService";
+import FilterSection from "@/components/FilterSection";
+import FilterSearchInput from "@/components/FilterSelects/FilterSearchInput";
 
 export default function UsersPage() {
   const router = useRouter();
@@ -84,9 +85,11 @@ export default function UsersPage() {
   return (
     <div className="space-y-6">
       <div className="">
-        <PageHeaderWithSearch title="لیست کاربران" searchPlaceholder="جستجو نام" onSearchChange={setSearchTerm}>
+        <div className="mb-5">
+          <h1 className="text-lg md:text-xl text-gray-100 mb-4">لیست کاربران</h1>
+
           <UsersFilters />
-        </PageHeaderWithSearch>
+        </div>
 
         {loading ? (
           <div className="p-8 text-center text-gray-400">

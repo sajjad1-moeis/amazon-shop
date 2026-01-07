@@ -2,11 +2,11 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
-import { Menu, Logout, User } from "iconsax-reactjs";
+import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
+import { Menu, Logout, User, CloseCircle } from "iconsax-reactjs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import AdminSidebar from "./AdminSidebar";
+import { SideBarContent } from "./AdminSidebar";
 
 // تابع ساده برای نمایش تاریخ شمسی (بدون moment-jalali)
 const getPersianDate = () => {
@@ -30,16 +30,29 @@ export default function AdminTopBar() {
   return (
     <div className="relative">
       <header className="bg-gray-900 flex items-center justify-between gap-2 p-4 border-b border-gray-800">
-        <Drawer open={open} onOpenChange={setOpen}>
-          <DrawerTrigger asChild>
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="lg:hidden text-white hover:bg-gray-800">
               <Menu size={24} />
             </Button>
-          </DrawerTrigger>
-          <DrawerContent className="bg-gray-900 text-white h-[90vh] p-0">
-            <AdminSidebar />
-          </DrawerContent>
-        </Drawer>
+          </SheetTrigger>
+          <SheetContent
+            side="right"
+            className="bg-gray-900 text-white w-[280px] sm:w-[320px] p-0 overflow-y-auto border-l border-gray-700 [&>button]:hidden"
+            dir="rtl"
+          >
+            <div className="p-4">
+              <div className="flex items-center justify-end mb-4">
+                <SheetClose asChild>
+                  <button className="text-white hover:text-gray-300 transition-colors p-1">
+                    <CloseCircle size={24} />
+                  </button>
+                </SheetClose>
+              </div>
+              <SideBarContent onLinkClick={() => setOpen(false)} />
+            </div>
+          </SheetContent>
+        </Sheet>
 
         <div className="flex items-center justify-between w-full text-white">
           <div className="rounded-lg flex items-center overflow-hidden bg-gray-800">

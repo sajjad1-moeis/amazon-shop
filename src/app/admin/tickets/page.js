@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import PageHeaderWithSearch from "@/template/Admin/PageHeaderWithSearch";
 import TicketsTable from "@/template/Admin/tickets/TicketsTable";
 import TicketsFilters from "@/template/Admin/tickets/TicketsFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
@@ -18,7 +17,8 @@ export default function TicketsPage() {
 
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
+  const searchParam = searchParams.get("search");
+  const searchTerm = searchParam || "";
   const [pageNumber, setPageNumber] = useState(pageParam ? parseInt(pageParam) : 1);
   const [pageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
@@ -38,11 +38,13 @@ export default function TicketsPage() {
   const fetchTickets = useCallback(async () => {
     try {
       setLoading(true);
+      const searchParam = searchParams.get("search");
+      const searchTermValue = searchParam || "";
       const response = await ticketService.getPaginated({
         pageNumber,
         pageSize,
         status,
-        searchTerm: searchTerm || undefined,
+        searchTerm: searchTermValue || undefined,
       });
 
       if (response.success && response.data) {
@@ -58,7 +60,7 @@ export default function TicketsPage() {
     } finally {
       setLoading(false);
     }
-  }, [pageNumber, pageSize, status, searchTerm]);
+  }, [pageNumber, pageSize, status, searchParams]);
 
   const handleView = (ticketId) => {
     router.push(`/admin/tickets/${ticketId}`);
@@ -72,10 +74,11 @@ export default function TicketsPage() {
   };
 
   useEffect(() => {
-    if (searchTerm) {
+    const search = searchParams.get("search");
+    if (search) {
       setPageNumber(1);
     }
-  }, [searchTerm]);
+  }, [searchParams]);
 
   useEffect(() => {
     fetchTickets();
@@ -84,9 +87,10 @@ export default function TicketsPage() {
   return (
     <div className="space-y-6">
       <div className="">
-        <PageHeaderWithSearch title="تیکت ها" searchPlaceholder="جستجو نام" onSearchChange={setSearchTerm}>
+        <div className="mb-5">
+          <h1 className="text-lg md:text-xl text-gray-100 mb-4">تیکت ها</h1>
           <TicketsFilters />
-        </PageHeaderWithSearch>
+        </div>
 
         {loading ? (
           <div className="p-8 text-center text-gray-400">

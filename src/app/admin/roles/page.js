@@ -5,7 +5,6 @@ import { Add } from "iconsax-reactjs";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import PageHeaderWithSearch from "@/template/Admin/PageHeaderWithSearch";
 import RolesTable from "@/template/Admin/roles/RolesTable";
 import RolesFilters from "@/template/Admin/roles/RolesFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
@@ -162,16 +161,10 @@ export default function RolesPage() {
   return (
     <div className="space-y-6">
       <div className="">
-        <PageHeaderWithSearch
-          title="مدیریت نقش‌ها"
-          searchPlaceholder="جستجو نام"
-          onSearchChange={(value) => {
-            setFilters({ ...filters, searchTerm: value });
-            setPageNumber(1);
-          }}
-        >
+        <div className="mb-5">
+          <h1 className="text-lg md:text-xl text-gray-100 mb-4">مدیریت نقش‌ها</h1>
           <RolesFilters filters={filters} onFilterChange={setFilters} />
-        </PageHeaderWithSearch>
+        </div>
 
         {loading ? (
           <div className="flex justify-center items-center py-12">

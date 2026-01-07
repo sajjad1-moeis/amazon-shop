@@ -30,7 +30,7 @@ function Page() {
           <Tabs
             dir="rtl"
             defaultValue="forex"
-            className="container p-0 w-full rounded-xl dark:bg-dark-box  bg-white overflow-hidden shadow"
+            className="container !p-0 w-full rounded-xl dark:bg-dark-box  bg-white overflow-hidden shadow"
           >
             <TabsList className="bg-white h-full   dark:border-b-2 dark:border-white/10 w-full justify-between overflow-auto rounded-t-xl rounded-b-none p-0 dark:bg-white/10">
               {tabsCurrency.map((tab) => (

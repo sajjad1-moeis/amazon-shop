@@ -18,3 +18,15 @@ export const filterSelectContentStyles = "dark:bg-dark-box dark:border-dark-stro
 
 // استایل‌های SelectItem
 export const filterSelectItemStyles = "dark:hover:bg-dark-field dark:text-dark-title";
+
+export const adminFilterSelectTriggerStyles =
+  "w-full md:w-fit gap-2  md:gap-5 bg-gray-800 bg-opacity-50 border border-gray-700 ";
+
+export const adminFilterSelectContentStyles = "bg-gray-800";
+
+export const adminFilterInputStyles =
+  "w-full md:w-fit gap-2  md:gap-5  bg-transparent max-md:bg-garay-800 border border-gray-700";
+
+export const adminFilterBtn = "bg-gray-800";
+
+export const adminFilterDrawer = "bg-gray-800";
