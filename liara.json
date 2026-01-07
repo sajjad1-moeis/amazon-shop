@@ -1,0 +1,11 @@
+{
+  "platform": "next",
+  "build": {
+    "commands": [
+      "rm -f package-lock.json || true",
+      "npm install --legacy-peer-deps",
+      "npm run build"
+    ]
+  }
+}
+
