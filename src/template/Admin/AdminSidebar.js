@@ -61,7 +61,9 @@ export const SideBarContent = ({ onLinkClick }) => {
                       size={20}
                       style={{ color: item.color, minWidth: "20px" }}
                     />
-                    <p className="ml-4 whitespace-nowrap text-base flex-grow text-right text-white">{item.name}</p>
+                    <p className="ml-4 whitespace-nowrap max-md:text-sm text-base flex-grow text-right text-white">
+                      {item.name}
+                    </p>
                   </AccordionTrigger>
                   <AccordionContent className="pb-2">
                     <ul className="p-3 space-y-2 border-b border-b-white/15">
@@ -94,7 +96,7 @@ export const SideBarContent = ({ onLinkClick }) => {
                   )}
                 >
                   <Icon variant="Bold" size={20} style={{ color: item.color, minWidth: "20px" }} />
-                  <p className="ml-4 whitespace-nowrap text-right">{item.name}</p>
+                  <p className="max-md:text-sm ml-4 whitespace-nowrap text-right">{item.name}</p>
                 </div>
               </Link>
             );

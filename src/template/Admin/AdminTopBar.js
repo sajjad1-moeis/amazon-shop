@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Menu, Logout, User, CloseCircle } from "iconsax-reactjs";
 import { useAuth } from "@/contexts/AuthContext";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { SideBarContent } from "./AdminSidebar";
+import { useLinkStatus } from "next/link";
 
 // تابع ساده برای نمایش تاریخ شمسی (بدون moment-jalali)
 const getPersianDate = () => {
@@ -21,11 +22,16 @@ export default function AdminTopBar() {
   const [open, setOpen] = useState(false);
   const { logout } = useAuth();
   const router = useRouter();
+  const location = usePathname();
 
   const handleLogout = async () => {
     await logout();
     router.push("/");
   };
+
+  useEffect(() => {
+    setOpen(false);
+  }, [location]);
 
   return (
     <div className="relative">
@@ -38,10 +44,10 @@ export default function AdminTopBar() {
           </SheetTrigger>
           <SheetContent
             side="right"
-            className="bg-gray-900 text-white w-[280px] sm:w-[320px] p-0 overflow-y-auto border-l border-gray-700 [&>button]:hidden"
+            className="bg-gray-900 text-white w-[250px] sm:w-[320px] p-0 overflow-y-auto border-l border-gray-700 [&>button]:hidden"
             dir="rtl"
           >
-            <div className="p-4">
+            <div className="p-2">
               <div className="flex items-center justify-end mb-4">
                 <SheetClose asChild>
                   <button className="text-white hover:text-gray-300 transition-colors p-1">
@@ -49,7 +55,7 @@ export default function AdminTopBar() {
                   </button>
                 </SheetClose>
               </div>
-              <SideBarContent onLinkClick={() => setOpen(false)} />
+              <SideBarContent />
             </div>
           </SheetContent>
         </Sheet>

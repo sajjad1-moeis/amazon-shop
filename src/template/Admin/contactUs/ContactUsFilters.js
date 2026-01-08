@@ -1,8 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import StatusSelect from "@/components/FilterSelects/StatusSelect";
+import FilterSection from "@/components/FilterSection";
+import FilterSearchInput from "@/components/FilterSelects/FilterSearchInput";
+import { productCategoryService } from "@/services/product/productCategoryService";
+import { productBrandService } from "@/services/product/productBrandService";
 
 const FILTER_OPTIONS = [
   { value: "all", label: "همه درخواست‌ها" },
@@ -10,39 +14,83 @@ const FILTER_OPTIONS = [
   { value: "read", label: "خوانده شده" },
 ];
 
-export default function ContactUsFilters() {
+export default function ProductsFilters({ isInDrawer = false }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const filterValue = searchParams.get("filter") || "all";
+  const filterCategory = searchParams.get("category") || "all";
+  const filterBrand = searchParams.get("brand") || "all";
 
-  const updateURL = (value) => {
-    const newParams = new URLSearchParams(searchParams.toString());
-    if (value === "all" || !value) {
-      newParams.delete("filter");
-    } else {
-      newParams.set("filter", value);
+  useEffect(() => {
+    fetchFilters();
+  }, []);
+
+  const fetchFilters = async () => {
+    try {
+      setLoading(true);
+      const [categoriesRes, brandsRes] = await Promise.all([
+        productCategoryService.getAll(),
+        productBrandService.getAll(),
+      ]);
+
+      if (categoriesRes.success && categoriesRes.data) {
+        setCategories(categoriesRes.data || []);
+      }
+      if (brandsRes.success && brandsRes.data) {
+        setBrands(brandsRes.data || []);
+      }
+    } catch (error) {
+      console.error("Error fetching filters:", error);
+    } finally {
+      setLoading(false);
     }
-    newParams.delete("page");
-    router.push(`/admin/contact-us?${newParams.toString()}`);
   };
 
-  const handleFilterChange = (value) => {
-    updateURL(value);
+  const updateURL = (params) => {
+    const newParams = new URLSearchParams(searchParams.toString());
+    Object.entries(params).forEach(([key, value]) => {
+      if (value === "all" || !value) {
+        newParams.delete(key);
+      } else {
+        newParams.set(key, value);
+      }
+    });
+    newParams.delete("page");
+    router.push(`/admin/products/list?${newParams.toString()}`);
+  };
+
+  const handleStatusChange = (value) => {
+    updateURL({ category: filterCategory, status: value, brand: filterBrand });
+  };
+
+  const searchValue = searchParams.get("search") || "";
+
+  const handleSearchChange = (value) => {
+    const newParams = new URLSearchParams(searchParams.toString());
+    if (value) {
+      newParams.set("search", value);
+    } else {
+      newParams.delete("search");
+    }
+    newParams.delete("page");
+    router.push(`/admin/products/list?${newParams.toString()}`);
   };
 
   return (
-    <Select value={filterValue} onValueChange={handleFilterChange}>
-      <SelectTrigger className="bg-gray-700 border-gray-600 text-white w-fit gap-5 h-auto">
-        <SelectValue placeholder="وضعیت" />
-      </SelectTrigger>
-      <SelectContent className="bg-gray-800 border-gray-700">
-        {FILTER_OPTIONS.map((option) => (
-          <SelectItem key={option.value} value={option.value}>
-            {option.label}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <FilterSection isAdmin>
+      <FilterSearchInput value={searchValue} onChange={handleSearchChange} isAdmin placeholder="جستجو محصول..." />
+
+      <StatusSelect
+        onValueChange={handleStatusChange}
+        placeholder="وضعیت"
+        options={FILTER_OPTIONS}
+        includeAll={true}
+        isInDrawer={isInDrawer}
+        isAdmin
+      />
+    </FilterSection>
   );
 }

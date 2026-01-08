@@ -28,11 +28,10 @@ export default function FilterSection({ children, isAdmin, className }) {
             <DrawerTrigger asChild>
               <Button
                 variant="outline"
-                className={
-                  isAdmin
-                    ? adminFilterBtn
-                    : "md:hidden p-2.5 dark:bg-dark-field rounded-lg dark:border-dark-stroke border flex items-center justify-center"
-                }
+                className={cn(
+                  "md:hidden p-2.5  rounded-lg flex items-center justify-center",
+                  isAdmin ? adminFilterBtn : " dark:bg-dark-field dark:border-dark-stroke border "
+                )}
               >
                 <Candle size={20} />
                 <span className="mr-2">فیلتر ها</span>

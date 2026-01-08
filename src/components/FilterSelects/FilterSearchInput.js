@@ -7,14 +7,10 @@ import { adminFilterInputStyles, filterInputStyles } from "@/utils/filterStyles"
 import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
 
 export default function FilterSearchInput({ value = "", isAdmin, onChange, placeholder = "جستجو..." }) {
-  // State محلی برای نمایش فوری در input
   const [searchValue, setSearchValue] = useState(value);
-  const [popoverSearchValue, setPopoverSearchValue] = useState(value);
 
-  // همگام‌سازی با URL params
   useEffect(() => {
     setSearchValue(value);
-    setPopoverSearchValue(value);
   }, [value]);
 
   // Debounce برای جستجو
@@ -38,7 +34,7 @@ export default function FilterSearchInput({ value = "", isAdmin, onChange, place
           value={searchValue}
           onChange={handleChange}
           placeholder={placeholder}
-          className={`pr-10 pl-4   ${isAdmin ? adminFilterInputStyles : filterInputStyles}`}
+          className={`pr-10 pl-4 max-md:placeholder:text-sm   ${isAdmin ? adminFilterInputStyles : filterInputStyles}`}
           dir="rtl"
         />
       </div>

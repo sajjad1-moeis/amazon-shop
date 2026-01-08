@@ -21,7 +21,7 @@ export const filterSelectContentStyles = "dark:bg-dark-box dark:border-dark-stro
 // استایل‌های SelectItem
 export const filterSelectItemStyles = "dark:hover:bg-dark-field dark:text-dark-title";
 
-export const adminFilterSelectTriggerStyles = FORM_STYLES.selectTrigger;
+export const adminFilterSelectTriggerStyles = FORM_STYLES.selectTrigger + "w-full md:w-fit gap-2";
 
 export const adminFilterSelectContentStyles = FORM_STYLES.selectContent;
 
