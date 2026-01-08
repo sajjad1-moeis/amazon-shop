@@ -24,18 +24,14 @@ export default function TopBar() {
   return (
     <div className="bg-primary-500 dark:bg-dark-header">
       <div className="bg-primary-800/20 dark:bg-white/5">
-        <div className="w-full  xl:container max-xl:px-4  py-3 px-4 flex items-center justify-between text-white">
+        <div className="w-full  xl:container max-md:px-2   py-3 px-4 flex items-center justify-between text-white">
           {/* Center Section */}
           <div className="flex items-center gap-1 lg:gap-3 ">
             <div className="max-xl:hidden">
               <MegaMenu trigger={categoriesTrigger} />
             </div>
-            <Link href={"/currency-services"}>
-              <Button
-                variant="gray"
-                size="sm"
-                className="relative rounded-xl px-3 py-1 flex items-center md:gap-2 max-md:hidden"
-              >
+            <Link href={"/currency-services"} className=" max-md:hidden">
+              <Button variant="gray" size="sm" className="relative rounded-xl px-3 py-1 flex items-center md:gap-2">
                 <BitcoinConvert size={16} variant="Bulk" />
                 <span className="text-sm">خدمات ارزی</span>
                 <span className="absolute -top-1 -left-3 -rotate-[35deg] bg-yellow-300 text-black text-xs px-1 py-0.5 rounded">
@@ -43,12 +39,8 @@ export default function TopBar() {
                 </span>
               </Button>
             </Link>
-            <Link href={"/gift-cart"}>
-              <Button
-                variant="gray"
-                size="sm"
-                className="rounded-xl px-3 py-1 flex items-center md:gap-2 gap-0 max-md:hidden"
-              >
+            <Link href={"/gift-cart"} className=" max-md:hidden">
+              <Button variant="gray" size="sm" className="rounded-xl px-3 py-1 flex items-center md:gap-2 gap-0">
                 <DiscountShape size={16} variant="Bulk" />
                 <span className="text-sm">گیفت کارت</span>
               </Button>
@@ -57,7 +49,7 @@ export default function TopBar() {
               <Button
                 variant="gray"
                 size="sm"
-                className="rounded-xl px-3 py-1  max-md:flex-col-reverse max-md:h-full flex items-center md:gap-2 gap-0 "
+                className="rounded-xl px-3 py-1   max-md:flex-col-reverse max-md:h-12  flex items-center md:gap-2 gap-0 "
               >
                 <span className="text-sm ">ایبی</span>
                 <Image src="/image/Header/ebay.png" width={50} height={50} alt="ebay" />
@@ -67,7 +59,7 @@ export default function TopBar() {
               <Button
                 variant="gray"
                 size="sm"
-                className="rounded-xl px-3 py-1 max-md:flex-col-reverse max-md:h-full flex items-center md:gap-2 gap-0"
+                className="rounded-xl px-3 py-1 max-md:flex-col-reverse max-md:h-12 flex items-center md:gap-2 gap-0"
               >
                 <span className="text-sm">علی اکسپرس</span>
                 <Image src="/image/Header/aliEx.png" width={83} height={20} alt="aliEx" />
@@ -78,7 +70,7 @@ export default function TopBar() {
               <Button
                 variant="gray"
                 size="sm"
-                className="rounded-xl px-3 py-1 max-md:flex-col-reverse max-md:h-full flex items-center md:gap-2 gap-0"
+                className="rounded-xl px-3 py-1 max-md:flex-col-reverse max-md:h-12 flex items-center md:gap-2 gap-0"
               >
                 <span className="text-sm">شین</span>
                 <Image src="/image/Header/Shein.png" alt="Shein" width={83} height={20} />

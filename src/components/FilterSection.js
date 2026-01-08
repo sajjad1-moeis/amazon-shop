@@ -47,8 +47,8 @@ export default function FilterSection({ children, isAdmin, className }) {
                 <DrawerTitle
                   className={
                     isAdmin
-                      ? "text-lg font-semibold text-white text-right"
-                      : "text-lg font-semibold text-gray-900 dark:text-dark-titre text-right"
+                      ? "text-lg font-medium text-white text-right"
+                      : "text-lg font-medium text-gray-900 dark:text-dark-titre text-right"
                   }
                 >
                   فیلترها

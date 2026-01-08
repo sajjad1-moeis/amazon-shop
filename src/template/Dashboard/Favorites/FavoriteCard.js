@@ -94,19 +94,19 @@ export default function FavoriteCard({ product }) {
           </div>
         </div>
         {/* Left Buttons */}
-        <div className="flex flex-row lg:flex-col gap-2 w-full lg:w-32 flex-shrink-0">
-          <Button className="w-full h-9 bg-yellow-400 hover:bg-yellow-500 text-gray-900 dark:text-primary-800 font-medium text-sm py-2 rounded-lg">
+        <div className="flex  flex-row lg:flex-col gap-2 w-full lg:w-32 flex-shrink-0">
+          <Button className="max-lg:flex-1 h-9 bg-yellow-400 hover:bg-yellow-500 text-gray-900 dark:text-primary-800 font-medium text-sm py-2 rounded-lg">
             مشاهده محصول
           </Button>
 
-          <Button className="w-full h-9 bg-primary-700 hover:bg-[#3143D8] dark:bg-dark-primary text-white font-medium text-sm py-2 rounded-lg">
+          <Button className="max-lg:flex-1 h-9 bg-primary-700 hover:bg-[#3143D8] dark:bg-dark-primary text-white font-medium text-sm py-2 rounded-lg">
             تنظیم هشدار قیمت
           </Button>
 
-          <Button className="w-9 lg:w-full h-9 bg-[#F6F7FB] dark:bg-dark-stroke dark:text-red-300 text-red-500 hover:bg-red-50 font-medium text-sm py-2 rounded-lg ">
+          <button className=" px-2 lg:w-full h-9 bg-[#F6F7FB] dark:bg-dark-stroke dark:text-red-300 text-red-500 hover:bg-red-50 font-medium text-sm py-2 rounded-lg ">
             <span className="max-lg:hidden">حذف</span>
-            <Trash className="lg:hidden" />
-          </Button>
+            <Trash size={18} className="lg:hidden flex-none block" />
+          </button>
         </div>
       </div>
     </div>
