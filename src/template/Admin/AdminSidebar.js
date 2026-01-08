@@ -30,7 +30,7 @@ export const SideBarContent = ({ onLinkClick }) => {
 
   return (
     <div className="h-full lg:bg-gray-800 lg:bg-opacity-50 border-0 lg:!border-l lg:border-gray-700 backdrop-blur-md lg:p-4 flex flex-col lg:shadow-lg">
-      <Link href="/" className="flex flex-col items-center max-lg:hidden">
+      <Link href="/" className="flex flex-col items-center max-md:my-3">
         <Image
           src="/image/logo.png"
           alt="لوگو"

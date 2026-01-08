@@ -36,7 +36,7 @@ export default function AdminTopBar() {
   return (
     <div className="relative">
       <header className="bg-gray-900 flex items-center justify-between gap-2 p-4 border-b border-gray-800">
-        <Sheet open={open} onOpenChange={setOpen}>
+        <Sheet open={open} onOpenChange={setOpen} className="relative">
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="lg:hidden text-white hover:bg-gray-800">
               <Menu size={24} />
@@ -48,9 +48,9 @@ export default function AdminTopBar() {
             dir="rtl"
           >
             <div className="p-2">
-              <div className="flex items-center justify-end mb-4">
+              <div className="flex items-center justify-end mb-4 absolute z-50 left-3">
                 <SheetClose asChild>
-                  <button className="text-white hover:text-gray-300 transition-colors p-1">
+                  <button className="text-white hover:text-gray-300  p-1">
                     <CloseCircle size={24} />
                   </button>
                 </SheetClose>
