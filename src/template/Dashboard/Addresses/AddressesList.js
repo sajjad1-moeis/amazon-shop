@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Add } from "iconsax-reactjs";
 import AddressCard from "./AddressCard";
-import AddressModal from "@/components/module/AddressModal";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
 import { useAddresses } from "@/hooks/use-address";
 import { formatAddress, formatFullName, parseAddressData } from "@/utils/address-utlis";
@@ -12,24 +11,22 @@ import { toast } from "sonner";
 import { mockAddresses } from "@/data";
 import ConfirmDialog from "@/components/ConfirmDialog";
 
-export default function AddressesList({ isModalOpen, setIsModalOpen, editingAddress, setEditingAddress }) {
-  const { addresses, addAddress, updateAddress, deleteAddress, setDefaultAddress } = useAddresses(mockAddresses);
-
-  const [internalIsModalOpen, setInternalIsModalOpen] = useState(false);
-  const [internalEditingAddress, setInternalEditingAddress] = useState(null);
+export default function AddressesList({
+  addresses,
+  editingAddress,
+  setEditingAddress,
+  deleteAddress,
+  setDefaultAddress,
+  handleAddClick,
+}) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
-
-  const modalOpen = isModalOpen !== undefined ? isModalOpen : internalIsModalOpen;
-  const setModalOpen = setIsModalOpen || setInternalIsModalOpen;
-  const editing = editingAddress !== undefined ? editingAddress : internalEditingAddress;
-  const setEditing = setEditingAddress || setInternalEditingAddress;
 
   const handleEditClick = (addressId) => {
     const address = addresses.find((a) => a.id === addressId);
     if (address) {
-      setEditing(address);
-      setModalOpen(true);
+      setEditingAddress(address);
+      handleAddClick();
     }
   };
 
@@ -61,30 +58,6 @@ export default function AddressesList({ isModalOpen, setIsModalOpen, editingAddr
     toast.success("آدرس پیش‌فرض با موفقیت تغییر کرد");
   };
 
-  const handleSaveAddress = (formData) => {
-    const addressData = {
-      name: formatFullName(formData),
-      address: formatAddress(formData),
-      ...formData,
-    };
-
-    if (editingAddress) {
-      updateAddress(editingAddress.id, addressData);
-      toast.success("آدرس با موفقیت ویرایش شد");
-    } else {
-      addAddress(addressData);
-      toast.success("آدرس با موفقیت اضافه شد");
-    }
-
-    setModalOpen(false);
-    setEditing(null);
-  };
-
-  const handleCloseDialog = () => {
-    setModalOpen(false);
-    setEditing(null);
-  };
-
   return (
     <>
       {/* Top Section: Header and Add Button */}
@@ -112,12 +85,6 @@ export default function AddressesList({ isModalOpen, setIsModalOpen, editingAddr
       </div>
 
       {/* Address Modal */}
-      <AddressModal
-        isOpen={modalOpen}
-        onClose={handleCloseDialog}
-        defaultValues={editing ? parseAddressData(editing) : null}
-        onSubmit={handleSaveAddress}
-      />
 
       <ConfirmDialog
         open={deleteDialogOpen}
