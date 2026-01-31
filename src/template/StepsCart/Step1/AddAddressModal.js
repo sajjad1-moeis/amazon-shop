@@ -70,7 +70,7 @@ export default function AddressForm({ isOpen, onClose, defaultValues, onSubmit }
       ...register(field.id, {
         required: field.required ? `${field.label || field.placeholder} الزامی است` : false,
       }),
-      className: "bg-gray-50 dark:bg-dark-field dark:border-none max-md:placeholder:text-xs",
+      className: "bg-gray-50 dark:bg-dark-field dark:border-none max-md:text-sm max-md:placeholder:text-xs",
       placeholder: field.placeholder,
     };
 
