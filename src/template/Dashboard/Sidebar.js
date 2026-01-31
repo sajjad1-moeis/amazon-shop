@@ -246,7 +246,7 @@ export default function DashboardSidebar({ isMobileOpen, setIsMobileOpen }) {
         )}
       >
         <div className="relative h-full overflow-y-auto">
-          <div class="flex-between px-2 mt-1">
+          <div className="flex-between px-2 mt-1">
             <SwitchButton clssBtn={"max-sm:text-gray-800"} />
             <button onClick={() => setIsMobileOpen(false)}>
               <CloseCircle />

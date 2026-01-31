@@ -70,7 +70,7 @@
     /* بهبود عملکرد touch در iOS */
     -webkit-tap-highlight-color: transparent;
     /* جلوگیری از pull-to-refresh در Safari */
-    overscroll-behavior-y: contain;
+    /* overscroll-behavior-y: contain; */
   }
 
   /* رفع مشکل touch در iOS */

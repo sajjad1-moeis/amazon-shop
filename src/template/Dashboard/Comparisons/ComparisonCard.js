@@ -88,13 +88,13 @@ export default function ComparisonCard({ comparison, onDelete, onView }) {
         <Button
           variant="ghost"
           onClick={onDelete}
-          className="text-red-600 flex-1 bg-gray-200 hover:text-red-700 rounded-lg hover:bg-red-50 dark:bg-dark-stroke dark:text-red-400 dark:hover:bg-red-900/20 border-red-300 dark:border-red-800 gap-2"
+          className="text-red-600 flex-1 bg-gray-200 hover:text-red-700 rounded-lg hover:bg-red-50 dark:bg-dark-stroke dark:text-red-400 border-red-300 dark:border-red-800 gap-2"
         >
           حذف
         </Button>
         <Button
           onClick={() => onView?.(comparison.id)}
-          className="flex-1 bg-primary-700 dark:bg-dark-primary hover:bg-primary-600 text-white gap-2 rounded-lg"
+          className="flex-1 bg-primary-700 dark:hover:bg-opacity-50 dark:bg-dark-primary hover:bg-primary-600 text-white gap-2 rounded-lg"
         >
           مشاهده مقایسه
         </Button>

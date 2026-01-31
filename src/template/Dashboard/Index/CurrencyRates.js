@@ -39,7 +39,7 @@ export default function CurrencyRates() {
             key={currency.id}
             className={cn(
               "flex items-center justify-between max-md:pb-4 max-lg:px-4  border-gray-200 dark:border-dark-stroke hover:bg-gray-50 dark:hover:bg-dark-field/50 transition-colors",
-              currencies.length == index + 1 || " max-lg:border-l  max-md:border-b"
+              currencies.length == index + 1 || " max-lg:border-l  max-md:border-b max-md:!border-l-0"
             )}
           >
             <div className="flex items-center gap-3">

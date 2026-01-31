@@ -56,7 +56,7 @@ export default function PriceLockCard({ product, onCancelLock, onViewDetails, re
         </div>
 
         {/* Info Boxes */}
-        <div className="w-full flex flex-col md:flex-row md:flex-wrap  justify-between gap-2">
+        <div className="w-full flex flex-col md:flex-row flex-wrap  justify-between gap-2">
           <InfoBox label="قیمت قفل شده (تومان)" value={lockedPrice} />
           <InfoBox label="پیش‌پرداخت" value={downPayment} />
           <InfoBox label="زمان باقی‌مانده" value={timeRemaining} />
@@ -79,10 +79,10 @@ export default function PriceLockCard({ product, onCancelLock, onViewDetails, re
 
           <Button
             onClick={() => onCancelLock?.(product?.id)}
-            className="w-full bg-[#F6F7FB] max-md:w-9 dark:bg-dark-stroke dark:border-0 dark:text-red-400 text-red-500 hover:bg-red-50 font-medium text-sm py-2 rounded-lg border border-red-200"
+            className="w-full bg-[#F6F7FB] max-md:w-9 px-0 dark:bg-dark-stroke dark:border-0 dark:text-red-400 text-red-500 hover:bg-red-50 font-medium text-sm py-2 rounded-lg border border-red-200"
           >
             <span className="max-md:hidden">لغو قفل</span>
-            <LockSlash className="md:hidden" />
+            <LockSlash className="md:hidden " size={18} />
           </Button>
         </div>
       )}
@@ -92,9 +92,9 @@ export default function PriceLockCard({ product, onCancelLock, onViewDetails, re
 
 function InfoBox({ label, value }) {
   return (
-    <div className="flex-1 bg-gray-100 dark:bg-dark-field px-2 py-1 rounded-lg flex justify-between items-center">
+    <div className="flex-auto bg-gray-100 dark:bg-dark-field px-2 py-1 rounded-lg flex justify-between items-center">
       <span className="text-gray-600 dark:text-dark-text text-xs">{label}</span>
-      <span className="text-gray-900 dark:text-dark-titre text-base">{value || "-"}</span>
+      <span className="text-gray-900 dark:text-dark-titre text-sm xl:text-base">{value || "-"}</span>
     </div>
   );
 }

@@ -16,21 +16,21 @@ export default function PurchaseCard({ product }) {
         <p className="text-xs md:text-sm text-gray-800 dark:text-dark-titre leading-6 mb-3">{product.title}</p>
 
         {/* 3 Boxes Row */}
-        <div className="flex flex-wrap gap-1 md:gap-2 mb-3 md:mb-4">
+        <div className="flex flex-wrap  gap-1 md:gap-2 mb-3 md:mb-4">
           {/* Purchase Date */}
           {/* ID */}
-          <div className="bg-gray-50 dark:bg-dark-field rounded-xl p-2 text-center flex-1">
+          <div className="bg-gray-50 dark:bg-dark-field rounded-xl p-2 text-center md:flex-1">
             <div className="text-sm text-gray-900 dark:text-dark-titre">{product.id}</div>
             <div className="text-xs text-gray-500 dark:text-dark-text mt-3 mb-1">شماره</div>
           </div>
 
           {/* Amount */}
-          <div className="bg-gray-50 dark:bg-dark-field rounded-xl p-2 text-center flex-1">
+          <div className="bg-gray-50 dark:bg-dark-field rounded-xl p-2 text-center md:flex-1 max-md:flex-auto">
             <div className="text-sm text-gray-900 dark:text-dark-titre">{product.amount}</div>
             <div className="text-xs text-gray-500 dark:text-dark-text mt-3 mb-1">مبلغ (تومان)</div>
           </div>
 
-          <div className="bg-gray-50 dark:bg-dark-field rounded-xl p-2 text-center flex-1">
+          <div className="bg-gray-50 dark:bg-dark-field rounded-xl p-2 text-center md:flex-1 max-md:flex-auto">
             <div className="text-sm text-gray-900 dark:text-dark-titre">{product.purchaseDate}</div>
             <div className="text-xs text-gray-500 dark:text-dark-text mt-3 mb-1">تاریخ خرید</div>
           </div>

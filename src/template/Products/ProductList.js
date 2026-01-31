@@ -39,7 +39,7 @@ export default function ProductList({ viewMode, products = [], totalCount = 0 })
           </div>
         )}
       </div>
-      <div class="md:hidden">
+      <div className="md:hidden">
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} badges={product.badges} />

@@ -2,8 +2,9 @@
 const nextConfig = {
   reactCompiler: true,
 
-  // Liara handles Next.js deployment automatically, standalone is not needed
-  // Removed output: "standalone" to fix deployment issues
+  // Enable standalone output only for Docker (not for Vercel)
+  // Vercel handles deployment automatically, standalone is not needed
+  ...(process.env.VERCEL ? {} : { output: "standalone" }),
 
   // Image optimization
   images: {
