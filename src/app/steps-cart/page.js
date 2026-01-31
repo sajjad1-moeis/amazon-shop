@@ -35,11 +35,13 @@ function Page() {
     <div>
       <HeaderSection />
       <div className="bg-[#F9F9F9] dark:bg-dark-box min-h-screen  pb-10">
-        <div className="flex flex-col p-8 lg:container">
+        <div className="flex flex-col p-4 md:p-8 lg:container">
           <h1 className="text-2xl font-bold text-right">پرداخت سفارش آمازون امارات</h1>
           <p className="text-primary-500 my-4 dark:text-primary-300">{steps[currentStep - 1].label}</p>
 
-          <Timeline steps={steps} currentStep={currentStep} />
+          <div>
+            <Timeline steps={steps} currentStep={currentStep} />
+          </div>
         </div>
 
         {/* نمایش فرم متناسب با step */}

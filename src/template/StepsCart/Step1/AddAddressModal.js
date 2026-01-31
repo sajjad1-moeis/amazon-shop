@@ -70,7 +70,7 @@ export default function AddressForm({ isOpen, onClose, defaultValues, onSubmit }
       ...register(field.id, {
         required: field.required ? `${field.label || field.placeholder} الزامی است` : false,
       }),
-      className: "bg-gray-50 dark:bg-dark-field dark:border-none",
+      className: "bg-gray-50 dark:bg-dark-field dark:border-none max-md:placeholder:text-xs",
       placeholder: field.placeholder,
     };
 
@@ -79,7 +79,10 @@ export default function AddressForm({ isOpen, onClose, defaultValues, onSubmit }
     if (field.type === "textarea") {
       return (
         <div>
-          <Textarea {...commonProps} className="bg-gray-50 min-h-[100px] dark:bg-dark-field dark:border-none" />
+          <Textarea
+            {...commonProps}
+            className="bg-gray-50 min-h-[100px] max-md:placeholder:text-xs  dark:bg-dark-field dark:border-none"
+          />
           {hasError && <p className="text-sm text-red-500 mt-1">{hasError.message}</p>}
         </div>
       );
@@ -97,7 +100,7 @@ export default function AddressForm({ isOpen, onClose, defaultValues, onSubmit }
     <Dialog open={isOpen} onOpenChange={onClose} dir="rtl">
       <DialogContent className="sm:max-w-[600px]  max-h-[90vh] overflow-y-auto dark:bg-dark-box dark:border-dark-stroke">
         <DialogHeader className="text-right">
-          <DialogTitle className="text-2xl font-bold mb-2">ثبت اطلاعات آدرس و گیرنده</DialogTitle>
+          <DialogTitle className="text-lg md:text-2xl font-medium mb-2">ثبت اطلاعات آدرس و گیرنده</DialogTitle>
           <DialogDescription className="text-sm text-gray-600 dark:text-gray-400">
             لطفاً محل تحویل سفارش خود را روی نقشه مشخص کنید.
           </DialogDescription>
@@ -109,7 +112,7 @@ export default function AddressForm({ isOpen, onClose, defaultValues, onSubmit }
               {group.fields.map((field) => (
                 <div key={field.id} className="grid gap-2">
                   {field.label && (
-                    <Label htmlFor={field.id} className="text-right font-semibold">
+                    <Label htmlFor={field.id} className="text-right">
                       {field.label}
                     </Label>
                   )}
@@ -124,7 +127,7 @@ export default function AddressForm({ isOpen, onClose, defaultValues, onSubmit }
           <Button
             variant="ghost"
             onClick={handleSubmit(onSubmit)}
-            className="w-full bg-yellow-400 text-white font-bold py-3 rounded-lg dark:text-gray-900"
+            className="w-full bg-yellow-400 text-white py-3 rounded-lg dark:text-gray-900"
           >
             تأیید و ثبت آدرس
           </Button>
