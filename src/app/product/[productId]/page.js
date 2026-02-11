@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import Link from "next/link";
@@ -12,19 +12,48 @@ import ProductDetailsAccordion from "@/template/Product/ProductDetailsAccordion"
 import ProductReviewsSection from "@/template/Product/ProductReviewsSection";
 import RelatedSlider from "@/template/Product/RelatedSlider";
 import AccessoriesSlider from "@/template/Product/AccessoriesSlider";
-import { mockProduct } from "@/data";
 import BreadCrump from "@/template/Product/BreadCrump";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { productService } from "@/services/product/productService";
 
 export default function ProductDetailPage({ params }) {
   const productId = params?.productId;
 
-  const [product] = useState(mockProduct);
-  const [loading] = useState(false);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedColor, setSelectedColor] = useState("navy"); // سرمه ای
   const [selectedDelivery, setSelectedDelivery] = useState("express");
   const [selectedImage, setSelectedImage] = useState(0);
+
+  useEffect(() => {
+    if (!productId) return;
+
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await productService.getById(productId);
+        const dto = response?.data ?? response;
+
+        if (!dto || response?.success === false) {
+          throw new Error(response?.message || "محصول یافت نشد");
+        }
+
+        setProduct(dto);
+      } catch (err) {
+        console.error("Error loading product details:", err);
+        setError(err?.message || "خطا در دریافت اطلاعات محصول");
+        setProduct(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [productId]);
 
   if (loading) {
     return (
@@ -41,7 +70,8 @@ export default function ProductDetailPage({ params }) {
       <IndexLayout>
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
           <div className="text-center">
-            <p className="text-gray-600 dark:text-gray-400 mb-4">محصول یافت نشد</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-2">محصول یافت نشد</p>
+            {error && <p className="text-xs text-red-500 mb-4">{error}</p>}
             <Link href="/products">
               <Button>بازگشت به لیست محصولات</Button>
             </Link>
@@ -51,9 +81,12 @@ export default function ProductDetailPage({ params }) {
     );
   }
 
+  const imageUrls = product.imageUrls || product.images || [];
   const productImages =
-    product.images && product.images.length > 0 ? product.images : [product.mainImage].filter(Boolean);
-  const colors = product.colors || [];
+    imageUrls && imageUrls.length > 0
+      ? imageUrls
+      : [product.mainImage || product.mainImageUrl || product.imageUrl].filter(Boolean);
+  const colors = product.colors || product.availableColors || [];
 
   return (
     <IndexLayout>
@@ -61,7 +94,11 @@ export default function ProductDetailPage({ params }) {
         {/* Breadcrumb Navigation */}
 
         <BreadCrump
-          items={[{ label: "کالای دیجیتال", href: "/" }, { label: "ساعت هوشمند", href: "/" }, { label: product.title }]}
+          items={[
+            { label: "کالای دیجیتال", href: "/" },
+            { label: "ساعت هوشمند", href: "/" },
+            { label: product.title || product.name },
+          ]}
         />
 
         <div className="xl:container px-4 py-6">

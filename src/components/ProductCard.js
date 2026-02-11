@@ -1,10 +1,16 @@
+ "use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import { productService } from "@/services/product/productService";
 
 function ProductCard({ className, product, badges }) {
+  const router = useRouter();
+
   const productId = product?.id || product?.productId || 1;
   const image = product?.image || product?.mainImage || "/image/Home/product.png";
   const title = product?.name || product?.title || "ساعت مچی مردانه Invicta مدل ۳۶۱ سری Reserve کرونوگراف";
@@ -32,8 +38,64 @@ function ProductCard({ className, product, badges }) {
     return `${Number(price).toLocaleString("fa-IR")} تومان`;
   };
 
+  const handleProductClick = async (e) => {
+    e.preventDefault();
+
+    try {
+      // ساخت payload سازگار با ScraperProductDto (snake_case)
+      const rawCurrentPrice =
+        product?.current_price ?? product?.price ?? product?.discountPrice ?? discountPrice ?? price;
+      const rawOriginalPrice =
+        product?.original_price ?? product?.originalPrice ?? product?.price ?? price ?? null;
+
+      const scraperPayload = {
+        asin: product?.asin || product?.ASIN || product?.amazonASIN || product?.amazonAsin,
+        title: product?.title || product?.name,
+        brand: product?.brand,
+        current_price: rawCurrentPrice != null ? String(rawCurrentPrice) : null,
+        original_price: rawOriginalPrice != null ? String(rawOriginalPrice) : null,
+        image_url:
+          product?.image_url ||
+          product?.image ||
+          product?.mainImage ||
+          product?.imageUrl ||
+          "/image/Home/product.png",
+        image_url_hq: product?.image_url_hq || product?.image_url || product?.image || product?.mainImage,
+        product_url: product?.product_url || product?.amazonUrl,
+        rating: product?.rating,
+        reviews_count: product?.reviews_count ?? product?.reviewCount,
+        category: product?.category,
+        search_term: product?.search_term,
+      };
+
+      // اگر ASIN نداریم، همان رفتار قبلی (رفتن به صفحه محصول با productId)
+      if (!scraperPayload.asin) {
+        router.push(`/product/${productId}`);
+        return;
+      }
+
+      const response = await productService.saveIfNotExistsFromScraper(scraperPayload);
+
+      const savedProductId =
+        response?.data?.productId ||
+        response?.data?.id ||
+        response?.data?.productID ||
+        response?.data?.ProductId;
+
+      if (response?.success && savedProductId) {
+        router.push(`/product/${savedProductId}`);
+      } else {
+        // اگر ذخیره موفق نبود، حداقل با ASIN به صفحه fallback برویم (در آینده می‌توان route مخصوص ASIN اضافه کرد)
+        router.push(`/product/${productId}`);
+      }
+    } catch (error) {
+      console.error("Error saving product before navigation:", error);
+      router.push(`/product/${productId}`);
+    }
+  };
+
   return (
-    <Link href={`/product/${productId}`}>
+    <Link href={`/product/${productId}`} onClick={handleProductClick}>
       <div
         className={cn(
           "shadow-box rounded-xl flex flex-col cursor-pointer hover:shadow-lg transition-shadow bg-white  dark:bg-dark-box ",

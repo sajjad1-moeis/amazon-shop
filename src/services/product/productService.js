@@ -244,4 +244,10 @@ export const productService = {
     const client = getAuthenticatedClient();
     return client.get("Product/GetCountByStatus").json();
   },
+
+  // ذخیره محصول اسکرپ شده در صورت عدم وجود (برای محصولات باز شده از Amazon)
+  saveIfNotExistsFromScraper: async (scraperProduct) => {
+    const client = getPublicClient();
+    return client.post("Product/SaveIfNotExists", { json: scraperProduct }).json();
+  },
 };

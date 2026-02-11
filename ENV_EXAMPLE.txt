@@ -1,0 +1,46 @@
+# ============================================
+# Amazon Shop Next.js Frontend - Environment Variables Example
+# ============================================
+# این فایل را به .env کپی کنید و مقادیر را تنظیم کنید
+# دستور: cp ENV_EXAMPLE.txt .env
+
+# ============================================
+# API Configuration
+# ============================================
+# آدرس پایه Backend API
+# Production (IP): http://107.161.175.45
+# Production (Domain - بعداً): https://amazon-shop.com
+# Development: http://localhost:5228
+NEXT_PUBLIC_BASE_URL=http://107.161.175.45
+
+# ============================================
+# Next.js Configuration
+# ============================================
+# Environment: production | development
+NODE_ENV=production
+
+# Disable Next.js telemetry
+NEXT_TELEMETRY_DISABLED=1
+
+# ============================================
+# Docker Configuration (Optional)
+# ============================================
+# Port for Next.js server (default: 3000)
+PORT=3000
+
+# Hostname for Next.js server (default: 0.0.0.0)
+HOSTNAME=0.0.0.0
+
+# ============================================
+# Additional Configuration (Optional)
+# ============================================
+# Enable bundle analyzer (true | false)
+# ANALYZE=false
+
+# ============================================
+# Notes
+# ============================================
+# 1. تمام متغیرهای NEXT_PUBLIC_* در client-side در دسترس هستند
+# 2. برای تغییرات در environment variables، container را restart کنید
+# 3. در production، حتماً NODE_ENV=production تنظیم کنید
+# 4. NEXT_PUBLIC_BASE_URL باید با آدرس Backend API شما مطابقت داشته باشد
