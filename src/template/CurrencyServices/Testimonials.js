@@ -9,6 +9,33 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 
+const testimonialsData = [
+  {
+    id: 1,
+    name: "الهام حسینی",
+    text: "خدمات ارزی میکرولس واقعاً عالیه! برای خرید از آمازون و پرداخت‌های بین‌المللی خیلی راحت و سریع کار می‌کنه. پشتیبانی همیشه پاسخگو هستن.",
+    rating: 5,
+  },
+  {
+    id: 2,
+    name: "سارا اکبری",
+    text: "من چندین بار از خدمات ارزی میکرولس استفاده کردم و همیشه راضی بودم. تبدیل ارز و واریز به کیف پول‌های خارجی خیلی ساده و بدون دردسر انجام میشه.",
+    rating: 4.5,
+  },
+  {
+    id: 3,
+    name: "محمدرضا شفیعی",
+    text: "بهترین سرویس ارزی که تا حالا استفاده کردم. سرعت بالا، کارمزد مناسب و پشتیبانی حرفه‌ای. برای کسب‌وکارم خیلی مفید بوده.",
+    rating: 5,
+  },
+  {
+    id: 4,
+    name: "علی کریمی",
+    text: "خدمات میکرولس برای خرید از فروشگاه‌های خارجی عالیه. امنیت بالا و سرعت پرداخت خیلی خوبه. به همه پیشنهاد می‌کنم.",
+    rating: 4.5,
+  },
+];
+
 const CommentBox = ({ t }) => {
   return (
     <div
@@ -19,16 +46,14 @@ const CommentBox = ({ t }) => {
         <div className="relative aspect-square size-8 rounded-full">
           <Image
             src="/image/GiftCart/bestSellingBanner.png"
-            alt={`محصول بازدید شده شماره `}
+            alt={`نظر کاربر ${t.name}`}
             fill
             className="object-cover rounded-2xl"
           />
         </div>
         <h3 className="text-lg text-gray-900  px-3 border-gray-200 dark:text-white mb-3">{t.name}</h3>
       </div>
-      <p className="text-sm text-gray-700 dark:text-gray-300 flex-1 mb-4">
-        تو دنیای امروز هر کسب‌وکاری که داشته باشی به پرداخت ارزی نیاز پیدا میکنی؛ اینجاست که مالتینا پی به دادت میرسه.
-      </p>
+      <p className="text-sm text-gray-700 dark:text-gray-300 flex-1 mb-4">{t.text}</p>
 
       <div className="flex items-center gap-2">
         <RenderStars rating={t.rating} />
@@ -42,11 +67,11 @@ export default function Testimonials() {
   return (
     <div className="mt-20 md:mt-36">
       <div className=" dark:bg-transparent rounded-lg container">
-        <TitreCard titleClassName={"text-primary-700 md:text-3xl"} title="نظرات کاربران درباره میکرولس پی" />
+        <TitreCard titleClassName={"text-primary-700 md:text-3xl"} title="نظرات کاربران درباره خدمات ارزی میکرولس" />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-lg:hidden mt-8">
-          {testimonials.map((t) => (
-            <CommentBox t={t} />
+          {testimonialsData.map((t) => (
+            <CommentBox key={t.id} t={t} />
           ))}
         </div>
 
@@ -64,8 +89,8 @@ export default function Testimonials() {
             modules={[Navigation]}
             className="mySwiper "
           >
-            {testimonials.map((t, i) => (
-              <SwiperSlide key={i}>
+            {testimonialsData.map((t) => (
+              <SwiperSlide key={t.id}>
                 <CommentBox t={t} />
               </SwiperSlide>
             ))}

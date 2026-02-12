@@ -5,7 +5,7 @@ import ProductCard from "@/components/ProductCard";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
-import { Navigation } from "swiper/modules";
+import { Navigation, Autoplay } from "swiper/modules";
 
 function LastSliderProduct() {
   return (
@@ -41,6 +41,11 @@ function LastSliderProduct() {
           <Swiper
             slidesPerView={1.5}
             spaceBetween={10}
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+            }}
+            loop={true}
             navigation={{
               nextEl: ".categories .next-slide",
               prevEl: ".categories .prev-slide",
@@ -49,7 +54,7 @@ function LastSliderProduct() {
               640: { slidesPerView: 2, spaceBetween: 20 },
               768: { slidesPerView: 3 },
             }}
-            modules={[Navigation]}
+            modules={[Navigation, Autoplay]}
             className="mySwiper"
           >
             {[...Array(9)].map((_, i) => (

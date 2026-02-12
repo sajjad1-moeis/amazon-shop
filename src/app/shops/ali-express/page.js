@@ -10,6 +10,7 @@ function Page() {
   return (
     <ShopsLayout
       title={"علی اکسپرس"}
+      searchLogo={"/image/Header/aliEx.png"}
       direct={
         <>
           <Categories />

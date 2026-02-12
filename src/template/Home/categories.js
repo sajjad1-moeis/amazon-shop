@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 
-import { Navigation } from "swiper/modules";
+import { Navigation, Autoplay } from "swiper/modules";
 import Image from "next/image";
 import { ArrowLeft2, ArrowRight2 } from "iconsax-reactjs";
 
@@ -25,6 +25,11 @@ function Categories() {
         <Swiper
           slidesPerView={1}
           spaceBetween={10}
+          autoplay={{
+            delay: 3000,
+            disableOnInteraction: false,
+          }}
+          loop={true}
           navigation={{
             nextEl: ".categories .next-slide",
             prevEl: ".categories .prev-slide",
@@ -34,7 +39,7 @@ function Categories() {
             768: { slidesPerView: 4 },
             1024: { slidesPerView: 5 },
           }}
-          modules={[Navigation]}
+          modules={[Navigation, Autoplay]}
           className="mySwiper "
         >
           {[...Array(9)].map((_, i) => (

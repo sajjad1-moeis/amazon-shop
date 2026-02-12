@@ -30,7 +30,7 @@ export default function DashboardHeader({ onMenuClick }) {
           </Button>
           <Link href={"/"}>
             <Image
-              alt="لوگو میکروالس"
+              alt="لوگو میکرولس"
               src="/image/logo.png"
               width={150}
               height={48}

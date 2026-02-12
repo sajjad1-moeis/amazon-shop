@@ -13,6 +13,7 @@ function Page() {
           <DirectPurchase />
         </>
       }
+      searchLogo={"/image/Shops/ikeaStore.svg"}
       src="/image/Shops/ikeaShop.png"
     >
       <ProductPurchaseForm />

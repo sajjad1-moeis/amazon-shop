@@ -12,6 +12,7 @@ function Page() {
       removeStepBuyComp
       title={"آمازون"}
       src={"/image/Amazon-Shop/buyEmarat.jpg"}
+      searchLogo={"/image/amazonLogo.png"}
     >
       <div>
         <div>

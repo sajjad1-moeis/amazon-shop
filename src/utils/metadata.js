@@ -14,7 +14,7 @@ export function createMetadata({ title, description, keywords, image, url }) {
       title,
       description,
       url: url || siteUrl,
-      siteName: "میکروالس",
+      siteName: "میکرولس",
       images: [
         {
           url: image || defaultImage,

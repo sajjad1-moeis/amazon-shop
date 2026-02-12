@@ -36,13 +36,13 @@ function ProductCard({ className, product, badges }) {
     <Link href={`/product/${productId}`}>
       <div
         className={cn(
-          "shadow-box rounded-xl flex flex-col cursor-pointer hover:shadow-lg transition-shadow bg-white  dark:bg-dark-box ",
+          "shadow-box rounded-xl flex flex-col cursor-pointer hover:shadow-lg transition-shadow bg-white dark:bg-dark-box h-full",
           className || "border-gray-200 dark:border-dark-stroke border"
         )}
         style={{ boxShadow: "0px 2px 4px 0px #0000001A" }}
       >
         {/* Product Image */}
-        <div className="relative aspect-square">
+        <div className="relative aspect-square flex-shrink-0">
           <Image src={image} alt={title} fill className="object-cover rounded-t-xl" />
 
           {/* Badges - Top of Image */}
@@ -70,7 +70,7 @@ function ProductCard({ className, product, badges }) {
         </div>
 
         {/* Product Info */}
-        <div className="p-3 lg:p-4 dark:text-dark-titre flex flex-col gap-2.5">
+        <div className="p-3 lg:p-4 dark:text-dark-titre flex flex-col gap-2.5 flex-grow">
           {/* Product Name */}
           <p className="font-medium text-right leading-6 max-lg:text-sm text-gray-900 dark:text-dark-titre line-clamp-2 ">
             {title}
@@ -91,8 +91,8 @@ function ProductCard({ className, product, badges }) {
             </div>
           </div>
 
-          {/* Price Section */}
-          <div className="flex flex-col gap-1.5">
+          {/* Price Section - این قسمت با flex-grow به پایین می‌رود */}
+          <div className="flex flex-col gap-1.5 mt-auto">
             <div className="flex-between">
               <div className="flex items-center gap-2">
                 <span className="font-bold dark:text-dark-titre text-gray-900 max-lg:text-sm text-base">

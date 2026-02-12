@@ -4,27 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Magicpen } from "iconsax-reactjs";
 import { Star } from "lucide-react";
 import SelectColor from "./SelectColor";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
 export default function ProductInfoSection({ product, colors, selectedColor, setSelectedColor }) {
-  const router = useRouter();
-
-  const handleViewOnAmazon = () => {
-    window.open("https://www.amazon.ae", "_blank");
-  };
-
-  const handleReviewSummary = () => {
-    const reviewsSection = document.getElementById("product-reviews");
-    if (reviewsSection) {
-      reviewsSection.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
-
-  const handleCompare = () => {
-    router.push("/compare");
-  };
-
   return (
     <div>
       {/* Title */}
@@ -53,7 +34,6 @@ export default function ProductInfoSection({ product, colors, selectedColor, set
 
           <div className="flex gap-2">
             <Button
-              onClick={handleReviewSummary}
               variant="ghost"
               size="sm"
               className="h-8 text-xs px-2 md:text-sm bg-primary-50 text-primary-400 dark:text-dark-titre dark:bg-[#4C537D]"
@@ -62,7 +42,6 @@ export default function ProductInfoSection({ product, colors, selectedColor, set
               <span className=" max-md:hidden">خلاصه نظرات</span>
             </Button>
             <Button
-              onClick={handleCompare}
               variant="ghost"
               size="sm"
               className="h-8 text-sm px-2 text-[#FF9900] bg-[#FF99000A] border border-[#FF9900]"
@@ -82,11 +61,7 @@ export default function ProductInfoSection({ product, colors, selectedColor, set
             </Button>
           </div>
         </div>
-        <button
-          onClick={handleViewOnAmazon}
-          type="button"
-          className="flex-center gap-2"
-        >
+        <div className="flex-center gap-2">
           <p className="text-yellow-700 dark:text-yellow-600 text-xs">مشاهده در آمازون</p>
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#clip0_170_5987)">
@@ -117,7 +92,7 @@ export default function ProductInfoSection({ product, colors, selectedColor, set
               </clipPath>
             </defs>
           </svg>
-        </button>
+        </div>
       </div>
 
       {/* Colors */}
@@ -136,30 +111,15 @@ export default function ProductInfoSection({ product, colors, selectedColor, set
       {/* Features Table */}
       {product?.attributes && product.attributes.length > 0 && (
         <div>
-          <h3 className="mb-3 text-right text-gray-800 dark:text-white">ویژگی ها</h3>
+          <h3 className=" mb-3 text-right text-gray-800 dark:text-white">ویژگی ها</h3>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {product.attributes.map((atr) => {
-              const selectedColorObj = colors?.find((c) => c.value === selectedColor);
-              let displayValue = atr.value;
-
-              // اگر رنگ انتخاب شده باشد و این ویژگی رنگ است، از رنگ انتخاب شده استفاده کن
-              if (atr.key === "color" && selectedColorObj) {
-                displayValue = selectedColorObj.label;
-              }
-
-              return (
-                <div
-                  key={atr.key || atr.name}
-                  className="bg-gray-100 border dark:bg-dark-field dark:border-0 border-gray-200 p-2 rounded-lg"
-                >
-                  <p className="text-gray-700 dark:text-dark-titre max-md:text-sm text-sm font-medium">
-                    {atr.name}
-                  </p>
-                  <p className="text-gray-500 text-sm dark:text-dark-text max-md:text-xs mt-2">{displayValue}</p>
-                </div>
-              );
-            })}
+            {product.attributes.map((atr) => (
+              <div className="bg-gray-100 border dark:bg-dark-field dark:border-0 border-gray-200 p-2 rounded-lg">
+                <p className="text-gray-700 dark:text-dark-titre max-md:text-sm">{atr.name}</p>
+                <p className="text-gray-500 text-sm dark:text-dark-text max-md:text-xs mt-2">{atr.value}</p>
+              </div>
+            ))}
           </div>
         </div>
       )}

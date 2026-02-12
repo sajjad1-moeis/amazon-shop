@@ -5,8 +5,9 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { toast } from "sonner";
 
-export default function GallerySection({ productImages, selectedImage, setSelectedImage }) {
-  const currentImage = productImages[selectedImage] || productImages[0] || "/image/Home/product.png";
+export default function GallerySection({ productImages, selectedImage, setSelectedImage, mainImage }) {
+  const currentImage = productImages[selectedImage] || productImages[0] || mainImage || "/image/Home/product.png";
+  const isFirstImage = selectedImage === 0;
 
   const handleShare = async () => {
     try {
@@ -22,7 +23,14 @@ export default function GallerySection({ productImages, selectedImage, setSelect
     <div className="bg-white dark:bg-gray-800 rounded-xl  relative">
       {/* Main Image Container */}
       <div className="relative aspect-square rounded-md ">
-        <Image src={currentImage} alt={`محصول - تصویر ${selectedImage + 1}`} fill className="object-cover rounded-md" />
+        <Image
+          src={currentImage}
+          alt={`محصول - تصویر ${selectedImage + 1}`}
+          fill
+          className="object-cover rounded-md"
+          priority={isFirstImage}
+          fetchPriority={isFirstImage ? "high" : "auto"}
+        />
 
         {/* Share Button */}
         <div className="absolute left-4 top-4 z-50">

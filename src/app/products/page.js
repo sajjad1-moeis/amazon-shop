@@ -12,8 +12,7 @@ import { Spinner } from "@/components/ui/spinner";
 export default function ProductsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [viewMode, setViewMode] = useState("list");
-
+  const [viewMode, setViewMode] = useState("grid");
   // داده‌های تستی
   const mockProducts = [
     {
@@ -106,8 +105,6 @@ export default function ProductsPage() {
     query: searchParams.get("search") || "",
   });
   const [pageNumber, setPageNumber] = useState(parseInt(searchParams.get("page")) || 1);
-  const [pageSize] = useState(20);
-  const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(mockProducts.length);
 
   // فیلتر کردن محصولات بر اساس فیلترها
@@ -116,7 +113,8 @@ export default function ProductsPage() {
 
     if (filters.query) {
       const query = filters.query.toLowerCase();
-      filtered = filtered.filter((p) => p.name.toLowerCase().includes(query) || p.title.toLowerCase().includes(query));
+      console.log(query);
+      filtered = filtered.filter((p) => p.name.toLowerCase().includes(query));
     }
 
     if (filters.categoryId) {

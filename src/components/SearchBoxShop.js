@@ -3,7 +3,7 @@ import React from "react";
 import { Button } from "./ui/button";
 import { SearchNormal1 } from "iconsax-reactjs";
 
-function SearchBoxShop({ type }) {
+function SearchBoxShop({ type, searchLogo, isWhite }) {
   return (
     <div
       className="relative rounded-2xl bg-white dark:bg-dark-bg -mt-[10%] md:-mt-[3%] p-4 max-w-4xl mx-auto"
@@ -11,8 +11,13 @@ function SearchBoxShop({ type }) {
     >
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-2 mt-2">
-          🟩
-          <Image src="/image/amazonLogo.png" alt={`عکس آمازون`} width={67} height={17} />
+          <Image
+            src={searchLogo}
+            alt="عکس آمازون"
+            width={67}
+            height={17}
+            className={isWhite && "invert dark:invert-0"}
+          />
         </div>
         <p className="text-lg text-gray-800 dark:text-dark-text">جستجو در {type}</p>
       </div>

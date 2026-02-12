@@ -8,6 +8,7 @@ function Page() {
   return (
     <ShopsLayout
       direct={<DirectPurchase />}
+      searchLogo={"/image/Shops/noonStore.svg"}
       title={"نون امارت"}
       src="/image/Shops/noonShop.png"
       imgClassName={"max-md:max-h-44"}

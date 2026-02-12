@@ -7,6 +7,7 @@ import DeliveryTypeSection from "./DeliveryTypeSection";
 import PriceDisplaySection from "./PriceDisplaySection";
 import ActionButtonsSection from "./ActionButtonsSection";
 import SidebarActions from "./SidebarActions";
+import { calculateProductPrice, getBasePrice } from "@/utils/productHelpers";
 
 export default function PurchaseSection({
   selectedDelivery,
@@ -19,31 +20,8 @@ export default function PurchaseSection({
   const [loading, setLoading] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
-  const calculatePrice = () => {
-    let basePrice = product?.discountPrice || product?.price || 0;
-
-    const colorPriceMap = {
-      white: 0,
-      gold: 500000,
-      navy: 0,
-      سفید: 0,
-      طلایی: 500000,
-      "سرمه ای": 0,
-    };
-
-    const deliveryPriceMap = {
-      standard: 0,
-      express: 1000000,
-    };
-
-    const colorPrice = colorPriceMap[selectedColor] || 0;
-    const deliveryPrice = deliveryPriceMap[selectedDelivery] || 0;
-
-    return basePrice + colorPrice + deliveryPrice;
-  };
-
-  const finalPrice = calculatePrice();
-  const basePrice = product?.discountPrice || product?.price || 0;
+  const finalPrice = calculateProductPrice(product, selectedColor, selectedDelivery);
+  const basePrice = getBasePrice(product);
 
   const addToCart = async () => {
     try {

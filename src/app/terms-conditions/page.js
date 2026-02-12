@@ -1,9 +1,23 @@
+"use client";
+
 import IntroductionCard from "@/components/IntroductionCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import IndexLayout from "@/layout/IndexLayout";
-import React from "react";
+import React, { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 
-function Page() {
+function TermsContent() {
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  const defaultTab = tabParam || "a4";
+  const [activeTab, setActiveTab] = useState(defaultTab);
+
+  useEffect(() => {
+    if (tabParam) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
+
   const tabs = [
     { value: "a4", label: "قوانین کل سایت", content: "قوانین کل سایت…" },
     { value: "a3", label: "قوانین سپر کیفیت", content: "قوانین سپر کیفیت…" },
@@ -16,11 +30,16 @@ function Page() {
     "data-[state=active]:text-primary-600 data-[state=active]:dark:text-dark-title text-gray-500 px-4 py-2 rounded-none transition";
 
   return (
-    <IndexLayout>
+    <>
       <IntroductionCard title="قوانین و مقررات" items={[{ label: "قوانین و مقررات" }]} />
 
       <div className="mb-20">
-        <Tabs dir="rtl" defaultValue="a4" className="container mt-10 w-full rounded-xl overflow-hidden">
+        <Tabs
+          dir="rtl"
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="container mt-10 w-full rounded-xl overflow-hidden"
+        >
           <TabsList className="bg-white h-full shadow dark:border-b-2 dark:border-white/10 w-full justify-start overflow-auto rounded-t-xl rounded-b-none p-0 dark:bg-white/10">
             {tabs.map((tab) => (
               <TabsTrigger key={tab.value} value={tab.value} className={activeClasses}>
@@ -42,6 +61,16 @@ function Page() {
           ))}
         </Tabs>
       </div>
+    </>
+  );
+}
+
+function Page() {
+  return (
+    <IndexLayout>
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center">در حال بارگذاری...</div>}>
+        <TermsContent />
+      </Suspense>
     </IndexLayout>
   );
 }
