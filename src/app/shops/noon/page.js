@@ -10,7 +10,7 @@ function Page() {
       direct={<DirectPurchase />}
       searchLogo={"/image/Shops/noonStore.svg"}
       title={"نون امارت"}
-      src="/image/Shops/noonShop.png"
+      src="/image/Shops/noonShop.jpg"
       imgClassName={"max-md:max-h-44"}
     >
       <div>

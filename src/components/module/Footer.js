@@ -26,7 +26,7 @@ export default function Footer() {
       className="w-full bg-white dark:bg-[#101010] text-gray-700 dark:text-white border-t border-neutral-100 dark:border-gray-800"
       dir="rtl"
     >
-      <div className="px-4 lg:container">
+      <div className="px-4 xl:container">
         {/* --- Recent Visits --- */}
         <section className="pt-8">
           <RecentVisits />
@@ -161,7 +161,7 @@ export default function Footer() {
                   window.open(
                     "",
                     "Popup",
-                    "toolbar=no, location=no, statusbar=no, menubar=no, scrollbars=1, resizable=0, width=580, height=600, top=30"
+                    "toolbar=no, location=no, statusbar=no, menubar=no, scrollbars=1, resizable=0, width=580, height=600, top=30",
                   )
                 }
               >
@@ -181,7 +181,7 @@ export default function Footer() {
                   window.open(
                     "https://logo.samandehi.ir/Verify.aspx?id=289203&p=uiwkmcsipfvluiwkobpdxlao",
                     "Popup",
-                    "toolbar=no, scrollbars=no, location=no, statusbar=no, menubar=no, resizable=0, width=450, height=630, top=30"
+                    "toolbar=no, scrollbars=no, location=no, statusbar=no, menubar=no, resizable=0, width=450, height=630, top=30",
                   )
                 }
               >

@@ -14,7 +14,7 @@ function Page() {
         </>
       }
       searchLogo={"/image/Shops/ikeaStore.svg"}
-      src="/image/Shops/ikeaShop.png"
+      src="/image/Shops/ikeaShop.jpg"
     >
       <ProductPurchaseForm />
 

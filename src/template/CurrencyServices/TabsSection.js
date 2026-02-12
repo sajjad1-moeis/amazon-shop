@@ -2,31 +2,30 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
 import LinerBg from "@/components/LinerBg";
 import { tabsCurrency } from "@/data";
+import Image from "next/image";
 
 function Page() {
   const activeClasses =
-    "w-full data-[state=active]:bg-primary-50 dark:data-[state=active]:bg-white/10 data-[state=active]:border-b-2 border-primary-500 dark:border-dark-title " +
+    "flex-none md:flex-1 w-fit data-[state=active]:bg-primary-50 dark:data-[state=active]:bg-white/10 data-[state=active]:border-b-2 border-primary-500 dark:border-dark-title " +
     "data-[state=active]:text-primary-600 data-[state=active]:dark:text-dark-title text-gray-500 px-4 py-3 rounded-none transition";
 
   return (
     <div className="">
-      <div className="relative max-md:bg-[url(/image/CurrencyServices/CurrencyServicesBg.png)] bg-cover max-md:py-20">
+      <div className="relative max-md:bg-[url(/image/CurrencyServices/CurrencyServicesBg.jpg)] bg-cover max-md:py-20">
         <LinerBg />
 
-        <div className="md:absolute md:size-max md:inset-0 m-auto z-50 md:-translate-y-full  text-white text-center">
-          <h1 className="text-primary-50 text-xl md:text-3xl lg:text-5xl">خدمات ارزی سریع و مطمئن</h1>
-          <p className="text-white/60 text-xs md:text-lg lg:text-xl mt-1 md:mt-3 w-1/2 lg:w-2/3 mx-auto">
-            پرداخت ارزی، شارژ حساب، خرید کالا، پرداخت آمازون و تسویه بین‌المللی با کمترین کارمزد از طریق سیستم امن ما.
-          </p>
-        </div>
-        <img
-          src="/image/CurrencyServices/CurrencyServicesBg.png"
-          className="max-h-[801px] max-md:hidden w-full"
-          alt=""
-        />
+<Image
+  src="/image/CurrencyServices/CurrencyServicesBg.jpg"
+  alt=""
+  width={1920}      // عرض واقعی یا تقریبی تصویر
+  height={801}      // ارتفاع واقعی تصویر
+  className="w-full h-auto  max-md:hidden"
+  priority
+/>
+
       </div>
       <div className="max-md:p-4">
-        <div className="mb-20 max-w-5xl mx-auto -mt-[10%] md:-mt-[20%]  relative rounded-xl">
+        <div className="mb-20 max-w-5xl mx-auto md:-mt-[18%]  relative rounded-xl">
           <Tabs
             dir="rtl"
             defaultValue="forex"

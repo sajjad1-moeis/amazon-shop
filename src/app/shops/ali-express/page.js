@@ -19,7 +19,7 @@ function Page() {
         </>
       }
       removeStepBuyComp
-      src={"/image/AliEx/aliExShop.png"}
+      src={"/image/AliEx/aliExShop.jpg"}
     >
       <div>
         <ProductPurchaseForm />

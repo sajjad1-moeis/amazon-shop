@@ -37,9 +37,26 @@ const serviceGuarantees = [
 ];
 
 export default function AccordionDemo() {
+  const [openItems, setOpenItems] = useState(["item-1", "item-2"]);
+
+  const handleValueChange = (value) => {
+    setOpenItems(value);
+  };
+
+  const handleToggleAll = () => {
+    if (openItems.length === 2) 
+      setOpenItems([]);
+    else 
+    
+      setOpenItems(["item-1", "item-2"]);
+  };
+
+  const isAllOpen = openItems.length === 2;
+
+
   return (
     <div>
-      <Accordion type="single" collapsible className="w-full" defaultValue="item-1">
+      <Accordion type="multiple" className="w-full" value={openItems} onValueChange={handleValueChange}>
         <AccordionItem value="item-1">
           <AccordionTrigger>درباره محصول</AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4 text-balance">
@@ -73,8 +90,11 @@ export default function AccordionDemo() {
       <div className="text-center mt-6">
         <div className="flex-center gap-3">
           <div className="border-b w-full dark:border-dark-stroke border-gray-200" />
-          <button className="text-primary-600 flex-none dark:text-primary-300 hover:text-primary-700 dark:hover:text-primary-300 font-medium text-sm transition-colors">
-            {"نمایش کمتر"}
+          <button
+            onClick={handleToggleAll}
+            className="text-primary-600 flex-none dark:text-primary-300 hover:text-primary-700 dark:hover:text-primary-300 font-medium text-sm transition-colors"
+          >
+            {isAllOpen ? "نمایش کمتر" : "نمایش بیشتر"}
           </button>
           <div className="border-b w-full dark:border-dark-stroke border-gray-200" />
         </div>

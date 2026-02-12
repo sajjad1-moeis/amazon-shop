@@ -35,8 +35,8 @@ export default function BottomNavigation() {
     const activeBtn = itemRefs.current[activeId];
     if (activeBtn) {
       requestAnimationFrame(() => {
-        const rect = activeBtn.getBoundingClientRect();
-        setOffset({ left: rect.left, width: rect.width });
+      const rect = activeBtn.getBoundingClientRect();
+      setOffset({ left: rect.left, width: rect.width });
       });
     }
   }, [activeId, pathname]);

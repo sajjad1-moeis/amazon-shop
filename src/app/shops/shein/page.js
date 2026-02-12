@@ -13,7 +13,7 @@ function Page() {
       searchLogo={"/image/Header/Shein.png"}
       title={"شین امارات"}
       isWhite
-      src="/image/Shops/shein.png"
+      src="/image/Shops/shein.jpg"
       imgClassName={"max-md:max-h-44"}
     >
       <div>
