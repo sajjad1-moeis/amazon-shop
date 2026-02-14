@@ -1,7 +1,11 @@
 import ky from "ky";
 import { getToken } from "@/lib/token-manager";
 
-const API_BASE_URL = "https://micrls.com/api";
+// روی سرور: در .env.local مقدار NEXT_PUBLIC_API_URL را بگذار (مثلاً http://107.161.175.45:8080/api)
+const API_BASE_URL =
+  typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL
+    ? process.env.NEXT_PUBLIC_API_URL
+    : "https://micrls.com/api";
 
 const apiClient = ky.create({
   prefixUrl: API_BASE_URL,
