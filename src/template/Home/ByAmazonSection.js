@@ -1,39 +1,20 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
-import Link from "next/link";
 import ByAmazonSlider from "./ByAmazonSlider";
-import QualityShieldModal from "./QualityShieldModal";
 
 export default function AmazonSection() {
-  const [isQualityShieldOpen, setIsQualityShieldOpen] = useState(false);
-
   return (
-    <>
-      <div className="w-full bg-white  dark:bg-dark-bg">
-        {/* Hero Section - بنر اول صفحه اصلی */}
-        <button
-          onClick={() => setIsQualityShieldOpen(true)}
-          className="block w-full cursor-pointer"
-        >
-          <Image
-            src="/image/Home/amazonBg.jpg"
-            alt="سپر کیفیت میکرولس"
-            width={1200}
-            height={600}
-            priority
-            className="w-full h-auto object-cover"
-          />
-        </button>
+    <div className="w-full bg-white  dark:bg-dark-bg">
+      {/* Hero Section */}
+
+      <div className="relative w-full h-48 sm:h-60 md:h-[400px] lg:h-[550px] xl:h-[700px]">
+        <Image src="/image/Home/amazonBg.png" alt="banner" fill priority sizes="100vw" className="object-cover" />
+      </div>
       {/* Product Slider Box */}
-      <div className="w-full container -mt-[10%] md:-mt-[13%] relative">
+      <div className="w-full container -mt-[10%] relative">
         <div className="w-full border-2  dark:border-[#50578152] border-primary-300 rounded-2xl p-4 flex gap-4 overflow-x-auto bg-white dark:bg-dark-bg shadow-[0_0_20px_rgba(0,0,0,0.05)]">
           {/* Explosion Offer Box */}
-          <Link
-            href="/products?discount=true"
-            className="min-w-[150px] lg:min-w-[200px]  rounded-xl p-4  flex justify-center items-center text-center max-md:hidden cursor-pointer hover:bg-gray-50 dark:hover:bg-dark-box transition-colors"
-          >
+          <div className="min-w-[150px] lg:min-w-[200px]  rounded-xl p-4  flex justify-center items-center text-center max-md:hidden">
             <div>
               <div className="flex items-center justify-center">
                 <svg width="135" height="105" viewBox="0 0 135 105" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -98,16 +79,13 @@ export default function AmazonSection() {
                 <span className="text-xl">15:12</span>
               </div>
             </div>
-          </Link>
+          </div>
 
           {/* Product Card */}
 
           <ByAmazonSlider />
         </div>
       </div>
-      </div>
-
-      <QualityShieldModal open={isQualityShieldOpen} onOpenChange={setIsQualityShieldOpen} />
-    </>
+    </div>
   );
 }

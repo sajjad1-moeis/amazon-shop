@@ -6,7 +6,7 @@ import { Heart, Link, Send2, Share, Whatsapp } from "iconsax-reactjs";
 import Comments from "./Comments";
 import { SocialCircle } from "@/components/module/Footer";
 
-export default function ReviewsAndShare({ blog, comments = [], loading = false }) {
+export default function ReviewsAndShare({ blog, comments = [] }) {
   const tags = blog?.tags?.map((tag) => tag.name) || [];
 
   const handleRefreshComments = () => {
@@ -53,11 +53,7 @@ export default function ReviewsAndShare({ blog, comments = [], loading = false }
         </div>
       </div>
 
-      {loading ? (
-        <div className="p-8 text-center text-gray-400">در حال بارگذاری نظرات...</div>
-      ) : (
-        <Comments blog={blog} comments={comments} onCommentAdded={handleRefreshComments} />
-      )}
+      <Comments blog={blog} comments={comments} onCommentAdded={handleRefreshComments} />
 
       <section className="mt-32">
         <h2 className="text-3xl font-semibold text-gray-800 text-center mb-6 dark:text-dark-titre">
