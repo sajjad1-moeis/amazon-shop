@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
 import { cn } from "@/lib/utils";
 
 const timePeriods = [
@@ -66,18 +68,36 @@ export default function RateChart() {
   return (
     <div className="bg-white dark:bg-dark-box rounded-2xl p-4 md:p-6 shadow-md border border-gray-200 dark:border-dark-stroke">
       {/* Tabs */}
-      <div class="flex-between mb-6 md:mb-8">
-        <p className="text-sm md:text-lg lg:text-2xl">نمودار تغییرات نرخ درهم امارات</p>
-        <div className="flex flex-wrap border bg-gray-100 rounded-lg overflow-hidden">
+      <div className="flex-between flex-col md:flex-row gap-4 mb-6 md:mb-8">
+        <p className="text-sm md:text-lg lg:text-2xl text-gray-900 dark:text-dark-title text-right w-full md:w-auto">
+          نمودار تغییرات نرخ درهم امارات
+        </p>
+        {/* Mobile: Select */}
+        <div className="w-full md:hidden">
+          <Select value={selectedPeriod} onValueChange={setSelectedPeriod} dir="rtl">
+            <SelectTrigger className={cn("!w-full", filterSelectTriggerStyles)}>
+              <SelectValue placeholder="انتخاب بازه زمانی" />
+            </SelectTrigger>
+            <SelectContent className={filterSelectContentStyles} dir="rtl">
+              {timePeriods.map((period) => (
+                <SelectItem key={period.id} value={period.id}>
+                  {period.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        {/* Desktop: Buttons */}
+        <div className="hidden md:flex flex-wrap border border-gray-200 dark:border-dark-stroke bg-gray-100 dark:bg-dark-field rounded-lg overflow-hidden">
           {timePeriods.map((period) => (
             <button
               key={period.id}
               onClick={() => setSelectedPeriod(period.id)}
               className={cn(
-                "px-4 py-2  text-sm md:text-base font-medium transition-colors",
+                "px-4 py-2 text-sm lg:text-base font-medium transition-colors",
                 selectedPeriod === period.id
-                  ? "bg-primary-100 text-primary-600"
-                  : "bg-white dark:bg-dark-field text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-stroke",
+                  ? "bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400"
+                  : "bg-white dark:bg-dark-box text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-stroke",
               )}
             >
               {period.label}
@@ -87,16 +107,20 @@ export default function RateChart() {
       </div>
 
       {/* Chart Container */}
-      <div class="bg-gray-50 p-2 rounded-lg border">
-        <ChartContainer config={chartConfig} className="h-64 md:h-80 w-full">
+      <div className="bg-gray-50 dark:bg-dark-field p-2 md:p-4 rounded-lg border border-gray-200 dark:border-dark-stroke">
+        <ChartContainer config={chartConfig} className="h-48 md:h-64 lg:h-80 w-full">
           <LineChart data={currentData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="0 0" />
-            <XAxis dataKey="name" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} />
+            <CartesianGrid strokeDasharray="0 0" stroke="#e5e7eb" className="dark:stroke-dark-stroke" />
+            <XAxis
+              dataKey="name"
+              tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }}
+              className="dark:text-dark-text"
+            />
             <YAxis
               direction={"ltr"}
               domain={[100, 500]}
               ticks={[100, 200, 300, 400, 500]}
-              tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
+              tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }}
               tickFormatter={(value) => value.toLocaleString("fa-IR")}
             />
             <ChartTooltip content={<ChartTooltipContent />} />
@@ -113,7 +137,9 @@ export default function RateChart() {
       </div>
 
       {/* Source Label */}
-      <div className="mt-4 text-xs text-gray-500 dark:text-gray-400 text-right">مرجع: آمازون (امارات)</div>
+      <div className="mt-4 text-xs md:text-sm text-gray-500 dark:text-gray-400 text-right">
+        مرجع: آمازون (امارات)
+      </div>
     </div>
   );
 }

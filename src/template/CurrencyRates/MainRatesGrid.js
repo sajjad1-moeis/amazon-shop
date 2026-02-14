@@ -51,7 +51,7 @@ const mainRates = [
 export default function MainRatesGrid() {
   return (
     <div class="">
-      <h3 className="text-lg md:text-xl lg:text-3xl text-center mb-8 mt-10">نرخ ارزهای اصلی</h3>
+      <h3 className="text-2xl lg:text-3xl text-center mb-8 mt-10">نرخ ارزهای اصلی</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {mainRates.map((currency) => (
           <div
@@ -72,14 +72,14 @@ export default function MainRatesGrid() {
 
             <div className="flex items-center gap-2">
               {currency.changeType === "positive" ? (
-                <div className="flex-between gap-1 bg-green-100 w-full p-2 rounded-lg text-green-600 dark:text-green-400">
+                <div className="flex-between gap-1 bg-green-100 dark:bg-green-950/20 dark:border-green-700 w-full p-2 rounded-lg text-green-600 dark:text-green-400">
                   <span className="text-sm md:text-base">
                     +{currency.change}% {currency.comparison}
                   </span>
                   <ArrowUp />
                 </div>
               ) : (
-                <div className="flex-between gap-1 bg-red-100 w-full p-2 rounded-lg text-red-600 dark:text-red-400">
+                <div className="flex-between gap-1 bg-red-100 w-full p-2 rounded-lg text-red-600 dark:bg-red-950/20 dark:border-red-700 dark:text-red-400">
                   <span className="text-sm md:text-base">
                     -{currency.change}% {currency.comparison}
                   </span>

@@ -30,35 +30,41 @@ export default function DirhamComparisonCard() {
 
   return (
     <div className="bg-white dark:bg-dark-box rounded-2xl p-4 md:p-6 shadow-md border border-gray-200 dark:border-dark-stroke">
-      <h3 className="text-lg md:text-2xl  text-gray-900 dark:text-dark-title mb-4 md:mb-6 text-right">
+      <h3 className="text-lg md:text-xl lg:text-2xl text-gray-900 dark:text-dark-title mb-4 md:mb-6 text-right">
         مقایسه نرخ درهم با منابع معتبر
       </h3>
 
       <div className="space-y-3 md:space-y-4 h-full">
         {/* باکس میکرولس */}
-        <div className={`border bg-green-50 border-green-300 rounded-xl p-3 md:p-4 `}>
+        <div className={`border bg-green-50 dark:bg-green-950/20 border-green-300 dark:border-green-700 rounded-xl p-3 md:p-4`}>
           <div className="flex-center flex-col justify-between h-full">
-            <img src="/image/logo-black.png" className="max-w-24" alt="" />
-            <p className={`text-base md:text-3xl font-bold mt-5  text-green-600`}>{dirhamComparison[0].rate} ت</p>
+            <img src="/image/logo-black.png" className="max-w-16 md:max-w-20 lg:max-w-24 dark:invert" alt="" />
+            <p className={`text-base md:text-2xl lg:text-3xl font-bold mt-3 md:mt-5 text-green-600 dark:text-green-500`}>
+              {dirhamComparison[0].rate} ت
+            </p>
           </div>
         </div>
 
         {/* دو باکس پایین */}
         <div className="grid grid-cols-2 gap-3 md:gap-4">
           {/* باکس BONBAST */}
-          <div className={` bg-gray-100  rounded-xl p-3 md:p-4 `}>
+          <div className={`bg-gray-100 dark:bg-dark-field rounded-xl p-3 md:p-4`}>
             <div className="flex-center flex-col justify-between h-full">
-              <img src="/image/tala.png" className="max-w-24" alt="" />
+              <img src="/image/tala.png" className="max-w-16 md:max-w-20 lg:max-w-24" alt="" />
 
-              <p className={`text-base md:text-2xl mt-5  text-red-600`}>{dirhamComparison[0].rate} ت</p>
+              <p className={`text-sm md:text-xl lg:text-2xl mt-3 md:mt-5 text-red-600 dark:text-red-500`}>
+                {dirhamComparison[0].rate} ت
+              </p>
             </div>
           </div>
 
           {/* باکس tgju */}
-          <div className={` bg-gray-100  h-full rounded-xl p-3 md:p-4 `}>
+          <div className={`bg-gray-100 dark:bg-dark-field h-full rounded-xl p-3 md:p-4`}>
             <div className="flex-center flex-col justify-between h-full">
-              <p className="text-2xl">BONBAST</p>
-              <p className={`text-base md:text-2xl mt-5  text-dark-primary`}>{dirhamComparison[0].rate} ت</p>
+              <p className="text-lg md:text-xl lg:text-2xl text-gray-900 dark:text-dark-title">BONBAST</p>
+              <p className={`text-sm md:text-xl lg:text-2xl mt-3 md:mt-5 text-dark-primary dark:text-primary-400`}>
+                {dirhamComparison[0].rate} ت
+              </p>
             </div>
           </div>
         </div>
