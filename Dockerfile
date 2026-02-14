@@ -23,13 +23,15 @@ COPY . .
 
 # Build arguments for environment variables at build time
 ARG NEXT_PUBLIC_BASE_URL=http://107.161.175.45
+ARG NEXT_PUBLIC_API_URL=http://107.161.175.45:8080/api
 ARG NEXT_TELEMETRY_DISABLED=1
 ARG NODE_ENV=production
 
-# Set environment variables for build
+# Set environment variables for build (NEXT_PUBLIC_* are baked into the client bundle)
 ENV NEXT_TELEMETRY_DISABLED=${NEXT_TELEMETRY_DISABLED}
 ENV NODE_ENV=${NODE_ENV}
 ENV NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 
 # Build the application
 RUN npm run build

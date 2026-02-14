@@ -1,79 +1,47 @@
 # راهنمای دیپلوی فرانت روی سرور
 
-## ۱. اطمینان از آخرین نسخه
-
-اگر سورس فرانت از گیت کش می‌کنی:
+## ۱. پول گرفتن آخرین نسخه
 
 ```bash
-cd /root/...   # مسیر پوش فرانت (مثلاً /root/front_amazon یا هر جایی که هست)
-git pull origin main
-# یا اگر برنچ دیگری داری: git pull origin master
+cd /root/amazon-shop
+# یا مسیر واقعی فرانت روی سرور
+
+git fetch origin
+git checkout seyed-custom-changes
+git pull origin seyed-custom-changes
 ```
 
-اگر سورس را با FTP یا دستی کپی کرده‌ای، آخرین نسخه را از همین پروژه (front_amazon/amazon-shop) روی سرور بریز.
+## ۲. اجرا با Docker
 
----
-
-## ۲. وصل بودن به بک‌اند درست
-
-بک‌اند API روی همین سرور روی پورت **8080** است:  
-`http://107.161.175.45:8080`
-
-قبل از بیلد، یک فایل **`.env.local`** در روت پروژه فرانت بساز و آدرس API را بگذار:
+آدرس بک‌اند به‌صورت پیش‌فرض `http://107.161.175.45:8080/api` در بیلد قرار می‌گیرد. برای بیلد و اجرا:
 
 ```bash
-cd /root/...   # مسیر پوش فرانت
+docker compose build --no-cache app
+docker compose up -d
+```
+
+اگر خواستی آدرس API یا base URL را عوض کنی، در همان پوش یک فایل `.env` بساز و بعد بیلد کن:
+
+```bash
+echo 'NEXT_PUBLIC_API_URL=http://107.161.175.45:8080/api' >> .env
+echo 'NEXT_PUBLIC_BASE_URL=http://107.161.175.45' >> .env
+docker compose build --no-cache app
+docker compose up -d
+```
+
+## ۳. اگر بدون داکر اجرا می‌کنی
+
+قبل از بیلد آدرس API را بگذار:
+
+```bash
 echo 'NEXT_PUBLIC_API_URL=http://107.161.175.45:8080/api' > .env.local
-```
-
-یا اگر فایل نمونه داری:
-
-```bash
-cp env.server.example .env.local
-# در صورت نیاز ویرایش کن: nano .env.local
-```
-
-**مهم:** مقدار `NEXT_PUBLIC_API_URL` حتماً قبل از `npm run build` تنظیم شود؛ وگرنه در بیلد استفاده نمی‌شود.
-
----
-
-## ۳. نصب، بیلد و اجرا
-
-```bash
-npm ci
-# یا: npm install
-
-npm run build
-npm run start
-```
-
-فرانت روی پورت **3000** بالا می‌آید:  
-`http://107.161.175.45:3000`
-
-برای اجرا در پس‌زمینه می‌توانی از **PM2** استفاده کنی:
-
-```bash
-npm install -g pm2
-pm2 start npm --name "amazon-shop-front" -- start
-pm2 save
-pm2 startup
+npm ci && npm run build && npm run start
 ```
 
 ---
-
-## ۴. چک کردن اتصال به بک‌اند
-
-- در مرورگر برو به: `http://107.161.175.45:3000`
-- اگر صفحه لود شد ولی داده‌ها (مثل محصولات، بنر، بلاگ) نمی‌آیند یا خطای شبکه می‌بینی، احتمالاً فرانت به آدرس اشتباه درخواست می‌زند.
-- در DevTools (F12) تب Network را باز کن و ببین درخواست‌ها به کجا می‌روند؛ باید به `http://107.161.175.45:8080/api/...` باشند.
-
----
-
-## خلاصه
 
 | مورد | مقدار |
 |------|--------|
 | آدرس فرانت | http://107.161.175.45:3000 |
 | آدرس بک‌اند API | http://107.161.175.45:8080 |
-| متغیر محیطی روی سرور | `NEXT_PUBLIC_API_URL=http://107.161.175.45:8080/api` در `.env.local` |
-| ترتیب کار | `git pull` → ساخت `.env.local` → `npm run build` → `npm run start` (یا PM2) |
+| برنچ | `seyed-custom-changes` |
