@@ -15,7 +15,16 @@ import { cn } from "@/lib/utils";
 import { Home } from "iconsax-reactjs";
 import Image from "next/image";
 
-export default function ShopsLayout({ children, src, title, direct, removeStepBuyComp, imgClassName }) {
+export default function ShopsLayout({
+  children,
+  src,
+  title,
+  direct,
+  isWhite,
+  removeStepBuyComp,
+  imgClassName,
+  searchLogo,
+}) {
   return (
     <IndexLayout>
       <div className="bg-[#FBFBFB] dark:bg-dark-bg">
@@ -45,7 +54,7 @@ export default function ShopsLayout({ children, src, title, direct, removeStepBu
           <Image src={src} alt={"محصول بازدید شده شماره "} fill className="max-lg:object-cover" />{" "}
         </div>
         <div className="max-lg:px-4 relative z-50">
-          <SearchBoxShop type={title} />
+          <SearchBoxShop type={title} isWhite={isWhite} searchLogo={searchLogo} />
         </div>
         <div className=" relative mt-10 lg:mt-28 ">
           <div className="bg-gray-50 dark:bg-dark-bg">

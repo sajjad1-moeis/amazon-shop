@@ -31,10 +31,13 @@ export default function BottomNavigation() {
 
   useEffect(() => {
     // هنگام لود صفحه، دکمه Active را پیدا کن
+    // استفاده از requestAnimationFrame برای جلوگیری از Forced Reflow
     const activeBtn = itemRefs.current[activeId];
     if (activeBtn) {
+      requestAnimationFrame(() => {
       const rect = activeBtn.getBoundingClientRect();
       setOffset({ left: rect.left, width: rect.width });
+      });
     }
   }, [activeId, pathname]);
 

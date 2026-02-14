@@ -1,9 +1,27 @@
 import FaqCard from "@/components/FaqCard";
 import IntroductionCard from "@/components/IntroductionCard";
+import { createMetadata } from "@/utils/metadata";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { faqs, faqTabs } from "@/data";
 import IndexLayout from "@/layout/IndexLayout";
 import React from "react";
+
+export async function generateMetadata() {
+  return createMetadata({
+    title: "سوالات متداول | راهنمای خرید و استفاده از میکرولس",
+    description:
+      "پاسخ به سوالات متداول درباره خرید از آمازون، ارسال به ایران، روش‌های پرداخت، گارانتی و خدمات میکرولس.",
+    keywords: [
+      "سوالات متداول",
+      "راهنمای خرید",
+      "سوالات",
+      "پاسخ سوالات",
+      "راهنمای استفاده",
+      "میکرولس",
+    ],
+    url: "/faqs",
+  });
+}
 
 function Page() {
   const activeClasses =

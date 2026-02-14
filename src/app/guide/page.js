@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import ShippingReturnPolicy from "@/template/Guide/ShippingReturnPolicy";
 import IndexLayout from "@/layout/IndexLayout";
@@ -8,8 +9,21 @@ import IntroductionCard from "@/components/IntroductionCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { GUIDE_ITEMS } from "@/data";
 
-export default function GuidesPage() {
-  const [activeGuide, setActiveGuide] = useState("shipping-return");
+function GuidesContent() {
+  const searchParams = useSearchParams();
+  const sectionParam = searchParams.get("section");
+  console.log(sectionParam);
+  const defaultSection = GUIDE_ITEMS.find((item) => item.id === sectionParam)?.id || "shipping-return";
+  const [activeGuide, setActiveGuide] = useState(defaultSection);
+
+  useEffect(() => {
+    if (sectionParam) {
+      const foundSection = GUIDE_ITEMS.find((item) => item.id === sectionParam);
+      if (foundSection) {
+        setActiveGuide(foundSection.id);
+      }
+    }
+  }, [sectionParam]);
 
   const ActiveComponent = GUIDE_ITEMS.find((item) => item.id === activeGuide)?.component || ShippingReturnPolicy;
   const activeClasses =
@@ -17,7 +31,7 @@ export default function GuidesPage() {
     "data-[state=active]:!text-yellow-600 dark:data-[state=active]:!text-[#FFC107] dark:data-[state=active]:bg-white/10 text-gray-500 dark:text-dark-text px-5 py-3 rounded-none transition";
 
   return (
-    <IndexLayout>
+    <>
       <IntroductionCard
         desc="تمام مراحل خرید، ارسال و استفاده از خدمات میکرولس به‌صورت ساده و مرحله‌به‌مرحله"
         title={"راهنمای خدمات سایت"}
@@ -61,7 +75,8 @@ export default function GuidesPage() {
           <div className="pt-10 pb-20 lg:hidden">
             <Tabs
               dir="rtl"
-              defaultValue="shipping-return"
+              value={activeGuide}
+              onValueChange={setActiveGuide}
               className=" w-full rounded-xl overflow-hidden shadow rounded-t-xl"
             >
               <TabsList className="bg-white dark:border-b-2 dark:border-white/10 dark:bg-dark-box w-full justify-between  h-full  rounded-b-none p-0 flex flex-nowrap overflow-auto">
@@ -82,6 +97,16 @@ export default function GuidesPage() {
           </div>
         </div>
       </div>
+    </>
+  );
+}
+
+export default function GuidesPage() {
+  return (
+    <IndexLayout>
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center">در حال بارگذاری...</div>}>
+        <GuidesContent />
+      </Suspense>
     </IndexLayout>
   );
 }

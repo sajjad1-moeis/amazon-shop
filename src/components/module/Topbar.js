@@ -3,12 +3,13 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { LanguagesIcon, MenuIcon } from "lucide-react";
-import { ArrowDown2, ArrowLeft2, BitcoinConvert, DiscountShape } from "iconsax-reactjs";
+import { ArrowDown2, BitcoinConvert, DiscountShape } from "iconsax-reactjs";
 import Image from "next/image";
 import Link from "next/link";
 import SwitchButton from "../SwitchButton";
 import DiscountAmazonButton from "../DiscountAmazonButton";
 import MegaMenu from "./MegaMenu";
+import ScrapingDropdown from "./ScrapingDropdown";
 
 export default function TopBar() {
   const categoriesTrigger = (
@@ -77,16 +78,7 @@ export default function TopBar() {
               </Button>
             </Link>
 
-            <Link href={"/products"}>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="rounded-xl  px-3 py-1 flex-between max-md:px-0 max-md:text-xs"
-              >
-                مشاهده همه
-                <ArrowLeft2 />
-              </Button>
-            </Link>
+            <ScrapingDropdown />
           </div>
           {/* Left Section */}
           <div className="max-lg:hidden">

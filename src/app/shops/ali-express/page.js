@@ -10,6 +10,7 @@ function Page() {
   return (
     <ShopsLayout
       title={"علی اکسپرس"}
+      searchLogo={"/image/Header/aliEx.png"}
       direct={
         <>
           <Categories />
@@ -18,7 +19,7 @@ function Page() {
         </>
       }
       removeStepBuyComp
-      src={"/image/AliEx/aliExShop.png"}
+      src={"/image/AliEx/aliExShop.jpg"}
     >
       <div>
         <ProductPurchaseForm />

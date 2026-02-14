@@ -1,10 +1,28 @@
 import IndexLayout from "@/layout/IndexLayout";
+import { createMetadata } from "@/utils/metadata";
 import BestSellingGadgets from "@/template/Categories/BestSellingGadgets";
 import BiggestDiscounts from "@/template/Categories/BiggestDiscounts";
 import Category from "@/template/Categories/category";
 import MicroLessDescription from "@/template/Categories/MicroLessDescription";
 import Image from "next/image";
 import React from "react";
+
+export async function generateMetadata() {
+  return createMetadata({
+    title: "دسته‌بندی محصولات | خرید از آمازون به تفکیک دسته",
+    description:
+      "بررسی و خرید محصولات از آمازون به تفکیک دسته‌بندی. کالای دیجیتال، پوشاک، لوازم خانگی و هزاران محصول دیگر با ارسال سریع به ایران.",
+    keywords: [
+      "دسته‌بندی محصولات",
+      "دسته‌بندی",
+      "کالای دیجیتال",
+      "محصولات آمازون",
+      "خرید آنلاین",
+      "میکرولس",
+    ],
+    url: "/categories",
+  });
+}
 
 function CateGoryPage() {
   return (

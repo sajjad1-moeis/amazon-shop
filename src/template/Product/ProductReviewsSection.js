@@ -1,3 +1,5 @@
+"use client"
+
 import { Calendar, MessageCircle, ThumbsUp, ThumbsDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -84,9 +86,7 @@ export default function ProductReviewsSection() {
       className="w-full mt-20 bg-transparent md:bg-white dark:bg-transparent rounded-2xl md:shadow-box md:border border-gray-200 dark:border-dark-stroke md:p-6 lg:p-8"
     >
       {/* Header */}
-      <h2 className="text-xl md:text-2xl text-gray-800 dark:text-dark-titre text-right">
-        امتیاز و نظرات کاربران دیگر
-      </h2>
+      <h2 className="text-xl md:text-2xl text-gray-800 dark:text-dark-titre text-right">امتیاز و نظرات کاربران دیگر</h2>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-6">
         {/* Right Column - Overall Rating and Call to Action */}
         <div className="lg:col-span-1 space-y-6">

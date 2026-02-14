@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Bag2, CardPos, Shield, Truck } from "iconsax-reactjs";
-import Link from "next/link";
 
 const productDescription = `ساعت Invicta Reserve 0361 ترکیبی از قدرت، ظرافت و عملکرد دقیق است. این ساعت با موتور کرونوگراف سوئیسی و مقاومت در برابر آب، برای مردانی طراحی شده که به کیفیت و جزئیات اهمیت می‌دهند. قاب ضخیم استیل و بند محکم، همراه با صفحه چند لایه و عقربه‌های براق، ظاهری لوکس و حرفه‌ای ایجاد می‌کند. این ساعت بخشی از سری Reserve است که توسط Invicta برای علاقه‌مندان به دقت و دوام طراحی شده است.`;
 
@@ -38,27 +37,26 @@ const serviceGuarantees = [
 ];
 
 export default function AccordionDemo() {
-  const [isExpanded, setIsExpanded] = useState(true);
-  const [accordionValue, setAccordionValue] = useState(["item-1", "item-2"]);
+  const [openItems, setOpenItems] = useState(["item-1", "item-2"]);
 
-  const handleShowLess = () => {
-    setIsExpanded(false);
-    setAccordionValue([]);
+  const handleValueChange = (value) => {
+    setOpenItems(value);
   };
 
-  const handleShowMore = () => {
-    setIsExpanded(true);
-    setAccordionValue(["item-1", "item-2"]);
+  const handleToggleAll = () => {
+    if (openItems.length === 2) 
+      setOpenItems([]);
+    else 
+    
+      setOpenItems(["item-1", "item-2"]);
   };
+
+  const isAllOpen = openItems.length === 2;
+
 
   return (
     <div>
-      <Accordion
-        type="multiple"
-        className="w-full"
-        value={accordionValue}
-        onValueChange={setAccordionValue}
-      >
+      <Accordion type="multiple" className="w-full" value={openItems} onValueChange={handleValueChange}>
         <AccordionItem value="item-1">
           <AccordionTrigger>درباره محصول</AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4 text-balance">
@@ -93,10 +91,10 @@ export default function AccordionDemo() {
         <div className="flex-center gap-3">
           <div className="border-b w-full dark:border-dark-stroke border-gray-200" />
           <button
-            onClick={isExpanded ? handleShowLess : handleShowMore}
+            onClick={handleToggleAll}
             className="text-primary-600 flex-none dark:text-primary-300 hover:text-primary-700 dark:hover:text-primary-300 font-medium text-sm transition-colors"
           >
-            {isExpanded ? "نمایش کمتر" : "نمایش بیشتر"}
+            {isAllOpen ? "نمایش کمتر" : "نمایش بیشتر"}
           </button>
           <div className="border-b w-full dark:border-dark-stroke border-gray-200" />
         </div>

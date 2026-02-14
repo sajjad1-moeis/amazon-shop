@@ -1,194 +1,45 @@
-"use client";
-
-import React, { useState, useEffect, useCallback } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import React from "react";
+import { createMetadata } from "@/utils/metadata";
 import IndexLayout from "@/layout/IndexLayout";
-import FiltersSection from "@/components/module/FiltersSection";
-import HeaderSection from "@/template/Products/HeaderSection";
-import ProductList from "@/template/Products/ProductList";
+import ProductsClient from "@/template/Products/ProductsClient";
 
-import { Spinner } from "@/components/ui/spinner";
+export async function generateMetadata({ searchParams }) {
+  // در Next.js 15، searchParams یک Promise است
+  const resolvedSearchParams = await searchParams;
+  const search = resolvedSearchParams?.search || "";
+  const category = resolvedSearchParams?.category || "";
+  
+  let title = "محصولات | خرید از آمازون | میکرولس";
+  let description = "خرید محصولات از آمازون آمریکا و امارات با ارسال سریع به ایران. هزاران محصول اصل و گارانتی شده با بهترین قیمت.";
+  
+  if (search) {
+    title = `جستجوی "${search}" | محصولات | میکرولس`;
+    description = `نتایج جستجو برای "${search}". خرید محصولات از آمازون با ارسال سریع به ایران.`;
+  } else if (category) {
+    title = `${category} | محصولات | میکرولس`;
+    description = `خرید محصولات ${category} از آمازون آمریکا و امارات با ارسال سریع به ایران.`;
+  }
 
-export default function ProductsPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [viewMode, setViewMode] = useState("list");
+  // ساخت URL query string
+  const queryString = resolvedSearchParams && Object.keys(resolvedSearchParams).length > 0
+    ? `?${new URLSearchParams(resolvedSearchParams).toString()}`
+    : "";
 
-  // داده‌های تستی
-  const mockProducts = [
-    {
-      id: "1",
-      name: "ساعت مچی مردانه Invicta مدل ۳۶۱ سری Reserve کرونوگراف",
-      title: "ساعت مچی مردانه Invicta مدل ۳۶۱ سری Reserve کرونوگراف",
-      price: 15370000,
-      discountPrice: 12450000,
-      mainImage: "/image/Home/product.png",
-      image: "/image/Home/product.png",
-      rating: 4.7,
-      reviewCount: 235,
-      inStock: true,
-      badges: ["انتخاب آمازون", "ارسال بین المللی"],
-      seller: "amazon",
-      sellerCountry: "🇦🇪",
-    },
-    {
-      id: "2",
-      name: "ساعت مچی مردانه Invicta مدل ۳۶۱ سری Reserve کرونوگراف",
-      title: "ساعت مچی مردانه Invicta مدل ۳۶۱ سری Reserve کرونوگراف",
-      price: 15370000,
-      discountPrice: 12450000,
-      mainImage: "/image/Home/product.png",
-      image: "/image/Home/product.png",
-      rating: 4.7,
-      reviewCount: 235,
-      inStock: true,
-      badges: ["پرفروش ترین", "ارسال بین المللی"],
-      seller: "amazon",
-      sellerCountry: "🇦🇪",
-    },
-    {
-      id: "3",
-      name: "کنترلر پلی استیشن ۵ - DualSense",
-      title: "کنترلر پلی استیشن ۵ - DualSense",
-      price: 5000000,
-      discountPrice: 4500000,
-      mainImage: "/image/Home/product.png",
-      image: "/image/Home/product.png",
-      rating: 4.5,
-      reviewCount: 128,
-      inStock: true,
-      badges: ["ارسال بین المللی"],
-      seller: "amazon",
-      sellerCountry: "🇦🇪",
-    },
-    {
-      id: "4",
-      name: "ساعت هوشمند سامسونگ Galaxy Watch",
-      title: "ساعت هوشمند سامسونگ Galaxy Watch",
-      price: 8000000,
-      discountPrice: 7500000,
-      mainImage: "/image/Home/product.png",
-      image: "/image/Home/product.png",
-      rating: 4.6,
-      reviewCount: 89,
-      inStock: true,
-      badges: ["پرفروش ترین"],
-      seller: "amazon",
-      sellerCountry: "🇦🇪",
-    },
-  ];
-
-  const mockCategories = [
-    { id: "1", name: "کالای دیجیتال" },
-    { id: "2", name: "کنسول بازی" },
-    { id: "3", name: "ساعت هوشمند" },
-    { id: "4", name: "لوازم گیمینگ" },
-    { id: "5", name: "صوتی و تصویری" },
-  ];
-
-  const mockBrands = [
-    { id: "1", name: "Sony" },
-    { id: "2", name: "Samsung" },
-    { id: "3", name: "Logitech" },
-    { id: "4", name: "Razer" },
-    { id: "5", name: "JBL" },
-  ];
-
-  const [products, setProducts] = useState(mockProducts);
-  const [loading, setLoading] = useState(false);
-  const [categories, setCategories] = useState(mockCategories);
-  const [brands, setBrands] = useState(mockBrands);
-  const [filters, setFilters] = useState({
-    categoryId: searchParams.get("category") || "",
-    brandId: searchParams.get("brand") || "",
-    minPrice: searchParams.get("minPrice") || "",
-    maxPrice: searchParams.get("maxPrice") || "",
-    query: searchParams.get("search") || "",
+  return createMetadata({
+    title,
+    description,
+    keywords: ["محصولات", "آمازون", "خرید", "فروشگاه آنلاین", "محصولات آمریکا", "محصولات امارات"],
+    url: `/products${queryString}`,
   });
-  const [pageNumber, setPageNumber] = useState(parseInt(searchParams.get("page")) || 1);
-  const [pageSize] = useState(20);
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalCount, setTotalCount] = useState(mockProducts.length);
+}
 
-  // فیلتر کردن محصولات بر اساس فیلترها
-  useEffect(() => {
-    let filtered = [...mockProducts];
-
-    if (filters.query) {
-      const query = filters.query.toLowerCase();
-      filtered = filtered.filter((p) => p.name.toLowerCase().includes(query) || p.title.toLowerCase().includes(query));
-    }
-
-    if (filters.categoryId) {
-      // در حالت تستی، همه محصولات را نشان می‌دهیم
-    }
-
-    if (filters.brandId) {
-      // در حالت تستی، همه محصولات را نشان می‌دهیم
-    }
-
-    if (filters.minPrice) {
-      filtered = filtered.filter((p) => (p.discountPrice || p.price) >= parseFloat(filters.minPrice));
-    }
-
-    if (filters.maxPrice) {
-      filtered = filtered.filter((p) => (p.discountPrice || p.price) <= parseFloat(filters.maxPrice));
-    }
-
-    setProducts(filtered);
-    setTotalCount(filtered.length);
-  }, [filters]);
-
-  const handleFilterChange = (filterType, value) => {
-    setFilters((prev) => ({ ...prev, [filterType]: value }));
-    setPageNumber(1);
-  };
-
-  const handleSearch = (query) => {
-    setFilters((prev) => ({ ...prev, query }));
-    setPageNumber(1);
-  };
-
-  const dynamicFilters = [
-    {
-      id: "categoryId",
-      label: "دسته‌بندی",
-      options: [{ id: "", label: "همه" }, ...categories.map((cat) => ({ id: cat.id.toString(), label: cat.name }))],
-    },
-    {
-      id: "brandId",
-      label: "برند",
-      options: [{ id: "", label: "همه" }, ...brands.map((brand) => ({ id: brand.id.toString(), label: brand.name }))],
-    },
-  ];
-
+export default async function ProductsPage({ searchParams }) {
+  // در Next.js 15، searchParams یک Promise است
+  const resolvedSearchParams = await searchParams;
+  
   return (
     <IndexLayout>
-      <HeaderSection
-        setViewMode={setViewMode}
-        viewMode={viewMode}
-        onSearch={handleSearch}
-        searchValue={filters.query}
-      />
-      <div className="grid lg:grid-cols-4 max-lg:px-4 lg:container mt-10 gap-4 md:gap-8">
-        <div className="max-lg:hidden">
-          <FiltersSection
-            dynamicFilters={dynamicFilters}
-            isInventory={true}
-            filters={filters}
-            onFilterChange={handleFilterChange}
-          />
-        </div>
-        <div className="lg:col-span-3">
-          {loading ? (
-            <div className="flex items-center justify-center min-h-[400px]">
-              <Spinner size="lg" />
-            </div>
-          ) : (
-            <ProductList viewMode={viewMode} products={products} totalCount={totalCount} />
-          )}
-        </div>
-      </div>
+      <ProductsClient searchParams={resolvedSearchParams} />
     </IndexLayout>
   );
 }

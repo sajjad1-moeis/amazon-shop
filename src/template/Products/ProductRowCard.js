@@ -7,7 +7,7 @@ import React from "react";
 function ProductRowCard() {
   return (
     <Card className="rounded-xl border overflow-hidden border-gray-200 dark:border-dark-field  dark:bg-dark-box shadow-sm hover:shadow-md transition p-0">
-      <CardContent className="p-0 grid grid-cols-4 gap-4 ">
+      <div className="p-3 grid grid-cols-4 gap-4 ">
         <div className="relative aspect-square max-h-64 w-full">
           <Image
             src="/image/Home/product.png"
@@ -18,7 +18,7 @@ function ProductRowCard() {
         </div>
 
         {/* LEFT SECTION (INFO) */}
-        <div className="md:col-span-3 p-3">
+        <div className="md:col-span-3">
           <div className="flex flex-col gap-3 border-b pb-4 mb-4 border-gray-200 ">
             {/* TITLE */}
             <h2 className="font-bold text-lg  text-neutral-800 dark:text-dark-titre">
@@ -79,7 +79,7 @@ function ProductRowCard() {
             </div>
           </div>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 }

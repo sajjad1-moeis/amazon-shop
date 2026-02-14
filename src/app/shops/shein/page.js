@@ -10,8 +10,10 @@ function Page() {
   return (
     <ShopsLayout
       direct={<DirectPurchase />}
+      searchLogo={"/image/Header/Shein.png"}
       title={"شین امارات"}
-      src="/image/Shops/shein.png"
+      isWhite
+      src="/image/Shops/shein.jpg"
       imgClassName={"max-md:max-h-44"}
     >
       <div>

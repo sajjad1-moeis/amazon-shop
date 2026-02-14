@@ -7,7 +7,7 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/
 
 const shops = [
   { name: "همه", id: "a1" },
-  { name: "آمازون عمارات", id: "a2" },
+  { name: "آمازون امارات", id: "a2" },
   { name: "آمازون آمریکا", id: "a3" },
 ];
 

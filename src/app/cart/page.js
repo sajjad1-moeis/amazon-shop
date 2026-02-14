@@ -13,7 +13,7 @@ function Page() {
               className="flex-between text-gray-700 dark:text-dark-title py-1.5 px-3 w-fit rounded"
               style={{ background: "linear-gradient(90deg, rgba(137, 149, 214, 0) 0%, rgba(137, 149, 214, 0.3) 100%)" }}
             >
-              🟩 خرید از فروشگاه امازون امارات
+              <img src="/image/emarat.png" className="w-5 ml-2" /> خرید از فروشگاه امازون امارات
             </div>
             <ProductList />
           </div>

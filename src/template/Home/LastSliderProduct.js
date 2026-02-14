@@ -5,7 +5,7 @@ import ProductCard from "@/components/ProductCard";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
-import { Navigation } from "swiper/modules";
+import { Navigation, Autoplay } from "swiper/modules";
 
 function LastSliderProduct() {
   return (
@@ -15,11 +15,11 @@ function LastSliderProduct() {
         <div className="bg-primary-600 dark:bg-[#32419166] p-4 flex-between">
           <p className="text-xl lg:text-2xl text-white">پرینتر های سه بعدی</p>
 
-          <div className="grid grid-cols-4 gap-4 max-md:hidden">
+          <div className="grid grid-cols-4 gap-4 max-lg:hidden">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="relative  rounded-md max-w-28">
+              <div key={i} className="relative my-auto rounded-md max-w-28">
                 <Image
-                  src="/image/Home/lastSlider.png"
+                  src={`/image/Home/logo${i + 1}.png`}
                   width={150}
                   height={30}
                   alt={`three-d-printer-banner-${i + 1}`}
@@ -41,6 +41,11 @@ function LastSliderProduct() {
           <Swiper
             slidesPerView={1.5}
             spaceBetween={10}
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+            }}
+            loop={true}
             navigation={{
               nextEl: ".categories .next-slide",
               prevEl: ".categories .prev-slide",
@@ -49,7 +54,7 @@ function LastSliderProduct() {
               640: { slidesPerView: 2, spaceBetween: 20 },
               768: { slidesPerView: 3 },
             }}
-            modules={[Navigation]}
+            modules={[Navigation, Autoplay]}
             className="mySwiper"
           >
             {[...Array(9)].map((_, i) => (
@@ -61,8 +66,13 @@ function LastSliderProduct() {
         </div>
         <div className="flex flex-nowrap overflow-auto gap-4 lg:hidden bg-primary-600 p-3">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="relative  rounded-md">
-              <Image src="/image/Home/lastSlider.png" width={150} height={30} alt={`three-d-printer-banner-${i + 1}`} />
+            <div key={i} className="relative  rounded-md my-auto">
+              <Image
+                src={`/image/Home/logo${i + 1}.png`}
+                width={150}
+                height={30}
+                alt={`three-d-printer-banner-${i + 1}`}
+              />
             </div>
           ))}
         </div>

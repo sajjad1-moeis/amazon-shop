@@ -4,7 +4,7 @@ import Link from "next/link";
 import React from "react";
 
 export const metadata = {
-  title: "صفحه یافت نشد | میکروالس",
+  title: "صفحه یافت نشد | میکرولس",
   description: "صفحه مورد نظر شما یافت نشد. به صفحه اصلی بازگردید.",
 };
 
