@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { cn } from "@/lib/utils";
 
 const timePeriods = [
@@ -50,21 +51,11 @@ const chartData = {
   ],
 };
 
-// Custom Tooltip component
-const CustomTooltip = ({ active, payload }) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-white dark:bg-dark-box border border-gray-200 dark:border-dark-stroke rounded-lg p-3 shadow-lg">
-        <p className="text-sm font-semibold text-gray-900 dark:text-dark-title">
-          {payload[0].payload.name}
-        </p>
-        <p className="text-sm text-primary-600 dark:text-primary-400">
-          نرخ: {payload[0].value.toLocaleString("fa-IR")} تومان
-        </p>
-      </div>
-    );
-  }
-  return null;
+const chartConfig = {
+  value: {
+    label: "نرخ",
+    color: "hsl(var(--chart-1))",
+  },
 };
 
 export default function RateChart() {
@@ -75,53 +66,50 @@ export default function RateChart() {
   return (
     <div className="bg-white dark:bg-dark-box rounded-2xl p-4 md:p-6 shadow-md border border-gray-200 dark:border-dark-stroke">
       {/* Tabs */}
-      <div className="flex flex-wrap gap-2 md:gap-4 mb-6 md:mb-8">
-        {timePeriods.map((period) => (
-          <button
-            key={period.id}
-            onClick={() => setSelectedPeriod(period.id)}
-            className={cn(
-              "px-4 py-2 rounded-lg text-sm md:text-base font-medium transition-colors",
-              selectedPeriod === period.id
-                ? "bg-primary-500 text-white"
-                : "bg-gray-100 dark:bg-dark-field text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-stroke",
-            )}
-          >
-            {period.label}
-          </button>
-        ))}
+      <div class="flex-between mb-6 md:mb-8">
+        <p className="text-sm md:text-lg lg:text-2xl">نمودار تغییرات نرخ درهم امارات</p>
+        <div className="flex flex-wrap border bg-gray-100 rounded-lg overflow-hidden">
+          {timePeriods.map((period) => (
+            <button
+              key={period.id}
+              onClick={() => setSelectedPeriod(period.id)}
+              className={cn(
+                "px-4 py-2  text-sm md:text-base font-medium transition-colors",
+                selectedPeriod === period.id
+                  ? "bg-primary-100 text-primary-600"
+                  : "bg-white dark:bg-dark-field text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-stroke",
+              )}
+            >
+              {period.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Chart Container */}
-      <div className="h-64 md:h-80 w-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={currentData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" className="dark:stroke-dark-stroke" />
-            <XAxis
-              dataKey="name"
-              tick={{ fill: "#6b7280", fontSize: 12 }}
-              className="dark:text-dark-text"
-              stroke="#9ca3af"
-            />
+      <div class="bg-gray-50 p-2 rounded-lg border">
+        <ChartContainer config={chartConfig} className="h-64 md:h-80 w-full">
+          <LineChart data={currentData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="0 0" />
+            <XAxis dataKey="name" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} />
             <YAxis
+              direction={"ltr"}
               domain={[100, 500]}
               ticks={[100, 200, 300, 400, 500]}
-              tick={{ fill: "#6b7280", fontSize: 12 }}
-              className="dark:text-dark-text"
-              stroke="#9ca3af"
+              tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
               tickFormatter={(value) => value.toLocaleString("fa-IR")}
             />
-            <Tooltip content={<CustomTooltip />} />
+            <ChartTooltip content={<ChartTooltipContent />} />
             <Line
               type="monotone"
               dataKey="value"
-              stroke="#3b82f6"
+              stroke="#6171C8"
               strokeWidth={2}
-              dot={{ fill: "#3b82f6", r: 4, strokeWidth: 2, stroke: "#ffffff" }}
-              activeDot={{ r: 6, fill: "#3b82f6" }}
+              dot={{ fill: "#fff", r: 4, strokeWidth: 2, stroke: "#8995D6" }}
+              activeDot={{ r: 6 }}
             />
           </LineChart>
-        </ResponsiveContainer>
+        </ChartContainer>
       </div>
 
       {/* Source Label */}
