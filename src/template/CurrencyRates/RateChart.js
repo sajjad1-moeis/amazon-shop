@@ -73,7 +73,7 @@ export default function RateChart() {
           نمودار تغییرات نرخ درهم امارات
         </p>
         {/* Mobile: Select */}
-        <div className="w-full md:hidden">
+        <div className="max-md:w-full lg:hidden">
           <Select value={selectedPeriod} onValueChange={setSelectedPeriod} dir="rtl">
             <SelectTrigger className={cn("!w-full", filterSelectTriggerStyles)}>
               <SelectValue placeholder="انتخاب بازه زمانی" />
@@ -88,7 +88,7 @@ export default function RateChart() {
           </Select>
         </div>
         {/* Desktop: Buttons */}
-        <div className="hidden md:flex flex-wrap border border-gray-200 dark:border-dark-stroke bg-gray-100 dark:bg-dark-field rounded-lg overflow-hidden">
+        <div className="hidden lg:flex flex-wrap border border-gray-200 dark:border-dark-stroke bg-gray-100 dark:bg-dark-field rounded-lg overflow-hidden">
           {timePeriods.map((period) => (
             <button
               key={period.id}
@@ -96,8 +96,8 @@ export default function RateChart() {
               className={cn(
                 "px-4 py-2 text-sm lg:text-base font-medium transition-colors",
                 selectedPeriod === period.id
-                  ? "bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400"
-                  : "bg-white dark:bg-dark-box text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-stroke",
+                  ? "bg-primary-100 dark:bg-dark-blue text-primary-600 dark:text-dark-title"
+                  : "bg-white dark:bg-dark-field text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-stroke",
               )}
             >
               {period.label}
@@ -137,9 +137,7 @@ export default function RateChart() {
       </div>
 
       {/* Source Label */}
-      <div className="mt-4 text-xs md:text-sm text-gray-500 dark:text-gray-400 text-right">
-        مرجع: آمازون (امارات)
-      </div>
+      <div className="mt-4 text-xs md:text-sm text-gray-500 dark:text-gray-400 text-right">مرجع: آمازون (امارات)</div>
     </div>
   );
 }

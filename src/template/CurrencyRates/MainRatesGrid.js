@@ -72,14 +72,14 @@ export default function MainRatesGrid() {
 
             <div className="flex items-center gap-2">
               {currency.changeType === "positive" ? (
-                <div className="flex-between gap-1 bg-green-100 dark:bg-green-950/20 dark:border-green-700 w-full p-2 rounded-lg text-green-600 dark:text-green-400">
+                <div className="flex-between gap-1 bg-green-100 dark:bg-dark-green dark:border-green-700 w-full p-2 rounded-lg text-green-600 dark:text-green-300">
                   <span className="text-sm md:text-base">
                     +{currency.change}% {currency.comparison}
                   </span>
                   <ArrowUp />
                 </div>
               ) : (
-                <div className="flex-between gap-1 bg-red-100 w-full p-2 rounded-lg text-red-600 dark:bg-red-950/20 dark:border-red-700 dark:text-red-400">
+                <div className="flex-between gap-1 bg-red-100 w-full p-2 rounded-lg text-red-600 dark:bg-dark-red dark:border-red-700 dark:text-red-300">
                   <span className="text-sm md:text-base">
                     -{currency.change}% {currency.comparison}
                   </span>

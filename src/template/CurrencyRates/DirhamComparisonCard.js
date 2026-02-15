@@ -36,10 +36,14 @@ export default function DirhamComparisonCard() {
 
       <div className="space-y-3 md:space-y-4 h-full">
         {/* باکس میکرولس */}
-        <div className={`border bg-green-50 dark:bg-green-950/20 border-green-300 dark:border-green-700 rounded-xl p-3 md:p-4`}>
+        <div
+          className={`border bg-green-50 dark:bg-dark-green border-green-300 dark:border-green-500 rounded-xl p-3 md:p-4`}
+        >
           <div className="flex-center flex-col justify-between h-full">
             <img src="/image/logo-black.png" className="max-w-16 md:max-w-20 lg:max-w-24 dark:invert" alt="" />
-            <p className={`text-base md:text-2xl lg:text-3xl font-bold mt-3 md:mt-5 text-green-600 dark:text-green-500`}>
+            <p
+              className={`text-base md:text-2xl lg:text-3xl font-bold mt-3 md:mt-5 text-green-600 dark:text-green-300`}
+            >
               {dirhamComparison[0].rate} ت
             </p>
           </div>
@@ -52,7 +56,7 @@ export default function DirhamComparisonCard() {
             <div className="flex-center flex-col justify-between h-full">
               <img src="/image/tala.png" className="max-w-16 md:max-w-20 lg:max-w-24" alt="" />
 
-              <p className={`text-sm md:text-xl lg:text-2xl mt-3 md:mt-5 text-red-600 dark:text-red-500`}>
+              <p className={`text-sm md:text-xl lg:text-2xl mt-3 md:mt-5 text-red-600 dark:text-red-300`}>
                 {dirhamComparison[0].rate} ت
               </p>
             </div>
@@ -61,8 +65,8 @@ export default function DirhamComparisonCard() {
           {/* باکس tgju */}
           <div className={`bg-gray-100 dark:bg-dark-field h-full rounded-xl p-3 md:p-4`}>
             <div className="flex-center flex-col justify-between h-full">
-              <p className="text-lg md:text-xl lg:text-2xl text-gray-900 dark:text-dark-title">BONBAST</p>
-              <p className={`text-sm md:text-xl lg:text-2xl mt-3 md:mt-5 text-dark-primary dark:text-primary-400`}>
+              <p className="text-lg md:text-xl lg:text-2xl text-gray-900 dark:text-white">BONBAST</p>
+              <p className={`text-sm md:text-xl lg:text-2xl mt-3 md:mt-5 text-dark-primary dark:text-dark-title`}>
                 {dirhamComparison[0].rate} ت
               </p>
             </div>

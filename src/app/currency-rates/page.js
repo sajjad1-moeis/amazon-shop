@@ -4,6 +4,7 @@ import DirhamComparisonCard from "@/template/CurrencyRates/DirhamComparisonCard"
 import CurrencyRatesTable from "@/template/CurrencyRates/CurrencyRatesTable";
 import DescriptionSection from "@/template/CurrencyRates/DescriptionSection";
 import MainRatesGrid from "@/template/CurrencyRates/MainRatesGrid";
+import CurrencyNotificationBanner from "@/template/CurrencyRates/CurrencyNotificationBanner";
 import Image from "next/image";
 
 export default function CurrencyRatesPage() {
@@ -37,6 +38,9 @@ export default function CurrencyRatesPage() {
 
           {/* بخش توضیحات - پایین */}
           <DescriptionSection />
+
+          {/* بنر اعلان نرخ ارز - آخرین کامپوننت */}
+          <CurrencyNotificationBanner />
         </div>
       </div>
     </IndexLayout>
