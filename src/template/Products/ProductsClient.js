@@ -1,18 +1,20 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import FiltersSection from "@/components/module/FiltersSection";
 import HeaderSection from "@/template/Products/HeaderSection";
 import ProductList from "@/template/Products/ProductList";
 import { Spinner } from "@/components/ui/spinner";
+import { productService } from "@/services/product/productService";
 
 export default function ProductsClient({ searchParams: serverSearchParams }) {
   const router = useRouter();
   const clientSearchParams = useSearchParams();
   const [viewMode, setViewMode] = useState("grid");
-  
-  // داده‌های تستی
+  const [searchError, setSearchError] = useState(null);
+
+  // داده‌های تستی (فقط وقتی جستجو خالی است نمایش داده می‌شود)
   const mockProducts = [
     {
       id: "1",
@@ -106,43 +108,111 @@ export default function ProductsClient({ searchParams: serverSearchParams }) {
   const [pageNumber, setPageNumber] = useState(parseInt(clientSearchParams.get("page")) || 1);
   const [totalCount, setTotalCount] = useState(mockProducts.length);
 
-  // فیلتر کردن محصولات بر اساس فیلترها
+  // جستجوی اسکرپر: وقتی در URL پارامتر search وجود دارد از API آمازون نتایج بگیر
+  const searchParam = clientSearchParams.get("search") ?? "";
+  const searchQuery = typeof searchParam === "string" ? searchParam.trim() : "";
+
   useEffect(() => {
+    if (searchQuery.length < 2) {
+      setProducts(mockProducts);
+      setTotalCount(mockProducts.length);
+      setSearchError(null);
+      setLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    setLoading(true);
+    setSearchError(null);
+
+    productService
+      .searchAmazon(searchQuery)
+      .then((res) => {
+        if (cancelled) return;
+        if (!res?.success) {
+          setProducts([]);
+          setTotalCount(0);
+          setSearchError(res?.message || "خطا در دریافت نتایج جستجو");
+          return;
+        }
+        const payload = res.data;
+        const list = payload?.data ?? payload?.Data ?? [];
+        const items = Array.isArray(list) ? list : [];
+        setProducts(items);
+        setTotalCount(items.length);
+        setSearchError(null);
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        setProducts([]);
+        setTotalCount(0);
+        const status = err?.response?.status;
+        const msg =
+          status === 429
+            ? "محدودیت تعداد درخواست. لطفاً چند دقیقه دیگر تلاش کنید."
+            : status === 503
+              ? "سرویس جستجو در حال حاضر در دسترس نیست."
+              : status === 408
+                ? "زمان درخواست به پایان رسید. دوباره تلاش کنید."
+                : "خطا در دریافت نتایج. لطفاً دوباره تلاش کنید.";
+        setSearchError(msg);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [searchQuery]);
+
+  // وقتی جستجو خالی است و فقط فیلترها عوض می‌شوند، روی mock فیلتر اعمال کن
+  useEffect(() => {
+    if (searchQuery.length >= 2) return;
     let filtered = [...mockProducts];
-
-    if (filters.query) {
-      const query = filters.query.toLowerCase();
-      filtered = filtered.filter((p) => p.name.toLowerCase().includes(query));
+    if (filters.query && typeof filters.query === "string") {
+      const q = filters.query.toLowerCase();
+      filtered = filtered.filter((p) => (p.name || p.title || "").toLowerCase().includes(q));
     }
-
-    if (filters.categoryId) {
-      // در حالت تستی، همه محصولات را نشان می‌دهیم
+    const minP = parseFloat(filters.minPrice);
+    if (Number.isFinite(minP)) {
+      filtered = filtered.filter((p) => Number(p.discountPrice || p.price || 0) >= minP);
     }
-
-    if (filters.brandId) {
-      // در حالت تستی، همه محصولات را نشان می‌دهیم
+    const maxP = parseFloat(filters.maxPrice);
+    if (Number.isFinite(maxP)) {
+      filtered = filtered.filter((p) => Number(p.discountPrice || p.price || 0) <= maxP);
     }
-
-    if (filters.minPrice) {
-      filtered = filtered.filter((p) => (p.discountPrice || p.price) >= parseFloat(filters.minPrice));
-    }
-
-    if (filters.maxPrice) {
-      filtered = filtered.filter((p) => (p.discountPrice || p.price) <= parseFloat(filters.maxPrice));
-    }
-
     setProducts(filtered);
     setTotalCount(filtered.length);
-  }, [filters]);
+  }, [filters, searchQuery]);
 
   const handleFilterChange = (filterType, value) => {
     setFilters((prev) => ({ ...prev, [filterType]: value }));
     setPageNumber(1);
   };
 
+  const searchDebounceRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    };
+  }, []);
+
   const handleSearch = (query) => {
-    setFilters((prev) => ({ ...prev, query }));
+    const q = typeof query === "string" ? String(query).trim().slice(0, 200) : "";
+    setFilters((prev) => ({ ...prev, query: q }));
     setPageNumber(1);
+
+    if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    searchDebounceRef.current = setTimeout(() => {
+      if (q.length >= 2) {
+        router.replace(`/products?search=${encodeURIComponent(q)}`, { scroll: false });
+      } else if (q.length === 0) {
+        router.replace("/products", { scroll: false });
+      }
+      searchDebounceRef.current = null;
+    }, 400);
   };
 
   const dynamicFilters = [
@@ -176,12 +246,22 @@ export default function ProductsClient({ searchParams: serverSearchParams }) {
           />
         </div>
         <div className="lg:col-span-3">
+          {searchError && searchQuery.length >= 2 && (
+            <div className="mb-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-4 py-3 text-sm text-red-700 dark:text-red-300">
+              {searchError}
+            </div>
+          )}
           {loading ? (
             <div className="flex items-center justify-center min-h-[400px]">
               <Spinner size="lg" />
             </div>
           ) : (
-            <ProductList viewMode={viewMode} products={products} totalCount={totalCount} />
+            <ProductList
+              viewMode={viewMode}
+              products={products}
+              totalCount={totalCount}
+              searchMode={searchQuery.length >= 2}
+            />
           )}
         </div>
       </div>

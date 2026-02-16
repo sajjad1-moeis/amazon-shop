@@ -11,31 +11,41 @@ import { productService } from "@/services/product/productService";
 function ProductCard({ className, product, badges }) {
   const router = useRouter();
 
-  const productId = product?.id || product?.productId || 1;
-  const image = product?.image || product?.mainImage || "/image/Home/product.png";
-  const title = product?.name || product?.title || "ساعت مچی مردانه Invicta مدل ۳۶۱ سری Reserve کرونوگراف";
-  const price = product?.price || 15370000;
-  const discountPrice = product?.discountPrice || 12450000;
-  const rating = product?.rating || 4.7;
-  const reviewCount = product?.reviewCount || product?.reviewsCount || 235;
-  // اول badges prop را چک می‌کنیم، بعد product.badges، و در نهایت مقدار پیش‌فرض
-  const productBadges = badges !== undefined ? badges : product?.badges || ["ارسال بین المللی"];
+  const productId = product?.id ?? product?.productId ?? null;
+  const image = product?.image_url || product?.image || product?.mainImage || "/image/Home/product.png";
+  const title =
+    product?.title || product?.name || "نام محصول";
+  // قیمت نمایشی (مبلغ پرداختی) و قیمت اصلی (برای خط خورده)
+  const salePriceRaw = product?.current_price ?? product?.discountPrice ?? product?.price;
+  const listPriceRaw = product?.original_price ?? product?.price ?? product?.discountPrice;
+  const salePrice = Math.max(0, Number(salePriceRaw) || 0);
+  const listPrice = Math.max(0, Number(listPriceRaw) || salePrice || 0);
+  const price = listPrice;
+  const discountPrice = salePrice;
+
+  const ratingNum = Number(product?.rating);
+  const rating = Number.isFinite(ratingNum) && ratingNum >= 0 ? Math.min(5, ratingNum) : 0;
+  const reviewCountNum = Number(product?.reviews_count ?? product?.reviewCount);
+  const reviewCount = Number.isInteger(reviewCountNum) && reviewCountNum >= 0 ? reviewCountNum : 0;
+  const rawBadges = badges !== undefined ? badges : product?.badges;
+  const productBadges = Array.isArray(rawBadges)
+    ? rawBadges.filter((b) => typeof b === "string").slice(0, 5)
+    : ["ارسال بین المللی"];
   const seller = product?.seller || "amazon";
   const sellerCountry = product?.sellerCountry || "🇦🇪";
 
   const calculateDiscount = () => {
-    if (discountPrice && price && discountPrice < price) {
-      const discount = ((price - discountPrice) / price) * 100;
-      return Math.round(discount);
-    }
-    return 0;
+    if (!Number.isFinite(listPrice) || !Number.isFinite(salePrice) || listPrice <= 0) return 0;
+    if (salePrice >= listPrice) return 0;
+    return Math.min(99, Math.round(((listPrice - salePrice) / listPrice) * 100));
   };
 
   const discount = calculateDiscount();
 
-  const formatPrice = (price) => {
-    if (!price && price !== 0) return "قیمت نامشخص";
-    return `${Number(price).toLocaleString("fa-IR")} تومان`;
+  const formatPrice = (value) => {
+    const n = Number(value);
+    if (!Number.isFinite(n) || n < 0) return "قیمت نامشخص";
+    return `${n.toLocaleString("fa-IR")} تومان`;
   };
 
   const handleProductClick = async (e) => {
@@ -68,34 +78,37 @@ function ProductCard({ className, product, badges }) {
         search_term: product?.search_term,
       };
 
-      // اگر ASIN نداریم، همان رفتار قبلی (رفتن به صفحه محصول با productId)
       if (!scraperPayload.asin) {
-        router.push(`/product/${productId}`);
+        const fallbackId = productId ?? product?.asin ?? "0";
+        router.push(`/product/${fallbackId}`);
         return;
       }
 
       const response = await productService.saveIfNotExistsFromScraper(scraperPayload);
 
       const savedProductId =
-        response?.data?.productId ||
-        response?.data?.id ||
-        response?.data?.productID ||
+        response?.data?.productId ??
+        response?.data?.id ??
+        response?.data?.productID ??
         response?.data?.ProductId;
 
-      if (response?.success && savedProductId) {
+      if (response?.success && savedProductId != null) {
         router.push(`/product/${savedProductId}`);
       } else {
-        // اگر ذخیره موفق نبود، حداقل با ASIN به صفحه fallback برویم (در آینده می‌توان route مخصوص ASIN اضافه کرد)
-        router.push(`/product/${productId}`);
+        const fallbackId = productId ?? product?.asin ?? "0";
+        router.push(`/product/${fallbackId}`);
       }
     } catch (error) {
       console.error("Error saving product before navigation:", error);
-      router.push(`/product/${productId}`);
+      const fallbackId = productId ?? product?.asin ?? "0";
+      router.push(`/product/${fallbackId}`);
     }
   };
 
+  const hrefId = productId ?? product?.asin ?? "0";
+
   return (
-    <Link href={`/product/${productId}`} onClick={handleProductClick}>
+    <Link href={`/product/${hrefId}`} onClick={handleProductClick}>
       <div
         className={cn(
           "shadow-box rounded-xl flex flex-col cursor-pointer hover:shadow-lg transition-shadow bg-white dark:bg-dark-box h-full",
@@ -142,7 +155,9 @@ function ProductCard({ className, product, badges }) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1">
               <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-              <span className="text-sm font-medium text-gray-900 dark:text-dark-titre">{rating.toFixed(1)}</span>
+              <span className="text-sm font-medium text-gray-900 dark:text-dark-titre">
+                {Number.isFinite(rating) ? rating.toFixed(1) : "0.0"}
+              </span>
               <span className="text-xs text-gray-500 dark:text-dark-text">({reviewCount})</span>
             </div>
 

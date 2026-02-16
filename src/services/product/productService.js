@@ -54,6 +54,31 @@ export const productService = {
     return client.get(`Product/Search?${searchParams.toString()}`).json();
   },
 
+  /**
+   * جستجوی آمازون از طریق اسکرپر (بک‌اند → پایتون).
+   * برای نمایش نتایج زنده در صفحه محصولات وقتی کاربر جستجو می‌کند.
+   * @param {string} q - عبارت جستجو (حداقل ۲ کاراکتر)
+   * @param {string} [weight] - فیلتر وزن: 'above_2kg' | 'below_2kg'
+   * @returns {Promise<{ success: boolean, data?: { data: Array, fromCache?: boolean, count?: number }, message?: string }>}
+   */
+  searchAmazon: async (q, weight = null) => {
+    const MAX_QUERY_LENGTH = 200;
+    const trimmed = typeof q === "string" ? q.trim() : "";
+    if (trimmed.length < 2) {
+      return { success: false, message: "عبارت جستجو باید حداقل ۲ کاراکتر باشد" };
+    }
+    if (trimmed.length > MAX_QUERY_LENGTH) {
+      return { success: false, message: "عبارت جستجو طولانی است" };
+    }
+    const client = getPublicClient();
+    const params = new URLSearchParams();
+    params.set("q", trimmed);
+    if (weight === "above_2kg" || weight === "below_2kg") {
+      params.set("weight", weight);
+    }
+    return client.get(`amazon/search?${params.toString()}`).json();
+  },
+
   getPaginated: async (params = {}) => {
     const {
       pageNumber = 1,
