@@ -32,6 +32,8 @@ ENV NEXT_TELEMETRY_DISABLED=${NEXT_TELEMETRY_DISABLED}
 ENV NODE_ENV=${NODE_ENV}
 ENV NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+# Limit Node memory during build to avoid OOM on low-RAM servers
+ENV NODE_OPTIONS="--max-old-space-size=2048"
 
 # Build the application
 RUN npm run build

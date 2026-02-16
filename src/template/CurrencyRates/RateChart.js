@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { cn } from "@/lib/utils";
 
 const timePeriods = [
@@ -51,11 +50,15 @@ const chartData = {
   ],
 };
 
-const chartConfig = {
-  value: {
-    label: "نرخ",
-    color: "hsl(var(--chart-1))",
-  },
+const CustomTooltip = ({ active, payload }) => {
+  if (!active || !payload?.length) return null;
+  const item = payload[0];
+  return (
+    <div className="bg-white dark:bg-dark-box border border-gray-200 dark:border-dark-stroke rounded-lg px-3 py-2 shadow-md text-sm">
+      <span className="text-gray-600 dark:text-gray-400">نرخ:</span>{" "}
+      <span className="font-medium">{item.payload.value?.toLocaleString("fa-IR")}</span>
+    </div>
+  );
 };
 
 export default function RateChart() {
@@ -83,27 +86,30 @@ export default function RateChart() {
         ))}
       </div>
 
-      {/* Chart Container */}
-      <ChartContainer config={chartConfig} className="h-64 md:h-80 w-full">
-        <LineChart data={currentData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
-          <XAxis dataKey="name" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} />
-          <YAxis
-            domain={[100, 500]}
-            ticks={[100, 200, 300, 400, 500]}
-            tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
-            tickFormatter={(value) => value.toLocaleString("fa-IR")}
-          />
-          <ChartTooltip content={<ChartTooltipContent />} />
-          <Line
-            type="monotone"
-            dataKey="value"
-            stroke="#3b82f6"
-            strokeWidth={2}
-            dot={{ fill: "#3b82f6", r: 4, strokeWidth: 2, stroke: "hsl(var(--background))" }}
-            activeDot={{ r: 6 }}
-          />
-        </LineChart>
-      </ChartContainer>
+      {/* Chart */}
+      <div className="h-64 md:h-80 min-h-[256px] w-full">
+        <ResponsiveContainer width="100%" height="100%" minHeight={256}>
+          <LineChart data={currentData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200 dark:stroke-dark-stroke" />
+            <XAxis dataKey="name" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} />
+            <YAxis
+              domain={[100, 500]}
+              ticks={[100, 200, 300, 400, 500]}
+              tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
+              tickFormatter={(value) => value.toLocaleString("fa-IR")}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Line
+              type="monotone"
+              dataKey="value"
+              stroke="#3b82f6"
+              strokeWidth={2}
+              dot={{ fill: "#3b82f6", r: 4, strokeWidth: 2, stroke: "hsl(var(--background))" }}
+              activeDot={{ r: 6 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
 
       {/* Source Label */}
       <div className="mt-4 text-xs text-gray-500 dark:text-gray-400 text-right">مرجع: آمازون (امارات)</div>
