@@ -1,4 +1,4 @@
-import { getPublicClient, getAuthenticatedClient } from "../api/client";
+import { getPublicClient, getAuthenticatedClient, getScraperClient, isScraperConfigured } from "../api/client";
 
 export const productService = {
   getAllActive: async () => {
@@ -55,8 +55,9 @@ export const productService = {
   },
 
   /**
-   * جستجوی آمازون از طریق اسکرپر (بک‌اند → پایتون).
-   * برای نمایش نتایج زنده در صفحه محصولات وقتی کاربر جستجو می‌کند.
+   * جستجوی آمازون (طبق IMPLEMENTATION_GUIDE: فرانت مستقیم به پایتون).
+   * اگر NEXT_PUBLIC_SCRAPER_URL تنظیم شده باشد → درخواست مستقیم به Python FastAPI.
+   * وگرنه fallback به بک‌اند .NET (api/amazon/search).
    * @param {string} q - عبارت جستجو (حداقل ۲ کاراکتر)
    * @param {string} [weight] - فیلتر وزن: 'above_2kg' | 'below_2kg'
    * @returns {Promise<{ success: boolean, data?: { data: Array, fromCache?: boolean, count?: number }, message?: string }>}
@@ -70,9 +71,32 @@ export const productService = {
     if (trimmed.length > MAX_QUERY_LENGTH) {
       return { success: false, message: "عبارت جستجو طولانی است" };
     }
-    const client = getPublicClient();
+
     const params = new URLSearchParams();
     params.set("q", trimmed);
+    if (weight === "above_2kg" || weight === "below_2kg") {
+      params.set("weight_filter", weight);
+    }
+
+    if (isScraperConfigured()) {
+      const scraper = getScraperClient();
+      const res = await scraper.get(`api/search?${params.toString()}`).json();
+      // نرمال‌سازی پاسخ پایتون به فرمت یکسان برای ProductsClient
+      const list = Array.isArray(res?.data) ? res.data : [];
+      return {
+        success: Boolean(res?.success),
+        data: {
+          data: list,
+          fromCache: res?.from_cache ?? false,
+          count: res?.count ?? list.length,
+          search_term: res?.search_term ?? trimmed,
+        },
+        message: res?.message ?? res?.error ?? null,
+      };
+    }
+
+    const client = getPublicClient();
+    params.delete("weight_filter");
     if (weight === "above_2kg" || weight === "below_2kg") {
       params.set("weight", weight);
     }

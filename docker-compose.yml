@@ -8,6 +8,7 @@ services:
       args:
         - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL:-http://107.161.175.45}
         - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://107.161.175.45:8080/api}
+        - NEXT_PUBLIC_SCRAPER_URL=${NEXT_PUBLIC_SCRAPER_URL:-http://107.161.175.45:5000}
         - NODE_ENV=production
         - NEXT_TELEMETRY_DISABLED=1
     container_name: amazon-shop-app
@@ -19,6 +20,7 @@ services:
       - NEXT_TELEMETRY_DISABLED=1
       - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL:-http://107.161.175.45}
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://107.161.175.45:8080/api}
+      - NEXT_PUBLIC_SCRAPER_URL=${NEXT_PUBLIC_SCRAPER_URL:-http://107.161.175.45:5000}
       - PORT=3000
       - HOSTNAME=0.0.0.0
     networks:

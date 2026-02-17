@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import Link from "next/link";
 import Image from "next/image";
@@ -21,10 +21,12 @@ import {
   generateProductSchema,
 } from "@/utils/productHelpers";
 
-export const revalidate = 60;
-
 export default function ProductDetailPage({ params }) {
-  const productId = params?.productId;
+  const resolved = use(
+    typeof params?.then === "function" ? params : Promise.resolve(params ?? {})
+  );
+  const productId = resolved?.productId ?? null;
+
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,31 +35,39 @@ export default function ProductDetailPage({ params }) {
   const [selectedImage, setSelectedImage] = useState(0);
 
   useEffect(() => {
-    if (!productId) return;
+    if (!productId) {
+      setLoading(false);
+      setError("شناسه محصول نامعتبر است");
+      return;
+    }
 
-    const fetchProduct = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
 
-        const response = await productService.getById(productId);
+    productService
+      .getById(productId)
+      .then((response) => {
+        if (cancelled) return;
         const dto = response?.data ?? response;
-
         if (!dto || response?.success === false) {
           throw new Error(response?.message || "محصول یافت نشد");
         }
-
         setProduct(dto);
-      } catch (err) {
+      })
+      .catch((err) => {
+        if (cancelled) return;
         console.error("Error loading product details:", err);
         setError(err?.message || "خطا در دریافت اطلاعات محصول");
         setProduct(null);
-      } finally {
-        setLoading(false);
-      }
-    };
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
 
-    fetchProduct();
+    return () => {
+      cancelled = true;
+    };
   }, [productId]);
 
   if (loading) {

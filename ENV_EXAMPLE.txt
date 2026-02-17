@@ -7,10 +7,16 @@
 # ============================================
 # API Configuration
 # ============================================
-# آدرس پایه Backend API
+# آدرس پایه Backend API (سفارش، سبد، پرداخت، ذخیره محصول)
+# Production: http://107.161.175.45:8080/api
+NEXT_PUBLIC_API_URL=http://107.161.175.45:8080/api
+
+# آدرس اسکرپر پایتون (جستجوی مستقیم فرانت → پایتون). بدون /api در انتها.
+# مثال: http://107.161.175.45:5000
+NEXT_PUBLIC_SCRAPER_URL=http://107.161.175.45:5000
+
+# آدرس پایه سایت
 # Production (IP): http://107.161.175.45
-# Production (Domain - بعداً): https://amazon-shop.com
-# Development: http://localhost:5228
 NEXT_PUBLIC_BASE_URL=http://107.161.175.45
 
 # ============================================

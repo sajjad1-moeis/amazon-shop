@@ -16,7 +16,7 @@ function Categories() {
       </h2>
       <div className="grid grid-cols-3 gap-4 lg:hidden">
         {[...Array(9)].map((_, i) => (
-          <div className="relative  h-36 sm:h-60 md:h-80 ">
+          <div key={i} className="relative  h-36 sm:h-60 md:h-80 ">
             <Image src={"/image/Home/category.png"} alt="category" fill className="rounded-md" />
           </div>
         ))}
