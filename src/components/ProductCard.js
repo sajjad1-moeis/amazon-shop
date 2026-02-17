@@ -48,18 +48,26 @@ function ProductCard({ className, product, badges }) {
     return `${n.toLocaleString("fa-IR")} تومان`;
   };
 
-  const handleProductClick = async (e) => {
+  const handleProductClick = (e) => {
     e.preventDefault();
 
-    try {
-      // ساخت payload سازگار با ScraperProductDto (snake_case)
+    const asin = product?.asin || product?.ASIN || product?.amazonASIN || product?.amazonAsin;
+    const hasNumericId = productId != null && String(Number(productId)) === String(productId);
+
+    // محصول از قبل در DB است (id عددی داریم) → مستقیم برو، بدون انتظار
+    if (hasNumericId && productId) {
+      router.push(`/product/${productId}`);
+      return;
+    }
+
+    // محصول از اسکرپ است (ASIN داریم) → ذخیره موقت برای صفحه محصول، بعد فوری ناوگیت
+    if (asin) {
       const rawCurrentPrice =
         product?.current_price ?? product?.price ?? product?.discountPrice ?? discountPrice ?? price;
       const rawOriginalPrice =
         product?.original_price ?? product?.originalPrice ?? product?.price ?? price ?? null;
-
       const scraperPayload = {
-        asin: product?.asin || product?.ASIN || product?.amazonASIN || product?.amazonAsin,
+        asin,
         title: product?.title || product?.name,
         brand: product?.brand,
         current_price: rawCurrentPrice != null ? String(rawCurrentPrice) : null,
@@ -77,35 +85,19 @@ function ProductCard({ className, product, badges }) {
         category: product?.category,
         search_term: product?.search_term,
       };
-
-      if (!scraperPayload.asin) {
-        const fallbackId = productId ?? product?.asin ?? "0";
-        router.push(`/product/${fallbackId}`);
-        return;
-      }
-
-      const response = await productService.saveIfNotExistsFromScraper(scraperPayload);
-
-      const savedProductId =
-        response?.data?.productId ??
-        response?.data?.id ??
-        response?.data?.productID ??
-        response?.data?.ProductId;
-
-      if (response?.success && savedProductId != null) {
-        router.push(`/product/${savedProductId}`);
-      } else {
-        const fallbackId = productId ?? product?.asin ?? "0";
-        router.push(`/product/${fallbackId}`);
-      }
-    } catch (error) {
-      console.error("Error saving product before navigation:", error);
-      const fallbackId = productId ?? product?.asin ?? "0";
-      router.push(`/product/${fallbackId}`);
+      try {
+        if (typeof sessionStorage !== "undefined") {
+          sessionStorage.setItem(`scraperProduct_${asin}`, JSON.stringify(scraperPayload));
+        }
+      } catch (_) {}
+      router.push(`/product/${asin}`);
+      return;
     }
+
+    router.push(`/product/${productId ?? "0"}`);
   };
 
-  const hrefId = productId ?? product?.asin ?? "0";
+  const hrefId = productId ?? product?.asin ?? product?.ASIN ?? "0";
 
   return (
     <Link href={`/product/${hrefId}`} onClick={handleProductClick}>

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { use, useEffect, useState } from "react";
-import { Spinner } from "@/components/ui/spinner";
 import Link from "next/link";
 import Image from "next/image";
 import { Star } from "lucide-react";
@@ -44,22 +43,88 @@ export default function ProductDetailPage({ params }) {
     let cancelled = false;
     setLoading(true);
     setError(null);
+    const isNumericId = /^\d+$/.test(String(productId));
 
+    const applyProduct = (dto) => {
+      if (cancelled) return;
+      setProduct(dto);
+    };
+    const fail = (msg) => {
+      if (cancelled) return;
+      setError(msg || "خطا در دریافت اطلاعات محصول");
+      setProduct(null);
+    };
+    const done = () => {
+      if (!cancelled) setLoading(false);
+    };
+
+    if (isNumericId) {
+      productService
+        .getById(productId)
+        .then((response) => {
+          if (cancelled) return;
+          const dto = response?.data ?? response;
+          if (!dto || response?.success === false) throw new Error(response?.message || "محصول یافت نشد");
+          applyProduct(dto);
+        })
+        .catch((err) => {
+          if (cancelled) return;
+          console.error("Error loading product details:", err);
+          fail(err?.message || err?.data?.message);
+        })
+        .finally(done);
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    // پارامتر ASIN است (مثلاً از کلیک روی نتایج اسکرپ)
     productService
-      .getById(productId)
+      .getByASIN(productId)
       .then((response) => {
         if (cancelled) return;
         const dto = response?.data ?? response;
-        if (!dto || response?.success === false) {
-          throw new Error(response?.message || "محصول یافت نشد");
-        }
-        setProduct(dto);
+        if (!dto || response?.success === false) throw new Error(response?.message || "محصول یافت نشد");
+        applyProduct(dto);
       })
-      .catch((err) => {
+      .catch(() => {
         if (cancelled) return;
-        console.error("Error loading product details:", err);
-        setError(err?.message || "خطا در دریافت اطلاعات محصول");
-        setProduct(null);
+        let payload = null;
+        try {
+          const raw = typeof sessionStorage !== "undefined" ? sessionStorage.getItem(`scraperProduct_${productId}`) : null;
+          if (raw) payload = JSON.parse(raw);
+        } catch (_) {}
+        if (!payload?.asin) {
+          fail("محصول یافت نشد");
+          done();
+          return;
+        }
+        return productService
+          .saveIfNotExistsFromScraper(payload)
+          .then((res) => {
+            if (cancelled) return;
+            const savedId =
+              res?.data?.productId ?? res?.data?.id ?? res?.data?.productID ?? res?.data?.ProductId;
+            try {
+              if (typeof sessionStorage !== "undefined") sessionStorage.removeItem(`scraperProduct_${productId}`);
+            } catch (_) {}
+            if (res?.success && savedId != null) {
+              return productService.getById(savedId);
+            }
+            throw new Error("ذخیره محصول انجام نشد");
+          })
+          .then((response) => {
+            if (cancelled) return;
+            const dto = response?.data ?? response;
+            if (!dto || response?.success === false) throw new Error(response?.message || "محصول یافت نشد");
+            applyProduct(dto);
+          })
+          .catch((err) => {
+            if (cancelled) return;
+            console.error("Error loading product details:", err);
+            fail(err?.message || err?.data?.message);
+          })
+          .finally(done);
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -73,8 +138,28 @@ export default function ProductDetailPage({ params }) {
   if (loading) {
     return (
       <IndexLayout>
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-          <Spinner size="lg" />
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900" dir="rtl">
+          <div className="xl:container px-4 py-6 animate-pulse">
+            <div className="h-6 w-48 bg-gray-200 dark:bg-gray-700 rounded mb-6" />
+            <div className="grid grid-cols-12 gap-6">
+              <div className="col-span-12 lg:col-span-4">
+                <div className="aspect-square bg-gray-200 dark:bg-gray-700 rounded-xl" />
+              </div>
+              <div className="col-span-12 lg:col-span-5 space-y-4">
+                <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-full max-w-md" />
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24" />
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full" />
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4" />
+              </div>
+              <div className="col-span-12 lg:col-span-3">
+                <div className="bg-white dark:bg-dark-box border border-gray-200 dark:border-dark-stroke rounded-xl p-4 space-y-3">
+                  <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-16" />
+                  <div className="h-9 bg-gray-200 dark:bg-gray-700 rounded w-32" />
+                  <div className="h-10 bg-primary-600 rounded w-full mt-4" />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </IndexLayout>
     );
