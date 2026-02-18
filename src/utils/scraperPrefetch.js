@@ -4,46 +4,44 @@ import { productService } from "@/services/product/productService";
  * Prefetch & cache for scraper product images.
  *
  * Flow:
- *  1. ProductCard hover → prefetchScraperImages(asin)  (request starts ~2s before click)
- *  2. Product page mount → prefetchScraperImages(asin)  (reuses in-flight promise)
- *  3. When product state is ready → getScraperImagesCached(asin) returns data instantly
+ *  1. Search results arrive → prefetch for top 6 ASINs (backend also prefetches in parallel)
+ *  2. ProductCard hover → prefetchScraperImages(asin) (reuses in-flight or cached)
+ *  3. Product page mount → prefetchScraperImages(asin) (instant if cached)
  *
- * Cache is in-memory, TTL = 5 min. Each ASIN stored only once (deduped).
+ * Backend simultaneously prefetches images in a background thread after search,
+ * so most requests hit the server cache and return in <100ms.
  */
 
 const _cache = new Map();
-const CACHE_TTL = 5 * 60 * 1000;
+const CACHE_TTL = 10 * 60 * 1000; // 10 min
 
-/**
- * Start fetching images for an ASIN. Returns existing promise if already in-flight or cached.
- * Safe to call multiple times with the same ASIN — only one request will be made.
- */
 export function prefetchScraperImages(asin) {
   if (!asin) return null;
   const key = String(asin).toUpperCase();
 
-  const existing = _cache.get(key);
-  if (existing && Date.now() - existing.ts < CACHE_TTL) {
-    return existing.promise;
+  const entry = _cache.get(key);
+  if (entry && Date.now() - entry.ts < CACHE_TTL) {
+    if (entry.data?.success) return Promise.resolve(entry.data);
+    if (entry.promise) return entry.promise;
   }
 
-  const promise = productService
+  const fresh = { promise: null, data: null, ts: Date.now() };
+  _cache.set(key, fresh);
+  fresh.promise = productService
     .getScraperProductImages(key)
     .then((res) => {
-      const entry = _cache.get(key);
-      if (entry) entry.data = res;
+      fresh.data = res;
+      fresh.ts = Date.now();
       return res;
     })
-    .catch(() => null);
+    .catch(() => {
+      _cache.delete(key);
+      return null;
+    });
 
-  _cache.set(key, { promise, data: null, ts: Date.now() });
-  return promise;
+  return fresh.promise;
 }
 
-/**
- * Get already-resolved cache entry (or null if not ready yet).
- * Use this for synchronous checks before falling back to the promise.
- */
 export function getScraperImagesCached(asin) {
   if (!asin) return null;
   const key = String(asin).toUpperCase();

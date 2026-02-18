@@ -34,6 +34,7 @@ export default function ProductDetailPage({ params }) {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [imagesEnriching, setImagesEnriching] = useState(false);
   const [selectedColor, setSelectedColor] = useState("navy");
   const [selectedDelivery, setSelectedDelivery] = useState("express");
   const [selectedImage, setSelectedImage] = useState(0);
@@ -176,26 +177,10 @@ export default function ProductDetailPage({ params }) {
     enrichedAsinRef.current = productId;
 
     const applyEnrichment = (res) => {
-      if (!res?.success) return;
+      if (!res?.success || !Array.isArray(res.images) || res.images.length === 0) return;
       setProduct((prev) => {
         if (!prev) return prev;
-        const updated = { ...prev };
-        if (Array.isArray(res.images) && res.images.length > 0) {
-          updated.images = res.images;
-        }
-        if (res.description && !prev.description) {
-          updated.description = res.description;
-        }
-        if (Array.isArray(res.attributes) && res.attributes.length > 0 && !prev.attributes?.length) {
-          updated.attributes = res.attributes;
-        }
-        if (res.rating != null && !prev.rating) {
-          updated.rating = res.rating;
-        }
-        if (res.reviews_count != null && !prev.reviews_count) {
-          updated.reviews_count = res.reviews_count;
-        }
-        return updated;
+        return { ...prev, images: res.images };
       });
     };
 
@@ -206,14 +191,19 @@ export default function ProductDetailPage({ params }) {
       return;
     }
 
-    // Otherwise wait for in-flight promise (started in Step A or hover)
+    setImagesEnriching(true);
     let cancelled = false;
     const promise = imagePromiseRef.current || prefetchScraperImages(productId);
     promise?.then((res) => {
-      if (!cancelled) applyEnrichment(res);
+      if (!cancelled) {
+        applyEnrichment(res);
+        setImagesEnriching(false);
+      }
+    }).catch(() => {
+      if (!cancelled) setImagesEnriching(false);
     });
 
-    return () => { cancelled = true; };
+    return () => { cancelled = true; setImagesEnriching(false); };
   }, [product, loading, productId]);
 
   if (loading) {
@@ -310,6 +300,7 @@ export default function ProductDetailPage({ params }) {
                 productId={productId}
                 mainImage={mainImage}
                 productImages={productImages}
+                imagesLoading={imagesEnriching}
                 renderGalleryOnly={true}
               />
             </div>
@@ -430,6 +421,7 @@ export default function ProductDetailPage({ params }) {
                     productId={productId}
                     mainImage={mainImage}
                     productImages={productImages}
+                    imagesLoading={imagesEnriching}
                     renderPurchaseOnly={true}
                   />
                 </div>

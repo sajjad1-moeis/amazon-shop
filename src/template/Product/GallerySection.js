@@ -5,9 +5,11 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { toast } from "sonner";
 
-export default function GallerySection({ productImages, selectedImage, setSelectedImage, mainImage }) {
+export default function GallerySection({ productImages, selectedImage, setSelectedImage, mainImage, imagesLoading = false }) {
   const currentImage = productImages[selectedImage] || productImages[0] || mainImage || "/image/Home/product.png";
   const isFirstImage = selectedImage === 0;
+  const showSkeletons = imagesLoading && productImages.length < 4;
+  const totalSlots = 4;
 
   const handleShare = async () => {
     try {
@@ -45,7 +47,7 @@ export default function GallerySection({ productImages, selectedImage, setSelect
 
         {/* Thumbnails - Absolute positioned on image */}
         <div className="absolute top-0 right-0 z-50 flex flex-col gap-2">
-          {productImages.slice(0, 4).map((img, index) => (
+          {productImages.slice(0, totalSlots).map((img, index) => (
             <button
               key={index}
               onClick={() => setSelectedImage(index)}
@@ -59,13 +61,21 @@ export default function GallerySection({ productImages, selectedImage, setSelect
               <Image src={img} alt={`تصویر ${index + 1}`} fill className="object-cover rounded-md" />
             </button>
           ))}
-
-          {/* {productImages.length > 4 && (
-            <button className="relative size-10 xl:size-14 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex items-center justify-center shadow-md hover:shadow-lg transition-all opacity-80 hover:opacity-100">
-              <span className="text-gray-400 dark:text-gray-600 text-2xl">⋯</span>
-            </button>
-          )} */}
+          {showSkeletons && Array.from({ length: totalSlots - productImages.length }).map((_, i) => (
+            <div
+              key={`skeleton-${i}`}
+              className="size-10 xl:size-14 rounded-lg xl:rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-gray-200 dark:bg-gray-700 animate-pulse"
+              aria-hidden
+            />
+          ))}
         </div>
+        {showSkeletons && (
+          <p className="absolute bottom-2 right-2 z-50 text-xs text-gray-500 dark:text-gray-400 bg-white/90 dark:bg-gray-900/90 px-2 py-1 rounded">
+            در حال بارگذاری تصاویر…
+          </p>
+        )}
+
+        {/* extra thumbnails: productImages.length > 4 */}
       </div>
     </div>
   );

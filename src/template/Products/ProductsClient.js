@@ -6,6 +6,7 @@ import FiltersSection from "@/components/module/FiltersSection";
 import HeaderSection from "@/template/Products/HeaderSection";
 import ProductList from "@/template/Products/ProductList";
 import { productService } from "@/services/product/productService";
+import { prefetchScraperImages } from "@/utils/scraperPrefetch";
 
 export default function ProductsClient({ searchParams: serverSearchParams }) {
   const router = useRouter();
@@ -140,6 +141,11 @@ export default function ProductsClient({ searchParams: serverSearchParams }) {
         setProducts(items);
         setTotalCount(items.length);
         setSearchError(null);
+        // Prefetch images for first 6 products so they load instantly when user clicks
+        items.slice(0, 6).forEach((p) => {
+          const asin = p?.asin || p?.ASIN;
+          if (asin) prefetchScraperImages(asin);
+        });
       })
       .catch((err) => {
         if (cancelled) return;

@@ -296,13 +296,15 @@ export const productService = {
 
   /**
    * دریافت عکس‌ها و جزئیات محصول از اسکرپر بر اساس ASIN (on-demand enrichment).
-   * وقتی کاربر صفحه محصول را باز می‌کند و هنوز ۴ عکس ندارد.
+   * timeout کوتاه تا UI معطل نماند؛ مرورگر با Accept-Encoding: gzip پاسخ فشرده می‌گیرد.
    */
   getScraperProductImages: async (asin) => {
     if (!isScraperConfigured()) return null;
     try {
       const scraper = getScraperClient();
-      return await scraper.get(`api/product/${encodeURIComponent(asin)}/images`).json();
+      return await scraper
+        .get(`api/product/${encodeURIComponent(asin)}/images`, { timeout: 12000 })
+        .json();
     } catch (err) {
       console.error("Error fetching scraper product images:", err);
       return null;

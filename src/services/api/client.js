@@ -43,7 +43,7 @@ const apiClient = ky.create({
   },
 });
 
-/** کلاینت مخصوص اسکرپر پایتون (جستجوی مستقیم Frontend → Python) */
+/** کلاینت مخصوص اسکرپر پایتون (جستجو و عکس — انتقال بهینه با gzip) */
 const scraperClient =
   SCRAPER_BASE_URL
     ? ky.create({
@@ -51,12 +51,13 @@ const scraperClient =
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
+          "Accept-Encoding": "gzip, deflate, br",
         },
-        timeout: 60000,
+        timeout: 30000,
         retry: {
           limit: 1,
           methods: ["get"],
-          statusCodes: [408, 429, 500, 502, 503, 504],
+          statusCodes: [408, 500, 502, 503, 504],
         },
         hooks: {
           beforeError: [
