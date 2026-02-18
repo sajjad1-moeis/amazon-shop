@@ -294,6 +294,21 @@ export const productService = {
     return client.get("Product/GetCountByStatus").json();
   },
 
+  /**
+   * دریافت عکس‌ها و جزئیات محصول از اسکرپر بر اساس ASIN (on-demand enrichment).
+   * وقتی کاربر صفحه محصول را باز می‌کند و هنوز ۴ عکس ندارد.
+   */
+  getScraperProductImages: async (asin) => {
+    if (!isScraperConfigured()) return null;
+    try {
+      const scraper = getScraperClient();
+      return await scraper.get(`api/product/${encodeURIComponent(asin)}/images`).json();
+    } catch (err) {
+      console.error("Error fetching scraper product images:", err);
+      return null;
+    }
+  },
+
   // ذخیره محصول اسکرپ شده در صورت عدم وجود (برای محصولات باز شده از Amazon)
   saveIfNotExistsFromScraper: async (scraperProduct) => {
     const client = getPublicClient();

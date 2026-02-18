@@ -51,14 +51,24 @@ const reviews = [
   },
 ];
 
-const overallRating = 4.5;
-const totalReviews = 24;
-
-export default function ProductReviewsSection() {
+export default function ProductReviewsSection({ product }) {
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [reviewText, setReviewText] = useState("");
   const [reviewRating, setReviewRating] = useState(5);
   const [submitting, setSubmitting] = useState(false);
+
+  const totalReviews = Math.max(
+    0,
+    Math.floor(
+      Number(product?.reviews_count ?? product?.reviewCount ?? 0) || 0
+    )
+  );
+  const overallRating = Math.min(
+    5,
+    Math.max(0, Number(product?.rating ?? 0) || 0)
+  );
+  const hasRealCount = totalReviews > 0;
+  const productReviews = Array.isArray(product?.reviews) ? product.reviews : [];
 
   const handleSubmitReview = async () => {
     if (!reviewText.trim()) {
@@ -95,7 +105,7 @@ export default function ProductReviewsSection() {
             <div className="text-center">
               {/* Rating Number */}
               <div className="text-5xl md:text-6xl font-bold text-primary-700 dark:text-dark-titre mb-3">
-                {overallRating}
+                {overallRating > 0 ? overallRating.toFixed(1) : "۰"}
               </div>
 
               {/* Stars */}
@@ -106,7 +116,10 @@ export default function ProductReviewsSection() {
               {/* Review Count */}
               <div className="flex items-center justify-center gap-1.5 text-gray-400 dark:text-dark-text">
                 <MessageText1 variant="Bold" size={16} className="dark:text-dark-text" />
-                <span className="text-sm font-medium dark:text-dark-text">{totalReviews}</span>
+                <span className="text-sm font-medium dark:text-dark-text">
+                  {totalReviews > 0 ? totalReviews.toLocaleString("fa-IR") : "۰"}
+                </span>
+                <span className="text-xs dark:text-dark-text">نظر</span>
               </div>
             </div>
           </div>
@@ -176,52 +189,59 @@ export default function ProductReviewsSection() {
           </Dialog>
         </div>
 
-        {/* Left Column - Individual Reviews */}
+        {/* Left Column - Individual Reviews (نمونه تا زمانی که API نظرات واقعی برگرداند) */}
         <div className="lg:col-span-2 space-y-6">
-          {reviews.map((review, index) => (
-            <div
-              key={review.id}
-              className={cn("pb-6", index < reviews.length - 1 && "border-b border-gray-200 dark:border-dark-stroke")}
-            >
-              {/* Review Header */}
-              <div className="flex items-center justify-between mb-3">
-                {/* Reviewer Name */}
-                <h3 className="text-base md:text-lg text-gray-900 dark:text-dark-titre">{review.name}</h3>
-
-                {/* Date with Calendar Icon */}
-                <div className="flex items-center gap-1.5 text-gray-400 dark:text-dark-text">
-                  <Calendar2 variant="Bold" className="w-4 h-4" />
-                  <span className="text-sm">{review.date}</span>
+          {!hasRealCount && (
+            <p className="text-sm text-gray-500 dark:text-dark-text text-right mb-4">
+              هنوز نظری برای این محصول ثبت نشده. اولین نفری باشید که نظر می‌دهد.
+            </p>
+          )}
+          {hasRealCount && totalReviews > 0 && productReviews.length === 0 && (
+            <p className="text-xs text-gray-500 dark:text-dark-text text-right">
+              این امتیاز و تعداد نظر از آمازون است.
+            </p>
+          )}
+          {productReviews.map((review, index) => {
+            const name = review.name ?? review.author ?? review.reviewerName ?? "کاربر";
+            const text = review.comment ?? review.text ?? review.body ?? review.content ?? "";
+            const ratingVal = Number(review.rating ?? review.stars ?? 0) || 0;
+            const date = review.date ?? review.createdAt ?? "";
+            const likes = review.likes ?? 0;
+            const dislikes = review.dislikes ?? 0;
+            return (
+              <div
+                key={review.id ?? index}
+                className={cn("pb-6", index < productReviews.length - 1 && "border-b border-gray-200 dark:border-dark-stroke")}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-base md:text-lg text-gray-900 dark:text-dark-titre">{name}</h3>
+                  <div className="flex items-center gap-1.5 text-gray-400 dark:text-dark-text">
+                    <Calendar2 variant="Bold" className="w-4 h-4" />
+                    <span className="text-sm">{date}</span>
+                  </div>
+                </div>
+                <p className="text-sm md:text-base text-gray-500 dark:text-dark-text leading-relaxed mb-4 text-right">
+                  {text}
+                </p>
+                <div className="flex-between gap-4">
+                  <div className="flex items-center gap-2">
+                    <RenderStars rating={ratingVal} />
+                    <span className="text-sm text-gray-500 dark:text-dark-text">{ratingVal || ""}</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-gray-500 dark:text-dark-text">
+                    <button onClick={() => toast.info("نپسندیدم")} type="button">
+                      <ThumbsDown className="w-4 h-4" />
+                      <span className="text-sm">{dislikes}</span>
+                    </button>
+                    <button onClick={() => toast.success("پسندیدم")} type="button">
+                      <ThumbsUp className="w-4 h-4" />
+                      <span className="text-sm">{likes}</span>
+                    </button>
+                  </div>
                 </div>
               </div>
-
-              {/* Review Text */}
-              <p className="text-sm md:text-base text-gray-500 dark:text-dark-text leading-relaxed mb-4 text-right">
-                {review.comment}
-              </p>
-
-              {/* Review Rating and Feedback */}
-              <div className="flex-between gap-4">
-                {/* Rating and Stars */}
-                <div className="flex items-center gap-2">
-                  <RenderStars rating={review.rating} />
-                  <span className="text-sm text-gray-500 dark:text-dark-text">{review.rating}</span>
-                </div>
-
-                {/* Like/Dislike */}
-                <div className="flex items-center gap-3 text-gray-500 dark:text-dark-text hover:text-gray-700 dark:hover:text-dark-titre transition-colors">
-                  <button onClick={() => toast.info("نپسندیدم")} type="button">
-                    <ThumbsDown className="w-4 h-4" />
-                    {<span className="text-sm">{review.dislikes}</span>}
-                  </button>
-                  <button onClick={() => toast.success("پسندیدم")} type="button">
-                    <ThumbsUp className="w-4 h-4" />
-                    <span className="text-sm">{review.likes}</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

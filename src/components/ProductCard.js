@@ -7,30 +7,53 @@ import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { productService } from "@/services/product/productService";
+import { parseProductNum } from "@/utils/productHelpers";
+import { prefetchScraperImages } from "@/utils/scraperPrefetch";
 
 function ProductCard({ className, product, badges }) {
   const router = useRouter();
 
   const productId = product?.id ?? product?.productId ?? null;
-  const image = product?.image_url || product?.image || product?.mainImage || "/image/Home/product.png";
-  const title =
-    product?.title || product?.name || "نام محصول";
-  // قیمت نمایشی (مبلغ پرداختی) و قیمت اصلی (برای خط خورده)
-  const salePriceRaw = product?.current_price ?? product?.discountPrice ?? product?.price;
-  const listPriceRaw = product?.original_price ?? product?.price ?? product?.discountPrice;
-  const salePrice = Math.max(0, Number(salePriceRaw) || 0);
-  const listPrice = Math.max(0, Number(listPriceRaw) || salePrice || 0);
+  const image =
+    product?.image_url_hq ||
+    product?.image_url ||
+    product?.image ||
+    product?.mainImage ||
+    product?.mainImageUrl ||
+    "/image/Home/product.png";
+  const title = product?.title || product?.name || "نام محصول";
+  const salePriceRaw =
+    product?.current_price ?? product?.discountPrice ?? product?.price;
+  const listPriceRaw =
+    product?.original_price ?? product?.price ?? product?.discountPrice;
+  const salePrice = Math.max(0, parseProductNum(salePriceRaw));
+  const listPrice = Math.max(0, parseProductNum(listPriceRaw) || salePrice || 0);
   const price = listPrice;
   const discountPrice = salePrice;
 
-  const ratingNum = Number(product?.rating);
-  const rating = Number.isFinite(ratingNum) && ratingNum >= 0 ? Math.min(5, ratingNum) : 0;
-  const reviewCountNum = Number(product?.reviews_count ?? product?.reviewCount);
-  const reviewCount = Number.isInteger(reviewCountNum) && reviewCountNum >= 0 ? reviewCountNum : 0;
+  const ratingNum = parseProductNum(product?.rating);
+  const rating =
+    Number.isFinite(ratingNum) && ratingNum >= 0 ? Math.min(5, ratingNum) : 0;
+  const reviewCountNum = parseProductNum(
+    product?.reviews_count ?? product?.reviewCount
+  );
+  const reviewCount = Math.max(0, Math.floor(reviewCountNum));
+
   const rawBadges = badges !== undefined ? badges : product?.badges;
+  const fromScraper = [
+    product?.is_prime && "انتخاب آمازون",
+    product?.is_free_delivery && "ارسال رایگان",
+    product?.discount_percentage &&
+      parseProductNum(product.discount_percentage) > 0 &&
+      `${Math.round(parseProductNum(product.discount_percentage))}٪ تخفیف`,
+  ]
+    .filter(Boolean)
+    .slice(0, 3);
   const productBadges = Array.isArray(rawBadges)
     ? rawBadges.filter((b) => typeof b === "string").slice(0, 5)
-    : ["ارسال بین المللی"];
+    : fromScraper.length > 0
+      ? fromScraper
+      : ["ارسال بین المللی"];
   const seller = product?.seller || "amazon";
   const sellerCountry = product?.sellerCountry || "🇦🇪";
 
@@ -42,10 +65,12 @@ function ProductCard({ className, product, badges }) {
 
   const discount = calculateDiscount();
 
-  const formatPrice = (value) => {
-    const n = Number(value);
+  const isAed = product?.currency === "AED" || product?.currency_symbol === "AED";
+  const formatPrice = (value, forceAed) => {
+    const n = parseProductNum(value);
     if (!Number.isFinite(n) || n < 0) return "قیمت نامشخص";
-    return `${n.toLocaleString("fa-IR")} تومان`;
+    const suffix = forceAed || isAed ? " درهم" : " تومان";
+    return `${n.toLocaleString("fa-IR")}${suffix}`;
   };
 
   const handleProductClick = (e) => {
@@ -66,24 +91,40 @@ function ProductCard({ className, product, badges }) {
         product?.current_price ?? product?.price ?? product?.discountPrice ?? discountPrice ?? price;
       const rawOriginalPrice =
         product?.original_price ?? product?.originalPrice ?? product?.price ?? price ?? null;
+      const imgList =
+        Array.isArray(product?.images) && product.images.length > 0
+          ? product.images
+          : Array.isArray(product?.image_urls) && product.image_urls.length > 0
+            ? product.image_urls
+            : undefined;
+      const imgMain =
+        product?.image_url ||
+        product?.image ||
+        product?.mainImage ||
+        product?.imageUrl ||
+        "/image/Home/product.png";
+      const imgHq = product?.image_url_hq || product?.image_url || product?.image || product?.mainImage;
       const scraperPayload = {
         asin,
         title: product?.title || product?.name,
         brand: product?.brand,
         current_price: rawCurrentPrice != null ? String(rawCurrentPrice) : null,
         original_price: rawOriginalPrice != null ? String(rawOriginalPrice) : null,
-        image_url:
-          product?.image_url ||
-          product?.image ||
-          product?.mainImage ||
-          product?.imageUrl ||
-          "/image/Home/product.png",
-        image_url_hq: product?.image_url_hq || product?.image_url || product?.image || product?.mainImage,
+        image_url: imgMain,
+        image_url_hq: imgHq,
+        images: imgList || (imgHq && imgMain && imgHq !== imgMain ? [imgHq, imgMain] : undefined),
+        image_urls: imgList,
         product_url: product?.product_url || product?.amazonUrl,
         rating: product?.rating,
         reviews_count: product?.reviews_count ?? product?.reviewCount,
         category: product?.category,
         search_term: product?.search_term,
+        currency: product?.currency ?? product?.currency_symbol,
+        seller: product?.seller,
+        amazonShopName: product?.amazonShopName,
+        description: product?.description ?? product?.shortDescription,
+        attributes: product?.attributes,
+        reviews: product?.reviews,
       };
       try {
         if (typeof sessionStorage !== "undefined") {
@@ -99,8 +140,13 @@ function ProductCard({ className, product, badges }) {
 
   const hrefId = productId ?? product?.asin ?? product?.ASIN ?? "0";
 
+  const handleMouseEnter = () => {
+    const asin = product?.asin || product?.ASIN || product?.amazonASIN;
+    if (asin) prefetchScraperImages(asin);
+  };
+
   return (
-    <Link href={`/product/${hrefId}`} onClick={handleProductClick}>
+    <Link href={`/product/${hrefId}`} onClick={handleProductClick} onMouseEnter={handleMouseEnter}>
       <div
         className={cn(
           "shadow-box rounded-xl flex flex-col cursor-pointer hover:shadow-lg transition-shadow bg-white dark:bg-dark-box h-full",

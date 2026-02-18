@@ -6,15 +6,18 @@ const nextConfig = {
   // Vercel handles deployment automatically, standalone is not needed
   ...(process.env.VERCEL ? {} : { output: "standalone" }),
 
-  // Image optimization
+  // Image optimization (اسکرپر: تصاویر از دامنه‌های آمازون)
   images: {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
-    // برای لیارا - تصاویر بدون بهینه‌سازی لود می‌شوند تا مشکل حل شود
     unoptimized: true,
-    remotePatterns: [],
+    remotePatterns: [
+      { protocol: "https", hostname: "m.media-amazon.com", pathname: "/**" },
+      { protocol: "https", hostname: "images-na.ssl-images-amazon.com", pathname: "/**" },
+      { protocol: "https", hostname: "images-eu.ssl-images-amazon.com", pathname: "/**" },
+    ],
   },
 
   // Security headers

@@ -21,7 +21,6 @@ export default function ProductList({ viewMode, products = [], totalCount = 0, s
     );
   }
 
-  // برای نتایج اسکرپر (بدون id) فقط grid با ProductCard تا کلیک → SaveIfNotExists → ریدایرکت درست کار کند
   const useGrid = searchMode || viewMode === "grid";
 
   return (

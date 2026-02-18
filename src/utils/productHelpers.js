@@ -5,13 +5,30 @@
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://micrls.com";
 
 /**
- * Get normalized product images array
+ * Get normalized product images array (پشتیبانی از خروجی اسکرپر و بک‌اند).
+ * هر آرایه‌ای که اسکرپر/بک‌اند بفرستد (images, imageUrls, image_urls) استفاده می‌شود؛
+ * وگرنه از image_url و image_url_hq ساخته می‌شود.
  */
 export function getProductImages(product) {
-  if (product?.images && product.images.length > 0) {
-    return product.images;
-  }
-  return product?.mainImage ? [product.mainImage] : [];
+  const fromArray = (arr) =>
+    Array.isArray(arr) && arr.length > 0
+      ? arr.filter((u) => typeof u === "string" && u.trim().length > 0)
+      : [];
+  const list =
+    fromArray(product?.images) ||
+    fromArray(product?.imageUrls) ||
+    fromArray(product?.image_urls) ||
+    fromArray(product?.gallery);
+  if (list.length > 0) return list;
+
+  const hq = product?.image_url_hq || product?.mainImage || product?.mainImageUrl;
+  const normal =
+    product?.image_url || product?.image || product?.imageUrl || product?.mainImage;
+  const out = [];
+  if (hq && hq !== normal) out.push(hq);
+  if (normal && !out.includes(normal)) out.push(normal);
+  if (out.length > 0) return out;
+  return hq ? [hq] : normal ? [normal] : [];
 }
 
 /**
@@ -19,7 +36,7 @@ export function getProductImages(product) {
  */
 export function getMainImage(product) {
   const images = getProductImages(product);
-  return images[0] || product?.mainImage || "/image/Home/product.png";
+  return images[0] || product?.image_url || product?.mainImage || "/image/Home/product.png";
 }
 
 /**
@@ -45,26 +62,27 @@ export function getProductUrl(productId) {
 }
 
 /**
- * Get product name (fallback to title)
+ * Get product name (fallback to title) — اسکرپر: title
  */
 export function getProductName(product) {
   return product?.name || product?.title || "محصول";
 }
 
 /**
- * Get product description (fallback chain)
+ * Get product description (fallback chain) — اسکرپر: description
  */
 export function getProductDescription(product) {
   return product?.shortDescription || product?.description || "";
 }
 
 /**
- * Get breadcrumb items for product
+ * Get breadcrumb items for product — اسکرپر: category
  */
 export function getBreadcrumbItems(product) {
+  const category = product?.categoryName || product?.category || "کالای دیجیتال";
   return [
     { label: product?.parentCategoryName || "کالای دیجیتال", href: "/categories" },
-    { label: product?.categoryName || "ساعت هوشمند", href: "/categories" },
+    { label: category, href: "/categories" },
     { label: getProductName(product) },
   ];
 }
@@ -90,17 +108,37 @@ const DELIVERY_PRICE_MAP = {
  * Calculate final price including color and delivery options
  */
 export function calculateProductPrice(product, selectedColor, selectedDelivery) {
-  const basePrice = product?.discountPrice || product?.price || 0;
+  const basePrice = getBasePrice(product);
   const colorPrice = COLOR_PRICE_MAP[selectedColor] || 0;
   const deliveryPrice = DELIVERY_PRICE_MAP[selectedDelivery] || 0;
   return basePrice + colorPrice + deliveryPrice;
 }
 
 /**
- * Get base price of product
+ * Parse numeric value from string (قیمت/امتیاز از اسکرپر ممکن است رشته باشد)
+ */
+export function parseProductNum(value) {
+  if (value == null) return 0;
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  const s = String(value).replace(/,/g, "").replace(/[^\d.-]/g, "").trim();
+  const n = parseFloat(s);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function parseNum(value) {
+  return parseProductNum(value);
+}
+
+/**
+ * Get base price of product — اسکرپر: current_price
  */
 export function getBasePrice(product) {
-  return product?.discountPrice || product?.price || 0;
+  const raw =
+    product?.discountPrice ??
+    product?.current_price ??
+    product?.price ??
+    product?.ourPrice;
+  return parseNum(raw);
 }
 
 /**
@@ -112,6 +150,10 @@ export function generateProductSchema(product, productId) {
   const productUrl = getProductUrl(productId);
   const oneYearLater = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
 
+  const priceVal = getBasePrice(product);
+  const inStock =
+    product?.isInStock ?? product?.is_in_stock ?? product?.inStock ?? true;
+
   const schema = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -120,18 +162,18 @@ export function generateProductSchema(product, productId) {
     image: getAbsoluteImageUrls(productImages),
     brand: {
       "@type": "Brand",
-      name: product?.brandName || "نامشخص",
+      name: product?.brandName || product?.brand || "نامشخص",
     },
-    category: product?.categoryName || "",
-    sku: product?.id || productId,
-    mpn: product?.id || productId,
+    category: product?.categoryName || product?.category || "",
+    sku: product?.id || product?.asin || productId,
+    mpn: product?.id || product?.asin || productId,
     offers: {
       "@type": "Offer",
       url: productUrl,
       priceCurrency: "IRR",
-      price: String(product?.discountPrice || product?.price || 0),
+      price: String(priceVal),
       priceValidUntil: oneYearLater,
-      availability: product?.inStock
+      availability: inStock
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",
       itemCondition: "https://schema.org/NewCondition",
@@ -142,12 +184,13 @@ export function generateProductSchema(product, productId) {
     },
   };
 
-  // Add aggregateRating if available
-  if (product?.rating && product?.reviewCount) {
+  const ratingVal = parseNum(product?.rating);
+  const reviewCountVal = Math.floor(parseNum(product?.reviews_count ?? product?.reviewCount));
+  if (ratingVal > 0 || reviewCountVal > 0) {
     schema.aggregateRating = {
       "@type": "AggregateRating",
-      ratingValue: String(product.rating),
-      reviewCount: String(product.reviewCount),
+      ratingValue: String(ratingVal),
+      reviewCount: String(reviewCountVal),
       bestRating: "5",
       worstRating: "1",
     };

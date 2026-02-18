@@ -1,6 +1,6 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
+import React, { use, useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Star } from "lucide-react";
@@ -16,9 +16,14 @@ import { productService } from "@/services/product/productService";
 import {
   getProductName,
   getMainImage,
+  getProductImages,
   getBreadcrumbItems,
+  getBasePrice,
+  getProductDescription,
+  parseProductNum,
   generateProductSchema,
 } from "@/utils/productHelpers";
+import { prefetchScraperImages, getScraperImagesCached } from "@/utils/scraperPrefetch";
 
 export default function ProductDetailPage({ params }) {
   const resolved = use(
@@ -109,14 +114,24 @@ export default function ProductDetailPage({ params }) {
               if (typeof sessionStorage !== "undefined") sessionStorage.removeItem(`scraperProduct_${productId}`);
             } catch (_) {}
             if (res?.success && savedId != null) {
-              return productService.getById(savedId);
+              return productService.getById(savedId).then((response) => ({ response, payload }));
             }
             throw new Error("ذخیره محصول انجام نشد");
           })
-          .then((response) => {
+          .then(({ response, payload }) => {
             if (cancelled) return;
             const dto = response?.data ?? response;
             if (!dto || response?.success === false) throw new Error(response?.message || "محصول یافت نشد");
+            if (payload && typeof payload === "object") {
+              if (Array.isArray(payload.images) && payload.images.length > 0) dto.images = payload.images;
+              else if (Array.isArray(payload.image_urls) && payload.image_urls.length > 0) dto.image_urls = payload.image_urls;
+              if (Array.isArray(payload.reviews) && payload.reviews.length > 0) dto.reviews = payload.reviews;
+              if (payload.description) dto.description = payload.description;
+              if (payload.currency) dto.currency = payload.currency;
+              if (payload.seller) dto.seller = payload.seller;
+              if (payload.amazonShopName) dto.amazonShopName = payload.amazonShopName;
+              if (payload.attributes?.length) dto.attributes = payload.attributes;
+            }
             applyProduct(dto);
           })
           .catch((err) => {
@@ -134,6 +149,72 @@ export default function ProductDetailPage({ params }) {
       cancelled = true;
     };
   }, [productId]);
+
+  // ==========================================
+  // On-demand enrichment (FAST — parallel with product load)
+  // ==========================================
+  // Step A: Start image prefetch IMMEDIATELY when page mounts (ASIN only).
+  //         This reuses the hover prefetch if user hovered on the card first.
+  const imagePromiseRef = useRef(null);
+  const enrichedAsinRef = useRef(null);
+
+  useEffect(() => {
+    const isAsin = productId && !/^\d+$/.test(String(productId));
+    if (!isAsin) return;
+    imagePromiseRef.current = prefetchScraperImages(productId);
+  }, [productId]);
+
+  // Step B: Once product state is ready, merge images from prefetch result.
+  //         If prefetch already resolved (hover cache), this is instant.
+  useEffect(() => {
+    if (!product || loading) return;
+    if (enrichedAsinRef.current === productId) return;
+
+    const isAsin = productId && !/^\d+$/.test(String(productId));
+    const currentImages = getProductImages(product);
+    if (!isAsin || currentImages.length >= 2) return;
+    enrichedAsinRef.current = productId;
+
+    const applyEnrichment = (res) => {
+      if (!res?.success) return;
+      setProduct((prev) => {
+        if (!prev) return prev;
+        const updated = { ...prev };
+        if (Array.isArray(res.images) && res.images.length > 0) {
+          updated.images = res.images;
+        }
+        if (res.description && !prev.description) {
+          updated.description = res.description;
+        }
+        if (Array.isArray(res.attributes) && res.attributes.length > 0 && !prev.attributes?.length) {
+          updated.attributes = res.attributes;
+        }
+        if (res.rating != null && !prev.rating) {
+          updated.rating = res.rating;
+        }
+        if (res.reviews_count != null && !prev.reviews_count) {
+          updated.reviews_count = res.reviews_count;
+        }
+        return updated;
+      });
+    };
+
+    // Fast path: already in cache from hover prefetch → instant
+    const cached = getScraperImagesCached(productId);
+    if (cached) {
+      applyEnrichment(cached);
+      return;
+    }
+
+    // Otherwise wait for in-flight promise (started in Step A or hover)
+    let cancelled = false;
+    const promise = imagePromiseRef.current || prefetchScraperImages(productId);
+    promise?.then((res) => {
+      if (!cancelled) applyEnrichment(res);
+    });
+
+    return () => { cancelled = true; };
+  }, [product, loading, productId]);
 
   if (loading) {
     return (
@@ -181,15 +262,24 @@ export default function ProductDetailPage({ params }) {
     );
   }
 
-  const imageUrls = product.imageUrls || product.images || [];
-  const productImages =
-    imageUrls && imageUrls.length > 0
-      ? imageUrls
-      : [product.mainImage || product.mainImageUrl || product.imageUrl].filter(Boolean);
-  const mainImage = productImages[0] || getMainImage(product);
+  const productImages = getProductImages(product);
+  const mainImage = getMainImage(product);
   const breadcrumbItems = getBreadcrumbItems(product);
   const productSchema = generateProductSchema(product, productId);
   const colors = product.colors || product.availableColors || [];
+  const displayPrice = getBasePrice(product);
+  const listPrice = parseProductNum(
+    product?.original_price ?? product?.price ?? product?.discountPrice
+  ) || displayPrice;
+  const ratingVal = parseProductNum(product?.rating);
+  const reviewCountVal = Math.floor(
+    parseProductNum(product?.reviews_count ?? product?.reviewCount)
+  );
+  const hasDiscount = listPrice > displayPrice && listPrice > 0;
+  const discountPercent = hasDiscount
+    ? Math.round(((listPrice - displayPrice) / listPrice) * 100)
+    : 0;
+  const description = getProductDescription(product);
 
   return (
     <IndexLayout>
@@ -229,6 +319,11 @@ export default function ProductDetailPage({ params }) {
                 <h1 className="md:text-2xl text-gray-900 dark:text-dark-titre mb-2 text-right">
                   {product?.title || product?.name || "نام محصول"}
                 </h1>
+                {(product?.brand || product?.brandName) && (
+                  <p className="text-sm text-gray-500 dark:text-dark-text mb-1 text-right">
+                    برند: {product?.brand || product?.brandName}
+                  </p>
+                )}
                 {product?.englishName && (
                   <p className="text-xs md:text-sm text-gray-400 dark:text-caption mb-4 text-right">
                     {product.englishName}
@@ -237,25 +332,28 @@ export default function ProductDetailPage({ params }) {
                 <div className="flex items-center gap-1 text-xs md:text-sm mb-4 border-b pb-4">
                   <Star className="w-5 h-5 fill-yellow-400 text-yellow-400 flex-none" />
                   <span className="font-bold text-gray-900 dark:text-white">
-                    {product?.rating ? product.rating.toFixed(1) : "0.0"}
+                    {ratingVal > 0 ? ratingVal.toFixed(1) : "0.0"}
                   </span>
-                  {product?.reviewCount && (
+                  {(reviewCountVal > 0 || product?.reviewCount || product?.reviews_count) && (
                     <span className="text-graty-500 dark:text-gray-400">
                       (
                       <span className="text-primary-500 dark:text-dark-title">
-                        {product.reviewCount}
+                        {reviewCountVal > 0
+                          ? reviewCountVal.toLocaleString("fa-IR")
+                          : product?.reviewCount ?? product?.reviews_count ?? "0"}
                       </span>
-                      )
+                      {" "}
+                      نظر)
                     </span>
                   )}
                 </div>
-                {product?.shortDescription && (
+                {description && (
                   <div className="mb-6">
                     <h3 className="mb-2 text-gray-800 dark:text-dark-titre md:text-lg text-right">
                       معرفی کوتاه
                     </h3>
-                    <p className="text-sm text-gray-600 leading-relaxed text-right">
-                      {product.shortDescription}
+                    <p className="text-sm text-gray-600 leading-relaxed text-right whitespace-pre-line">
+                      {description}
                     </p>
                   </div>
                 )}
@@ -283,7 +381,7 @@ export default function ProductDetailPage({ params }) {
                 )}
               </div>
               <div className="max-md:hidden">
-                <ProductDetailsAccordion />
+                <ProductDetailsAccordion product={product} />
               </div>
             </div>
 
@@ -295,35 +393,31 @@ export default function ProductDetailPage({ params }) {
                     <div className="flex-between gap-2">
                       <div>
                         <span className="text-2xl">
-                          {Number(
-                            product?.discountPrice || product?.price || product?.ourPrice || 0
-                          ).toLocaleString("fa-IR")}
+                          {displayPrice.toLocaleString("fa-IR")}
                         </span>
-                        <span className="text-sm">تومان</span>
+                        <span className="text-sm">
+                          {product?.currency_symbol || product?.currency === "AED" ? " درهم" : " تومان"}
+                        </span>
                       </div>
-                      {product?.price &&
-                        product?.discountPrice &&
-                        product.price > product.discountPrice && (
-                          <span className="bg-orange-600 text-white text-xs px-2 py-1 rounded">
-                            {Math.round(
-                              ((product.price - product.discountPrice) / product.price) * 100
-                            )}
-                            ٪
-                          </span>
-                        )}
-                    </div>
-                    {product?.price &&
-                      product?.discountPrice &&
-                      product.price > product.discountPrice && (
-                        <div className="text-sm text-gray-400 line-through mt-1">
-                          {Number(product.price).toLocaleString("fa-IR")} تومان
-                        </div>
+                      {hasDiscount && (
+                        <span className="bg-orange-600 text-white text-xs px-2 py-1 rounded">
+                          {discountPercent}٪
+                        </span>
                       )}
+                    </div>
+                    {hasDiscount && (
+                      <div className="text-sm text-gray-400 line-through mt-1">
+                        {listPrice.toLocaleString("fa-IR")}
+                        {product?.currency_symbol || product?.currency === "AED" ? " درهم" : " تومان"}
+                      </div>
+                    )}
                   </div>
                   <div className="flex-between mt-6">
                     <p className="text-gray-500 text-sm">فروشگاه :</p>
                     <div className="flex-center gap-1">
-                      <div className="text-sm text-gray-400">آمازون امارات</div>
+                      <div className="text-sm text-gray-400">
+                        {product?.amazonShopName || product?.seller || "آمازون امارات"}
+                      </div>
                       <img
                         src="/image/amazonLogo.png"
                         className="w-10 h-max"
@@ -341,14 +435,14 @@ export default function ProductDetailPage({ params }) {
                 </div>
               </div>
               <div className="md:hidden">
-                <ProductDetailsAccordion />
+                <ProductDetailsAccordion product={product} />
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mt-6">
             <div className="md:col-span-4">
-              <ProductReviewsSection />
+              <ProductReviewsSection product={product} />
               <RelatedSlider />
               <AccessoriesSlider />
             </div>
