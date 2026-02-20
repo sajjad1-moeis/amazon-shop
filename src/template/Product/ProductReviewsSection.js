@@ -1,6 +1,6 @@
 "use client"
 
-import { Calendar, MessageCircle, ThumbsUp, ThumbsDown } from "lucide-react";
+import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import RenderStars from "@/components/RenderStars";
@@ -17,39 +17,6 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-
-const reviews = [
-  {
-    id: 1,
-    name: "محمد",
-    date: "۲۴ اسفند",
-    comment:
-      "من این محصولو چند وقت پیش گرفتم و تا الان استفاده کردم از خیلی جهات خوب بود، مثلا کیفیتش بدک نبود و کارمو راه انداخت بسته بندی هم مرتب بود و به موقع به دستم رسید.",
-    rating: 4.5,
-    likes: 12,
-    dislikes: 0,
-  },
-  {
-    id: 2,
-    name: "سمیرا",
-    date: "۲۴ اسفند",
-    comment:
-      "من این محصولو چند وقت پیش گرفتم و تا الان استفاده کردم از خیلی جهات خوب بود، مثلا کیفیتش بدک نبود و کارمو راه انداخت بسته بندی هم مرتب بود و به موقع به دستم رسید.",
-    rating: 4.5,
-    likes: 8,
-    dislikes: 1,
-  },
-  {
-    id: 3,
-    name: "مریم کشمیری",
-    date: "۲۳ اسفند",
-    comment:
-      "من این محصولو چند وقت پیش گرفتم و تا الان استفاده کردم از خیلی جهات خوب بود، مثلا کیفیتش بدک نبود و کارمو راه انداخت بسته بندی هم مرتب بود و به موقع به دستم رسید.",
-    rating: 4.5,
-    likes: 15,
-    dislikes: 2,
-  },
-];
 
 export default function ProductReviewsSection({ product }) {
   const [showReviewForm, setShowReviewForm] = useState(false);
@@ -189,57 +156,71 @@ export default function ProductReviewsSection({ product }) {
           </Dialog>
         </div>
 
-        {/* Left Column - Individual Reviews (نمونه تا زمانی که API نظرات واقعی برگرداند) */}
+        {/* Left Column - Individual Reviews */}
         <div className="lg:col-span-2 space-y-6">
-          {!hasRealCount && (
+          {productReviews.length > 0 && (
+            <p className="text-sm text-gray-500 dark:text-dark-text text-right mb-2">
+              نمونه نظرات از آمازون
+            </p>
+          )}
+          {productReviews.length === 0 && !hasRealCount && (
             <p className="text-sm text-gray-500 dark:text-dark-text text-right mb-4">
               هنوز نظری برای این محصول ثبت نشده. اولین نفری باشید که نظر می‌دهد.
             </p>
           )}
-          {hasRealCount && totalReviews > 0 && productReviews.length === 0 && (
+          {productReviews.length === 0 && hasRealCount && totalReviews > 0 && (
             <p className="text-xs text-gray-500 dark:text-dark-text text-right">
-              این امتیاز و تعداد نظر از آمازون است.
+              امتیاز و تعداد نظر از آمازون است. نظرات به‌زودی بارگذاری می‌شوند.
             </p>
           )}
           {productReviews.map((review, index) => {
             const name = review.name ?? review.author ?? review.reviewerName ?? "کاربر";
+            const title = review.title ?? "";
             const text = review.comment ?? review.text ?? review.body ?? review.content ?? "";
             const ratingVal = Number(review.rating ?? review.stars ?? 0) || 0;
             const date = review.date ?? review.createdAt ?? "";
             const likes = review.likes ?? 0;
             const dislikes = review.dislikes ?? 0;
             return (
-              <div
+              <article
                 key={review.id ?? index}
-                className={cn("pb-6", index < productReviews.length - 1 && "border-b border-gray-200 dark:border-dark-stroke")}
+                className={cn(
+                  "rounded-xl border border-gray-200 dark:border-dark-stroke bg-white dark:bg-dark-box p-4 md:p-5 text-right",
+                  index < productReviews.length - 1 && "mb-4"
+                )}
               >
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-base md:text-lg text-gray-900 dark:text-dark-titre">{name}</h3>
-                  <div className="flex items-center gap-1.5 text-gray-400 dark:text-dark-text">
-                    <Calendar2 variant="Bold" className="w-4 h-4" />
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                  <h3 className="text-base md:text-lg font-medium text-gray-900 dark:text-dark-titre">{name}</h3>
+                  <div className="flex items-center gap-1.5 text-gray-500 dark:text-dark-text">
+                    <Calendar2 variant="Bold" className="w-4 h-4 flex-shrink-0" />
                     <span className="text-sm">{date}</span>
                   </div>
                 </div>
-                <p className="text-sm md:text-base text-gray-500 dark:text-dark-text leading-relaxed mb-4 text-right">
+                {title ? (
+                  <p className="text-sm font-medium text-gray-800 dark:text-dark-titre mb-2">
+                    {title}
+                  </p>
+                ) : null}
+                <p className="text-sm md:text-base text-gray-600 dark:text-dark-text leading-relaxed mb-4 whitespace-pre-line">
                   {text}
                 </p>
-                <div className="flex-between gap-4">
+                <div className="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-gray-100 dark:border-dark-stroke">
                   <div className="flex items-center gap-2">
                     <RenderStars rating={ratingVal} />
-                    <span className="text-sm text-gray-500 dark:text-dark-text">{ratingVal || ""}</span>
+                    <span className="text-sm text-gray-500 dark:text-dark-text">{ratingVal ? ratingVal.toFixed(1) : ""}</span>
                   </div>
                   <div className="flex items-center gap-3 text-gray-500 dark:text-dark-text">
-                    <button onClick={() => toast.info("نپسندیدم")} type="button">
+                    <span className="flex items-center gap-1">
                       <ThumbsDown className="w-4 h-4" />
                       <span className="text-sm">{dislikes}</span>
-                    </button>
-                    <button onClick={() => toast.success("پسندیدم")} type="button">
+                    </span>
+                    <span className="flex items-center gap-1">
                       <ThumbsUp className="w-4 h-4" />
                       <span className="text-sm">{likes}</span>
-                    </button>
+                    </span>
                   </div>
                 </div>
-              </div>
+              </article>
             );
           })}
         </div>

@@ -23,7 +23,7 @@ import {
   parseProductNum,
   generateProductSchema,
 } from "@/utils/productHelpers";
-import { prefetchScraperImages, getScraperImagesCached } from "@/utils/scraperPrefetch";
+import { prefetchScraperImages, getScraperImagesCached, prefetchScraperDetails, getScraperDetailsCached } from "@/utils/scraperPrefetch";
 
 export default function ProductDetailPage({ params }) {
   const resolved = use(
@@ -157,24 +157,29 @@ export default function ProductDetailPage({ params }) {
   // Step A: Start image prefetch IMMEDIATELY when page mounts (ASIN only).
   //         This reuses the hover prefetch if user hovered on the card first.
   const imagePromiseRef = useRef(null);
+  const detailsPromiseRef = useRef(null);
   const enrichedAsinRef = useRef(null);
+  const detailsEnrichedAsinRef = useRef(null);
+
+  // ASIN برای درخواست به اسکرپر: از URL (اگر ASIN باشد) یا از product.asin وقتی با ID عددی باز شده
+  const isAsinInUrl = productId && !/^\d+$/.test(String(productId));
+  const asinForScraper = isAsinInUrl ? productId : (product?.asin ?? null);
 
   useEffect(() => {
-    const isAsin = productId && !/^\d+$/.test(String(productId));
-    if (!isAsin) return;
+    if (!isAsinInUrl) return;
     imagePromiseRef.current = prefetchScraperImages(productId);
-  }, [productId]);
+    detailsPromiseRef.current = prefetchScraperDetails(productId);
+  }, [productId, isAsinInUrl]);
 
   // Step B: Once product state is ready, merge images from prefetch result.
-  //         If prefetch already resolved (hover cache), this is instant.
+  //         اگر URL عددی است از product.asin استفاده می‌کنیم تا عکس‌ها/جزئیات گرفته شوند.
   useEffect(() => {
     if (!product || loading) return;
-    if (enrichedAsinRef.current === productId) return;
+    if (!asinForScraper || enrichedAsinRef.current === asinForScraper) return;
 
-    const isAsin = productId && !/^\d+$/.test(String(productId));
     const currentImages = getProductImages(product);
-    if (!isAsin || currentImages.length >= 2) return;
-    enrichedAsinRef.current = productId;
+    if (currentImages.length >= 2) return;
+    enrichedAsinRef.current = asinForScraper;
 
     const applyEnrichment = (res) => {
       if (!res?.success || !Array.isArray(res.images) || res.images.length === 0) return;
@@ -184,8 +189,7 @@ export default function ProductDetailPage({ params }) {
       });
     };
 
-    // Fast path: already in cache from hover prefetch → instant
-    const cached = getScraperImagesCached(productId);
+    const cached = getScraperImagesCached(asinForScraper);
     if (cached) {
       applyEnrichment(cached);
       return;
@@ -193,8 +197,8 @@ export default function ProductDetailPage({ params }) {
 
     setImagesEnriching(true);
     let cancelled = false;
-    const promise = imagePromiseRef.current || prefetchScraperImages(productId);
-    promise?.then((res) => {
+    const promise = isAsinInUrl ? imagePromiseRef.current : null;
+    (promise || prefetchScraperImages(asinForScraper))?.then((res) => {
       if (!cancelled) {
         applyEnrichment(res);
         setImagesEnriching(false);
@@ -204,7 +208,43 @@ export default function ProductDetailPage({ params }) {
     });
 
     return () => { cancelled = true; setImagesEnriching(false); };
-  }, [product, loading, productId]);
+  }, [product, loading, productId, asinForScraper, isAsinInUrl]);
+
+  // Step C: جزئیات کامل (توضیحات، مشخصات فنی، نظرات). با ASIN از URL یا از product.asin.
+  const mergeDetailsIntoProduct = (res) => {
+    if (!res?.success) return;
+    setProduct((prev) => {
+      if (!prev) return prev;
+      const next = { ...prev };
+      if (res.description != null) next.description = res.description;
+      if (Array.isArray(res.attributes) && res.attributes.length > 0) next.attributes = res.attributes;
+      if (Array.isArray(res.reviews)) next.reviews = res.reviews;
+      if (res.reviews_count != null) next.reviews_count = res.reviews_count;
+      if (res.rating != null) next.rating = res.rating;
+      if (Array.isArray(res.bullet_points) && res.bullet_points.length > 0) next.bullet_points = res.bullet_points;
+      if (Array.isArray(res.images) && res.images.length > 0 && (!prev.images || prev.images.length < res.images.length)) {
+        next.images = res.images;
+      }
+      return next;
+    });
+  };
+  useEffect(() => {
+    if (!product || loading) return;
+    if (!asinForScraper || detailsEnrichedAsinRef.current === asinForScraper) return;
+
+    detailsEnrichedAsinRef.current = asinForScraper;
+    let cancelled = false;
+    const cached = getScraperDetailsCached(asinForScraper);
+    if (cached) {
+      mergeDetailsIntoProduct(cached);
+      return;
+    }
+    const promise = isAsinInUrl ? detailsPromiseRef.current : null;
+    (promise || prefetchScraperDetails(asinForScraper))?.then((res) => {
+      if (!cancelled) mergeDetailsIntoProduct(res);
+    });
+    return () => { cancelled = true; };
+  }, [product, loading, productId, asinForScraper, isAsinInUrl]);
 
   if (loading) {
     return (
@@ -351,7 +391,7 @@ export default function ProductDetailPage({ params }) {
                 {product?.attributes && product.attributes.length > 0 && (
                   <div>
                     <h3 className="mb-3 text-right text-gray-800 dark:text-white">
-                      ویژگی ها
+                      مشخصات فنی
                     </h3>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                       {product.attributes.map((atr, index) => (

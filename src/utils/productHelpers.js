@@ -69,10 +69,38 @@ export function getProductName(product) {
 }
 
 /**
- * Get product description (fallback chain) — اسکرپر: description
+ * بررسی می‌کند که متن عملاً همان عنوان محصول نباشد (تا در مشخصات فنی عنوان به‌جای توضیح نمایش داده نشود).
+ */
+function isEffectivelyTitle(product, text) {
+  if (!text || !product) return false;
+  const t = String(text).trim();
+  const title = String(product?.title || product?.name || "").trim();
+  if (!title) return false;
+  if (t === title) return true;
+  // اگر متن فقط عنوان + چند کاراکتر اضافه باشد (مثلاً همان جملهٔ تایتل در یک فیلد دیگر)
+  if (t.length <= title.length + 100 && (t.includes(title) || title.includes(t))) return true;
+  return false;
+}
+
+/**
+ * Get product description (fallback chain) — اسکرپر: description و در صورت نبود، bullet_points.
+ * اگر مقدار به‌دست‌آمده عملاً همان عنوان محصول باشد، خالی برمی‌گرداند تا در مشخصات فنی دوباره نمایش داده نشود.
  */
 export function getProductDescription(product) {
-  return product?.shortDescription || product?.description || "";
+  const desc = product?.shortDescription || product?.description || "";
+  if (desc.trim()) {
+    if (isEffectivelyTitle(product, desc)) return "";
+    return desc;
+  }
+  const bullets = product?.bullet_points;
+  if (Array.isArray(bullets) && bullets.length > 0) {
+    const joined = bullets.join("\n\n");
+    if (isEffectivelyTitle(product, joined)) return "";
+    // اگر فقط یک آیتم داریم و همان تایتل است، خالی برگردان
+    if (bullets.length === 1 && isEffectivelyTitle(product, bullets[0])) return "";
+    return joined;
+  }
+  return "";
 }
 
 /**

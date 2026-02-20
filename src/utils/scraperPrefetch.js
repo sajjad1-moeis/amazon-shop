@@ -13,6 +13,7 @@ import { productService } from "@/services/product/productService";
  */
 
 const _cache = new Map();
+const _detailsCache = new Map();
 const CACHE_TTL = 10 * 60 * 1000; // 10 min
 
 export function prefetchScraperImages(asin) {
@@ -46,6 +47,47 @@ export function getScraperImagesCached(asin) {
   if (!asin) return null;
   const key = String(asin).toUpperCase();
   const entry = _cache.get(key);
+  if (entry && Date.now() - entry.ts < CACHE_TTL && entry.data?.success) {
+    return entry.data;
+  }
+  return null;
+}
+
+/**
+ * Prefetch & cache for scraper product details (توضیحات، مشخصات فنی، نظرات).
+ * همان منطق عکس‌ها: درخواست از همان اول (mount) شروع می‌شود تا با لود محصول هم‌زمان یا زودتر بیاید.
+ */
+export function prefetchScraperDetails(asin) {
+  if (!asin) return null;
+  const key = String(asin).toUpperCase();
+
+  const entry = _detailsCache.get(key);
+  if (entry && Date.now() - entry.ts < CACHE_TTL) {
+    if (entry.data?.success) return Promise.resolve(entry.data);
+    if (entry.promise) return entry.promise;
+  }
+
+  const fresh = { promise: null, data: null, ts: Date.now() };
+  _detailsCache.set(key, fresh);
+  fresh.promise = productService
+    .getScraperProductDetails(key)
+    .then((res) => {
+      fresh.data = res;
+      fresh.ts = Date.now();
+      return res;
+    })
+    .catch(() => {
+      _detailsCache.delete(key);
+      return null;
+    });
+
+  return fresh.promise;
+}
+
+export function getScraperDetailsCached(asin) {
+  if (!asin) return null;
+  const key = String(asin).toUpperCase();
+  const entry = _detailsCache.get(key);
   if (entry && Date.now() - entry.ts < CACHE_TTL && entry.data?.success) {
     return entry.data;
   }

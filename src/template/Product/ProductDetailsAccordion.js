@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Bag2, CardPos, Shield, Truck } from "iconsax-reactjs";
 import { getProductDescription } from "@/utils/productHelpers";
@@ -14,9 +14,19 @@ const serviceGuarantees = [
 
 function buildSpecsFromProduct(product) {
   if (!product) return [];
+  const title = (product.title || product.name || "").trim();
   const attrs = product.attributes;
   if (Array.isArray(attrs) && attrs.length > 0) {
-    return attrs.map((a) => ({ label: a.name || a.label || "", value: a.value || "" })).filter((s) => s.label || s.value);
+    return attrs
+      .map((a) => ({ label: a.name || a.label || "", value: (a.value || "").trim() }))
+      .filter((s) => s.label || s.value)
+      .filter((s) => {
+        if (!title || s.value.length < 20) return true;
+        if (s.value === title) return false;
+        if (s.label && /title|نام محصول|عنوان/i.test(s.label)) return false;
+        if (s.value.length > 100 && s.value.includes(title.slice(0, 30))) return false;
+        return true;
+      });
   }
   const manual = [];
   if (product.brand || product.brandName) manual.push({ label: "برند", value: product.brand || product.brandName });
@@ -29,11 +39,20 @@ function buildSpecsFromProduct(product) {
 export default function ProductDetailsAccordion({ product }) {
   const description = getProductDescription(product);
   const technicalSpecs = buildSpecsFromProduct(product);
+  const hasDescription = Boolean(description && description.trim());
+  const hasSpecs = technicalSpecs.length > 0;
   const items = [];
-  if (description) items.push("item-1");
-  if (technicalSpecs.length > 0) items.push("item-2");
+  if (hasDescription) items.push("item-1");
+  if (hasDescription || hasSpecs) items.push("item-2");
 
   const [openItems, setOpenItems] = useState(items);
+  const prevItemsLenRef = useRef(0);
+
+  // وقتی جزئیات بعداً لود می‌شوند (مثلاً از API اسکرپر)، آیتم‌های آکاردئون باز شوند
+  useEffect(() => {
+    if (items.length > 0 && prevItemsLenRef.current === 0) setOpenItems([...items]);
+    prevItemsLenRef.current = items.length;
+  }, [items.length]);
 
   const handleValueChange = (value) => {
     setOpenItems(value);
@@ -67,33 +86,56 @@ export default function ProductDetailsAccordion({ product }) {
   return (
     <div>
       <Accordion type="multiple" className="w-full" value={openItems} onValueChange={handleValueChange}>
-        {description && (
+        {hasDescription && (
           <AccordionItem value="item-1">
             <AccordionTrigger>درباره محصول</AccordionTrigger>
             <AccordionContent className="flex flex-col gap-4 text-balance">
-              <p className="text-[#484B4F] dark:text-dark-text whitespace-pre-line text-right">
+              <p className="text-[#484B4F] dark:text-dark-text whitespace-pre-line text-right leading-relaxed">
                 {description}
               </p>
             </AccordionContent>
           </AccordionItem>
         )}
-        {technicalSpecs.length > 0 && (
+        {(hasDescription || hasSpecs) && (
           <AccordionItem value="item-2">
             <AccordionTrigger>مشخصات فنی</AccordionTrigger>
-            <AccordionContent className="flex flex-col gap-4 text-balance">
-              <div className="grid grid-cols-1 gap-0">
-                {technicalSpecs.map((spec, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-row items-center justify-between gap-4 py-3 border-b dark:border-dark-stroke border-gray-100 last:border-b-0"
-                  >
-                    <span className="text-sm font-medium dark:text-caption text-gray-600 text-right flex-1">
-                      {spec.label}
-                    </span>
-                    <span className="text-sm text-gray-900 dark:text-dark-titre flex-1 text-left">{spec.value}</span>
+            <AccordionContent className="flex flex-col gap-4 text-balance pb-2">
+              {hasDescription && (
+                <div className={hasSpecs ? "mb-4" : ""}>
+                  {hasSpecs && (
+                    <h4 className="text-sm font-semibold text-gray-700 dark:text-dark-titre mb-2 text-right">
+                      توضیحات محصول
+                    </h4>
+                  )}
+                  <p className="text-[#484B4F] dark:text-dark-text whitespace-pre-line text-right leading-relaxed text-sm">
+                    {description}
+                  </p>
+                </div>
+              )}
+              {hasSpecs && (
+                <div className="rounded-xl border border-gray-200 dark:border-dark-stroke bg-gray-50/80 dark:bg-dark-field/60 overflow-hidden">
+                  {hasDescription && (
+                    <div className="border-b border-gray-200 dark:border-dark-stroke px-4 py-2">
+                      <span className="text-xs font-medium text-gray-500 dark:text-caption">جدول مشخصات</span>
+                    </div>
+                  )}
+                  <div className="divide-y divide-gray-200 dark:divide-dark-stroke">
+                    {technicalSpecs.map((spec, index) => (
+                      <div
+                        key={index}
+                        className="flex flex-row items-center justify-between gap-4 px-4 py-3"
+                      >
+                        <span className="text-sm font-medium dark:text-caption text-gray-600 text-right flex-1 min-w-0">
+                          {spec.label}
+                        </span>
+                        <span className="text-sm text-gray-900 dark:text-dark-titre flex-1 text-left min-w-0 break-words">
+                          {spec.value}
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
             </AccordionContent>
           </AccordionItem>
         )}

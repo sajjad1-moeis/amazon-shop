@@ -311,6 +311,23 @@ export const productService = {
     }
   },
 
+  /**
+   * دریافت جزئیات کامل از اسکرپر: توضیحات، مشخصات فنی (attributes)، نظرات.
+   * برای نمایش در صفحه محصول (بخش توضیحات، مشخصات فنی، نظرات).
+   */
+  getScraperProductDetails: async (asin) => {
+    if (!isScraperConfigured()) return null;
+    try {
+      const scraper = getScraperClient();
+      return await scraper
+        .get(`api/product/${encodeURIComponent(asin)}/details`, { timeout: 20000 })
+        .json();
+    } catch (err) {
+      console.error("Error fetching scraper product details:", err);
+      return null;
+    }
+  },
+
   // ذخیره محصول اسکرپ شده در صورت عدم وجود (برای محصولات باز شده از Amazon)
   saveIfNotExistsFromScraper: async (scraperProduct) => {
     const client = getPublicClient();
