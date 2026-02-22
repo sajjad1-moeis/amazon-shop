@@ -50,6 +50,14 @@ const nextConfig = {
   // Compression
   compress: true,
 
+  // پروکسی اسکرپر پایتون: برای لوکال وقتی CORS مشکل می‌دهد
+  // در .env.local: NEXT_PUBLIC_SCRAPER_URL=http://localhost:3000/api/scraper و SCRAPER_PROXY_TARGET=http://107.161.175.45:5000
+  async rewrites() {
+    const target = process.env.SCRAPER_PROXY_TARGET || process.env.NEXT_PUBLIC_SCRAPER_URL || "http://107.161.175.45:5000";
+    const base = String(target).replace(/\/$/, "");
+    return [{ source: "/api/scraper/:path*", destination: `${base}/:path*` }];
+  },
+
   // Remove X-Powered-By header for security
   poweredByHeader: false,
 

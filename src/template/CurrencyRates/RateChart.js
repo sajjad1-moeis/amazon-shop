@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
@@ -65,6 +65,8 @@ const CustomTooltip = ({ active, payload }) => {
 
 export default function RateChart() {
   const [selectedPeriod, setSelectedPeriod] = useState("1year");
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   const currentData = chartData[selectedPeriod];
 
@@ -109,29 +111,31 @@ export default function RateChart() {
         </div>
       </div>
 
-      {/* Chart */}
-      <div className="h-64 md:h-80 min-h-[256px] w-full">
-        <ResponsiveContainer width="100%" height="100%" minHeight={256}>
-          <LineChart data={currentData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200 dark:stroke-dark-stroke" />
-            <XAxis dataKey="name" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} />
-            <YAxis
-              domain={[100, 500]}
-              ticks={[100, 200, 300, 400, 500]}
-              tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
-              tickFormatter={(value) => value.toLocaleString("fa-IR")}
-            />
-            <Tooltip content={<CustomTooltip />} />
-            <Line
-              type="monotone"
-              dataKey="value"
-              stroke="#3b82f6"
-              strokeWidth={2}
-              dot={{ fill: "#3b82f6", r: 4, strokeWidth: 2, stroke: "hsl(var(--background))" }}
-              activeDot={{ r: 6 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+      {/* Chart - render only after mount to avoid recharts width/height -1 warning during SSR */}
+      <div className="w-full" style={{ minHeight: 256, height: 320 }}>
+        {mounted && (
+          <ResponsiveContainer width="100%" height="100%" minHeight={256}>
+            <LineChart data={currentData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200 dark:stroke-dark-stroke" />
+              <XAxis dataKey="name" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} />
+              <YAxis
+                domain={[100, 500]}
+                ticks={[100, 200, 300, 400, 500]}
+                tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
+                tickFormatter={(value) => value.toLocaleString("fa-IR")}
+              />
+              <Tooltip content={<CustomTooltip />} />
+              <Line
+                type="monotone"
+                dataKey="value"
+                stroke="#3b82f6"
+                strokeWidth={2}
+                dot={{ fill: "#3b82f6", r: 4, strokeWidth: 2, stroke: "hsl(var(--background))" }}
+                activeDot={{ r: 6 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
       </div>
 
       {/* Source Label */}

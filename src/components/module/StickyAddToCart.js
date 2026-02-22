@@ -20,7 +20,7 @@ export default function StickyAddToCart({ onAddToCart, loading, price, className
             {price ? `${Number(price).toLocaleString("fa-IR")} تومان` : "قیمت نامشخص"}
           </span>
         </div>
-        <div class="flex gap-2">
+        <div className="flex gap-2">
           <Button>
             <Heart />
           </Button>

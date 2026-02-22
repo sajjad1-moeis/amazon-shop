@@ -50,7 +50,7 @@ const mainRates = [
 
 export default function MainRatesGrid() {
   return (
-    <div class="">
+    <div className="">
       <h3 className="text-2xl lg:text-3xl text-center mb-8 mt-10">نرخ ارزهای اصلی</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {mainRates.map((currency) => (
@@ -64,7 +64,7 @@ export default function MainRatesGrid() {
                 <img className="rounded-full size-10" src="/image/emarat.png" alt="" />
               </span>
 
-              <div class="">
+              <div className="">
                 <p className="text-gray-400 dark:text-white text-xs md:text-sm">{currency.name}</p>
                 <p className="text-gray-900 dark:text-white text-xl md:text-2xl mb-1">{currency.rate} تومان</p>
               </div>
