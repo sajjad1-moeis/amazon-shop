@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { fieldClassName } from "./AuthModal";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 export default function ResetVerifyView({ onBack, onSuccess }) {
   const { resetPassword, resendOtp, loading } = useAuth();
@@ -25,19 +26,34 @@ export default function ResetVerifyView({ onBack, onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (password !== passwordRepeat) {
-      return;
-    }
-
-    if (password.length < 6) {
-      return;
-    }
-
     if (!phone) {
+      toast.error("شماره موبایل یافت نشد");
+      return;
+    }
+    if (!code || code.length !== 6) {
+      toast.error("لطفاً کد تأیید ۶ رقمی را وارد کنید");
+      return;
+    }
+    if (!password || password.length < 6 || password.length > 50) {
+      toast.error("رمز عبور باید بین ۶ تا ۵۰ کاراکتر باشد");
+      return;
+    }
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d).{6,}$/;
+    if (!passwordRegex.test(password)) {
+      toast.error("رمز عبور باید شامل حداقل یک حرف و یک عدد باشد");
+      return;
+    }
+    if (password !== passwordRepeat) {
+      toast.error("رمز عبور و تکرار آن یکسان نیستند");
       return;
     }
 
-    const result = await resetPassword({ phoneNumber: phone, otpCode: code, newPassword: password });
+    const result = await resetPassword({
+      phoneNumber: phone,
+      otpCode: code,
+      newPassword: password,
+      confirmPassword: passwordRepeat,
+    });
     if (result.success) {
       localStorage.removeItem("reset_phone");
       onSuccess?.();
@@ -46,7 +62,7 @@ export default function ResetVerifyView({ onBack, onSuccess }) {
 
   const handleResend = async () => {
     if (!phone) return;
-    await resendOtp(phone, "forgotPassword");
+    await resendOtp(phone, "forgot");
   };
 
   return (

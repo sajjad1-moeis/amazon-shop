@@ -76,8 +76,9 @@ export const AuthProvider = ({ children }) => {
       toast.success(response.message || "ورود موفقیت‌آمیز");
       return { success: true, data: response.data };
     } catch (error) {
-      toast.error(error?.message || "خطا در ارتباط با سرور");
-      return { success: false };
+      const msg = error?.data?.message || error?.message || "خطا در ارتباط با سرور";
+      toast.error(msg);
+      return { success: false, message: msg };
     } finally {
       setLoading(false);
     }
@@ -96,7 +97,7 @@ export const AuthProvider = ({ children }) => {
       toast.error(response?.message || "خطا در ارسال کد");
       return { success: false };
     } catch (error) {
-      toast.error(error?.message || "خطا در ارتباط با سرور");
+      toast.error(error?.data?.message || error?.message || "خطا در ارتباط با سرور");
       return { success: false };
     } finally {
       setLoading(false);
@@ -124,7 +125,7 @@ export const AuthProvider = ({ children }) => {
       toast.success(response.message || "ثبت‌نام موفقیت‌آمیز");
       return { success: true, data: response.data };
     } catch (error) {
-      toast.error(error?.message || "خطا در ارتباط با سرور");
+      toast.error(error?.data?.message || error?.message || "خطا در ارتباط با سرور");
       return { success: false };
     } finally {
       setLoading(false);
@@ -146,7 +147,7 @@ export const AuthProvider = ({ children }) => {
       toast.error(response?.message || "خطا در ارسال کد");
       return { success: false };
     } catch (error) {
-      toast.error(error?.message || "خطا در ارتباط با سرور");
+      toast.error(error?.data?.message || error?.message || "خطا در ارتباط با سرور");
       return { success: false };
     } finally {
       setLoading(false);
@@ -171,7 +172,7 @@ export const AuthProvider = ({ children }) => {
       toast.success(response.message || "رمز عبور با موفقیت تغییر کرد");
       return { success: true, data: response.data };
     } catch (error) {
-      toast.error(error?.message || "خطا در ارتباط با سرور");
+      toast.error(error?.data?.message || error?.message || "خطا در ارتباط با سرور");
       return { success: false };
     } finally {
       setLoading(false);
@@ -194,7 +195,7 @@ export const AuthProvider = ({ children }) => {
       toast.error(response?.message || "خطا در ارسال مجدد کد");
       return { success: false };
     } catch (error) {
-      toast.error(error?.message || "خطا در ارتباط با سرور");
+      toast.error(error?.data?.message || error?.message || "خطا در ارتباط با سرور");
       return { success: false };
     } finally {
       setLoading(false);

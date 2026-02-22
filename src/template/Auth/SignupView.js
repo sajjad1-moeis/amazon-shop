@@ -78,10 +78,9 @@ export default function SignupView({ onGoLogin, onSuccess }) {
       return;
     }
 
+    // طبق API فقط: phoneNumber, password, confirmPassword (API_Phase1_Auth_For_Frontend)
     const result = await sendRegistrationOtp({
       phoneNumber: phone,
-      firstName: firstName.trim(),
-      lastName: lastName.trim(),
       password,
       confirmPassword: passwordRepeat,
     });

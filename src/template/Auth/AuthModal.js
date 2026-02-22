@@ -68,7 +68,7 @@ export function AuthModal({ open, onClose }) {
         )}
 
         {view === VIEWS.SIGNUP_VERIFY && (
-          <SignupVerifyView phone={phone} code={code} onChangeCode={setCode} onBack={() => goTo(VIEWS.RESET_REQUEST)} />
+          <SignupVerifyView phone={phone} code={code} onChangeCode={setCode} onBack={() => goTo(VIEWS.SIGNUP)} />
         )}
 
         {view === VIEWS.RESET_REQUEST && (
@@ -76,7 +76,7 @@ export function AuthModal({ open, onClose }) {
             phone={phone}
             onChangePhone={setPhone}
             onBack={() => goTo(VIEWS.LOGIN)}
-            onNext={() => goTo(VIEWS.RESET_VERIFY)}
+            onSuccess={() => goTo(VIEWS.RESET_VERIFY)}
           />
         )}
 
