@@ -12,7 +12,7 @@ import { GUIDE_ITEMS } from "@/data";
 function GuidesContent() {
   const searchParams = useSearchParams();
   const sectionParam = searchParams.get("section");
-  console.log(sectionParam);
+
   const defaultSection = GUIDE_ITEMS.find((item) => item.id === sectionParam)?.id || "shipping-return";
   const [activeGuide, setActiveGuide] = useState(defaultSection);
 
@@ -56,7 +56,7 @@ function GuidesContent() {
                           "w-full text-right px-4 py-3 rounded-lg transition-colors text-sm font-medium",
                           activeGuide === item.id
                             ? "bg-gray-100 dark:bg-white/10 text-yellow-600"
-                            : "bg-white dark:bg-transparent dark:text-dark-text text-gray-700 hover:bg-gray-50"
+                            : "bg-white dark:bg-transparent dark:text-dark-text text-gray-700 hover:bg-gray-50",
                         )}
                       >
                         {item.label}

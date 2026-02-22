@@ -6,7 +6,7 @@ import { SearchNormal1 } from "iconsax-reactjs";
 function SearchBoxShop({ type, searchLogo, isWhite }) {
   return (
     <div
-      className="relative rounded-2xl bg-white dark:bg-dark-bg -mt-[10%] md:-mt-[3%] p-4 max-w-4xl mx-auto"
+      className="relative rounded-lg md:rounded-2xl bg-white dark:bg-dark-bg -mt-[5%] md:-mt-[3%] p-2 md:p-4 max-w-4xl mx-auto"
       style={{ boxShadow: "0px 1px 8px 0px #0000001F" }}
     >
       <div className="flex items-center gap-2">
@@ -19,7 +19,7 @@ function SearchBoxShop({ type, searchLogo, isWhite }) {
             className={isWhite && "invert dark:invert-0"}
           />
         </div>
-        <p className="text-lg text-gray-800 dark:text-dark-text">جستجو در {type}</p>
+        <p className="text-sm md:text-lg text-gray-800 dark:text-dark-text">جستجو در {type}</p>
       </div>
 
       <div className="bg-gray-50 border border-gray-300 dark:bg-dark-field dark:border-dark-stroke w-full rounded-lg p-2 flex-between mt-4">
@@ -28,7 +28,7 @@ function SearchBoxShop({ type, searchLogo, isWhite }) {
           className="px-2 outline-none bg-transparent placeholder:text-sm dark:placeholder:text-gray-400"
           placeholder="لینک یا نام کالا را وارد کنید ..."
         />
-        <Button variant="ghost" className="bg-yellow-500 text-primary-800 flex-flex-between rounded-xl">
+        <Button variant="ghost" className="bg-yellow-500 text-primary-800 flex-flex-between rounded-xl max-md:h-8">
           <SearchNormal1 /> جستجو
         </Button>
       </div>

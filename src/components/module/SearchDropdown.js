@@ -4,13 +4,7 @@ import React, { useState } from "react";
 import { SearchNormal1 } from "iconsax-reactjs";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // لیست فروشگاه‌ها
 const shops = [
@@ -72,22 +66,15 @@ export default function SearchDropdown() {
         <SelectTrigger className="bg-gray-100 w-max gap-4 flex-none dark:bg-[#6F6F6F3D] dark:text-white rounded-l-none rounded-r-lg text-gray-500 text-base  border-0 h-auto py-2 px-2">
           <SelectValue>
             <div className="flex items-center gap-2">
-            
               <span className="text-sm">{selectedShop.name}</span>
             </div>
           </SelectValue>
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className=" p-1 bg-white dark:bg-dark-box rounded-xl shadow-xl border border-gray-200 dark:border-dark-stroke relative z-50">
           {shops.map((shop) => (
             <SelectItem key={shop.id} value={shop.id}>
               <div className="flex items-center gap-3">
-                <Image
-                  src={shop.image}
-                  alt={shop.name}
-                  width={24}
-                  height={24}
-                  className="object-contain shadow-md"
-                />
+                <Image src={shop.image} alt={shop.name} width={24} height={24} className="object-contain shadow-md" />
                 <span>{shop.name}</span>
               </div>
             </SelectItem>
@@ -112,8 +99,7 @@ export default function SearchDropdown() {
           onClick={handleSearch}
           className="bg-yellow-500 hover:bg-yellow-600 text-primary-800 gap-2 flex-between rounded-lg p-2 md:px-3 py-2 flex-shrink-0"
         >
-          <SearchNormal1 className="max-lg:size-6" />{" "}
-          <span className="max-lg:hidden">جستجو</span>
+          <SearchNormal1 className="max-lg:size-6" /> <span className="max-lg:hidden">جستجو</span>
         </button>
       </div>
     </div>

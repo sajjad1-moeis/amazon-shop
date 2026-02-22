@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
 import { cn } from "@/lib/utils";
 
 const timePeriods = [
@@ -69,21 +71,42 @@ export default function RateChart() {
   return (
     <div className="bg-white dark:bg-dark-box rounded-2xl p-4 md:p-6 shadow-md border border-gray-200 dark:border-dark-stroke">
       {/* Tabs */}
-      <div className="flex flex-wrap gap-2 md:gap-4 mb-6 md:mb-8">
-        {timePeriods.map((period) => (
-          <button
-            key={period.id}
-            onClick={() => setSelectedPeriod(period.id)}
-            className={cn(
-              "px-4 py-2 rounded-lg text-sm md:text-base font-medium transition-colors",
-              selectedPeriod === period.id
-                ? "bg-primary-500 text-white"
-                : "bg-gray-100 dark:bg-dark-field text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-stroke",
-            )}
-          >
-            {period.label}
-          </button>
-        ))}
+      <div className="flex-between flex-col md:flex-row gap-4 mb-6 md:mb-8">
+        <p className="text-sm md:text-lg lg:text-2xl text-gray-900 dark:text-dark-title text-right w-full md:w-auto">
+          نمودار تغییرات نرخ درهم امارات
+        </p>
+        {/* Mobile: Select */}
+        <div className="max-md:w-full lg:hidden">
+          <Select value={selectedPeriod} onValueChange={setSelectedPeriod} dir="rtl">
+            <SelectTrigger className={cn("!w-full", filterSelectTriggerStyles)}>
+              <SelectValue placeholder="انتخاب بازه زمانی" />
+            </SelectTrigger>
+            <SelectContent className={filterSelectContentStyles} dir="rtl">
+              {timePeriods.map((period) => (
+                <SelectItem key={period.id} value={period.id}>
+                  {period.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        {/* Desktop: Buttons */}
+        <div className="hidden lg:flex flex-wrap border border-gray-200 dark:border-dark-stroke bg-gray-100 dark:bg-dark-field rounded-lg overflow-hidden">
+          {timePeriods.map((period) => (
+            <button
+              key={period.id}
+              onClick={() => setSelectedPeriod(period.id)}
+              className={cn(
+                "px-4 py-2 text-sm lg:text-base font-medium transition-colors",
+                selectedPeriod === period.id
+                  ? "bg-primary-100 dark:bg-dark-blue text-primary-600 dark:text-dark-title"
+                  : "bg-white dark:bg-dark-field text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-stroke",
+              )}
+            >
+              {period.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Chart */}
@@ -112,7 +135,7 @@ export default function RateChart() {
       </div>
 
       {/* Source Label */}
-      <div className="mt-4 text-xs text-gray-500 dark:text-gray-400 text-right">مرجع: آمازون (امارات)</div>
+      <div className="mt-4 text-xs md:text-sm text-gray-500 dark:text-gray-400 text-right">مرجع: آمازون (امارات)</div>
     </div>
   );
 }

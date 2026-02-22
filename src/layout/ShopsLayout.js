@@ -28,7 +28,7 @@ export default function ShopsLayout({
   return (
     <IndexLayout>
       <div className="bg-[#FBFBFB] dark:bg-dark-bg">
-        <div className={cn("relative aspect-square max-h-72 md:max-h-[450px] lg:max-h-[450px] w-full", imgClassName)}>
+        <div className={cn("relative w-full", imgClassName)}>
           {" "}
           <div className="absolute bottom-0 w-full h-2/4 dark:hidden liner-shop-bg-white z-[50]" />
           <div className="absolute bottom-0 w-full h-2/4 hidden dark:block liner-shop-bg-dark z-[50]" />
@@ -51,7 +51,15 @@ export default function ShopsLayout({
               </BreadcrumbList>
             </Breadcrumb>
           </div>
-          <Image src={src} alt={"محصول بازدید شده شماره "} fill className="max-lg:object-cover" />{" "}
+          {/* <Image src={src} alt={"محصول بازدید شده شماره "} fill className="max-lg:object-cover" />{" "} */}
+          <Image
+            src={src}
+            alt="سپر کیفیت میکرولس"
+            width={1200}
+            height={600}
+            priority
+            className="w-full h-auto object-cover"
+          />
         </div>
         <div className="max-lg:px-4 relative z-50">
           <SearchBoxShop type={title} isWhite={isWhite} searchLogo={searchLogo} />

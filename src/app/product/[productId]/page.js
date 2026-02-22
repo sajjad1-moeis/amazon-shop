@@ -20,6 +20,7 @@ import {
   getBreadcrumbItems,
   getBasePrice,
   getProductDescription,
+  getProductUrl,
   parseProductNum,
   generateProductSchema,
 } from "@/utils/productHelpers";
@@ -31,6 +32,7 @@ export default function ProductDetailPage({ params }) {
   );
   const productId = resolved?.productId ?? null;
 
+<<<<<<< HEAD
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -332,6 +334,7 @@ export default function ProductDetailPage({ params }) {
               fetchPriority="high"
             />
           </div>
+<<<<<<< HEAD
 
           <div className="grid grid-cols-12 gap-6">
             <div className="col-span-12 lg:col-span-3 xl:col-span-4 order-1 lg:order-1">

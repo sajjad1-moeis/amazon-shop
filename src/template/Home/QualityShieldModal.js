@@ -36,7 +36,7 @@ export default function QualityShieldModal({ open, onOpenChange }) {
           </h2>
 
           {/* Description Box */}
-          <div className="bg-gray-100 dark:bg-dark-field border border-gray-200 dark:border-dark-stroke rounded-xl p-3 mb-6">
+          <div className="bg-gray-100 dark:bg-dark-field border border-gray-200 dark:border-dark-stroke rounded-xl p-3 mb-4">
             <p className="text-gray-700 dark:text-dark-text text-sm md:text-base mb-4 text-right">
               با فعال سازی سپر کیفیت، تیم میکرولس محصول شما را به صورت تخصصی بررسی خواهد کرد
             </p>
@@ -53,7 +53,7 @@ export default function QualityShieldModal({ open, onOpenChange }) {
           </div>
 
           {/* Rules Link */}
-          <div className="mb-6 text-center">
+          <div className="mb-6">
             <button className="text-sm md:text-base text-gray-600 dark:text-dark-text hover:text-blue-600 dark:hover:text-primary-400 transition-colors">
               مشاهده{" "}
               <span className="text-blue-600 dark:text-primary-400 font-medium hover:underline">قوانین سپر کیفیت</span>

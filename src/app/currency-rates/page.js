@@ -1,30 +1,48 @@
 import IndexLayout from "@/layout/IndexLayout";
-import MainRatesGrid from "@/template/CurrencyRates/MainRatesGrid";
 import RateChart from "@/template/CurrencyRates/RateChart";
+import DirhamComparisonCard from "@/template/CurrencyRates/DirhamComparisonCard";
+import CurrencyRatesTable from "@/template/CurrencyRates/CurrencyRatesTable";
+import DescriptionSection from "@/template/CurrencyRates/DescriptionSection";
+import MainRatesGrid from "@/template/CurrencyRates/MainRatesGrid";
+import CurrencyNotificationBanner from "@/template/CurrencyRates/CurrencyNotificationBanner";
+import Image from "next/image";
 
 export default function CurrencyRatesPage() {
   return (
     <IndexLayout>
       <div className="bg-gray-50 dark:bg-dark-bg min-h-screen">
-        <div className="container px-4 py-6 md:py-8">
-          {/* Main Exchange Rates Section */}
-          <div className="mb-8 md:mb-12">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
-              نرخ ارزهای اصلی
-            </h2>
-            <MainRatesGrid />
-          </div>
+        <Image
+          src="/image/currency-rates.png"
+          alt="سپر کیفیت میکرولس"
+          width={1200}
+          height={600}
+          priority
+          className="w-full h-auto object-cover"
+        />
 
-          {/* Historical Rate Chart Section */}
-          <div className="mt-8 md:mt-12">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-6">
-              نمودار تغییرات نرخ درهم امارات
-            </h2>
+        <div className="container px-4 py-6 md:py-8">
+          {/* نمودار تغییرات نرخ درهم امارات - بالا */}
+
+          <MainRatesGrid />
+
+          <div className="mb-8 md:mb-12  mt-28">
             <RateChart />
           </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 mb-8">
+            <div class="lg:col-span-2">
+              <CurrencyRatesTable />
+            </div>
+            <DirhamComparisonCard />
+          </div>
+
+          {/* بخش توضیحات - پایین */}
+          <DescriptionSection />
+
+          {/* بنر اعلان نرخ ارز - آخرین کامپوننت */}
+          <CurrencyNotificationBanner />
         </div>
       </div>
     </IndexLayout>
   );
 }
-

@@ -65,6 +65,7 @@ module.exports = {
           stroke: "#686869",
           primary: "#3F51B5",
           green: "#426F5B",
+          red: "#624343",
           blue: "#4F5F70",
           yellow: "#71653E",
           "gray-primary": "#494B56",
@@ -109,6 +110,7 @@ module.exports = {
         },
         green: {
           200: "#BCF0DA",
+          300: "#84E1BC",
           500: "#23A26D",
           600: "#057A55",
         },
