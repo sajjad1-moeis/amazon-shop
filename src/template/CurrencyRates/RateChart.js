@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { filterSelectTriggerStyles, filterSelectContentStyles } from "@/utils/filterStyles";
 import { cn } from "@/lib/utils";
@@ -52,21 +53,15 @@ const chartData = {
   ],
 };
 
-const CustomTooltip = ({ active, payload }) => {
-  if (!active || !payload?.length) return null;
-  const item = payload[0];
-  return (
-    <div className="bg-white dark:bg-dark-box border border-gray-200 dark:border-dark-stroke rounded-lg px-3 py-2 shadow-md text-sm">
-      <span className="text-gray-600 dark:text-gray-400">نرخ:</span>{" "}
-      <span className="font-medium">{item.payload.value?.toLocaleString("fa-IR")}</span>
-    </div>
-  );
+const chartConfig = {
+  value: {
+    label: "نرخ",
+    color: "hsl(var(--chart-1))",
+  },
 };
 
 export default function RateChart() {
   const [selectedPeriod, setSelectedPeriod] = useState("1year");
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
 
   const currentData = chartData[selectedPeriod];
 
@@ -111,31 +106,34 @@ export default function RateChart() {
         </div>
       </div>
 
-      {/* Chart - render only after mount to avoid recharts width/height -1 warning during SSR */}
-      <div className="w-full" style={{ minHeight: 256, height: 320 }}>
-        {mounted && (
-          <ResponsiveContainer width="100%" height="100%" minHeight={256}>
-            <LineChart data={currentData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200 dark:stroke-dark-stroke" />
-              <XAxis dataKey="name" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} />
-              <YAxis
-                domain={[100, 500]}
-                ticks={[100, 200, 300, 400, 500]}
-                tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
-                tickFormatter={(value) => value.toLocaleString("fa-IR")}
-              />
-              <Tooltip content={<CustomTooltip />} />
-              <Line
-                type="monotone"
-                dataKey="value"
-                stroke="#3b82f6"
-                strokeWidth={2}
-                dot={{ fill: "#3b82f6", r: 4, strokeWidth: 2, stroke: "hsl(var(--background))" }}
-                activeDot={{ r: 6 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        )}
+      {/* Chart Container */}
+      <div className="bg-gray-50 dark:bg-dark-field p-2 md:p-4 rounded-lg border border-gray-200 dark:border-dark-stroke">
+        <ChartContainer config={chartConfig} className="h-48 md:h-64 lg:h-80 w-full">
+          <LineChart data={currentData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="0 0" stroke="#e5e7eb" className="dark:stroke-dark-stroke" />
+            <XAxis
+              dataKey="name"
+              tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }}
+              className="dark:text-dark-text"
+            />
+            <YAxis
+              direction={"ltr"}
+              domain={[100, 500]}
+              ticks={[100, 200, 300, 400, 500]}
+              tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }}
+              tickFormatter={(value) => value.toLocaleString("fa-IR")}
+            />
+            <ChartTooltip content={<ChartTooltipContent />} />
+            <Line
+              type="monotone"
+              dataKey="value"
+              stroke="#6171C8"
+              strokeWidth={2}
+              dot={{ fill: "#fff", r: 4, strokeWidth: 2, stroke: "#8995D6" }}
+              activeDot={{ r: 6 }}
+            />
+          </LineChart>
+        </ChartContainer>
       </div>
 
       {/* Source Label */}

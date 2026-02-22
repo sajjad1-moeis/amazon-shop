@@ -6,18 +6,15 @@ const nextConfig = {
   // Vercel handles deployment automatically, standalone is not needed
   ...(process.env.VERCEL ? {} : { output: "standalone" }),
 
-  // Image optimization (اسکرپر: تصاویر از دامنه‌های آمازون)
+  // Image optimization
   images: {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
+    // برای لیارا - تصاویر بدون بهینه‌سازی لود می‌شوند تا مشکل حل شود
     unoptimized: true,
-    remotePatterns: [
-      { protocol: "https", hostname: "m.media-amazon.com", pathname: "/**" },
-      { protocol: "https", hostname: "images-na.ssl-images-amazon.com", pathname: "/**" },
-      { protocol: "https", hostname: "images-eu.ssl-images-amazon.com", pathname: "/**" },
-    ],
+    remotePatterns: [],
   },
 
   // Security headers
@@ -49,14 +46,6 @@ const nextConfig = {
 
   // Compression
   compress: true,
-
-  // پروکسی اسکرپر پایتون: برای لوکال وقتی CORS مشکل می‌دهد
-  // در .env.local: NEXT_PUBLIC_SCRAPER_URL=http://localhost:3000/api/scraper و SCRAPER_PROXY_TARGET=http://107.161.175.45:5000
-  async rewrites() {
-    const target = process.env.SCRAPER_PROXY_TARGET || process.env.NEXT_PUBLIC_SCRAPER_URL || "http://107.161.175.45:5000";
-    const base = String(target).replace(/\/$/, "");
-    return [{ source: "/api/scraper/:path*", destination: `${base}/:path*` }];
-  },
 
   // Remove X-Powered-By header for security
   poweredByHeader: false,
