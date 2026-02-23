@@ -8,6 +8,7 @@ import BlogFilters from "@/template/Admin/blog/list/BlogFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { blogService } from "@/services/blog/blogService";
+import { unwrapApiData } from "@/services/api/client";
 
 export default function BlogListPage() {
   const router = useRouter();
@@ -31,9 +32,9 @@ export default function BlogListPage() {
         pageSize,
         searchTerm: searchTerm || undefined,
       });
-
-      if (response.success && response.data) {
-        const formattedPosts = response.data.blogs.map((blog) => ({
+      const data = unwrapApiData(response);
+      if (data?.blogs) {
+        const formattedPosts = data.blogs.map((blog) => ({
           id: blog.id,
           title: blog.title,
           category: blog.categoryName || "-",
@@ -49,7 +50,7 @@ export default function BlogListPage() {
             : "-",
         }));
         setPosts(formattedPosts);
-        setTotalPages(response.data.totalPages || 1);
+        setTotalPages(data.totalPages || 1);
       }
     } catch (error) {
       toast.error(error.message || "خطا در دریافت بلاگ‌ها");
@@ -85,12 +86,11 @@ export default function BlogListPage() {
     setDeleteLoading(true);
     try {
       const response = await blogService.softDelete(selectedPostId);
-      if (response.success) {
-        toast.success("بلاگ با موفقیت حذف شد");
+      unwrapApiData(response);
+      toast.success("بلاگ با موفقیت حذف شد");
         setDeleteDialogOpen(false);
         setSelectedPostId(null);
         fetchBlogs();
-      }
     } catch (error) {
       toast.error(error.message || "خطا در حذف بلاگ");
     } finally {

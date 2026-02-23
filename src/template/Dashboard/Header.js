@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Search, Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -9,10 +9,25 @@ import Image from "next/image";
 import Link from "next/link";
 import { Notification, SearchNormal1, User } from "iconsax-reactjs";
 import SwitchButton from "@/components/SwitchButton";
+import { notificationService } from "@/services/notification/notificationService";
+import { unwrapApiData } from "@/services/api/client";
 
 export default function DashboardHeader({ onMenuClick }) {
   const { user } = useAuth();
-  const userName = user?.fullName || user?.firstName || "محمد داوری";
+  const userName = user?.fullName || user?.firstName || "کاربر";
+  const userId = user?.id ?? user?.userId;
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    if (userId == null) return;
+    notificationService
+      .getUnreadCount(userId)
+      .then((res) => {
+        const data = unwrapApiData(res);
+        setUnreadCount(typeof data === "number" ? data : 0);
+      })
+      .catch(() => setUnreadCount(0));
+  }, [userId]);
 
   return (
     <header className="py-2 md:py-4 z-50 w-full bg-primary-500 dark:bg-dark-box/35 border-b dark:border-0 border-[#2a4a6f]">
@@ -58,8 +73,13 @@ export default function DashboardHeader({ onMenuClick }) {
         <div className="flex items-center gap-2 flex-shrink-0">
           {/* User Name & Icons - Hidden on mobile */}
           <div className="hidden sm:flex items-center gap-1.5 md:gap-2 text-white dark:text-primary-100">
-            <Link href={"/dashboard/notifications"}>
+            <Link href="/dashboard/notifications" className="relative inline-flex">
               <Notification className="h-4 w-4 md:h-5 md:w-5" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center rounded-full bg-red-500 text-white text-xs font-bold">
+                  {unreadCount > 99 ? "99+" : unreadCount}
+                </span>
+              )}
             </Link>
             <SwitchButton />
 
@@ -69,8 +89,13 @@ export default function DashboardHeader({ onMenuClick }) {
 
           {/* Mobile: Only Icons */}
           <div className="sm:hidden flex items-center gap-2 text-white dark:text-primary-100">
-            <Link href={"/dashboard/notifications"}>
+            <Link href="/dashboard/notifications" className="relative inline-flex">
               <Notification />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center rounded-full bg-red-500 text-white text-xs font-bold">
+                  {unreadCount > 99 ? "99+" : unreadCount}
+                </span>
+              )}
             </Link>
             <User />
           </div>

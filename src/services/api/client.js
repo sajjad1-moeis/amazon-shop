@@ -96,4 +96,17 @@ export const getPublicClient = () => {
   return apiClient;
 };
 
+/**
+ * استاندارد پاسخ API مرحله ۳: { statusCode, success, message, data }
+ * دادهٔ اصلی در data؛ در خطا success: false و message پر است.
+ */
+export const unwrapApiData = (body) => {
+  if (body && body.success === false) {
+    const err = new Error(body.message || "خطا در انجام عملیات");
+    err.data = body;
+    throw err;
+  }
+  return body && typeof body.data !== "undefined" ? body.data : body;
+};
+
 export default apiClient;

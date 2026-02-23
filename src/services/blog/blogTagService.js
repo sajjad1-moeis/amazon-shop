@@ -16,18 +16,25 @@ export const blogTagService = {
     return client.get(`BlogTag/GetById?id=${id}`).json();
   },
 
+  getBySlug: async (slug) => {
+    const client = getPublicClient();
+    return client.get(`BlogTag/GetBySlug?slug=${encodeURIComponent(slug)}`).json();
+  },
+
   create: async (data) => {
     const client = getAuthenticatedClient();
     return client.post("BlogTag/Create", { json: data }).json();
   },
 
+  /** POST api/BlogTag/update/{id} */
   update: async (id, data) => {
     const client = getAuthenticatedClient();
-    return client.put(`BlogTag/Update?id=${id}`, { json: data }).json();
+    return client.post(`BlogTag/update/${id}`, { json: data }).json();
   },
 
+  /** POST api/BlogTag/delete/{id} */
   delete: async (id) => {
     const client = getAuthenticatedClient();
-    return client.delete(`BlogTag/Delete?id=${id}`).json();
+    return client.post(`BlogTag/delete/${id}`).json();
   },
 };

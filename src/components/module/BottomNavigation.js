@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { BitcoinConvert, BoxTick, Home, Profile, ShoppingCart } from "iconsax-reactjs";
 import Link from "next/link";
+import { useCartCount } from "@/contexts/CartCountContext";
 
 const navigationItems = [
   { id: "home", label: "خانه", icon: Home, href: "/" },
@@ -16,6 +17,7 @@ const navigationItems = [
 
 export default function BottomNavigation() {
   const pathname = usePathname();
+  const { cartCount } = useCartCount();
   const [offset, setOffset] = useState({ left: 0, width: 0 });
   const itemRefs = useRef({});
 
@@ -53,6 +55,7 @@ export default function BottomNavigation() {
           {navigationItems.map((item) => {
             const Icon = item.icon;
             const isActive = item.id === activeId;
+            const showCartBadge = item.id === "cart" && cartCount > 0;
 
             return (
               <Link
@@ -64,10 +67,17 @@ export default function BottomNavigation() {
                   isActive && "text-blue-600"
                 )}
               >
-                <Icon
-                  className={cn("transition-all duration-300", isActive ? "text-blue-600" : "text-gray-500")}
-                  variant={isActive ? "Bold" : "Outline"}
-                />
+                <span className="relative inline-flex">
+                  <Icon
+                    className={cn("transition-all duration-300", isActive ? "text-blue-600" : "text-gray-500")}
+                    variant={isActive ? "Bold" : "Outline"}
+                  />
+                  {showCartBadge && (
+                    <span className="absolute -top-1.5 -right-1.5 size-5 bg-primary-400 text-white flex items-center justify-center rounded-full text-xs font-medium min-w-[20px]">
+                      {cartCount}
+                    </span>
+                  )}
+                </span>
 
                 <span
                   className={cn(

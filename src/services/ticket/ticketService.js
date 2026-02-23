@@ -1,5 +1,22 @@
 import { getAuthenticatedClient } from "../api/client";
 
+/** وضعیت تیکت — مطابق داک مرحله ۸ */
+export const TicketStatus = {
+  Open: 1,
+  InProgress: 2,
+  WaitingForUser: 3,
+  Resolved: 4,
+  Closed: 5,
+};
+
+/** اولویت تیکت */
+export const TicketPriority = {
+  Low: 1,
+  Normal: 2,
+  High: 3,
+  Urgent: 4,
+};
+
 export const ticketService = {
   create: async (data) => {
     const client = getAuthenticatedClient();
@@ -21,25 +38,20 @@ export const ticketService = {
     return client.get(`Ticket/GetByUserId?userId=${userId}`).json();
   },
 
+  /** GET api/Ticket/GetMyTickets */
   getMyTickets: async () => {
     const client = getAuthenticatedClient();
-    return client.get("Ticket/GetMyTicket").json();
+    return client.get("Ticket/GetMyTickets").json();
   },
 
   getPaginated: async (params = {}) => {
-    const { pageNumber = 1, pageSize = 20, status, priority, searchTerm, sortBy, sortColumn } = params;
-
+    const { pageNumber = 1, pageSize = 20, status, priority } = params;
     const searchParams = new URLSearchParams({
       pageNumber: pageNumber.toString(),
       pageSize: pageSize.toString(),
     });
-
     if (status !== undefined && status !== null) searchParams.append("status", status.toString());
     if (priority !== undefined && priority !== null) searchParams.append("priority", priority.toString());
-    if (searchTerm) searchParams.append("searchTerm", searchTerm);
-    if (sortBy) searchParams.append("sortBy", sortBy);
-    if (sortColumn) searchParams.append("sortColumn", sortColumn);
-
     const client = getAuthenticatedClient();
     return client.get(`Ticket/GetPaginated?${searchParams.toString()}`).json();
   },
@@ -49,14 +61,16 @@ export const ticketService = {
     return client.get(`Ticket/GetByStatus?status=${status}`).json();
   },
 
+  /** POST api/Ticket/Update?id= — بدنه: UpdateTicketDto */
   update: async (id, data) => {
     const client = getAuthenticatedClient();
-    return client.put(`Ticket/Update?id=${id}`, { json: data }).json();
+    return client.post(`Ticket/Update?id=${id}`, { json: data }).json();
   },
 
-  addMessage: async (ticketId, message) => {
+  /** POST api/Ticket/AddMessage — بدنه: CreateTicketMessageDto */
+  addMessage: async (body) => {
     const client = getAuthenticatedClient();
-    return client.post(`Ticket/AddMessage?ticketId=${ticketId}`, { json: { message } }).json();
+    return client.post("Ticket/AddMessage", { json: body }).json();
   },
 
   getMessages: async (ticketId) => {
@@ -64,24 +78,57 @@ export const ticketService = {
     return client.get(`Ticket/GetMessages?ticketId=${ticketId}`).json();
   },
 
-  getTicketWithMessages: async (id) => {
+  getTicketWithMessages: async (ticketId) => {
     const client = getAuthenticatedClient();
-    return client.get(`Ticket/GetTicketWithMessages?id=${id}`).json();
+    return client.get(`Ticket/GetTicketWithMessages?ticketId=${ticketId}`).json();
   },
 
-  softDelete: async (id) => {
+  /** POST api/Ticket/delete/{id} */
+  softDelete: async (id, reason) => {
     const client = getAuthenticatedClient();
-    return client.delete(`Ticket/SoftDelete?id=${id}`).json();
+    const qs = reason ? `?reason=${encodeURIComponent(reason)}` : "";
+    return client.post(`Ticket/delete/${id}${qs}`).json();
   },
 
+  /** POST api/Ticket/hard-delete/{id} */
   hardDelete: async (id) => {
     const client = getAuthenticatedClient();
-    return client.delete(`Ticket/HardDelete?id=${id}`).json();
+    return client.post(`Ticket/hard-delete/${id}`).json();
   },
 
+  /** POST api/Ticket/Restore?id= */
   restore: async (id) => {
     const client = getAuthenticatedClient();
     return client.post(`Ticket/Restore?id=${id}`).json();
+  },
+
+  /** POST api/Ticket/{ticketId}/Rate — بدنه: { rating, comment? } */
+  rate: async (ticketId, body) => {
+    const client = getAuthenticatedClient();
+    return client.post(`Ticket/${ticketId}/Rate`, { json: body }).json();
+  },
+
+  /** POST api/Ticket/UploadTicketFile?ticketId= — form: file */
+  uploadTicketFile: async (ticketId, file) => {
+    const client = getAuthenticatedClient();
+    const formData = new FormData();
+    formData.append("file", file);
+    return client
+      .extend({ retry: { limit: 0 } })
+      .post(`Ticket/UploadTicketFile?ticketId=${ticketId}`, { body: formData })
+      .json();
+  },
+
+  /** POST api/Ticket/UploadTicketFiles?ticketId= — form: files */
+  uploadTicketFiles: async (ticketId, files) => {
+    const client = getAuthenticatedClient();
+    const formData = new FormData();
+    const list = Array.isArray(files) ? files : [files];
+    list.forEach((f) => formData.append("files", f));
+    return client
+      .extend({ retry: { limit: 0 } })
+      .post(`Ticket/UploadTicketFiles?ticketId=${ticketId}`, { body: formData })
+      .json();
   },
 
   getTicketCountByUserId: async (userId) => {
@@ -97,22 +144,5 @@ export const ticketService = {
   getTicketCountByStatus: async (status) => {
     const client = getAuthenticatedClient();
     return client.get(`Ticket/GetTicketCountByStatus?status=${status}`).json();
-  },
-
-  uploadTicketFile: async (ticketId, file) => {
-    const client = getAuthenticatedClient();
-    const formData = new FormData();
-    formData.append("file", file);
-    // formData.append("ticketId", ticketId.toString());
-    return client
-      .extend({
-        retry: {
-          limit: 0, // غیرفعال کردن retry برای آپلود فایل
-        },
-      })
-      .post(`Ticket/UploadTicketFile?ticketId=${ticketId}`, {
-        body: formData,
-      })
-      .json();
   },
 };

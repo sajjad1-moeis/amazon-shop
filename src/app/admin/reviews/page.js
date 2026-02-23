@@ -8,6 +8,7 @@ import ReviewsTable from "@/template/Admin/reviews/ReviewsTable";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import { reviewService } from "@/services/review/reviewService";
+import { unwrapApiData } from "@/services/api/client";
 
 export default function ReviewsPage() {
   const searchParams = useSearchParams();
@@ -29,11 +30,9 @@ export default function ReviewsPage() {
         status,
         searchTerm: searchTerm || undefined,
       });
-
-      if (response.success && response.data) {
-        setReviews(response.data.reviews || response.data || []);
-        setTotalPages(response.data.totalPages || 1);
-      }
+      const data = unwrapApiData(response);
+      setReviews(data?.reviews || data || []);
+      setTotalPages(data?.totalPages || 1);
     } catch (error) {
       toast.error(error.message || "خطا در دریافت نظرات");
       console.error("Error fetching reviews:", error);

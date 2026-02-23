@@ -13,19 +13,20 @@ export const contactService = {
   /**
    * دریافت درخواست‌ها با صفحه‌بندی
    * GET /api/ContactUs/GetPaginated
-   * @param {Object} params - { pageNumber, pageSize, isRead }
+   * @param {Object} params - { pageNumber, pageSize, isRead, searchTerm }
    */
   getPaginated: async (params = {}) => {
-    const { pageNumber = 1, pageSize = 20, isRead } = params;
+    const { pageNumber = 1, pageSize = 20, isRead, searchTerm } = params;
     const searchParams = new URLSearchParams({
       pageNumber: pageNumber.toString(),
       pageSize: pageSize.toString(),
     });
-
     if (isRead !== null && isRead !== undefined) {
       searchParams.append("isRead", isRead.toString());
     }
-
+    if (searchTerm) {
+      searchParams.append("searchTerm", searchTerm);
+    }
     const client = getAuthenticatedClient();
     return client.get(`ContactUs/GetPaginated?${searchParams.toString()}`).json();
   },
@@ -77,12 +78,11 @@ export const contactService = {
   },
 
   /**
-   * علامت‌گذاری درخواست به عنوان خوانده شده
-   * PUT /api/ContactUs/MarkAsRead?id={id}
+   * علامت‌گذاری به‌عنوان خوانده‌شده — POST api/ContactUs/mark-read/{id}
    */
   markAsRead: async (id) => {
     const client = getAuthenticatedClient();
-    return client.put(`ContactUs/MarkAsRead?id=${id}`).json();
+    return client.post(`ContactUs/mark-read/${id}`).json();
   },
 };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { use, useState, useEffect } from "react";
 import DashboardLayout from "@/layout/DashboardLayout";
 import InvoiceDetailHeader from "@/template/Dashboard/InvoiceDetail/InvoiceDetailHeader";
 import OrderTimelineSection from "@/template/Dashboard/InvoiceDetail/OrderTimelineSection";
@@ -9,16 +9,56 @@ import ProductsTable from "@/template/Dashboard/InvoiceDetail/ProductsTable";
 import PaymentInfoCard from "@/template/Dashboard/InvoiceDetail/PaymentInfoCard";
 import TrackingCodesCard from "@/template/Dashboard/InvoiceDetail/TrackingCodesCard";
 import { toast } from "sonner";
-import { mockInvoiceData } from "@/data";
+import { invoiceService } from "@/services/invoice/invoiceService";
+import { unwrapApiData } from "@/services/api/client";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function InvoiceDetailPage({ params }) {
-  const invoiceId = params.invoiceId;
+  const resolved = use(typeof params?.then === "function" ? params : Promise.resolve(params ?? {}));
+  const invoiceId = resolved?.invoiceId ?? null;
+  const [invoice, setInvoice] = useState(null);
+  const [loading, setLoading] = useState(!!invoiceId);
+
+  useEffect(() => {
+    if (!invoiceId) return;
+    setLoading(true);
+    invoiceService
+      .getInvoiceById(invoiceId)
+      .then((res) => {
+        const data = unwrapApiData(res);
+        setInvoice(data);
+      })
+      .catch(() => setInvoice(null))
+      .finally(() => setLoading(false));
+  }, [invoiceId]);
 
   const handleDownload = () => {
     toast.success("فاکتور با موفقیت دانلود شد");
   };
 
-  const invoice = mockInvoiceData;
+  if (loading) {
+    return (
+      <DashboardLayout>
+        <div className="flex justify-center py-12">
+          <Spinner size="lg" />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (!invoiceId || !invoice) {
+    return (
+      <DashboardLayout>
+        <div className="p-6 text-center text-gray-500 dark:text-dark-text">فاکتور یافت نشد.</div>
+      </DashboardLayout>
+    );
+  }
+
+  const recipient = invoice.recipient ?? {};
+  const timelineSteps = invoice.timelineSteps ?? invoice.timeline ?? [];
+  const products = invoice.products ?? invoice.items ?? [];
+  const paymentInfo = invoice.paymentInfo ?? invoice.payment ?? {};
+  const trackingCodes = invoice.trackingCodes ?? [];
 
   return (
     <DashboardLayout>
@@ -26,26 +66,20 @@ export default function InvoiceDetailPage({ params }) {
         {/* Header with Download and Status */}
         <InvoiceDetailHeader invoice={invoice} onDownload={handleDownload} />
 
-        {/* Order Timeline and Recipient Info - کنار هم */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          {/* Order Timeline - Takes 2 columns */}
           <div className="md:col-span-2">
-            <RecipientInfoCard recipient={invoice.recipient} />
+            <RecipientInfoCard recipient={recipient} />
           </div>
-
-          {/* Recipient Info - Takes 1 column */}
           <div className="md:col-span-1">
-            <OrderTimelineSection timelineSteps={invoice.timelineSteps} currentStepIndex={2} />
+            <OrderTimelineSection timelineSteps={timelineSteps} currentStepIndex={invoice.currentStepIndex ?? 2} />
           </div>
         </div>
 
-        {/* Products Table */}
-        <ProductsTable products={invoice.products} />
+        <ProductsTable products={products} />
 
-        {/* Payment Info and Tracking Codes - کنار هم */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 my-6">
-          <PaymentInfoCard paymentInfo={invoice.paymentInfo} />
-          <TrackingCodesCard trackingCodes={invoice.trackingCodes} />
+          <PaymentInfoCard paymentInfo={paymentInfo} />
+          <TrackingCodesCard trackingCodes={trackingCodes} />
         </div>
       </div>
     </DashboardLayout>

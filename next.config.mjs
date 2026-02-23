@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: false,
   reactCompiler: true,
 
   // Enable standalone output only for Docker (not for Vercel)

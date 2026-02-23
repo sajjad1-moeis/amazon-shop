@@ -16,18 +16,25 @@ export const blogCategoryService = {
     return client.get(`BlogCategory/GetById?id=${id}`).json();
   },
 
+  getBySlug: async (slug) => {
+    const client = getPublicClient();
+    return client.get(`BlogCategory/GetBySlug?slug=${encodeURIComponent(slug)}`).json();
+  },
+
   create: async (data) => {
     const client = getAuthenticatedClient();
     return client.post("BlogCategory/Create", { json: data }).json();
   },
 
+  /** POST api/BlogCategory/update/{id} */
   update: async (id, data) => {
     const client = getAuthenticatedClient();
-    return client.put(`BlogCategory/Update?id=${id}`, { json: data }).json();
+    return client.post(`BlogCategory/update/${id}`, { json: data }).json();
   },
 
+  /** POST api/BlogCategory/delete/{id} */
   delete: async (id) => {
     const client = getAuthenticatedClient();
-    return client.delete(`BlogCategory/Delete?id=${id}`).json();
+    return client.post(`BlogCategory/delete/${id}`).json();
   },
 };

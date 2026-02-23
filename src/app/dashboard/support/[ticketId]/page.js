@@ -81,7 +81,10 @@ export default function TicketDetail() {
 
     setSendingMessage(true);
     try {
-      const response = await ticketService.addMessage(ticketId, message.trim());
+      const response = await ticketService.addMessage({
+        ticketId: Number(ticketId),
+        message: message.trim(),
+      });
       if (response.success) {
         toast.success("پیام با موفقیت ارسال شد");
         setMessage("");

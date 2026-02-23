@@ -1,58 +1,68 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Box, Heart, Sms, Wallet } from "iconsax-reactjs";
+import { userDashboardService } from "@/services/userDashboard/userDashboardService";
+import { unwrapApiData } from "@/services/api/client";
+import { Spinner } from "@/components/ui/spinner";
+import Link from "next/link";
 
-const overviewCards = [
-  {
-    id: 4,
-    title: "موجودی کیف پول",
-    value: "۴۵۰,۰۰۰",
-    type: "تومان",
-    icon: Wallet,
-    iconColor: "text-yellow-500",
-    bgColor: "bg-yellow-50 dark:bg-yellow-950/20",
-  },
-  {
-    id: 3,
-    title: "سفارش های فعال",
-    value: "۳",
-    type: "سفارش",
-    icon: Box,
-    iconColor: "text-green-500",
-    bgColor: "bg-green-50 dark:bg-green-950/20",
-  },
-  {
-    id: 2,
-    title: "تیکت های باز",
-    value: "۱",
-    type: "تیکت",
-    icon: Sms,
-    iconColor: "text-blue-500",
-    bgColor: "bg-blue-50 dark:bg-blue-950/20",
-  },
-  {
-    id: 1,
-    title: "علاقه مندی ها",
-    value: "۱۲",
-    type: "کالا",
-    icon: Heart,
-    iconColor: "text-red-500",
-    bgColor: "bg-red-50 dark:bg-red-950/20",
-  },
+const cardConfig = [
+  { id: "wallet", title: "موجودی کیف پول", key: "walletBalance", type: "تومان", icon: Wallet, iconColor: "text-yellow-500", bgColor: "bg-yellow-50 dark:bg-yellow-950/20" },
+  { id: "orders", title: "سفارش های فعال", key: "activeOrdersCount", type: "سفارش", icon: Box, iconColor: "text-green-500", bgColor: "bg-green-50 dark:bg-green-950/20", link: "/dashboard/orders" },
+  { id: "tickets", title: "تیکت های باز", key: "openTicketsCount", type: "تیکت", icon: Sms, iconColor: "text-blue-500", bgColor: "bg-blue-50 dark:bg-blue-950/20", link: "/dashboard/support" },
+  { id: "wishlist", title: "علاقه مندی ها", key: "wishlistCount", type: "کالا", icon: Heart, iconColor: "text-red-500", bgColor: "bg-red-50 dark:bg-red-950/20", link: "/dashboard/favorites" },
 ];
 
 export default function OverviewCards() {
+  const [summary, setSummary] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    userDashboardService
+      .getSummary()
+      .then((res) => {
+        if (cancelled) return;
+        const data = unwrapApiData(res);
+        setSummary(data || {});
+      })
+      .catch(() => {
+        if (!cancelled) setSummary({});
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="my-8 flex justify-center py-8">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
+  const formatValue = (val) => {
+    if (val == null) return "۰";
+    if (typeof val === "number") return val.toLocaleString("fa-IR");
+    return String(val);
+  };
+
   return (
     <div className="my-8">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        {overviewCards.map((card) => {
+        {cardConfig.map((card) => {
           const Icon = card.icon;
-          return (
+          const value = summary?.[card.key] ?? summary?.[card.key === "walletBalance" ? "walletBalance" : card.key] ?? 0;
+          const content = (
             <div
-              key={card.id}
-              className="bg-white dark:bg-dark-box gap-2 flex items-center rounded-xl shadow-md p-2 md:p-4 hover:shadow-md transition-shadow"
+              className={cn(
+                "bg-white dark:bg-dark-box gap-2 flex items-center rounded-xl shadow-md p-2 md:p-4 hover:shadow-md transition-shadow w-full",
+                card.link && "cursor-pointer"
+              )}
             >
               <div className="flex items-center justify-between">
                 <div className={cn("p-2.5 md:p-3 rounded-lg bg-primary-700 dark:bg-dark-title")}>
@@ -60,12 +70,19 @@ export default function OverviewCards() {
                 </div>
               </div>
               <div>
-                <p className="text-lg md:text-xl  text-primary-700 dark:text-dark-title mb-2">
-                  {card.value} <span className="text-xs md:text-sm">{card.type}</span>
+                <p className="text-lg md:text-xl text-primary-700 dark:text-dark-title mb-2">
+                  {formatValue(value)} <span className="text-xs md:text-sm">{card.type}</span>
                 </p>
                 <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1">{card.title}</p>
               </div>
             </div>
+          );
+          return card.link ? (
+            <Link key={card.id} href={card.link}>
+              {content}
+            </Link>
+          ) : (
+            <div key={card.id}>{content}</div>
           );
         })}
       </div>

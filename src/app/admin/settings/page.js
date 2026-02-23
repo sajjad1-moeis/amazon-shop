@@ -53,6 +53,16 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
         </Link>
+        <Link href="/admin/settings/pricing">
+          <Card className="bg-gray-800 border-gray-700 hover:bg-gray-700/50 cursor-pointer transition-colors">
+            <CardHeader>
+              <CardTitle className="text-white">تنظیمات قیمت‌گذاری</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-400">درصد سود، هزینه حمل، طرح اقساط، قوانین قیمت و وزن</p>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
     </div>
   );

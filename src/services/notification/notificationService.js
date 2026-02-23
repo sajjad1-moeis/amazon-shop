@@ -1,48 +1,82 @@
 import { getAuthenticatedClient } from "../api/client";
 
+/**
+ * Phase 9: api/Notification — GetNotifications(userId, pageNumber, pageSize, onlyUnread),
+ * GetNotification(notificationId, userId), MarkAsRead, MarkAllAsRead(userId),
+ * POST delete/{id}?userId=, GetUnreadCount(userId), GetNotificationsByType(userId, type).
+ */
 export const notificationService = {
-  getPaginated: async (params = {}) => {
-    const {
-      pageNumber = 1,
-      pageSize = 20,
-      isRead,
-      type,
-    } = params;
-
+  /** GET api/Notification/GetNotifications — Query: userId, pageNumber, pageSize, onlyUnread */
+  getNotifications: async (params = {}) => {
+    const { userId, pageNumber = 1, pageSize = 20, onlyUnread = false } = params;
     const searchParams = new URLSearchParams({
-      pageNumber: pageNumber.toString(),
-      pageSize: pageSize.toString(),
+      userId: String(userId),
+      pageNumber: String(pageNumber),
+      pageSize: String(pageSize),
+      onlyUnread: String(onlyUnread),
     });
-
-    if (isRead !== undefined) searchParams.append("isRead", isRead.toString());
-    if (type) searchParams.append("type", type);
-
     const client = getAuthenticatedClient();
-    return client.get(`Notification/GetPaginated?${searchParams.toString()}`).json();
+    return client.get(`Notification/GetNotifications?${searchParams.toString()}`).json();
   },
 
-  getById: async (id) => {
-    const client = getAuthenticatedClient();
-    return client.get(`Notification/GetById?id=${id}`).json();
+  /** برای سازگاری با کد قبلی؛ همان getNotifications با نام قدیمی */
+  getPaginated: async (params = {}) => {
+    const { userId, pageNumber = 1, pageSize = 20, onlyUnread } = params;
+    return notificationService.getNotifications({
+      userId,
+      pageNumber,
+      pageSize,
+      onlyUnread,
+    });
   },
 
-  markAsRead: async (id) => {
+  /** GET api/Notification/GetNotification — Query: notificationId, userId */
+  getNotification: async (notificationId, userId) => {
     const client = getAuthenticatedClient();
-    return client.post(`Notification/MarkAsRead?id=${id}`).json();
+    const qs = new URLSearchParams({ notificationId: String(notificationId), userId: String(userId) });
+    return client.get(`Notification/GetNotification?${qs.toString()}`).json();
   },
 
-  markAllAsRead: async () => {
-    const client = getAuthenticatedClient();
-    return client.post("Notification/MarkAllAsRead").json();
+  getById: async (id, userId) => {
+    return notificationService.getNotification(id, userId);
   },
 
+  /** POST api/Notification/MarkAsRead — Query: notificationId, userId */
+  markAsRead: async (notificationId, userId) => {
+    const client = getAuthenticatedClient();
+    const qs = new URLSearchParams({ notificationId: String(notificationId), userId: String(userId) });
+    return client.post(`Notification/MarkAsRead?${qs.toString()}`).json();
+  },
+
+  /** POST api/Notification/MarkAllAsRead — Query: userId؛ بدنه اختیاری: { notificationIds } */
+  markAllAsRead: async (userId, body) => {
+    const client = getAuthenticatedClient();
+    const qs = new URLSearchParams({ userId: String(userId) });
+    return client.post(`Notification/MarkAllAsRead?${qs.toString()}`, { json: body || {} }).json();
+  },
+
+  /** POST api/Notification/CreateNotification — بدنه: CreateNotificationDto */
   create: async (data) => {
     const client = getAuthenticatedClient();
-    return client.post("Notification/Create", { json: data }).json();
+    return client.post("Notification/CreateNotification", { json: data }).json();
   },
 
-  delete: async (id) => {
+  /** POST api/Notification/delete/{id} — Query: userId */
+  delete: async (id, userId) => {
     const client = getAuthenticatedClient();
-    return client.delete(`Notification/Delete?id=${id}`).json();
+    return client.post(`Notification/delete/${id}?userId=${encodeURIComponent(userId)}`).json();
+  },
+
+  /** GET api/Notification/GetUnreadCount — Query: userId */
+  getUnreadCount: async (userId) => {
+    const client = getAuthenticatedClient();
+    return client.get(`Notification/GetUnreadCount?userId=${encodeURIComponent(userId)}`).json();
+  },
+
+  /** GET api/Notification/GetNotificationsByType — Query: userId, type */
+  getNotificationsByType: async (userId, type) => {
+    const client = getAuthenticatedClient();
+    const qs = new URLSearchParams({ userId: String(userId), type: String(type) });
+    return client.get(`Notification/GetNotificationsByType?${qs.toString()}`).json();
   },
 };

@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import React from "react";
 import { Heart, ShoppingCart } from "iconsax-reactjs";
@@ -9,8 +11,10 @@ import SwitchButton from "../SwitchButton";
 import DiscountAmazonButton from "../DiscountAmazonButton";
 import DrawerMobile from "./DrawerMobile";
 import SearchDropdown from "./SearchDropdown";
+import { useCartCount } from "@/contexts/CartCountContext";
 
 function Header() {
+  const { cartCount } = useCartCount();
   return (
     <header className="w-full ">
       <div className="dark:bg-dark-header bg-primary-500 py-1.5 ">
@@ -65,7 +69,9 @@ function Header() {
             </Link>
             <Link href={"/cart"}>
               <div className="p-3 rounded-lg border-2 dark:border-[#898989] dark:text-[#898989] border-white relative">
-                <div className="absolute size-5 bg-primary-400 text-white flex-center rounded -top-2 -right-2">0</div>
+                <div className="absolute size-5 bg-primary-400 text-white flex-center rounded -top-2 -right-2 text-xs font-medium min-w-[20px]">
+                  {cartCount}
+                </div>
                 <ShoppingCart />
               </div>
             </Link>

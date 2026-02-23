@@ -63,7 +63,7 @@ export function AuthModal({ open, onClose }) {
             onChangePassword={setPassword}
             onChangePasswordRepeat={setPasswordRepeat}
             onGoLogin={() => goTo(VIEWS.LOGIN)}
-            onSubmitSignup={() => goTo(VIEWS.SIGNUP_VERIFY)}
+            onSuccess={() => goTo(VIEWS.SIGNUP_VERIFY)}
           />
         )}
 

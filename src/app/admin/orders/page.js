@@ -12,46 +12,44 @@ import { orderService } from "@/services/order/orderService";
 export default function OrdersPage() {
   const searchParams = useSearchParams();
   const statusParam = searchParams.get("status");
+  const searchTerm = searchParams.get("search") || "";
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const searchParam = searchParams.get("search");
-  const searchTerm = searchParam || "";
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
 
-  const fetchOrders = async () => {
-    try {
-      setLoading(true);
-      const response = await orderService.getPaginated({
-        pageNumber,
-        pageSize,
-        status: statusParam || undefined,
-        searchTerm: searchTerm || undefined,
-      });
+  useEffect(() => {
+    setPageNumber(1);
+  }, [statusParam, searchTerm]);
 
-      if (response.success && response.data) {
-        setOrders(response.data.orders || response.data || []);
-        setTotalPages(response.data.totalPages || 1);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        setLoading(true);
+        const response = await orderService.getPaginated({
+          pageNumber,
+          pageSize,
+          status: statusParam || undefined,
+          searchTerm: searchTerm || undefined,
+        });
+        if (cancelled) return;
+        if (response.success && response.data) {
+          setOrders(response.data.orders || response.data || []);
+          setTotalPages(response.data.totalPages || 1);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          toast.error(error.message || "خطا در دریافت سفارشات");
+          console.error("Error fetching orders:", error);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-    } catch (error) {
-      toast.error(error.message || "خطا در دریافت سفارشات");
-      console.error("Error fetching orders:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const search = searchParams.get("search");
-    if (search) {
-      setPageNumber(1);
-    }
-  }, [searchParams]);
-
-  useEffect(() => {
-    fetchOrders();
-  }, [pageNumber, searchParams, statusParam]);
+    })();
+    return () => { cancelled = true; };
+  }, [pageNumber, statusParam, searchTerm, pageSize]);
 
   return (
     <div className="space-y-6">

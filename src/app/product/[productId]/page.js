@@ -24,12 +24,16 @@ import {
   generateProductSchema,
 } from "@/utils/productHelpers";
 import { prefetchScraperImages, getScraperImagesCached, prefetchScraperDetails, getScraperDetailsCached } from "@/utils/scraperPrefetch";
+import { useAuth } from "@/contexts/AuthContext";
+import { userRecentViewService } from "@/services/userRecentView/userRecentViewService";
 
 export default function ProductDetailPage({ params }) {
   const resolved = use(
     typeof params?.then === "function" ? params : Promise.resolve(params ?? {})
   );
   const productId = resolved?.productId ?? null;
+  const { user } = useAuth();
+  const userId = user?.id ?? user?.userId;
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -150,6 +154,16 @@ export default function ProductDetailPage({ params }) {
       cancelled = true;
     };
   }, [productId]);
+
+  // ثبت بازدید اخیر (برای کاربر لاگین‌شده)
+  useEffect(() => {
+    if (!userId || !product) return;
+    const pid = product.id ?? productId;
+    if (!pid) return;
+    const numericId = /^\d+$/.test(String(pid)) ? Number(pid) : null;
+    if (numericId == null) return;
+    userRecentViewService.trackView(userId, { productId: numericId }).catch(() => {});
+  }, [userId, product?.id, productId]);
 
   // ==========================================
   // On-demand enrichment (FAST — parallel with product load)

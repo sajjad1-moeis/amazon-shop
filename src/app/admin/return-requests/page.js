@@ -33,9 +33,9 @@ export default function ReturnRequestsPage() {
       } else {
         response = await returnRequestService.getAll();
       }
-
       if (response.success && response.data) {
-        let filtered = response.data;
+        const raw = response.data;
+        let filtered = Array.isArray(raw) ? raw : (raw?.returnRequests ?? []);
         if (searchTerm) {
           filtered = filtered.filter(
             (request) =>
@@ -45,7 +45,6 @@ export default function ReturnRequestsPage() {
               request.userFullName?.toLowerCase().includes(searchTerm.toLowerCase())
           );
         }
-
         const startIndex = (pageNumber - 1) * pageSize;
         const endIndex = startIndex + pageSize;
         setReturnRequests(filtered.slice(startIndex, endIndex));
@@ -60,16 +59,60 @@ export default function ReturnRequestsPage() {
   };
 
   useEffect(() => {
-    fetchReturnRequests();
-  }, [pageNumber, searchParams, statusParam]);
+    setPageNumber(1);
+  }, [statusParam, searchTerm]);
 
   useEffect(() => {
-    setPageNumber(1);
-  }, [searchParams, statusParam]);
+    let cancelled = false;
+    (async () => {
+      try {
+        setLoading(true);
+        let response;
+        if (statusParam) {
+          response = await returnRequestService.getByStatus(parseInt(statusParam));
+        } else {
+          response = await returnRequestService.getAll();
+        }
+        if (cancelled) return;
+        if (response.success && response.data) {
+          const raw = response.data;
+          let filtered = Array.isArray(raw) ? raw : (raw?.returnRequests ?? []);
+          if (searchTerm) {
+            filtered = filtered.filter(
+              (request) =>
+                request.returnNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                request.orderNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                request.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                request.userFullName?.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+          }
+          const startIndex = (pageNumber - 1) * pageSize;
+          const endIndex = startIndex + pageSize;
+          setReturnRequests(filtered.slice(startIndex, endIndex));
+          setTotalPages(Math.ceil(filtered.length / pageSize));
+        }
+      } catch (error) {
+        if (!cancelled) {
+          toast.error(error.message || "خطا در دریافت درخواست‌های مرجوعی");
+          console.error("Error fetching return requests:", error);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [pageNumber, statusParam, searchTerm, pageSize]);
 
-  const handleApprove = async (id) => {
+  const handleApprove = async (id, finalRefundAmount) => {
+    const amount = finalRefundAmount ?? Number(prompt("مبلغ نهایی بازگشت (تومان) را وارد کنید:") || "0");
+    if (!amount || amount <= 0) {
+      toast.error("مبلغ بازگشت باید بزرگ‌تر از صفر باشد");
+      return;
+    }
     try {
-      const response = await returnRequestService.approve(id);
+      const response = await returnRequestService.approve(id, {
+        finalRefundAmount: amount,
+      });
       if (response.success) {
         toast.success("درخواست مرجوعی با موفقیت تایید شد");
         fetchReturnRequests();
@@ -85,7 +128,7 @@ export default function ReturnRequestsPage() {
       if (!reason) return;
     }
     try {
-      const response = await returnRequestService.reject(id, reason);
+      const response = await returnRequestService.reject(id, { rejectionReason: reason });
       if (response.success) {
         toast.success("درخواست مرجوعی با موفقیت رد شد");
         fetchReturnRequests();

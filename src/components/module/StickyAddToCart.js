@@ -59,3 +59,5 @@ export default function StickyAddToCart({ onAddToCart, loading, price, className
 
 
 
+
+

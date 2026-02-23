@@ -38,6 +38,8 @@ export default function EditProductPage() {
     status: 1,
     isActive: true,
     inStock: true,
+    manualPriceOverrideToman: "",
+    isPriceBlocked: false,
   });
 
   useEffect(() => {
@@ -89,6 +91,8 @@ export default function EditProductPage() {
           status: product.status || 1,
           isActive: product.isActive !== undefined ? product.isActive : true,
           inStock: product.inStock !== undefined ? product.inStock : true,
+          manualPriceOverrideToman: product.manualPriceOverrideToman != null ? product.manualPriceOverrideToman.toString() : "",
+          isPriceBlocked: !!product.isPriceBlocked,
         });
       } else {
         toast.error(response.message || "خطا در دریافت محصول");
@@ -141,6 +145,12 @@ export default function EditProductPage() {
         isActive: formData.isActive,
         inStock: formData.inStock,
       };
+      if (formData.manualPriceOverrideToman !== "" && formData.manualPriceOverrideToman != null) {
+        payload.manualPriceOverrideToman = parseFloat(formData.manualPriceOverrideToman);
+      } else {
+        payload.manualPriceOverrideToman = null;
+      }
+      payload.isPriceBlocked = formData.isPriceBlocked;
 
       const response = await productService.update(productId, payload);
 
@@ -322,6 +332,40 @@ export default function EditProductPage() {
                     <SelectItem value="3">ناموجود</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div className="md:col-span-2 border-t border-gray-700 pt-4 mt-2">
+                <h3 className="text-white font-medium mb-3">فیلدهای ادمین (قیمت‌گذاری)</h3>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="manualPriceOverrideToman" className="text-gray-300">
+                      قیمت دستی نهایی (تومان)
+                    </Label>
+                    <Input
+                      id="manualPriceOverrideToman"
+                      name="manualPriceOverrideToman"
+                      type="number"
+                      min="0"
+                      value={formData.manualPriceOverrideToman}
+                      onChange={handleChange}
+                      placeholder="خالی = محاسبه خودکار"
+                      className="bg-gray-700 border-gray-600 text-white"
+                    />
+                  </div>
+                  <div className="flex items-center gap-2 pt-8">
+                    <input
+                      type="checkbox"
+                      id="isPriceBlocked"
+                      name="isPriceBlocked"
+                      checked={formData.isPriceBlocked}
+                      onChange={handleChange}
+                      className="rounded border-gray-600"
+                    />
+                    <Label htmlFor="isPriceBlocked" className="text-gray-300 cursor-pointer">
+                      مسدود فروش (وزن/قیمت)
+                    </Label>
+                  </div>
+                </div>
               </div>
             </div>
 

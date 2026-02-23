@@ -67,9 +67,16 @@ export const blogService = {
     return client.post("Blog/Create", { json: data }).json();
   },
 
+  /** POST api/Blog/update/{id} — Admin */
   update: async (id, data) => {
     const client = getAuthenticatedClient();
-    return client.put(`Blog/Update?id=${id}`, { json: data }).json();
+    return client.post(`Blog/update/${id}`, { json: data }).json();
+  },
+
+  /** POST api/Blog/IncrementViewCount?id= */
+  incrementViewCount: async (id) => {
+    const client = getPublicClient();
+    return client.post(`Blog/IncrementViewCount?id=${id}`).json();
   },
 
   uploadFeaturedImage: async (blogId, file) => {
@@ -90,16 +97,29 @@ export const blogService = {
     return client.post(`Blog/IncrementLikeCount?id=${id}`).json();
   },
 
-  softDelete: async (id, reason = "") => {
+  /** POST api/Blog/delete/{id} — Admin */
+  softDelete: async (id, reason) => {
     const client = getAuthenticatedClient();
-    const searchParams = new URLSearchParams({ id: id.toString() });
-    if (reason) searchParams.append("reason", reason);
-    return client.delete(`Blog/SoftDelete?${searchParams.toString()}`).json();
+    const qs = reason ? `?reason=${encodeURIComponent(reason)}` : "";
+    return client.post(`Blog/delete/${id}${qs}`).json();
   },
 
+  /** POST api/Blog/hard-delete/{id} — Admin */
+  hardDelete: async (id) => {
+    const client = getAuthenticatedClient();
+    return client.post(`Blog/hard-delete/${id}`).json();
+  },
+
+  /** POST api/Blog/Restore?id= — Admin */
   restore: async (id) => {
     const client = getAuthenticatedClient();
     return client.post(`Blog/Restore?id=${id}`).json();
+  },
+
+  /** POST api/Blog/Publish?id= — Admin (در صورت وجود در بک‌اند) */
+  publish: async (id) => {
+    const client = getAuthenticatedClient();
+    return client.post(`Blog/Publish?id=${id}`).json();
   },
 };
 

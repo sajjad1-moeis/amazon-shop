@@ -14,18 +14,28 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import ProvinceCitySelect from "@/components/ProvinceCitySelect";
 import { ADDRESS_FORM_FIELDS } from "@/data";
 import { DEFAULT_FORM_DATA } from "@/hooks/use-address";
+
+const ADDRESS_FIELDS_WITHOUT_LOCATION = ADDRESS_FORM_FIELDS.filter(
+  (f) => f.id !== "province" && f.id !== "city"
+);
 
 export default function AddressForm({ isOpen, onClose, defaultValues, onSubmit }) {
   const {
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: defaultValues || DEFAULT_FORM_DATA,
   });
+
+  const province = watch("province");
+  const city = watch("city");
 
   useEffect(() => {
     if (isOpen) {
@@ -33,11 +43,14 @@ export default function AddressForm({ isOpen, onClose, defaultValues, onSubmit }
     }
   }, [isOpen, defaultValues, reset]);
 
+  register("province", { required: "استان الزامی است" });
+  register("city", { required: "شهر الزامی است" });
+
   const groupedFields = useMemo(() => {
     const groups = [];
     let currentGroup = null;
 
-    ADDRESS_FORM_FIELDS.forEach((field) => {
+    ADDRESS_FIELDS_WITHOUT_LOCATION.forEach((field) => {
       if (field.gridCols === 1) {
         if (currentGroup) {
           groups.push(currentGroup);
@@ -107,6 +120,18 @@ export default function AddressForm({ isOpen, onClose, defaultValues, onSubmit }
         </DialogHeader>
 
         <div className="grid gap-5 py-4">
+          <ProvinceCitySelect
+            province={province}
+            city={city}
+            onChange={({ province: p, city: c }) => {
+              setValue("province", p);
+              setValue("city", c);
+            }}
+            provinceLabel="استان"
+            cityLabel="شهر"
+            provinceError={errors.province?.message}
+            cityError={errors.city?.message}
+          />
           {groupedFields.map((group, groupIndex) => (
             <div key={groupIndex} className={group.gridCols === 2 ? "grid grid-cols-2 gap-4" : "grid gap-2"}>
               {group.fields.map((field) => (

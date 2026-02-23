@@ -219,6 +219,7 @@ export const ADMIN_SIDEBAR_ITEMS = [
       { name: "تنظیمات پرداخت", href: "/admin/settings/payment" },
       { name: "تنظیمات ارسال", href: "/admin/settings/shipping" },
       { name: "تنظیمات ایمیل", href: "/admin/settings/email" },
+      { name: "تنظیمات قیمت‌گذاری", href: "/admin/settings/pricing" },
     ],
   },
 ];

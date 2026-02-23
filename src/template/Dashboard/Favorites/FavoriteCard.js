@@ -2,10 +2,11 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Trash } from "iconsax-reactjs";
 
-export default function FavoriteCard({ product }) {
+export default function FavoriteCard({ product, onRemove }) {
   const InfosCard = () => (
     <div className="w-full  flex-wrap flex flex-row items-stretch sm:items-center justify-between gap-2 lg:gap-3">
       {/* Box 1 */}
@@ -95,15 +96,21 @@ export default function FavoriteCard({ product }) {
         </div>
         {/* Left Buttons */}
         <div className="flex  flex-row lg:flex-col gap-2 w-full lg:w-32 flex-shrink-0">
-          <Button className="max-lg:flex-1 h-9 bg-yellow-400 hover:bg-yellow-500 text-gray-900 dark:text-primary-800 font-medium text-sm py-2 rounded-lg">
-            مشاهده محصول
-          </Button>
-
-          <Button className="max-lg:flex-1 h-9 bg-primary-700 hover:bg-[#3143D8] dark:bg-dark-primary text-white font-medium text-sm py-2 rounded-lg">
-            تنظیم هشدار قیمت
-          </Button>
-
-          <button className=" px-2 lg:w-full h-9 bg-[#F6F7FB] dark:bg-dark-stroke dark:text-red-300 text-red-500 hover:bg-red-50 font-medium text-sm py-2 rounded-lg ">
+          <Link href={product.productId ? `/product/${product.productId}` : "#"} className="max-lg:flex-1">
+            <Button className="max-lg:w-full h-9 bg-yellow-400 hover:bg-yellow-500 text-gray-900 dark:text-primary-800 font-medium text-sm py-2 rounded-lg">
+              مشاهده محصول
+            </Button>
+          </Link>
+          <Link href={product.productId ? `/product/${product.productId}` : "#"} className="max-lg:flex-1">
+            <Button className="max-lg:w-full h-9 bg-primary-700 hover:bg-[#3143D8] dark:bg-dark-primary text-white font-medium text-sm py-2 rounded-lg">
+              تنظیم هشدار قیمت
+            </Button>
+          </Link>
+          <button
+            type="button"
+            onClick={onRemove}
+            className=" px-2 lg:w-full h-9 bg-[#F6F7FB] dark:bg-dark-stroke dark:text-red-300 text-red-500 hover:bg-red-50 font-medium text-sm py-2 rounded-lg "
+          >
             <span className="max-lg:hidden">حذف</span>
             <Trash size={18} className="lg:hidden flex-none block" />
           </button>

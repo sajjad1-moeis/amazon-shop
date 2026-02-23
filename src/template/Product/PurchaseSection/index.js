@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { shoppingCartService } from "@/services/shoppingCart/shoppingCartService";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
+import { useCartCount } from "@/contexts/CartCountContext";
 import DeliveryTypeSection from "./DeliveryTypeSection";
 import PriceDisplaySection from "./PriceDisplaySection";
 import ActionButtonsSection from "./ActionButtonsSection";
@@ -19,17 +21,28 @@ export default function PurchaseSection({
 }) {
   const [loading, setLoading] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const { user } = useAuth();
+  const { refreshCartCount } = useCartCount();
 
   const finalPrice = calculateProductPrice(product, selectedColor, selectedDelivery);
   const basePrice = getBasePrice(product);
 
   const addToCart = async () => {
+    if (!user?.id) {
+      toast.error("برای افزودن به سبد خرید وارد شوید");
+      return;
+    }
     try {
       setLoading(true);
-      await shoppingCartService.addItem({ productId, quantity, color: selectedColor, delivery: selectedDelivery });
+      await shoppingCartService.addToCart(user.id, {
+        productId: Number(productId),
+        quantity: Number(quantity) || 1,
+        hasQualityShield: false,
+      });
+      refreshCartCount();
       toast.success("به سبد خرید اضافه شد");
-    } catch {
-      toast.error("خطا در افزودن به سبد خرید");
+    } catch (error) {
+      toast.error(error?.message ?? "خطا در افزودن به سبد خرید");
     } finally {
       setLoading(false);
     }

@@ -7,9 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
+import { useAuth } from "@/contexts/AuthContext";
 import { notificationService } from "@/services/notification/notificationService";
 
 export default function NotificationsPage() {
+  const { user } = useAuth();
+  const userId = user?.id ?? user?.userId;
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pageNumber, setPageNumber] = useState(1);
@@ -17,9 +20,11 @@ export default function NotificationsPage() {
   const [totalPages, setTotalPages] = useState(1);
 
   const fetchNotifications = async () => {
+    if (userId == null) return;
     try {
       setLoading(true);
       const response = await notificationService.getPaginated({
+        userId,
         pageNumber,
         pageSize,
       });
@@ -38,11 +43,12 @@ export default function NotificationsPage() {
 
   useEffect(() => {
     fetchNotifications();
-  }, [pageNumber]);
+  }, [pageNumber, userId]);
 
   const handleMarkAsRead = async (id) => {
+    if (userId == null) return;
     try {
-      const response = await notificationService.markAsRead(id);
+      const response = await notificationService.markAsRead(id, userId);
       if (response.success) {
         fetchNotifications();
       }

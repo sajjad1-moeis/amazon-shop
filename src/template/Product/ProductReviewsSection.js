@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import RenderStars from "@/components/RenderStars";
-import { Calendar2, MessageText, MessageText1, Star } from "iconsax-reactjs";
-import { useState } from "react";
+import { Calendar2, MessageText1, Star } from "iconsax-reactjs";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -17,41 +17,60 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { productReviewService } from "@/services/review/productReviewService";
+import { unwrapApiData } from "@/services/api/client";
 
 export default function ProductReviewsSection({ product }) {
+  const productId = product?.id ?? product?.productId ?? product?.asin;
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [reviewText, setReviewText] = useState("");
   const [reviewRating, setReviewRating] = useState(5);
   const [submitting, setSubmitting] = useState(false);
+  const [productReviews, setProductReviews] = useState(Array.isArray(product?.reviews) ? product.reviews : []);
+  const [totalReviews, setTotalReviews] = useState(
+    Math.max(0, Math.floor(Number(product?.reviews_count ?? product?.reviewCount ?? 0) || 0))
+  );
+  const [overallRating, setOverallRating] = useState(
+    Math.min(5, Math.max(0, Number(product?.rating ?? 0) || 0))
+  );
 
-  const totalReviews = Math.max(
-    0,
-    Math.floor(
-      Number(product?.reviews_count ?? product?.reviewCount ?? 0) || 0
-    )
-  );
-  const overallRating = Math.min(
-    5,
-    Math.max(0, Number(product?.rating ?? 0) || 0)
-  );
+  useEffect(() => {
+    if (!productId) return;
+    productReviewService.getApprovedByProductId(productId).then((res) => {
+      const data = unwrapApiData(res);
+      setProductReviews(Array.isArray(data) ? data : []);
+    }).catch(() => {});
+    productReviewService.getReviewCountByProductId(productId).then((res) => {
+      const data = unwrapApiData(res);
+      setTotalReviews(typeof data === "number" ? data : 0);
+    }).catch(() => {});
+  }, [productId]);
+
   const hasRealCount = totalReviews > 0;
-  const productReviews = Array.isArray(product?.reviews) ? product.reviews : [];
 
   const handleSubmitReview = async () => {
     if (!reviewText.trim()) {
       toast.error("لطفا متن نظر را وارد کنید");
       return;
     }
-
+    if (!productId) return;
     try {
       setSubmitting(true);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      toast.success("نظر شما با موفقیت ثبت شد");
+      await productReviewService.create({
+        productId: Number(productId) || productId,
+        authorName: "کاربر",
+        content: reviewText.trim(),
+        rating: reviewRating,
+      });
+      toast.success("نظر شما با موفقیت ثبت شد و پس از تأیید نمایش داده می‌شود");
       setReviewText("");
       setReviewRating(5);
       setShowReviewForm(false);
-    } catch {
-      toast.error("خطا در ثبت نظر");
+      const countRes = await productReviewService.getReviewCountByProductId(productId);
+      const count = unwrapApiData(countRes);
+      setTotalReviews(typeof count === "number" ? count : totalReviews + 1);
+    } catch (e) {
+      toast.error(e?.message ?? "خطا در ثبت نظر");
     } finally {
       setSubmitting(false);
     }
@@ -74,8 +93,6 @@ export default function ProductReviewsSection({ product }) {
               <div className="text-5xl md:text-6xl font-bold text-primary-700 dark:text-dark-titre mb-3">
                 {overallRating > 0 ? overallRating.toFixed(1) : "۰"}
               </div>
-
-              {/* Stars */}
               <div className="flex justify-center mb-3">
                 <RenderStars rating={overallRating} />
               </div>
@@ -174,7 +191,7 @@ export default function ProductReviewsSection({ product }) {
             </p>
           )}
           {productReviews.map((review, index) => {
-            const name = review.name ?? review.author ?? review.reviewerName ?? "کاربر";
+            const name = review.name ?? review.author ?? review.authorName ?? review.reviewerName ?? "کاربر";
             const title = review.title ?? "";
             const text = review.comment ?? review.text ?? review.body ?? review.content ?? "";
             const ratingVal = Number(review.rating ?? review.stars ?? 0) || 0;

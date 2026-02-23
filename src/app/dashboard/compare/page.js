@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import ProductComparisonColumn from "@/template/Dashboard/Comparisons/ProductComparisonColumn";
@@ -9,43 +9,11 @@ import FeatureHighlightCards from "@/template/Dashboard/Comparisons/FeatureHighl
 import AddProductColumn from "@/template/Dashboard/Comparisons/AddProductColumn";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
 import DashboardLayout from "@/layout/DashboardLayout";
-
-const mockProducts = [
-  {
-    id: "p1",
-    title: "ساعت مچی مردانه Invicta مدل ۳۶۱ سری Reserve کرونوگراف",
-    image: "/image/Home/product.png",
-    retailer: "Amazon",
-    rating: 4.7,
-    reviewsCount: 275,
-    price: "۱۲,۴۵۰,۰۰۰",
-    features: {
-      brand: "Sony",
-      model: "PS5 Standard",
-      diskDrive: true,
-      outputResolution: "4K",
-      frameRate: "تا ۱۲۰fps",
-      weight: "۴.۵kg",
-    },
-  },
-  {
-    id: "p2",
-    title: "ساعت مچی مردانه Invicta مدل ۳۶۱ سری Reserve کرونوگراف",
-    image: "/image/Home/product.png",
-    retailer: "Amazon",
-    rating: 4.7,
-    reviewsCount: 275,
-    price: "۱۲,۴۵۰,۰۰۰",
-    features: {
-      brand: "Sony",
-      model: "PS5 Digital",
-      diskDrive: false,
-      outputResolution: "4K",
-      frameRate: "تا ۱۲۰fps",
-      weight: "۳.۹kg",
-    },
-  },
-];
+import { useAuth } from "@/contexts/AuthContext";
+import { compareService } from "@/services/compare/compareService";
+import { unwrapApiData } from "@/services/api/client";
+import { Spinner } from "@/components/ui/spinner";
+import Link from "next/link";
 
 const comparisonFeatures = [
   { key: "brand", label: "برند" },
@@ -57,27 +25,53 @@ const comparisonFeatures = [
 ];
 
 export default function ProductComparison() {
-  const [products, setProducts] = useState(mockProducts);
-  const category = "لوازم جانبی کنسول";
+  const { user } = useAuth();
+  const userId = user?.id ?? user?.userId;
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [category, setCategory] = useState("");
 
-  const handleRemoveProduct = (productId) => {
-    setProducts(products.filter((p) => p.id !== productId));
-    toast.success("محصول از مقایسه حذف شد");
+  const fetchCompare = () => {
+    setLoading(true);
+    compareService
+      .data({ userId: userId ?? undefined })
+      .then((res) => {
+        const data = unwrapApiData(res);
+        const list = data?.products ?? (Array.isArray(data) ? data : []);
+        setProducts(Array.isArray(list) ? list : []);
+        if (data?.category) setCategory(data.category);
+      })
+      .catch(() => setProducts([]))
+      .finally(() => setLoading(false));
   };
 
-  const handleSaveComparison = () => {
-    toast.success("مقایسه با موفقیت ذخیره شد");
+  useEffect(() => {
+    fetchCompare();
+  }, [userId]);
+
+  const handleRemoveProduct = async (productId) => {
+    try {
+      await compareService.remove({ productId, userId: userId ?? undefined });
+      setProducts((prev) => prev.filter((p) => p.id !== productId && String(p.productId) !== String(productId)));
+      toast.success("محصول از مقایسه حذف شد");
+    } catch (e) {
+      toast.error(e?.message ?? "خطا در حذف");
+    }
   };
 
-  const handleDeleteComparison = () => {
-    if (confirm("آیا از حذف این مقایسه اطمینان دارید؟")) {
+  const handleDeleteComparison = async () => {
+    if (!confirm("آیا از حذف این مقایسه اطمینان دارید؟")) return;
+    try {
+      await compareService.clear({ userId: userId ?? undefined });
       setProducts([]);
       toast.success("مقایسه حذف شد");
+    } catch (e) {
+      toast.error(e?.message ?? "خطا");
     }
   };
 
   const handleAddProduct = () => {
-    toast.info("در حال انتقال به انتخاب محصول...");
+    toast.info("محصول را از صفحه محصول با دکمه «افزودن به مقایسه» اضافه کنید.");
   };
 
   const ActionBtns = () => (
@@ -90,13 +84,6 @@ export default function ProductComparison() {
       >
         حذف
       </Button>
-      <Button
-        variant="ghost"
-        onClick={handleSaveComparison}
-        className="bg-yellow-500 max-md:w-full text-primary-800 font-medium text-xs sm:text-sm w-full sm:w-auto"
-      >
-        ذخیره مقایسه
-      </Button>
     </div>
   );
 
@@ -105,14 +92,14 @@ export default function ProductComparison() {
       <div className="flex flex-col gap-4 sm:gap-6">
         <PageHeader
           title="مقایسه محصولات - کنترلر پلی استیشن"
-          description={
-            <p className="text-xs sm:text-sm text-gray-600 dark:text-dark-text">
-              دسته بندی :{" "}
-              <span className="px-2 py-1 dark:bg-dark-blue dark:text-primary-300 bg-primary-100 text-primary-800 rounded-md text-xs sm:text-sm">
-                {category}
-              </span>
-            </p>
-          }
+        description={
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-dark-text">
+            دسته بندی :{" "}
+            <span className="px-2 py-1 dark:bg-dark-blue dark:text-primary-300 bg-primary-100 text-primary-800 rounded-md text-xs sm:text-sm">
+              {category || "—"}
+            </span>
+          </p>
+        }
           actionButton={
             <div className="md:hidden">
               <ActionBtns />
@@ -129,15 +116,21 @@ export default function ProductComparison() {
           <div className="w-full md:max-w-48">
             <AddProductColumn onAdd={handleAddProduct} />
           </div>
+          {loading ? (
+            <div className="flex-1 flex justify-center py-12">
+              <Spinner size="lg" />
+            </div>
+          ) : (
           <div className="grid grid-cols-2 gap-4 sm:gap-6 flex-1">
             {products.map((product) => (
               <ProductComparisonColumn
-                key={product.id}
+                key={product.id ?? product.productId}
                 product={product}
-                onRemove={() => handleRemoveProduct(product.id)}
+                onRemove={() => handleRemoveProduct(product.id ?? product.productId)}
               />
             ))}
           </div>
+          )}
         </div>
 
         {/* Comparison Table */}

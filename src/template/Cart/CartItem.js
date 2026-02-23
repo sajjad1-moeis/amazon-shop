@@ -10,21 +10,24 @@ import React, { useState } from "react";
 import { shoppingCartService } from "@/services/shoppingCart/shoppingCartService";
 import { toast } from "sonner";
 
-function CartItem({ item, onUpdate }) {
-  const [quantity, setQuantity] = useState(item?.quantity || 1);
+function CartItem({ item, userId, onUpdate }) {
+  const [quantity, setQuantity] = useState(item?.quantity ?? 1);
   const [loading, setLoading] = useState(false);
 
   const handleQuantityChange = async (newQuantity) => {
     if (newQuantity < 1) return;
-    
+    if (!userId) return;
     try {
       setLoading(true);
-      await shoppingCartService.updateItemQuantity(item.id, newQuantity);
+      await shoppingCartService.updateCartItem(userId, item.id, {
+        quantity: newQuantity,
+        hasQualityShield: item.hasQualityShield ?? false,
+      });
       setQuantity(newQuantity);
       onUpdate?.();
       toast.success("تعداد به‌روزرسانی شد");
     } catch (error) {
-      toast.error("خطا در به‌روزرسانی تعداد");
+      toast.error(error?.message ?? "خطا در به‌روزرسانی تعداد");
       console.error("Error updating quantity:", error);
     } finally {
       setLoading(false);
@@ -32,13 +35,14 @@ function CartItem({ item, onUpdate }) {
   };
 
   const handleRemove = async () => {
+    if (!userId) return;
     try {
       setLoading(true);
-      await shoppingCartService.removeItem(item.id);
+      await shoppingCartService.removeItem(userId, item.id);
       toast.success("محصول از سبد خرید حذف شد");
       onUpdate?.();
     } catch (error) {
-      toast.error("خطا در حذف محصول");
+      toast.error(error?.message ?? "خطا در حذف محصول");
       console.error("Error removing item:", error);
     } finally {
       setLoading(false);
@@ -58,10 +62,16 @@ function CartItem({ item, onUpdate }) {
     return new Intl.NumberFormat("fa-IR").format(price);
   };
 
-  const product = item?.product || {};
-  const price = item?.price || 0;
-  const discount = item?.discount || 0;
-  const originalPrice = discount > 0 ? price / (1 - discount / 100) : price;
+  const product = item?.product ?? {};
+  const title = item?.productTitle ?? product?.name ?? "محصول";
+  const imageUrl = item?.productMainImageUrl ?? product?.image ?? "/image/Home/product.png";
+  const price = item?.price ?? 0;
+  const discountPrice = item?.discountPrice ?? 0;
+  const denominator = price + discountPrice;
+  const discount =
+    item?.discount ??
+    (discountPrice > 0 && denominator > 0 ? Math.round((discountPrice / denominator) * 100) : 0);
+  const originalPrice = discount > 0 && denominator > 0 ? price + discountPrice : price;
 
   return (
     <Card className="rounded-xl border overflow-hidden border-gray-200 dark:bg-dark-box  dark:border-dark-field shadow-sm hover:shadow-md transition p-0">
@@ -69,8 +79,8 @@ function CartItem({ item, onUpdate }) {
         <div className="">
           <div className="relative aspect-square max-h-32 h-full md:max-h-56 w-full">
             <Image
-              src={product.image || "/image/Home/product.png"}
-              alt={product.name || "محصول"}
+              src={imageUrl}
+              alt={title}
               fill
               className="object-cover rounded-md"
             />
@@ -82,7 +92,7 @@ function CartItem({ item, onUpdate }) {
             <div className="flex justify-between items-start">
               <div className="">
                 <h2 className="font-bold text-sm md:text-lg  text-neutral-800 dark:text-dark-titre">
-                  {product.name || "محصول"}
+                  {title}
                 </h2>
                 <div className="flex items-center gap-2 mt-2">
                   🟩
@@ -109,10 +119,12 @@ function CartItem({ item, onUpdate }) {
                 )}
               </div>
               <div className="flex gap-1 md:gap-2 max-md:mt-3">
-                <div className="flex-between bg-gray-100 dark:bg-dark-field dark:border-0 border p-1 rounded-lg border-gray-200 max-md:text-xs text-sm gap-0.5 md:gap-2 text-[#0554DB]">
-                  <ShieldTick size={22} variant="Bold" />
-                  <p>دارای سپر کیفیت</p>
-                </div>
+                {item?.hasQualityShield && (
+                  <div className="flex-between bg-gray-100 dark:bg-dark-field dark:border-0 border p-1 rounded-lg border-gray-200 max-md:text-xs text-sm gap-0.5 md:gap-2 text-[#0554DB]">
+                    <ShieldTick size={22} variant="Bold" />
+                    <p>دارای سپر کیفیت</p>
+                  </div>
+                )}
                 <div className="flex-between bg-gray-100 dark:bg-dark-field dark:border-0 border p-1 rounded-lg border-gray-200 max-md:text-xs text-sm gap-0.5 md:gap-2 ">
                   <div className="bg-green-600 p-0.5 rounded-lg">
                     <TruckFast size={18} className="text-white" />
@@ -125,7 +137,7 @@ function CartItem({ item, onUpdate }) {
             <div className="flex justify-between items-end mt-4 gap-6  max-md:hidden">
               <div className="w-full">
                 <div className="flex items-center gap-2">
-                  <p>{formatPrice(price * quantity)} تومان</p>
+                  <p>{formatPrice(item?.totalPrice ?? price * quantity)} تومان</p>
                   {discount > 0 && (
                     <div className="bg-primary-400 p-1.5 px-2 rounded-lg text-xs text-white">
                       {discount}%
@@ -135,7 +147,7 @@ function CartItem({ item, onUpdate }) {
                 {discount > 0 && (
                   <div className="flex-between gap-2 mt-2">
                     <p className="text-gray-400 text-sm line-through">
-                      {formatPrice(originalPrice * quantity)} تومان
+                      {formatPrice((originalPrice || price) * quantity)} تومان
                     </p>
                   </div>
                 )}
@@ -170,7 +182,7 @@ function CartItem({ item, onUpdate }) {
       <div className="flex justify-between items-end  gap-6 md:hidden p-4">
         <div className="w-full">
           <div className="flex items-center gap-2">
-            <p>{formatPrice(price * quantity)} تومان</p>
+            <p>{formatPrice(item?.totalPrice ?? price * quantity)} تومان</p>
             {discount > 0 && (
               <div className="bg-primary-400 p-1.5 px-2 rounded-lg text-xs text-white">{discount}%</div>
             )}
@@ -178,7 +190,7 @@ function CartItem({ item, onUpdate }) {
           {discount > 0 && (
             <div className="flex-between gap-2 mt-2">
               <p className="text-gray-400 text-sm line-through">
-                {formatPrice(originalPrice * quantity)} تومان
+                {formatPrice((originalPrice || price) * quantity)} تومان
               </p>
             </div>
           )}

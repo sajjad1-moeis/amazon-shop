@@ -1,65 +1,84 @@
 import { getAuthenticatedClient } from "../api/client";
+import { unwrapApiData } from "../api/client";
 
-const buildQueryString = (params) => {
-  const searchParams = new URLSearchParams();
-  Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null) {
-      searchParams.append(key, encodeURIComponent(value));
-    }
+const qs = (params) => {
+  const search = new URLSearchParams();
+  Object.entries(params).forEach(([k, v]) => {
+    if (v !== undefined && v !== null) search.append(k, String(v));
   });
-  return searchParams.toString();
+  return search.toString();
 };
 
+/**
+ * سرویس سبد خرید — API مرحله ۳ (api/ShoppingCart)
+ * همهٔ متدها نیاز به توکن و userId برابر کاربر جاری دارند.
+ */
 export const shoppingCartService = {
+  /** GET api/ShoppingCart/GetCart?userId={id} — برمی‌گرداند: items, totalItems, subTotal, finalTotal, ... */
   getCart: async (userId) => {
     const client = getAuthenticatedClient();
-    const queryString = buildQueryString({ userId });
-    return client.get(`ShoppingCart/GetCart?${queryString}`).json();
+    const res = await client.get(`ShoppingCart/GetCart?${qs({ userId })}`).json();
+    return unwrapApiData(res);
   },
 
-  addItem: async (data) => {
+  /** POST api/ShoppingCart/AddToCart?userId={id} — body: { productId, quantity, hasQualityShield? } */
+  addToCart: async (userId, body) => {
     const client = getAuthenticatedClient();
-    return client.post("ShoppingCart/AddItem", { json: data }).json();
+    const res = await client
+      .post(`ShoppingCart/AddToCart?${qs({ userId })}`, { json: body })
+      .json();
+    return unwrapApiData(res);
   },
 
-  updateItemQuantity: async (itemId, quantity) => {
+  /** POST api/ShoppingCart/UpdateCartItem?userId={id}&cartItemId={id} — body: { quantity, hasQualityShield? } */
+  updateCartItem: async (userId, cartItemId, body) => {
     const client = getAuthenticatedClient();
-    const queryString = buildQueryString({ itemId, quantity });
-    return client.put(`ShoppingCart/UpdateItemQuantity?${queryString}`).json();
+    const res = await client
+      .post(`ShoppingCart/UpdateCartItem?${qs({ userId, cartItemId })}`, { json: body })
+      .json();
+    return unwrapApiData(res);
   },
 
-  removeItem: async (itemId) => {
+  /** POST api/ShoppingCart/delete-item?userId={id}&cartItemId={id} */
+  removeItem: async (userId, cartItemId) => {
     const client = getAuthenticatedClient();
-    const queryString = buildQueryString({ itemId });
-    return client.delete(`ShoppingCart/RemoveItem?${queryString}`).json();
+    const res = await client
+      .post(`ShoppingCart/delete-item?${qs({ userId, cartItemId })}`)
+      .json();
+    return res;
   },
 
-  clearCart: async () => {
+  /** POST api/ShoppingCart/delete-multiple?userId={id} — body: { cartItemIds: number[] } */
+  removeMultipleItems: async (userId, cartItemIds) => {
     const client = getAuthenticatedClient();
-    return client.delete("ShoppingCart/ClearCart").json();
+    const res = await client
+      .post(`ShoppingCart/delete-multiple?${qs({ userId })}`, {
+        json: { cartItemIds },
+      })
+      .json();
+    return res;
   },
 
-  getCartCount: async (userId) => {
+  /** POST api/ShoppingCart/clear?userId={id} */
+  clearCart: async (userId) => {
     const client = getAuthenticatedClient();
-    const queryString = buildQueryString({ userId });
-    return client.get(`ShoppingCart/GetCartCount?${queryString}`).json();
+    const res = await client.post(`ShoppingCart/clear?${qs({ userId })}`).json();
+    return res;
   },
 
-  getCartTotal: async (userId) => {
+  /** POST api/ShoppingCart/RefreshCartPrices?userId={id} */
+  refreshCartPrices: async (userId) => {
     const client = getAuthenticatedClient();
-    const queryString = buildQueryString({ userId });
-    return client.get(`ShoppingCart/GetCartTotal?${queryString}`).json();
+    const res = await client
+      .post(`ShoppingCart/RefreshCartPrices?${qs({ userId })}`)
+      .json();
+    return unwrapApiData(res);
   },
 
-  applyDiscountCode: async (discountCode) => {
+  /** POST api/ShoppingCart/remove-discount/{userId} */
+  removeDiscountCode: async (userId) => {
     const client = getAuthenticatedClient();
-    const queryString = buildQueryString({ discountCode });
-    return client.post(`ShoppingCart/ApplyDiscountCode?${queryString}`).json();
-  },
-
-  removeDiscountCode: async () => {
-    const client = getAuthenticatedClient();
-    return client.delete("ShoppingCart/RemoveDiscountCode").json();
+    const res = await client.post(`ShoppingCart/remove-discount/${userId}`).json();
+    return res;
   },
 };
-
