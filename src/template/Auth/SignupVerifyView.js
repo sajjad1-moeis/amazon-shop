@@ -20,14 +20,15 @@ export default function SignupVerifyView({ onBack, onSuccess }) {
   useEffect(() => {
     const savedPhone = localStorage.getItem("signup_phone");
     if (savedPhone) {
-      setPhone(savedPhone);
+      setPhone(String(savedPhone).trim());
     }
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!code || code.length !== 6) {
+    const cleanedCode = code.replace(/\D/g, "").slice(0, 6);
+    if (cleanedCode.length !== 6) {
       toast.error("لطفاً کد تایید ۶ رقمی را وارد کنید");
       return;
     }
@@ -37,7 +38,7 @@ export default function SignupVerifyView({ onBack, onSuccess }) {
       return;
     }
 
-    const result = await verifyRegistrationOtp(phone, code);
+    const result = await verifyRegistrationOtp(phone.trim(), cleanedCode);
     if (result.success) {
       localStorage.removeItem("signup_phone");
       onSuccess?.();
@@ -47,7 +48,7 @@ export default function SignupVerifyView({ onBack, onSuccess }) {
 
   const handleResend = async () => {
     if (!phone) return;
-    await resendOtp(phone, "register");
+    await resendOtp(phone.trim(), "register");
   };
 
   return (

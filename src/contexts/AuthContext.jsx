@@ -107,9 +107,15 @@ export const AuthProvider = ({ children }) => {
   const verifyRegistrationOtp = async (phoneNumber, otpCode) => {
     try {
       setLoading(true);
+      const phone = String(phoneNumber ?? "").trim();
+      const code = String(otpCode ?? "").replace(/\D/g, "").slice(0, 6);
+      if (!phone || code.length !== 6) {
+        toast.error("شماره موبایل و کد تایید ۶ رقمی را وارد کنید");
+        return { success: false };
+      }
       const response = await authAPI.verifyRegistrationOtp({
-        phoneNumber,
-        otpCode,
+        phoneNumber: phone,
+        otpCode: code,
       });
 
       if (!response?.success || !response?.data) {
@@ -182,8 +188,13 @@ export const AuthProvider = ({ children }) => {
   const resendOtp = async (phoneNumber, otpType) => {
     try {
       setLoading(true);
+      const phone = String(phoneNumber ?? "").trim();
+      if (!phone) {
+        toast.error("شماره موبایل یافت نشد");
+        return { success: false };
+      }
       const response = await authAPI.resendOtp({
-        phoneNumber,
+        phoneNumber: phone,
         otpType,
       });
 
