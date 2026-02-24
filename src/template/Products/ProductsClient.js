@@ -107,15 +107,42 @@ export default function ProductsClient({ searchParams: serverSearchParams }) {
   });
   const [pageNumber, setPageNumber] = useState(parseInt(clientSearchParams.get("page")) || 1);
   const [totalCount, setTotalCount] = useState(mockProducts.length);
+  // لیست از بک‌اند؛ null = هنوز لود نشده یا خطا → از mock استفاده می‌شود
+  const [apiProducts, setApiProducts] = useState(null);
 
   // جستجوی اسکرپر: وقتی در URL پارامتر search وجود دارد از API آمازون نتایج بگیر
   const searchParam = clientSearchParams.get("search") ?? "";
   const searchQuery = typeof searchParam === "string" ? searchParam.trim() : "";
 
+  // وقتی جستجو خالی است: لیست محصولات را از بک‌اند بگیر؛ در صورت خطا از mock استفاده کن
+  useEffect(() => {
+    if (searchQuery.length >= 2) return;
+
+    let cancelled = false;
+    setLoading(true);
+    setSearchError(null);
+    productService
+      .getAllActive()
+      .then((response) => {
+        if (cancelled) return;
+        const raw = response?.data ?? response;
+        const list = Array.isArray(raw) ? raw : [];
+        setApiProducts(list);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setApiProducts(null);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [searchQuery]);
+
   useEffect(() => {
     if (searchQuery.length < 2) {
-      setProducts(mockProducts);
-      setTotalCount(mockProducts.length);
       setSearchError(null);
       setLoading(false);
       return;
@@ -171,10 +198,11 @@ export default function ProductsClient({ searchParams: serverSearchParams }) {
     };
   }, [searchQuery]);
 
-  // وقتی جستجو خالی است و فقط فیلترها عوض می‌شوند، روی mock فیلتر اعمال کن
+  // وقتی جستجو خالی است: منبع = لیست بک‌اند (در صورت وجود) وگرنه mock؛ بعد فیلترها را اعمال کن
   useEffect(() => {
     if (searchQuery.length >= 2) return;
-    let filtered = [...mockProducts];
+    const sourceList = apiProducts !== null ? apiProducts : mockProducts;
+    let filtered = Array.isArray(sourceList) ? [...sourceList] : [...mockProducts];
     if (filters.query && typeof filters.query === "string") {
       const q = filters.query.toLowerCase();
       filtered = filtered.filter((p) => (p.name || p.title || "").toLowerCase().includes(q));
@@ -189,7 +217,7 @@ export default function ProductsClient({ searchParams: serverSearchParams }) {
     }
     setProducts(filtered);
     setTotalCount(filtered.length);
-  }, [filters, searchQuery]);
+  }, [apiProducts, filters, searchQuery]);
 
   const handleFilterChange = (filterType, value) => {
     setFilters((prev) => ({ ...prev, [filterType]: value }));

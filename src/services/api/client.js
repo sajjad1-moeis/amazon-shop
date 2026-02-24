@@ -1,7 +1,8 @@
 import ky from "ky";
 import { getToken } from "@/lib/token-manager";
 
-// روی سرور: در .env.local مقدار NEXT_PUBLIC_API_URL را بگذار (مثلاً http://107.161.175.45:8080/api)
+// روی سرور: در .env.local مقدار NEXT_PUBLIC_API_URL را بگذار.
+// در production با docker پورت 80 باز است، پس: http://107.161.175.45/api (بدون :8080)
 const API_BASE_URL =
   typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL
     ? process.env.NEXT_PUBLIC_API_URL

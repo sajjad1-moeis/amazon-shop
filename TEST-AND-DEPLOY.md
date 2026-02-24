@@ -28,7 +28,7 @@
 فایل **`.env.local`** همین‌طور با آدرس سرور باشد (همان که الان داری):
 
 ```env
-NEXT_PUBLIC_API_URL=http://107.161.175.45:8080/api
+NEXT_PUBLIC_API_URL=http://107.161.175.45/api
 NEXT_PUBLIC_SCRAPER_URL=http://107.161.175.45:5000
 ```
 

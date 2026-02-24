@@ -64,6 +64,15 @@ export default function ProductDetailPage({ params }) {
       setError(msg || "خطا در دریافت اطلاعات محصول");
       setProduct(null);
     };
+    const getErrorMessage = (err) => {
+      const isNetworkError =
+        err?.message === "Failed to fetch" ||
+        err?.name === "TypeError" ||
+        (typeof err?.message === "string" && err.message.toLowerCase().includes("network"));
+      return isNetworkError
+        ? "اتصال به سرور برقرار نشد. لطفاً اتصال اینترنت و وضعیت سرور را بررسی کنید."
+        : (err?.message || err?.data?.message || "خطا در دریافت اطلاعات محصول");
+    };
     const done = () => {
       if (!cancelled) setLoading(false);
     };
@@ -80,7 +89,7 @@ export default function ProductDetailPage({ params }) {
         .catch((err) => {
           if (cancelled) return;
           console.error("Error loading product details:", err);
-          fail(err?.message || err?.data?.message);
+          fail(getErrorMessage(err));
         })
         .finally(done);
       return () => {
@@ -142,7 +151,7 @@ export default function ProductDetailPage({ params }) {
           .catch((err) => {
             if (cancelled) return;
             console.error("Error loading product details:", err);
-            fail(err?.message || err?.data?.message);
+            fail(getErrorMessage(err));
           })
           .finally(done);
       })

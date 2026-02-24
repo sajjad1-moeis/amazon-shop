@@ -23,7 +23,7 @@ docker compose up -d
 اگر خواستی آدرس API یا base URL را عوض کنی، در همان پوش یک فایل `.env` بساز و بعد بیلد کن:
 
 ```bash
-echo 'NEXT_PUBLIC_API_URL=http://107.161.175.45:8080/api' >> .env
+echo 'NEXT_PUBLIC_API_URL=http://107.161.175.45/api' >> .env
 echo 'NEXT_PUBLIC_SCRAPER_URL=http://107.161.175.45:5000' >> .env
 echo 'NEXT_PUBLIC_BASE_URL=http://107.161.175.45' >> .env
 docker compose build --no-cache app
@@ -35,7 +35,7 @@ docker compose up -d
 قبل از بیلد آدرس API را بگذار:
 
 ```bash
-echo 'NEXT_PUBLIC_API_URL=http://107.161.175.45:8080/api' > .env.local
+echo 'NEXT_PUBLIC_API_URL=http://107.161.175.45/api' > .env.local
 echo 'NEXT_PUBLIC_SCRAPER_URL=http://107.161.175.45:5000' >> .env.local
 npm ci && npm run build && npm run start
 ```
