@@ -9,6 +9,7 @@ import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import { useAuth } from "@/contexts/AuthContext";
 import { notificationService } from "@/services/notification/notificationService";
+import { unwrapApiData } from "@/services/api/client";
 
 export default function NotificationsPage() {
   const { user } = useAuth();
@@ -28,14 +29,12 @@ export default function NotificationsPage() {
         pageNumber,
         pageSize,
       });
-
-      if (response.success && response.data) {
-        setNotifications(response.data.notifications || response.data || []);
-        setTotalPages(response.data.totalPages || 1);
-      }
+      const data = unwrapApiData(response);
+      const list = data?.notifications ?? (Array.isArray(data) ? data : []);
+      setNotifications(Array.isArray(list) ? list : []);
+      setTotalPages(data?.totalPages ?? 1);
     } catch (error) {
       toast.error(error.message || "خطا در دریافت اعلان‌ها");
-      console.error("Error fetching notifications:", error);
     } finally {
       setLoading(false);
     }
@@ -48,10 +47,8 @@ export default function NotificationsPage() {
   const handleMarkAsRead = async (id) => {
     if (userId == null) return;
     try {
-      const response = await notificationService.markAsRead(id, userId);
-      if (response.success) {
-        fetchNotifications();
-      }
+      await notificationService.markAsRead(id, userId);
+      fetchNotifications();
     } catch (error) {
       toast.error(error.message || "خطا در به‌روزرسانی اعلان");
     }

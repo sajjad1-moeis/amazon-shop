@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { adminTicketService } from "@/services/ticket/adminTicketService";
+import { ticketService } from "@/services/ticket/ticketService";
+import { unwrapApiData } from "@/services/api/client";
 import TicketDetailHeader from "@/template/Admin/tickets/detail/TicketDetailHeader";
 import TicketInfoCards from "@/template/Admin/tickets/detail/TicketInfoCards";
 import TicketMessagesSection from "@/template/Admin/tickets/detail/TicketMessagesSection";
@@ -33,25 +35,21 @@ export default function TicketDetailPage() {
     try {
       setLoading(true);
 
-      // دریافت اطلاعات تیکت
-      const ticketResponse = await adminTicketService.getMessages(ticketId);
-      if (!ticketResponse.success || !ticketResponse.data) {
-        toast.error(ticketResponse.message || "خطا در دریافت تیکت");
-        router.push("/admin/tickets");
-        return;
-      }
-      setTicket(ticketResponse.data);
+      const ticketResponse = await ticketService.getById(ticketId);
+      const ticketData = unwrapApiData(ticketResponse);
+      setTicket(ticketData);
 
-      // دریافت پیام‌های تیکت
       const messagesResponse = await adminTicketService.getMessages(ticketId);
-      if (messagesResponse.success && messagesResponse.data) {
-        setMessages(
-          Array.isArray(messagesResponse.data) ? messagesResponse.data : messagesResponse.data.messages || []
-        );
-      }
+      const messagesData = unwrapApiData(messagesResponse);
+      const raw = Array.isArray(messagesData) ? messagesData : messagesData?.messages ?? [];
+      const mapped = raw.map((msg) => ({
+        ...msg,
+        isFromAdmin: msg.messageType === 2 || msg.messageTypeName === "Support",
+        sender: msg.messageType === 2 ? "admin" : "user",
+      }));
+      setMessages(mapped);
     } catch (error) {
       toast.error(error.message || "خطا در دریافت تیکت");
-      console.error("Error fetching ticket:", error);
       router.push("/admin/tickets");
     } finally {
       setLoading(false);
@@ -70,13 +68,10 @@ export default function TicketDetailPage() {
         message: messageText.trim(),
         isInternal: false,
       });
-      if (response.success) {
-        toast.success("پیام با موفقیت ارسال شد");
-        setMessageText("");
-        fetchTicket();
-      } else {
-        toast.error(response.message || "خطا در ارسال پیام");
-      }
+      unwrapApiData(response);
+      toast.success("پیام با موفقیت ارسال شد");
+      setMessageText("");
+      fetchTicket();
     } catch (error) {
       toast.error(error.message || "خطا در ارسال پیام");
       console.error("Error sending message:", error);
@@ -91,15 +86,11 @@ export default function TicketDetailPage() {
     setUpdating(true);
     try {
       const response = await adminTicketService.closeTicket(ticketId);
-      if (response.success) {
-        toast.success("تیکت با موفقیت بسته شد");
-        fetchTicket();
-      } else {
-        toast.error(response.message || "خطا در بستن تیکت");
-      }
+      unwrapApiData(response);
+      toast.success("تیکت با موفقیت بسته شد");
+      fetchTicket();
     } catch (error) {
       toast.error(error.message || "خطا در بستن تیکت");
-      console.error("Error closing ticket:", error);
     } finally {
       setUpdating(false);
     }
@@ -109,15 +100,11 @@ export default function TicketDetailPage() {
     setUpdating(true);
     try {
       const response = await adminTicketService.reopenTicket(ticketId);
-      if (response.success) {
-        toast.success("تیکت با موفقیت باز شد");
-        fetchTicket();
-      } else {
-        toast.error(response.message || "خطا در باز کردن تیکت");
-      }
+      unwrapApiData(response);
+      toast.success("تیکت با موفقیت باز شد");
+      fetchTicket();
     } catch (error) {
       toast.error(error.message || "خطا در باز کردن تیکت");
-      console.error("Error reopening ticket:", error);
     } finally {
       setUpdating(false);
     }

@@ -104,6 +104,9 @@ export default function ProductsClient({ searchParams: serverSearchParams }) {
     minPrice: clientSearchParams.get("minPrice") || "",
     maxPrice: clientSearchParams.get("maxPrice") || "",
     query: clientSearchParams.get("search") || "",
+    inStock: false,
+    shop: "",
+    sortBy: "",
   });
   const [pageNumber, setPageNumber] = useState(parseInt(clientSearchParams.get("page")) || 1);
   const [totalCount, setTotalCount] = useState(mockProducts.length);
@@ -165,8 +168,9 @@ export default function ProductsClient({ searchParams: serverSearchParams }) {
         const payload = res.data;
         const list = payload?.data ?? payload?.Data ?? [];
         const items = Array.isArray(list) ? list : [];
-        setProducts(items);
-        setTotalCount(items.length);
+        const filtered = applyFilters(items, { skipTextFilter: true });
+        setProducts(filtered);
+        setTotalCount(filtered.length);
         setSearchError(null);
         // Prefetch images for first 6 products so they load instantly when user clicks
         items.slice(0, 6).forEach((p) => {
@@ -196,17 +200,16 @@ export default function ProductsClient({ searchParams: serverSearchParams }) {
     return () => {
       cancelled = true;
     };
-  }, [searchQuery]);
+  }, [searchQuery, filters]);
 
-  // وقتی جستجو خالی است: منبع = لیست بک‌اند (در صورت وجود) وگرنه mock؛ بعد فیلترها را اعمال کن
-  useEffect(() => {
-    if (searchQuery.length >= 2) return;
-    const sourceList = apiProducts !== null ? apiProducts : mockProducts;
-    let filtered = Array.isArray(sourceList) ? [...sourceList] : [...mockProducts];
-    if (filters.query && typeof filters.query === "string") {
+  const applyFilters = (list, { skipTextFilter = false } = {}) => {
+    let filtered = Array.isArray(list) ? [...list] : [];
+
+    if (!skipTextFilter && filters.query && typeof filters.query === "string") {
       const q = filters.query.toLowerCase();
       filtered = filtered.filter((p) => (p.name || p.title || "").toLowerCase().includes(q));
     }
+
     const minP = parseFloat(filters.minPrice);
     if (Number.isFinite(minP)) {
       filtered = filtered.filter((p) => Number(p.discountPrice || p.price || 0) >= minP);
@@ -215,6 +218,65 @@ export default function ProductsClient({ searchParams: serverSearchParams }) {
     if (Number.isFinite(maxP)) {
       filtered = filtered.filter((p) => Number(p.discountPrice || p.price || 0) <= maxP);
     }
+
+    if (filters.inStock) {
+      filtered = filtered.filter((p) => {
+        const inStock = p.isInStock ?? p.inStock;
+        return inStock === undefined ? true : Boolean(inStock);
+      });
+    }
+
+    if (filters.shop) {
+      filtered = filtered.filter((p) => {
+        const shop = p.amazonShop;
+        const country = p.sellerCountry || p.shopCountry;
+        if (filters.shop === "uae") {
+          return shop === 1 || shop === 3 || country === "🇦🇪";
+        }
+        if (filters.shop === "us") {
+          return shop === 2 || shop === 3 || country === "🇺🇸";
+        }
+        return true;
+      });
+    }
+
+    if (filters.categoryId) {
+      const target = String(filters.categoryId).toLowerCase();
+      filtered = filtered.filter((p) =>
+        String(p.categoryName || p.category || "").toLowerCase() === target
+      );
+    }
+
+    if (filters.brandId) {
+      const target = String(filters.brandId).toLowerCase();
+      filtered = filtered.filter((p) =>
+        String(p.brand || "").toLowerCase() === target
+      );
+    }
+
+    if (filters.sortBy) {
+      const sort = filters.sortBy;
+      filtered.sort((a, b) => {
+        const priceA = Number(a.finalPrice ?? a.discountPrice ?? a.price ?? 0);
+        const priceB = Number(b.finalPrice ?? b.discountPrice ?? b.price ?? 0);
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        if (sort === "price-high") return priceB - priceA;
+        if (sort === "price-low") return priceA - priceB;
+        if (sort === "newest") return dateB - dateA;
+        if (sort === "oldest") return dateA - dateB;
+        return 0;
+      });
+    }
+
+    return filtered;
+  };
+
+  // وقتی جستجو خالی است: منبع = لیست بک‌اند (در صورت وجود) وگرنه mock؛ بعد فیلترها را اعمال کن
+  useEffect(() => {
+    if (searchQuery.length >= 2) return;
+    const sourceList = apiProducts !== null ? apiProducts : mockProducts;
+    const filtered = applyFilters(sourceList);
     setProducts(filtered);
     setTotalCount(filtered.length);
   }, [apiProducts, filters, searchQuery]);
@@ -252,12 +314,12 @@ export default function ProductsClient({ searchParams: serverSearchParams }) {
     {
       id: "categoryId",
       label: "دسته‌بندی",
-      options: [{ id: "", label: "همه" }, ...categories.map((cat) => ({ id: cat.id.toString(), label: cat.name }))],
+      options: [{ id: "", label: "همه" }, ...categories.map((cat) => ({ id: cat.name, label: cat.name }))],
     },
     {
       id: "brandId",
       label: "برند",
-      options: [{ id: "", label: "همه" }, ...brands.map((brand) => ({ id: brand.id.toString(), label: brand.name }))],
+      options: [{ id: "", label: "همه" }, ...brands.map((brand) => ({ id: brand.name, label: brand.name }))],
     },
   ];
 
@@ -268,6 +330,9 @@ export default function ProductsClient({ searchParams: serverSearchParams }) {
         viewMode={viewMode}
         onSearch={handleSearch}
         searchValue={filters.query}
+        totalCount={totalCount}
+        sortBy={filters.sortBy}
+        onSortChange={(val) => handleFilterChange("sortBy", val)}
       />
       <div className="grid lg:grid-cols-4 max-lg:px-4 lg:container mt-10 gap-4 md:gap-8">
         <div className="max-lg:hidden">

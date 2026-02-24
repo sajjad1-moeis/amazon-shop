@@ -24,7 +24,9 @@ export default function DashboardHeader({ onMenuClick }) {
       .getUnreadCount(userId)
       .then((res) => {
         const data = unwrapApiData(res);
-        setUnreadCount(typeof data === "number" ? data : 0);
+        setUnreadCount(
+          typeof data === "number" ? data : (data?.unreadCount ?? data?.count ?? 0)
+        );
       })
       .catch(() => setUnreadCount(0));
   }, [userId]);

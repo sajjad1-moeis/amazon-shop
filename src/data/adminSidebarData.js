@@ -19,6 +19,7 @@ import {
   Notification,
   RotateRight,
   MoneyRecive,
+  ShieldSearch,
 } from "iconsax-reactjs";
 
 export const ADMIN_SIDEBAR_ITEMS = [
@@ -116,7 +117,17 @@ export const ADMIN_SIDEBAR_ITEMS = [
     href: "/admin/return-requests",
     key: "return-request",
   },
-
+  {
+    name: "بیمه و سپر کیفیت",
+    icon: ShieldSearch,
+    color: "#10b981",
+    href: "/admin/insurance",
+    key: "insurance-quality",
+    children: [
+      { name: "بیمه ارسال", href: "/admin/insurance" },
+      { name: "سپر کیفیت", href: "/admin/quality-shield" },
+    ],
+  },
   {
     name: "تخفیف‌ها و کوپن‌ها",
     icon: TicketDiscount,
@@ -202,11 +213,15 @@ export const ADMIN_SIDEBAR_ITEMS = [
     key: "notification",
   },
   {
-    name: "خدمات ارزی",
+    name: "ارز و نرخ",
     icon: MoneyRecive,
     color: "#10b981",
-    href: "/admin/currency-services",
-    key: "currency-service",
+    href: "/admin/currency-rates",
+    key: "currency",
+    children: [
+      { name: "نرخ ارز", href: "/admin/currency-rates" },
+      { name: "درخواست‌های سرویس ارز", href: "/admin/currency-services" },
+    ],
   },
   {
     name: "تنظیمات",

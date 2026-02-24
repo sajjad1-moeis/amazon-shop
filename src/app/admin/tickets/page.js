@@ -7,7 +7,8 @@ import TicketsTable from "@/template/Admin/tickets/TicketsTable";
 import TicketsFilters from "@/template/Admin/tickets/TicketsFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
-import { ticketService } from "@/services/ticket/ticketService";
+import { adminTicketService } from "@/services/ticket/adminTicketService";
+import { unwrapApiData } from "@/services/api/client";
 
 export default function TicketsPage() {
   const router = useRouter();
@@ -24,7 +25,8 @@ export default function TicketsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
 
-  const status = statusParam === "open" ? 1 : statusParam === "closed" ? 2 : undefined;
+  // فیلتر وضعیت برای سرچ ادمین: open => 1 (Open), closed => 5 (Closed)
+  const status = statusParam === "open" ? 1 : statusParam === "closed" ? 5 : undefined;
 
   useEffect(() => {
     const page = searchParams.get("page");
@@ -40,20 +42,18 @@ export default function TicketsPage() {
       setLoading(true);
       const searchParam = searchParams.get("search");
       const searchTermValue = searchParam || "";
-      const response = await ticketService.getPaginated({
+      const response = await adminTicketService.searchTickets({
+        searchTerm: searchTermValue || undefined,
+        status,
         pageNumber,
         pageSize,
-        status,
-        searchTerm: searchTermValue || undefined,
       });
 
-      if (response.success && response.data) {
-        setTickets(response.data.tickets || response.data || []);
-        setTotalPages(response.data.totalPages || 1);
-        setTotalCount(response.data.totalCount || 0);
-      } else {
-        toast.error(response.message || "خطا در دریافت تیکت‌ها");
-      }
+      const data = unwrapApiData(response);
+      const list = Array.isArray(data?.tickets) ? data.tickets : Array.isArray(data) ? data : [];
+      setTickets(list);
+      setTotalPages(data?.totalPages || 1);
+      setTotalCount(data?.totalCount || 0);
     } catch (error) {
       toast.error(error.message || "خطا در دریافت تیکت‌ها");
       console.error("Error fetching tickets:", error);

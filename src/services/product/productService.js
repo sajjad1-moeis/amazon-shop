@@ -23,35 +23,27 @@ export const productService = {
 
   getByASIN: async (asin) => {
     const client = getPublicClient();
-    return client.get(`Product/GetByASIN?asin=${encodeURIComponent(asin)}`).json();
+    return client.get(`Product/GetByASIN?amazonASIN=${encodeURIComponent(asin)}`).json();
   },
 
-  search: async (params = {}) => {
-    const {
-      query,
-      categoryId,
-      brandId,
-      minPrice,
-      maxPrice,
-      pageNumber = 1,
-      pageSize = 20,
-      sortBy,
-      sortDescending,
-    } = params;
-    const searchParams = new URLSearchParams({
-      pageNumber: pageNumber.toString(),
-      pageSize: pageSize.toString(),
-    });
-    if (query) searchParams.append("query", query);
-    if (categoryId) searchParams.append("categoryId", categoryId.toString());
-    if (brandId) searchParams.append("brandId", brandId.toString());
-    if (minPrice) searchParams.append("minPrice", minPrice.toString());
-    if (maxPrice) searchParams.append("maxPrice", maxPrice.toString());
-    if (sortBy) searchParams.append("sortBy", sortBy);
-    if (sortDescending !== undefined) searchParams.append("sortDescending", sortDescending.toString());
-
+  /**
+   * شکست قیمت محصول برای نمایش «این مبلغ بابت چیست؟»
+   * GET api/Product/{id}/price-breakdown
+   */
+  getPriceBreakdown: async (id) => {
     const client = getPublicClient();
-    return client.get(`Product/Search?${searchParams.toString()}`).json();
+    return client.get(`Product/${id}/price-breakdown`).json();
+  },
+
+  /**
+   * جستجوی ساده روی جدول محصولات دیتابیس.
+   * GET api/Product/Search?searchTerm={text}
+   */
+  search: async (searchTerm) => {
+    const client = getPublicClient();
+    const qs = new URLSearchParams();
+    if (searchTerm) qs.set("searchTerm", searchTerm);
+    return client.get(`Product/Search?${qs.toString()}`).json();
   },
 
   /**
@@ -135,18 +127,9 @@ export const productService = {
     return client.get(`Product/GetPaginated?${searchParams.toString()}`).json();
   },
 
-  getByCategory: async (categoryId, params = {}) => {
-    const { pageNumber = 1, pageSize = 20, sortBy, sortDescending } = params;
-    const searchParams = new URLSearchParams({
-      categoryId: categoryId.toString(),
-      pageNumber: pageNumber.toString(),
-      pageSize: pageSize.toString(),
-    });
-    if (sortBy) searchParams.append("sortBy", sortBy);
-    if (sortDescending !== undefined) searchParams.append("sortDescending", sortDescending.toString());
-
+  getByCategory: async (categoryId) => {
     const client = getPublicClient();
-    return client.get(`Product/GetByCategory?${searchParams.toString()}`).json();
+    return client.get(`Product/GetByCategory?categoryId=${categoryId}`).json();
   },
 
   getByBrand: async (brandId, params = {}) => {
@@ -245,7 +228,7 @@ export const productService = {
   },
 
   trackView: async (productId) => {
-    const client = getPublicClient();
+    const client = getAuthenticatedClient();
     return client.post(`Product/TrackView?productId=${productId}`).json();
   },
 

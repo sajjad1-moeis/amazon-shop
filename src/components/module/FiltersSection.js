@@ -6,25 +6,35 @@ import { Switch } from "../ui/switch";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 
 const shops = [
-  { name: "همه", id: "a1" },
-  { name: "آمازون امارات", id: "a2" },
-  { name: "آمازون آمریکا", id: "a3" },
+  { name: "همه", id: "a1", value: "all" },
+  { name: "آمازون امارات", id: "a2", value: "uae" },
+  { name: "آمازون آمریکا", id: "a3", value: "us" },
 ];
 
-function FiltersSection({ dynamicFilters, isInventory }) {
-  const [checkedOptions, setCheckedOptions] = useState({});
+function FiltersSection({ dynamicFilters, isInventory, filters = {}, onFilterChange }) {
+  const hasActiveFilters =
+    !!(
+      filters.categoryId ||
+      filters.brandId ||
+      filters.minPrice ||
+      filters.maxPrice ||
+      filters.inStock ||
+      filters.shop
+    );
 
-  const handleCheckboxChange = (filterId, optionId) => {
-    setCheckedOptions((prev) => ({
-      ...prev,
-      [filterId]: {
-        ...prev[filterId],
-        [optionId]: !prev[filterId]?.[optionId],
-      },
-    }));
+  const handleClearAll = () => {
+    if (!onFilterChange) return;
+    onFilterChange("categoryId", "");
+    onFilterChange("brandId", "");
+    onFilterChange("minPrice", "");
+    onFilterChange("maxPrice", "");
+    onFilterChange("inStock", false);
+    onFilterChange("shop", "");
   };
 
-  const isAnyChecked = (filterId) => checkedOptions[filterId] && Object.values(checkedOptions[filterId]).some(Boolean);
+  const selectedShop = filters.shop || "all";
+
+  const isAnyChecked = (filterId) => Boolean(filters[filterId]);
 
   return (
     <div
@@ -36,10 +46,16 @@ function FiltersSection({ dynamicFilters, isInventory }) {
       {/* Header */}
       <div className="flex justify-between items-center">
         <p className="text-xl text-gray-800 dark:text-dark-title">فیلتر ها</p>
-        <div className="flex items-center gap-1 text-red-600 dark:text-red-500 text-xs cursor-pointer hover:text-red-700 dark:hover:text-red-400 transition-colors">
-          <Trash size={16} />
-          <p>حذف همه</p>
-        </div>
+        {hasActiveFilters && (
+          <button
+            type="button"
+            onClick={handleClearAll}
+            className="flex items-center gap-1 text-red-600 dark:text-red-500 text-xs cursor-pointer hover:text-red-700 dark:hover:text-red-400 transition-colors"
+          >
+            <Trash size={16} />
+            <p>حذف همه</p>
+          </button>
+        )}
       </div>
 
       {/* Shops */}
@@ -52,6 +68,12 @@ function FiltersSection({ dynamicFilters, isInventory }) {
                 className="data-[state=checked]:bg-primary-500 dark:data-[state=checked]:bg-blue-500 border rounded"
                 checkClassName="text-white"
                 id={shop.id}
+                checked={selectedShop === shop.value}
+                onCheckedChange={() => {
+                  if (!onFilterChange) return;
+                  const next = selectedShop === shop.value ? "all" : shop.value;
+                  onFilterChange("shop", next === "all" ? "" : next);
+                }}
               />
               <Label className="cursor-pointer text-gray-700 dark:text-gray-300" htmlFor={shop.id}>
                 {shop.name}
@@ -72,6 +94,8 @@ function FiltersSection({ dynamicFilters, isInventory }) {
               className="data-[state=checked]:bg-primary-500 dark:data-[state=checked]:bg-blue-500"
               dir="ltr"
               id="airplane-mode"
+              checked={!!filters.inStock}
+              onCheckedChange={(val) => onFilterChange && onFilterChange("inStock", Boolean(val))}
             />
           </div>
         </div>
@@ -94,19 +118,26 @@ function FiltersSection({ dynamicFilters, isInventory }) {
               </span>
             </AccordionTrigger>
             <AccordionContent className="flex flex-col gap-4 mt-2">
-              {filter.options.map((option) => (
-                <div key={option.id} className="flex items-center gap-2">
-                  <Checkbox
-                    id={option.id}
-                    checked={!!checkedOptions[filter.id]?.[option.id]}
-                    onCheckedChange={() => handleCheckboxChange(filter.id, option.id)}
-                    className="data-[state=checked]:bg-primary-500 dark:data-[state=checked]:bg-blue-500"
-                  />
-                  <Label htmlFor={option.id} className="text-gray-700 dark:text-gray-300 cursor-pointer">
-                    {option.label}
-                  </Label>
-                </div>
-              ))}
+              {filter.options.map((option) => {
+                const checked = filters[filter.id] === option.id;
+                return (
+                  <div key={option.id} className="flex items-center gap-2">
+                    <Checkbox
+                      id={option.id}
+                      checked={checked}
+                      onCheckedChange={() => {
+                        if (!onFilterChange) return;
+                        const next = checked ? "" : option.id;
+                        onFilterChange(filter.id, next);
+                      }}
+                      className="data-[state=checked]:bg-primary-500 dark:data-[state=checked]:bg-blue-500"
+                    />
+                    <Label htmlFor={option.id} className="text-gray-700 dark:text-gray-300 cursor-pointer">
+                      {option.label}
+                    </Label>
+                  </div>
+                );
+              })}
             </AccordionContent>
           </AccordionItem>
         ))}

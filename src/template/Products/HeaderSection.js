@@ -3,7 +3,8 @@
 import SwitchButton from "@/components/SwitchButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowDown2, Candle, DiscountShape, Element3, RowVertical, Sort, SearchNormal1 } from "iconsax-reactjs";
+import { Candle, DiscountShape, Element3, RowVertical, SearchNormal1 } from "iconsax-reactjs";
+import SortBySelect from "@/components/FilterSelects/SortBySelect";
 import React from "react";
 import Link from "next/link";
 
@@ -12,7 +13,7 @@ const VIEW_MODES = [
   { id: "list", icon: RowVertical },
 ];
 
-function HeaderSection({ viewMode, setViewMode, onSearch, searchValue = "", totalCount = 0 }) {
+function HeaderSection({ viewMode, setViewMode, onSearch, searchValue = "", totalCount = 0, sortBy = "", onSortChange }) {
   const handleSearchChange = (e) => {
     if (onSearch) {
       onSearch(e.target.value);
@@ -42,14 +43,17 @@ function HeaderSection({ viewMode, setViewMode, onSearch, searchValue = "", tota
           )}
 
           <div className="flex-between gap-2 max-md:hidden">
-            <Button
-              variant="ghost"
-              className="max-lg:hidden bg-gray-100 border dark:border-[#7B7F86] dark:text-dark-text dark:bg-dark-field border-gray-300 rounded-lg flex-between text-gray-500"
-            >
-              <Sort size={20} />
-              مرتب سازی
-              <ArrowDown2 size={18} />
-            </Button>
+            {onSortChange && (
+              <div className="max-lg:hidden">
+                <SortBySelect
+                  value={sortBy || ""}
+                  onValueChange={(value) => onSortChange(value === "all" ? "" : value)}
+                  placeholder="مرتب سازی"
+                  includeAll
+                  includePrice
+                />
+              </div>
+            )}
 
             {VIEW_MODES.map(({ id, icon: Icon }) => (
               <button

@@ -1,25 +1,26 @@
-import { getPublicClient, getAuthenticatedClient } from "../api/client";
+import { getAuthenticatedClient } from "../api/client";
 
+/**
+ * Phase 14 — api/CurrencyService (ادمین درخواست‌های سرویس ارز).
+ * GetPaginated: data.requests, data.totalCount, data.totalPages
+ */
 export const currencyService = {
   getPaginated: async (params = {}) => {
-    const {
-      pageNumber = 1,
-      pageSize = 20,
-      status,
-      searchTerm,
-    } = params;
-
-    const searchParams = new URLSearchParams({
-      pageNumber: pageNumber.toString(),
-      pageSize: pageSize.toString(),
-    });
-
-    if (status) searchParams.append("status", status.toString());
-    if (searchTerm) searchParams.append("searchTerm", searchTerm);
-
+    const { pageNumber = 1, pageSize = 20, status, serviceType, userId, searchTerm } = params;
+    const q = new URLSearchParams({ pageNumber: String(pageNumber), pageSize: String(pageSize) });
+    if (status != null) q.set("status", String(status));
+    if (serviceType != null) q.set("serviceType", String(serviceType));
+    if (userId != null) q.set("userId", String(userId));
+    if (searchTerm) q.set("searchTerm", searchTerm);
     const client = getAuthenticatedClient();
-    return client.get(`CurrencyService/GetPaginated?${searchParams.toString()}`).json();
+    return client.get(`CurrencyService/GetPaginated?${q.toString()}`).json();
   },
+
+  getByStatus: (status) =>
+    getAuthenticatedClient().get(`CurrencyService/by-status/${status}`).json(),
+
+  updateRequestStatus: (requestId, body) =>
+    getAuthenticatedClient().post(`CurrencyService/${requestId}/status`, { json: body }).json(),
 
   getAll: async () => {
     const client = getAuthenticatedClient();

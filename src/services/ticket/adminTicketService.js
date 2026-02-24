@@ -68,9 +68,10 @@ export const adminTicketService = {
     return client.get(`AdminTicket/GetByCategory?categoryId=${categoryId}`).json();
   },
 
-  getByAssignedUser: async (userId) => {
+  /** GET api/AdminTicket/GetByAssignedUser?assignedToUserId= */
+  getByAssignedUser: async (assignedToUserId) => {
     const client = getAuthenticatedClient();
-    return client.get(`AdminTicket/GetByAssignedUser?userId=${userId}`).json();
+    return client.get(`AdminTicket/GetByAssignedUser?assignedToUserId=${assignedToUserId}`).json();
   },
 
   getUnassigned: async () => {
@@ -83,19 +84,19 @@ export const adminTicketService = {
     return client.put(`AdminTicket/Update?id=${id}`, { json: data }).json();
   },
 
-  // تغییر وضعیت مطابق داکیومنت (PUT /api/AdminTicket/{ticketId}/ChangeStatus)
+  // تغییر وضعیت مطابق داکیومنت (POST /api/AdminTicket/{ticketId}/ChangeStatus)
   changeStatus: async (ticketId, status, notes) => {
     const client = getAuthenticatedClient();
     const searchParams = new URLSearchParams({ status: status.toString() });
     if (notes) searchParams.append("notes", notes);
-    return client.put(`AdminTicket/${ticketId}/ChangeStatus?${searchParams.toString()}`).json();
+    return client.post(`AdminTicket/${ticketId}/ChangeStatus?${searchParams.toString()}`).json();
   },
 
-  // تغییر اولویت مطابق داکیومنت (PUT /api/AdminTicket/{ticketId}/ChangePriority)
+  // تغییر اولویت مطابق داکیومنت (POST /api/AdminTicket/{ticketId}/ChangePriority)
   changePriority: async (ticketId, priority) => {
     const client = getAuthenticatedClient();
     const searchParams = new URLSearchParams({ priority: priority.toString() });
-    return client.put(`AdminTicket/${ticketId}/ChangePriority?${searchParams.toString()}`).json();
+    return client.post(`AdminTicket/${ticketId}/ChangePriority?${searchParams.toString()}`).json();
   },
 
   // اختصاص تیکت مطابق داکیومنت (POST /api/AdminTicket/{ticketId}/Assign)
