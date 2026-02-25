@@ -12,7 +12,7 @@ const serviceGuarantees = [
   { icon: CardPos, title: "پرداخت امن ریالی" },
 ];
 
-function buildSpecsFromProduct(product) {
+function buildSpecsFromProduct(product, dataSource) {
   if (!product) return [];
   const title = (product.title || product.name || "").trim();
   const attrs = product.attributes;
@@ -24,6 +24,12 @@ function buildSpecsFromProduct(product) {
         if (!title || s.value.length < 20) return true;
         if (s.value === title) return false;
         if (s.label && /title|نام محصول|عنوان/i.test(s.label)) return false;
+        // مسیر اسکرپینگ: فقط وقتی مقدار عملاً تکرار عنوان است فیلتر کن
+        if (dataSource === "scraper") {
+          if (s.value.length <= title.length + 30 && (s.value.includes(title) || title.includes(s.value))) return false;
+          return true;
+        }
+        // مسیر دیتابیس (سجاد)
         if (s.value.length > 100 && s.value.includes(title.slice(0, 30))) return false;
         return true;
       });
@@ -36,9 +42,9 @@ function buildSpecsFromProduct(product) {
   return manual;
 }
 
-export default function ProductDetailsAccordion({ product }) {
+export default function ProductDetailsAccordion({ product, dataSource = "db" }) {
   const description = getProductDescription(product);
-  const technicalSpecs = buildSpecsFromProduct(product);
+  const technicalSpecs = buildSpecsFromProduct(product, dataSource);
   const hasDescription = Boolean(description && description.trim());
   const hasSpecs = technicalSpecs.length > 0;
   const items = [];

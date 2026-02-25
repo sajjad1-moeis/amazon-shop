@@ -20,7 +20,7 @@ import { Label } from "@/components/ui/label";
 import { productReviewService } from "@/services/review/productReviewService";
 import { unwrapApiData } from "@/services/api/client";
 
-export default function ProductReviewsSection({ product }) {
+export default function ProductReviewsSection({ product, dataSource = "db" }) {
   const productId = product?.id ?? product?.productId ?? product?.asin;
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [reviewText, setReviewText] = useState("");
@@ -34,17 +34,50 @@ export default function ProductReviewsSection({ product }) {
     Math.min(5, Math.max(0, Number(product?.rating ?? 0) || 0))
   );
 
+  // مسیر دیتابیس (سجاد): همیشه از API؛ مسیر اسکرپینگ: فقط وقتی داده معتبر است ست می‌شود
   useEffect(() => {
     if (!productId) return;
     productReviewService.getApprovedByProductId(productId).then((res) => {
       const data = unwrapApiData(res);
-      setProductReviews(Array.isArray(data) ? data : []);
+      if (dataSource === "scraper") {
+        if (Array.isArray(data) && data.length > 0) setProductReviews(data);
+      } else {
+        setProductReviews(Array.isArray(data) ? data : []);
+      }
     }).catch(() => {});
     productReviewService.getReviewCountByProductId(productId).then((res) => {
       const data = unwrapApiData(res);
-      setTotalReviews(typeof data === "number" ? data : 0);
+      if (dataSource === "scraper") {
+        if (typeof data === "number" && data > 0) setTotalReviews(data);
+      } else {
+        setTotalReviews(typeof data === "number" ? data : 0);
+      }
     }).catch(() => {});
-  }, [productId]);
+  }, [productId, dataSource]);
+
+  // مسیر اسکرپینگ: همگام‌سازی با داده اسکرپر وقتی از product می‌رسد
+  const scraperReviews = dataSource === "scraper" ? product?.reviews : undefined;
+  const scraperReviewsCount = dataSource === "scraper" ? (product?.reviews_count ?? product?.reviewCount) : undefined;
+  const scraperRating = dataSource === "scraper" ? product?.rating : undefined;
+
+  useEffect(() => {
+    if (dataSource !== "scraper") return;
+    if (Array.isArray(scraperReviews) && scraperReviews.length > 0) {
+      setProductReviews((prev) => (prev.length === 0 ? scraperReviews : prev));
+    }
+  }, [dataSource, scraperReviews]);
+
+  useEffect(() => {
+    if (dataSource !== "scraper") return;
+    const count = Math.max(0, Math.floor(Number(scraperReviewsCount) || 0));
+    if (count > 0) setTotalReviews((prev) => (prev === 0 ? count : Math.max(prev, count)));
+  }, [dataSource, scraperReviewsCount]);
+
+  useEffect(() => {
+    if (dataSource !== "scraper") return;
+    const r = Math.min(5, Math.max(0, Number(scraperRating) || 0));
+    if (r > 0) setOverallRating((prev) => (prev === 0 ? r : prev));
+  }, [dataSource, scraperRating]);
 
   const hasRealCount = totalReviews > 0;
 
