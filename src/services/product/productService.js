@@ -95,6 +95,43 @@ export const productService = {
     return client.get(`amazon/search?${params.toString()}`).json();
   },
 
+  /**
+   * لیست محصولات با فیلتر و صفحه‌بندی — طبق داک Phase2.
+   * GET api/Product/GetPaginated
+   * پاسخ: { data: { products, totalCount, pageNumber, pageSize, totalPages } }
+   * پارامترها: category, brand, minPrice, maxPrice, inStock, featured, amazonShop (1=UAE, 2=America, 3=Both), sortBy (price_asc|price_desc|rating|popularity|newest)
+   */
+  getList: async (params = {}) => {
+    const q = new URLSearchParams();
+    const {
+      pageNumber = 1,
+      pageSize = 20,
+      category,
+      brand,
+      minPrice,
+      maxPrice,
+      inStock,
+      featured,
+      amazonShop,
+      sortBy,
+    } = params;
+    q.set("pageNumber", String(Math.max(1, pageNumber)));
+    q.set("pageSize", String(Math.min(100, Math.max(1, pageSize))));
+    if (category) q.set("category", category);
+    if (brand) q.set("brand", brand);
+    if (minPrice != null && minPrice !== "") q.set("minPrice", String(minPrice));
+    if (maxPrice != null && maxPrice !== "") q.set("maxPrice", String(maxPrice));
+    if (inStock === true) q.set("inStock", "true");
+    if (featured === true) q.set("featured", "true");
+    if (amazonShop != null && amazonShop !== "") {
+      const v = Number(amazonShop);
+      if ([1, 2, 3].includes(v)) q.set("amazonShop", String(v));
+    }
+    if (sortBy) q.set("sortBy", sortBy);
+    const client = getPublicClient();
+    return client.get(`Product/GetPaginated?${q.toString()}`).json();
+  },
+
   getPaginated: async (params = {}) => {
     const {
       pageNumber = 1,

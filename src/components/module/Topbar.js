@@ -3,7 +3,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { LanguagesIcon, MenuIcon } from "lucide-react";
-import { ArrowDown2, BitcoinConvert, DiscountShape } from "iconsax-reactjs";
+import { ArrowDown2, BitcoinConvert } from "iconsax-reactjs";
 import Image from "next/image";
 import Link from "next/link";
 import SwitchButton from "../SwitchButton";
@@ -29,7 +29,7 @@ export default function TopBar() {
             <div className="max-xl:hidden">
               <MegaMenu trigger={categoriesTrigger} />
             </div>
-            <Link href={"/currency-services"} className=" max-md:hidden">
+            <Link href={"/currency-services"} className="max-md:hidden">
               <Button variant="gray" size="sm" className="relative rounded-xl px-3 py-1 flex items-center md:gap-2">
                 <BitcoinConvert size={16} variant="Bulk" />
                 <span className="text-sm">خدمات ارزی</span>
@@ -38,10 +38,9 @@ export default function TopBar() {
                 </span>
               </Button>
             </Link>
-            <Link href={"/gift-cart"} className=" max-md:hidden">
-              <Button variant="gray" size="sm" className="rounded-xl px-3 py-1 flex items-center md:gap-2 gap-0">
-                <DiscountShape size={16} variant="Bulk" />
-                <span className="text-sm">گیفت کارت</span>
+            <Link href={"/currency-rates"} className="max-md:hidden">
+              <Button variant="gray" size="sm" className="rounded-xl px-3 py-1 flex items-center md:gap-2">
+                <span className="text-sm">نرخ ارز</span>
               </Button>
             </Link>
             <Link href={"/shops/ebay"}>

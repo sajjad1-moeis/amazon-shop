@@ -11,7 +11,7 @@ const shops = [
   { name: "آمازون آمریکا", id: "a3", value: "us" },
 ];
 
-function FiltersSection({ dynamicFilters, isInventory, filters = {}, onFilterChange }) {
+function FiltersSection({ dynamicFilters, isInventory, filters = {}, onFilterChange, onClearAll }) {
   const hasActiveFilters =
     !!(
       filters.categoryId ||
@@ -23,6 +23,10 @@ function FiltersSection({ dynamicFilters, isInventory, filters = {}, onFilterCha
     );
 
   const handleClearAll = () => {
+    if (onClearAll) {
+      onClearAll();
+      return;
+    }
     if (!onFilterChange) return;
     onFilterChange("categoryId", "");
     onFilterChange("brandId", "");
