@@ -3,11 +3,11 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
-import { Menu, Logout, User, CloseCircle } from "iconsax-reactjs";
+import { Menu, Logout, User, CloseCircle, Home2 } from "iconsax-reactjs";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
 import { SideBarContent } from "./AdminSidebar";
-import { useLinkStatus } from "next/link";
 
 // تابع ساده برای نمایش تاریخ شمسی (بدون moment-jalali)
 const getPersianDate = () => {
@@ -67,6 +67,17 @@ export default function AdminTopBar() {
           </div>
 
           <div className="flex items-center gap-2">
+            <Link href="/">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="border border-gray-700 rounded-full hover:bg-gray-800 text-white gap-1.5 px-3"
+                title="صفحه اصلی"
+              >
+                <Home2 size={20} />
+                <span className="max-sm:hidden">صفحه اصلی</span>
+              </Button>
+            </Link>
             <Button
               variant="ghost"
               size="icon"
