@@ -24,7 +24,8 @@ function buildSpecsFromProduct(product) {
         if (!title || s.value.length < 20) return true;
         if (s.value === title) return false;
         if (s.label && /title|نام محصول|عنوان/i.test(s.label)) return false;
-        if (s.value.length > 100 && s.value.includes(title.slice(0, 30))) return false;
+        // Only filter if the value is essentially a repeat of the title (not just containing it)
+        if (s.value.length <= title.length + 30 && (s.value.includes(title) || title.includes(s.value))) return false;
         return true;
       });
   }

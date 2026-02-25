@@ -38,13 +38,38 @@ export default function ProductReviewsSection({ product }) {
     if (!productId) return;
     productReviewService.getApprovedByProductId(productId).then((res) => {
       const data = unwrapApiData(res);
-      setProductReviews(Array.isArray(data) ? data : []);
+      if (Array.isArray(data) && data.length > 0) setProductReviews(data);
     }).catch(() => {});
     productReviewService.getReviewCountByProductId(productId).then((res) => {
       const data = unwrapApiData(res);
-      setTotalReviews(typeof data === "number" ? data : 0);
+      if (typeof data === "number" && data > 0) setTotalReviews(data);
     }).catch(() => {});
   }, [productId]);
+
+  // Sync with scraper data arriving asynchronously via product prop
+  const scraperReviews = product?.reviews;
+  const scraperReviewsCount = product?.reviews_count ?? product?.reviewCount;
+  const scraperRating = product?.rating;
+
+  useEffect(() => {
+    if (Array.isArray(scraperReviews) && scraperReviews.length > 0) {
+      setProductReviews((prev) => (prev.length === 0 ? scraperReviews : prev));
+    }
+  }, [scraperReviews]);
+
+  useEffect(() => {
+    const count = Math.max(0, Math.floor(Number(scraperReviewsCount) || 0));
+    if (count > 0) {
+      setTotalReviews((prev) => (prev === 0 ? count : Math.max(prev, count)));
+    }
+  }, [scraperReviewsCount]);
+
+  useEffect(() => {
+    const r = Math.min(5, Math.max(0, Number(scraperRating) || 0));
+    if (r > 0) {
+      setOverallRating((prev) => (prev === 0 ? r : prev));
+    }
+  }, [scraperRating]);
 
   const hasRealCount = totalReviews > 0;
 

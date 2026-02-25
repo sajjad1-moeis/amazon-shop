@@ -194,8 +194,21 @@ export default function ProductDetailPage({ params }) {
     detailsPromiseRef.current = prefetchScraperDetails(productId);
   }, [productId, isAsinInUrl]);
 
+  // For numeric-ID products: start prefetch as soon as product.asin becomes available
+  useEffect(() => {
+    if (isAsinInUrl || !product?.asin) return;
+    if (!detailsPromiseRef.current) {
+      detailsPromiseRef.current = prefetchScraperDetails(product.asin);
+    }
+    if (!imagePromiseRef.current) {
+      imagePromiseRef.current = prefetchScraperImages(product.asin);
+    }
+  }, [isAsinInUrl, product?.asin]);
+
   // Step B: Once product state is ready, merge images from prefetch result.
   //         اگر URL عددی است از product.asin استفاده می‌کنیم تا عکس‌ها/جزئیات گرفته شوند.
+  //         No `cancelled` flag — the ref guard prevents duplicate calls,
+  //         and ASIN check prevents stale merges after navigation.
   useEffect(() => {
     if (!product || loading) return;
     if (!asinForScraper || enrichedAsinRef.current === asinForScraper) return;
@@ -204,8 +217,10 @@ export default function ProductDetailPage({ params }) {
     if (currentImages.length >= 2) return;
     enrichedAsinRef.current = asinForScraper;
 
+    const targetAsin = asinForScraper;
     const applyEnrichment = (res) => {
       if (!res?.success || !Array.isArray(res.images) || res.images.length === 0) return;
+      if (enrichedAsinRef.current !== targetAsin) return;
       setProduct((prev) => {
         if (!prev) return prev;
         return { ...prev, images: res.images };
@@ -219,29 +234,28 @@ export default function ProductDetailPage({ params }) {
     }
 
     setImagesEnriching(true);
-    let cancelled = false;
-    const promise = isAsinInUrl ? imagePromiseRef.current : null;
-    (promise || prefetchScraperImages(asinForScraper))?.then((res) => {
-      if (!cancelled) {
-        applyEnrichment(res);
-        setImagesEnriching(false);
-      }
+    const promise = imagePromiseRef.current || prefetchScraperImages(asinForScraper);
+    promise?.then((res) => {
+      applyEnrichment(res);
+      setImagesEnriching(false);
     }).catch(() => {
-      if (!cancelled) setImagesEnriching(false);
+      setImagesEnriching(false);
     });
-
-    return () => { cancelled = true; setImagesEnriching(false); };
   }, [product, loading, productId, asinForScraper, isAsinInUrl]);
 
   // Step C: جزئیات کامل (توضیحات، مشخصات فنی، نظرات). با ASIN از URL یا از product.asin.
+  //         CRITICAL: No `cancelled` cleanup — images enrichment (Step B) updates product state
+  //         which re-runs this effect. The old `cancelled` flag would kill the pending details
+  //         promise, and the ref guard would prevent re-running. Details were NEVER merged.
+  //         Fix: ref guard deduplicates, ASIN check prevents stale merges. No cancellation.
   const mergeDetailsIntoProduct = (res) => {
     if (!res?.success) return;
     setProduct((prev) => {
       if (!prev) return prev;
       const next = { ...prev };
-      if (res.description != null) next.description = res.description;
+      if (res.description != null && res.description) next.description = res.description;
       if (Array.isArray(res.attributes) && res.attributes.length > 0) next.attributes = res.attributes;
-      if (Array.isArray(res.reviews)) next.reviews = res.reviews;
+      if (Array.isArray(res.reviews) && res.reviews.length > 0) next.reviews = res.reviews;
       if (res.reviews_count != null) next.reviews_count = res.reviews_count;
       if (res.rating != null) next.rating = res.rating;
       if (Array.isArray(res.bullet_points) && res.bullet_points.length > 0) next.bullet_points = res.bullet_points;
@@ -256,17 +270,16 @@ export default function ProductDetailPage({ params }) {
     if (!asinForScraper || detailsEnrichedAsinRef.current === asinForScraper) return;
 
     detailsEnrichedAsinRef.current = asinForScraper;
-    let cancelled = false;
+    const targetAsin = asinForScraper;
     const cached = getScraperDetailsCached(asinForScraper);
     if (cached) {
       mergeDetailsIntoProduct(cached);
       return;
     }
-    const promise = isAsinInUrl ? detailsPromiseRef.current : null;
-    (promise || prefetchScraperDetails(asinForScraper))?.then((res) => {
-      if (!cancelled) mergeDetailsIntoProduct(res);
+    const promise = isAsinInUrl ? detailsPromiseRef.current : prefetchScraperDetails(asinForScraper);
+    promise?.then((res) => {
+      if (detailsEnrichedAsinRef.current === targetAsin) mergeDetailsIntoProduct(res);
     });
-    return () => { cancelled = true; };
   }, [product, loading, productId, asinForScraper, isAsinInUrl]);
 
   if (loading) {
