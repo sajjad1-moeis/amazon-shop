@@ -20,8 +20,9 @@ function Header() {
       <div className="dark:bg-dark-header bg-primary-500 py-1.5 ">
         <div className="flex-between xl:container max-2xl:px-4 ">
           <div className="flex-between gap-2">
-            <Image alt="logo img" src="/image/Header/paypal.png" width={65} height={48} />
-            <p className="dark:text-[#D4F4FF] text-info-200 font-thin text-sm ">داری، کلیک کن</p>
+            <p className="dark:text-[#D4F4FF] text-info-200 font-thin text-sm max-lg:hidden">
+              تخفیف ویژه خرید اولی‌ها! تا ۵٪ هزینه خدمات کمتر برای اولین سفارش شما 🎁
+            </p>
           </div>
           <div className="flex-between ">
             <DiscountAmazonButton className={"max-md:hidden lg:hidden"} />
@@ -29,13 +30,20 @@ function Header() {
               <SwitchButton />
             </div>
           </div>
-          <p className="dark:text-[#DCE1FF] text-primary-200 max-lg:hidden">
-            تخفیف ویژه خرید اولی‌ها! تا ۵٪ هزینه خدمات کمتر برای اولین سفارش شما 🎁
-          </p>
           <div className="flex-between gap-2 max-lg:hidden">
             <HeadphonesIcon className="dark:text-[#E9F0FF] text-primary-300" />
             <p className="dark:text-[#E9F0FF] text-primary-300">پشتیبانی 24 ساعته</p>
           </div>
+          <a
+            href="https://www.paypal.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 flex-shrink-0"
+            aria-label="PayPal"
+          >
+            <Image alt="PayPal" src="/image/Header/paypal.png" width={65} height={48} />
+            <p className="dark:text-[#D4F4FF] text-info-200 font-thin text-sm hidden sm:inline">داری، کلیک کن</p>
+          </a>
         </div>
       </div>
       <div

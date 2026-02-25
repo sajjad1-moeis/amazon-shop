@@ -2,357 +2,247 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import FiltersSection from "@/components/module/FiltersSection";
+import ProductsFilters from "@/template/Products/ProductsFilters";
 import HeaderSection from "@/template/Products/HeaderSection";
 import ProductList from "@/template/Products/ProductList";
 import { productService } from "@/services/product/productService";
-import { prefetchScraperImages } from "@/utils/scraperPrefetch";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 
-export default function ProductsClient({ searchParams: serverSearchParams }) {
+/** map مقادیر UI به API طبق داک: price_asc, price_desc, rating, popularity, newest */
+const SORT_TO_API = { "price-low": "price_asc", "price-high": "price_desc", newest: "newest", oldest: "newest" };
+/** فروشگاه: 1=UAE, 2=America */
+const SHOP_TO_API = { uae: 1, us: 2 };
+
+function parseQuery(sp) {
+  const search = (sp.get("search") ?? "").trim().slice(0, 200);
+  const category = sp.get("category") ?? "";
+  const brand = sp.get("brand") ?? "";
+  const minPrice = sp.get("minPrice") ?? "";
+  const maxPrice = sp.get("maxPrice") ?? "";
+  const inStock = sp.get("inStock") === "true";
+  const sortBy = sp.get("sortBy") ?? "";
+  const shop = sp.get("shop") ?? "";
+  const featured = sp.get("featured") === "true" || sp.get("discount") === "true";
+  return { search, category, brand, minPrice, maxPrice, inStock, sortBy, shop, featured };
+}
+
+function buildFilters(query) {
+  return {
+    categoryId: query.category,
+    brandId: query.brand,
+    minPrice: query.minPrice,
+    maxPrice: query.maxPrice,
+    inStock: query.inStock,
+    shop: query.shop,
+    sortBy: query.sortBy,
+    query: query.search,
+  };
+}
+
+function buildUrl(pathname, params, overrides = {}) {
+  const p = { ...params, ...overrides };
+  const q = new URLSearchParams();
+  if (p.search) q.set("search", p.search);
+  if (p.category) q.set("category", p.category);
+  if (p.brand) q.set("brand", p.brand);
+  if (p.minPrice) q.set("minPrice", p.minPrice);
+  if (p.maxPrice) q.set("maxPrice", p.maxPrice);
+  if (p.inStock) q.set("inStock", "true");
+  if (p.sortBy) q.set("sortBy", p.sortBy);
+  if (p.shop) q.set("shop", p.shop);
+  const qs = q.toString();
+  return qs ? `${pathname}?${qs}` : pathname;
+}
+
+export default function ProductsClient() {
   const router = useRouter();
-  const clientSearchParams = useSearchParams();
+  const sp = useSearchParams();
   const [viewMode, setViewMode] = useState("grid");
-  const [searchError, setSearchError] = useState(null);
-
-  // داده‌های تستی (فقط وقتی جستجو خالی است نمایش داده می‌شود)
-  const mockProducts = [
-    {
-      id: "1",
-      name: "ساعت مچی مردانه Invicta مدل ۳۶۱ سری Reserve کرونوگراف",
-      title: "ساعت مچی مردانه Invicta مدل ۳۶۱ سری Reserve کرونوگراف",
-      price: 15370000,
-      discountPrice: 12450000,
-      mainImage: "/image/Home/product.png",
-      image: "/image/Home/product.png",
-      rating: 4.7,
-      reviewCount: 235,
-      inStock: true,
-      badges: ["انتخاب آمازون", "ارسال بین المللی"],
-      seller: "amazon",
-      sellerCountry: "🇦🇪",
-    },
-    {
-      id: "2",
-      name: "ساعت مچی مردانه Invicta مدل ۳۶۱ سری Reserve کرونوگراف",
-      title: "ساعت مچی مردانه Invicta مدل ۳۶۱ سری Reserve کرونوگراف",
-      price: 15370000,
-      discountPrice: 12450000,
-      mainImage: "/image/Home/product.png",
-      image: "/image/Home/product.png",
-      rating: 4.7,
-      reviewCount: 235,
-      inStock: true,
-      badges: ["پرفروش ترین", "ارسال بین المللی"],
-      seller: "amazon",
-      sellerCountry: "🇦🇪",
-    },
-    {
-      id: "3",
-      name: "کنترلر پلی استیشن ۵ - DualSense",
-      title: "کنترلر پلی استیشن ۵ - DualSense",
-      price: 5000000,
-      discountPrice: 4500000,
-      mainImage: "/image/Home/product.png",
-      image: "/image/Home/product.png",
-      rating: 4.5,
-      reviewCount: 128,
-      inStock: true,
-      badges: ["ارسال بین المللی"],
-      seller: "amazon",
-      sellerCountry: "🇦🇪",
-    },
-    {
-      id: "4",
-      name: "ساعت هوشمند سامسونگ Galaxy Watch",
-      title: "ساعت هوشمند سامسونگ Galaxy Watch",
-      price: 8000000,
-      discountPrice: 7500000,
-      mainImage: "/image/Home/product.png",
-      image: "/image/Home/product.png",
-      rating: 4.6,
-      reviewCount: 89,
-      inStock: true,
-      badges: ["پرفروش ترین"],
-      seller: "amazon",
-      sellerCountry: "🇦🇪",
-    },
-  ];
-
-  const mockCategories = [
-    { id: "1", name: "کالای دیجیتال" },
-    { id: "2", name: "کنسول بازی" },
-    { id: "3", name: "ساعت هوشمند" },
-    { id: "4", name: "لوازم گیمینگ" },
-    { id: "5", name: "صوتی و تصویری" },
-  ];
-
-  const mockBrands = [
-    { id: "1", name: "Sony" },
-    { id: "2", name: "Samsung" },
-    { id: "3", name: "Logitech" },
-    { id: "4", name: "Razer" },
-    { id: "5", name: "JBL" },
-  ];
-
-  const [products, setProducts] = useState(mockProducts);
-  const [loading, setLoading] = useState(false);
-  const [categories, setCategories] = useState(mockCategories);
-  const [brands, setBrands] = useState(mockBrands);
-  const [filters, setFilters] = useState({
-    categoryId: clientSearchParams.get("category") || "",
-    brandId: clientSearchParams.get("brand") || "",
-    minPrice: clientSearchParams.get("minPrice") || "",
-    maxPrice: clientSearchParams.get("maxPrice") || "",
-    query: clientSearchParams.get("search") || "",
-    inStock: false,
-    shop: "",
-    sortBy: "",
-  });
-  const [pageNumber, setPageNumber] = useState(parseInt(clientSearchParams.get("page")) || 1);
-  const [totalCount, setTotalCount] = useState(mockProducts.length);
-  // لیست از بک‌اند؛ null = هنوز لود نشده یا خطا → از mock استفاده می‌شود
-  const [apiProducts, setApiProducts] = useState(null);
-
-  // جستجوی اسکرپر: وقتی در URL پارامتر search وجود دارد از API آمازون نتایج بگیر
-  const searchParam = clientSearchParams.get("search") ?? "";
-  const searchQuery = typeof searchParam === "string" ? searchParam.trim() : "";
-
-  // وقتی جستجو خالی است: لیست محصولات را از بک‌اند بگیر؛ در صورت خطا از mock استفاده کن
-  useEffect(() => {
-    if (searchQuery.length >= 2) return;
-
-    let cancelled = false;
-    setLoading(true);
-    setSearchError(null);
-    productService
-      .getAllActive()
-      .then((response) => {
-        if (cancelled) return;
-        const raw = response?.data ?? response;
-        const list = Array.isArray(raw) ? raw : [];
-        setApiProducts(list);
-      })
-      .catch(() => {
-        if (cancelled) return;
-        setApiProducts(null);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [searchQuery]);
-
-  useEffect(() => {
-    if (searchQuery.length < 2) {
-      setSearchError(null);
-      setLoading(false);
-      return;
-    }
-
-    let cancelled = false;
-    setLoading(true);
-    setSearchError(null);
-
-    productService
-      .searchAmazon(searchQuery)
-      .then((res) => {
-        if (cancelled) return;
-        if (!res?.success) {
-          setProducts([]);
-          setTotalCount(0);
-          setSearchError(res?.message || "خطا در دریافت نتایج جستجو");
-          return;
-        }
-        const payload = res.data;
-        const list = payload?.data ?? payload?.Data ?? [];
-        const items = Array.isArray(list) ? list : [];
-        const filtered = applyFilters(items, { skipTextFilter: true });
-        setProducts(filtered);
-        setTotalCount(filtered.length);
-        setSearchError(null);
-        // Prefetch images for first 6 products so they load instantly when user clicks
-        items.slice(0, 6).forEach((p) => {
-          const asin = p?.asin || p?.ASIN;
-          if (asin) prefetchScraperImages(asin);
-        });
-      })
-      .catch((err) => {
-        if (cancelled) return;
-        setProducts([]);
-        setTotalCount(0);
-        const status = err?.response?.status;
-        const msg =
-          status === 429
-            ? "محدودیت تعداد درخواست. لطفاً چند دقیقه دیگر تلاش کنید."
-            : status === 503
-              ? "سرویس جستجو در حال حاضر در دسترس نیست."
-              : status === 408
-                ? "زمان درخواست به پایان رسید. دوباره تلاش کنید."
-                : "خطا در دریافت نتایج. لطفاً دوباره تلاش کنید.";
-        setSearchError(msg);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [searchQuery, filters]);
-
-  const applyFilters = (list, { skipTextFilter = false } = {}) => {
-    let filtered = Array.isArray(list) ? [...list] : [];
-
-    if (!skipTextFilter && filters.query && typeof filters.query === "string") {
-      const q = filters.query.toLowerCase();
-      filtered = filtered.filter((p) => (p.name || p.title || "").toLowerCase().includes(q));
-    }
-
-    const minP = parseFloat(filters.minPrice);
-    if (Number.isFinite(minP)) {
-      filtered = filtered.filter((p) => Number(p.discountPrice || p.price || 0) >= minP);
-    }
-    const maxP = parseFloat(filters.maxPrice);
-    if (Number.isFinite(maxP)) {
-      filtered = filtered.filter((p) => Number(p.discountPrice || p.price || 0) <= maxP);
-    }
-
-    if (filters.inStock) {
-      filtered = filtered.filter((p) => {
-        const inStock = p.isInStock ?? p.inStock;
-        return inStock === undefined ? true : Boolean(inStock);
-      });
-    }
-
-    if (filters.shop) {
-      filtered = filtered.filter((p) => {
-        const shop = p.amazonShop;
-        const country = p.sellerCountry || p.shopCountry;
-        if (filters.shop === "uae") {
-          return shop === 1 || shop === 3 || country === "🇦🇪";
-        }
-        if (filters.shop === "us") {
-          return shop === 2 || shop === 3 || country === "🇺🇸";
-        }
-        return true;
-      });
-    }
-
-    if (filters.categoryId) {
-      const target = String(filters.categoryId).toLowerCase();
-      filtered = filtered.filter((p) =>
-        String(p.categoryName || p.category || "").toLowerCase() === target
-      );
-    }
-
-    if (filters.brandId) {
-      const target = String(filters.brandId).toLowerCase();
-      filtered = filtered.filter((p) =>
-        String(p.brand || "").toLowerCase() === target
-      );
-    }
-
-    if (filters.sortBy) {
-      const sort = filters.sortBy;
-      filtered.sort((a, b) => {
-        const priceA = Number(a.finalPrice ?? a.discountPrice ?? a.price ?? 0);
-        const priceB = Number(b.finalPrice ?? b.discountPrice ?? b.price ?? 0);
-        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-        if (sort === "price-high") return priceB - priceA;
-        if (sort === "price-low") return priceA - priceB;
-        if (sort === "newest") return dateB - dateA;
-        if (sort === "oldest") return dateA - dateB;
-        return 0;
-      });
-    }
-
-    return filtered;
-  };
-
-  // وقتی جستجو خالی است: منبع = لیست بک‌اند (در صورت وجود) وگرنه mock؛ بعد فیلترها را اعمال کن
-  useEffect(() => {
-    if (searchQuery.length >= 2) return;
-    const sourceList = apiProducts !== null ? apiProducts : mockProducts;
-    const filtered = applyFilters(sourceList);
-    setProducts(filtered);
-    setTotalCount(filtered.length);
-  }, [apiProducts, filters, searchQuery]);
-
-  const handleFilterChange = (filterType, value) => {
-    setFilters((prev) => ({ ...prev, [filterType]: value }));
-    setPageNumber(1);
-  };
-
+  const [products, setProducts] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchInputValue, setSearchInputValue] = useState("");
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const searchDebounceRef = useRef(null);
 
+  const query = parseQuery(sp);
+  const filters = buildFilters(query);
+  const isSearchMode = Boolean(query.search);
+
+  const extractCategoriesBrands = (list) => {
+    if (!Array.isArray(list) || list.length === 0) return;
+    const catSet = new Set();
+    const brandSet = new Set();
+    list.forEach((p) => {
+      const c = p.categoryName ?? p.category;
+      if (c) catSet.add(c);
+      if (p.brand) brandSet.add(p.brand);
+    });
+    setCategories(Array.from(catSet).map((name) => ({ id: name, name })));
+    setBrands(Array.from(brandSet).map((name) => ({ id: name, name })));
+  };
+
   useEffect(() => {
-    return () => {
-      if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    setSearchInputValue(query.search);
+  }, [query.search]);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+
+    const load = async () => {
+      try {
+        const hasSearch = Boolean(query.search);
+
+        if (hasSearch) {
+          const res = await productService.search(query.search);
+          const list = Array.isArray(res?.data) ? res.data : [];
+          if (cancelled) return;
+          extractCategoriesBrands(list);
+          setProducts(list);
+          setTotalCount(list.length);
+        } else {
+          const res = await productService.getList({
+            pageNumber: 1,
+            pageSize: 100,
+            category: query.category || undefined,
+            brand: query.brand || undefined,
+            minPrice: query.minPrice ? Number(query.minPrice) : undefined,
+            maxPrice: query.maxPrice ? Number(query.maxPrice) : undefined,
+            inStock: query.inStock || undefined,
+            featured: query.featured || undefined,
+            amazonShop: SHOP_TO_API[query.shop],
+            sortBy: SORT_TO_API[query.sortBy] || undefined,
+          });
+          if (cancelled) return;
+          const payload = res?.data ?? {};
+          const list = Array.isArray(payload.products) ? payload.products : [];
+          const total = payload.totalCount ?? list.length;
+          extractCategoriesBrands(list);
+          setProducts(list);
+          setTotalCount(total);
+        }
+      } catch {
+        if (!cancelled) {
+          setProducts([]);
+          setTotalCount(0);
+          setError("خطا در دریافت لیست محصولات.");
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
     };
-  }, []);
 
-  const handleSearch = (query) => {
-    const q = typeof query === "string" ? String(query).trim().slice(0, 200) : "";
-    setFilters((prev) => ({ ...prev, query: q }));
-    setPageNumber(1);
+    load();
 
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    query.search,
+    query.category,
+    query.brand,
+    query.minPrice,
+    query.maxPrice,
+    query.inStock,
+    query.sortBy,
+    query.shop,
+    query.featured,
+  ]);
+
+  const updateUrl = (overrides) => {
+    const next = { ...query, ...overrides };
+    router.replace(buildUrl("/products", query, next), { scroll: false });
+  };
+
+  const handleFilterChange = (key, value) => {
+    if (key === "categoryId") updateUrl({ category: value || undefined });
+    else if (key === "brandId") updateUrl({ brand: value || undefined });
+    else if (key === "minPrice") updateUrl({ minPrice: value || undefined });
+    else if (key === "maxPrice") updateUrl({ maxPrice: value || undefined });
+    else if (key === "inStock") updateUrl({ inStock: value ? "true" : undefined });
+    else if (key === "shop") updateUrl({ shop: value || undefined });
+    else if (key === "sortBy") updateUrl({ sortBy: value || undefined });
+  };
+
+  const handleClearFilters = () => {
+    updateUrl({
+      category: undefined,
+      brand: undefined,
+      minPrice: undefined,
+      maxPrice: undefined,
+      inStock: undefined,
+      shop: undefined,
+    });
+  };
+
+  const handleSearch = (value) => {
+    const q = typeof value === "string" ? value.trim().slice(0, 200) : "";
+    setSearchInputValue(value ?? "");
     if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
     searchDebounceRef.current = setTimeout(() => {
-      if (q.length >= 2) {
-        router.replace(`/products?search=${encodeURIComponent(q)}`, { scroll: false });
-      } else if (q.length === 0) {
-        router.replace("/products", { scroll: false });
-      }
+      updateUrl({ search: q || undefined });
       searchDebounceRef.current = null;
     }, 400);
   };
 
-  const dynamicFilters = [
-    {
-      id: "categoryId",
-      label: "دسته‌بندی",
-      options: [{ id: "", label: "همه" }, ...categories.map((cat) => ({ id: cat.name, label: cat.name }))],
-    },
-    {
-      id: "brandId",
-      label: "برند",
-      options: [{ id: "", label: "همه" }, ...brands.map((brand) => ({ id: brand.name, label: brand.name }))],
-    },
-  ];
-
   return (
     <>
       <HeaderSection
-        setViewMode={setViewMode}
         viewMode={viewMode}
+        setViewMode={setViewMode}
         onSearch={handleSearch}
-        searchValue={filters.query}
+        searchValue={searchInputValue}
         totalCount={totalCount}
         sortBy={filters.sortBy}
-        onSortChange={(val) => handleFilterChange("sortBy", val)}
+        onSortChange={(v) => handleFilterChange("sortBy", v === "all" ? "" : v)}
+        onOpenFilterDrawer={() => setFilterDrawerOpen(true)}
       />
-      <div className="grid lg:grid-cols-4 max-lg:px-4 lg:container mt-10 gap-4 md:gap-8">
+      <Drawer open={filterDrawerOpen} onOpenChange={setFilterDrawerOpen}>
+        <DrawerContent className="max-h-[85vh] dark:bg-dark-box" dir="rtl">
+          <DrawerHeader className="border-b border-gray-200 dark:border-dark-stroke pb-4">
+            <DrawerTitle className="text-lg font-medium text-gray-900 dark:text-dark-titre text-right">
+              فیلترها
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="overflow-y-auto p-4">
+            <ProductsFilters
+              categories={categories}
+              brands={brands}
+              filters={filters}
+              onFilterChange={handleFilterChange}
+              onClearAll={handleClearFilters}
+            />
+          </div>
+        </DrawerContent>
+      </Drawer>
+      <div className="grid lg:grid-cols-4 max-lg:px-4 lg:container my-10 gap-4 md:gap-8">
         <div className="max-lg:hidden">
-          <FiltersSection
-            dynamicFilters={dynamicFilters}
-            isInventory={true}
+          <ProductsFilters
+            categories={categories}
+            brands={brands}
             filters={filters}
             onFilterChange={handleFilterChange}
+            onClearAll={handleClearFilters}
           />
         </div>
         <div className="lg:col-span-3">
-          {searchError && searchQuery.length >= 2 && (
+          {error && (
             <div className="mb-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-4 py-3 text-sm text-red-700 dark:text-red-300">
-              {searchError}
+              {error}
             </div>
           )}
           {loading ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="animate-pulse rounded-xl border border-gray-200 dark:border-dark-stroke bg-white dark:bg-dark-box overflow-hidden">
+                <div
+                  key={i}
+                  className="animate-pulse rounded-xl border border-gray-200 dark:border-dark-stroke bg-white dark:bg-dark-box overflow-hidden"
+                >
                   <div className="aspect-square bg-gray-200 dark:bg-gray-700" />
                   <div className="p-3 space-y-3">
                     <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full" />
@@ -367,16 +257,10 @@ export default function ProductsClient({ searchParams: serverSearchParams }) {
               ))}
             </div>
           ) : (
-            <ProductList
-              viewMode={viewMode}
-              products={products}
-              totalCount={totalCount}
-              searchMode={searchQuery.length >= 2}
-            />
+            <ProductList viewMode={viewMode} products={products} totalCount={totalCount} searchMode={isSearchMode} />
           )}
         </div>
       </div>
     </>
   );
 }
-

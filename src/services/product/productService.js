@@ -95,6 +95,43 @@ export const productService = {
     return client.get(`amazon/search?${params.toString()}`).json();
   },
 
+  /**
+   * لیست محصولات با فیلتر و صفحه‌بندی — طبق داک Phase2.
+   * GET api/Product/GetPaginated
+   * پاسخ: { data: { products, totalCount, pageNumber, pageSize, totalPages } }
+   * پارامترها: category, brand, minPrice, maxPrice, inStock, featured, amazonShop (1=UAE, 2=America, 3=Both), sortBy (price_asc|price_desc|rating|popularity|newest)
+   */
+  getList: async (params = {}) => {
+    const q = new URLSearchParams();
+    const {
+      pageNumber = 1,
+      pageSize = 20,
+      category,
+      brand,
+      minPrice,
+      maxPrice,
+      inStock,
+      featured,
+      amazonShop,
+      sortBy,
+    } = params;
+    q.set("pageNumber", String(Math.max(1, pageNumber)));
+    q.set("pageSize", String(Math.min(100, Math.max(1, pageSize))));
+    if (category) q.set("category", category);
+    if (brand) q.set("brand", brand);
+    if (minPrice != null && minPrice !== "") q.set("minPrice", String(minPrice));
+    if (maxPrice != null && maxPrice !== "") q.set("maxPrice", String(maxPrice));
+    if (inStock === true) q.set("inStock", "true");
+    if (featured === true) q.set("featured", "true");
+    if (amazonShop != null && amazonShop !== "") {
+      const v = Number(amazonShop);
+      if ([1, 2, 3].includes(v)) q.set("amazonShop", String(v));
+    }
+    if (sortBy) q.set("sortBy", sortBy);
+    const client = getPublicClient();
+    return client.get(`Product/GetPaginated?${q.toString()}`).json();
+  },
+
   getPaginated: async (params = {}) => {
     const {
       pageNumber = 1,
@@ -315,5 +352,36 @@ export const productService = {
   saveIfNotExistsFromScraper: async (scraperProduct) => {
     const client = getPublicClient();
     return client.post("Product/SaveIfNotExists", { json: scraperProduct }).json();
+  },
+
+  /**
+   * به‌روزرسانی محصول در دیتابیس با جزئیات کامل اسکرپر (عکس‌ها، توضیحات، مشخصات فنی، نظرات).
+   * بعد از merge جزئیات در UI این را صدا بزن تا همان داده در DB ذخیره شود.
+   */
+  updateFromScraperDetails: async (productId, details) => {
+    if (!details || !productId) return null;
+    const attributes = Array.isArray(details.attributes)
+      ? details.attributes.map((a) => ({
+          name: a?.name ?? a?.label ?? "",
+          value: a?.value ?? "",
+        }))
+      : undefined;
+    const reviews = Array.isArray(details.reviews)
+      ? details.reviews.map((r) => ({
+          title: r?.title ?? "",
+          body: r?.comment ?? r?.text ?? r?.body ?? r?.content ?? "",
+        }))
+      : undefined;
+    const body = {
+      productId: Number(productId),
+      description: details.description ?? undefined,
+      images: Array.isArray(details.images) && details.images.length > 0 ? details.images : undefined,
+      attributes: attributes?.length ? attributes : undefined,
+      reviews: reviews?.length ? reviews : undefined,
+      rating: details.rating != null ? Number(details.rating) : undefined,
+      reviewsCount: details.reviews_count != null ? Math.floor(Number(details.reviews_count)) : undefined,
+    };
+    const client = getPublicClient();
+    return client.post("Product/UpdateFromScraperDetails", { json: body }).json();
   },
 };

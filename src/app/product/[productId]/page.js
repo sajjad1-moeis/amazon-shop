@@ -183,65 +183,61 @@ export default function ProductDetailPage({ params }) {
   const detailsPromiseRef = useRef(null);
   const enrichedAsinRef = useRef(null);
   const detailsEnrichedAsinRef = useRef(null);
+  const detailsPersistedRef = useRef(false);
 
-  // ASIN برای درخواست به اسکرپر: از URL (اگر ASIN باشد) یا از product.asin وقتی با ID عددی باز شده
+  // منبع داده: ASIN در URL = اسکرپینگ (صفحه جزئیات شما)، ID عددی = دیتابیس (تغییرات سجاد)
   const isAsinInUrl = productId && !/^\d+$/.test(String(productId));
+  const dataSource = isAsinInUrl ? "scraper" : "db";
   const asinForScraper = isAsinInUrl ? productId : (product?.asin ?? null);
 
+  // ========== مسیر اسکرپینگ فقط وقتی dataSource === "scraper" ==========
   useEffect(() => {
+    if (dataSource !== "scraper") return;
     if (!isAsinInUrl) return;
     imagePromiseRef.current = prefetchScraperImages(productId);
     detailsPromiseRef.current = prefetchScraperDetails(productId);
-  }, [productId, isAsinInUrl]);
+  }, [productId, isAsinInUrl, dataSource]);
 
-  // Step B: Once product state is ready, merge images from prefetch result.
-  //         اگر URL عددی است از product.asin استفاده می‌کنیم تا عکس‌ها/جزئیات گرفته شوند.
   useEffect(() => {
+    if (dataSource !== "scraper") return;
+    if (isAsinInUrl || !product?.asin) return;
+    if (!detailsPromiseRef.current) detailsPromiseRef.current = prefetchScraperDetails(product.asin);
+    if (!imagePromiseRef.current) imagePromiseRef.current = prefetchScraperImages(product.asin);
+  }, [isAsinInUrl, product?.asin, dataSource]);
+
+  useEffect(() => {
+    if (dataSource !== "scraper") return;
     if (!product || loading) return;
     if (!asinForScraper || enrichedAsinRef.current === asinForScraper) return;
-
     const currentImages = getProductImages(product);
     if (currentImages.length >= 2) return;
     enrichedAsinRef.current = asinForScraper;
-
+    const targetAsin = asinForScraper;
     const applyEnrichment = (res) => {
       if (!res?.success || !Array.isArray(res.images) || res.images.length === 0) return;
-      setProduct((prev) => {
-        if (!prev) return prev;
-        return { ...prev, images: res.images };
-      });
+      if (enrichedAsinRef.current !== targetAsin) return;
+      setProduct((prev) => (prev ? { ...prev, images: res.images } : prev));
     };
-
     const cached = getScraperImagesCached(asinForScraper);
     if (cached) {
       applyEnrichment(cached);
       return;
     }
-
     setImagesEnriching(true);
-    let cancelled = false;
-    const promise = isAsinInUrl ? imagePromiseRef.current : null;
-    (promise || prefetchScraperImages(asinForScraper))?.then((res) => {
-      if (!cancelled) {
-        applyEnrichment(res);
-        setImagesEnriching(false);
-      }
-    }).catch(() => {
-      if (!cancelled) setImagesEnriching(false);
-    });
+    (imagePromiseRef.current || prefetchScraperImages(asinForScraper))?.then((res) => {
+      applyEnrichment(res);
+      setImagesEnriching(false);
+    }).catch(() => setImagesEnriching(false));
+  }, [product, loading, productId, asinForScraper, isAsinInUrl, dataSource]);
 
-    return () => { cancelled = true; setImagesEnriching(false); };
-  }, [product, loading, productId, asinForScraper, isAsinInUrl]);
-
-  // Step C: جزئیات کامل (توضیحات، مشخصات فنی، نظرات). با ASIN از URL یا از product.asin.
   const mergeDetailsIntoProduct = (res) => {
     if (!res?.success) return;
     setProduct((prev) => {
       if (!prev) return prev;
       const next = { ...prev };
-      if (res.description != null) next.description = res.description;
+      if (res.description != null && res.description) next.description = res.description;
       if (Array.isArray(res.attributes) && res.attributes.length > 0) next.attributes = res.attributes;
-      if (Array.isArray(res.reviews)) next.reviews = res.reviews;
+      if (Array.isArray(res.reviews) && res.reviews.length > 0) next.reviews = res.reviews;
       if (res.reviews_count != null) next.reviews_count = res.reviews_count;
       if (res.rating != null) next.rating = res.rating;
       if (Array.isArray(res.bullet_points) && res.bullet_points.length > 0) next.bullet_points = res.bullet_points;
@@ -251,23 +247,48 @@ export default function ProductDetailPage({ params }) {
       return next;
     });
   };
+
   useEffect(() => {
+    if (dataSource !== "scraper") return;
     if (!product || loading) return;
     if (!asinForScraper || detailsEnrichedAsinRef.current === asinForScraper) return;
-
     detailsEnrichedAsinRef.current = asinForScraper;
-    let cancelled = false;
+    const targetAsin = asinForScraper;
+    const numericId = product?.id != null && /^\d+$/.test(String(product.id)) ? Number(product.id) : null;
+
+    const persistDetailsToDb = (res) => {
+      if (!res?.success || !numericId || detailsPersistedRef.current) return;
+      const images = Array.isArray(res.images) && res.images.length > 0
+        ? res.images
+        : getProductImages(product);
+      const hasPayload =
+        (res.description && res.description.trim()) ||
+        (images.length > 0) ||
+        (Array.isArray(res.attributes) && res.attributes.length > 0) ||
+        (Array.isArray(res.reviews) && res.reviews.length > 0) ||
+        (res.rating != null) ||
+        (res.reviews_count != null);
+      if (!hasPayload) return;
+      detailsPersistedRef.current = true;
+      productService
+        .updateFromScraperDetails(numericId, { ...res, images: images.length > 0 ? images : undefined })
+        .catch(() => { detailsPersistedRef.current = false; });
+    };
+
     const cached = getScraperDetailsCached(asinForScraper);
     if (cached) {
       mergeDetailsIntoProduct(cached);
+      persistDetailsToDb(cached);
       return;
     }
-    const promise = isAsinInUrl ? detailsPromiseRef.current : null;
-    (promise || prefetchScraperDetails(asinForScraper))?.then((res) => {
-      if (!cancelled) mergeDetailsIntoProduct(res);
+    (isAsinInUrl ? detailsPromiseRef.current : prefetchScraperDetails(asinForScraper))?.then((res) => {
+      if (detailsEnrichedAsinRef.current !== targetAsin) return;
+      mergeDetailsIntoProduct(res);
+      persistDetailsToDb(res);
     });
-    return () => { cancelled = true; };
-  }, [product, loading, productId, asinForScraper, isAsinInUrl]);
+  }, [product, loading, productId, asinForScraper, isAsinInUrl, dataSource]);
+
+  // ========== مسیر دیتابیس (سجاد): بدون enrichment اسکرپر ==========
 
   if (loading) {
     return (
@@ -435,7 +456,7 @@ export default function ProductDetailPage({ params }) {
                 )}
               </div>
               <div className="max-md:hidden">
-                <ProductDetailsAccordion product={product} />
+                <ProductDetailsAccordion product={product} dataSource={dataSource} />
               </div>
             </div>
 
@@ -490,14 +511,14 @@ export default function ProductDetailPage({ params }) {
                 </div>
               </div>
               <div className="md:hidden">
-                <ProductDetailsAccordion product={product} />
+                <ProductDetailsAccordion product={product} dataSource={dataSource} />
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mt-6">
             <div className="md:col-span-4">
-              <ProductReviewsSection product={product} />
+              <ProductReviewsSection product={product} dataSource={dataSource} />
               <RelatedSlider />
               <AccessoriesSlider />
             </div>

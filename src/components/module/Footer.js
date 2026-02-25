@@ -12,7 +12,9 @@ const links = [
   { title: "ارتباط با ما", href: "/contact-us" },
   { title: "گیفت کارت", href: "/gift-cart" },
   { title: "خدمات ارزی", href: "/currency-services" },
+  { title: "نرخ ارز", href: "/currency-rates" },
   { title: "داشبورد", href: "/dashboard" },
+  { title: "تخفیف‌های آمازون", href: "/outlet" },
   { title: "تخفیف ویژه", href: "/gift-cart" },
   { title: "قوانین مرجوع کردن کالا", href: "/terms-conditions?tab=a2" },
   { title: "حریم خصوصی", href: "/terms-conditions?tab=a4" },
@@ -112,7 +114,7 @@ export default function Footer() {
           {/* About & Badges */}
           <div className="col-span-2">
             <div className="flex items-center gap-2">
-              <h4 className="text-2xl font-semibold text-right text-primary-700 dark:text-[#B1B1FF]">درباره</h4>
+              <h4 className="text-xl md:text-2xl font-semibold text-right text-primary-700 dark:text-[#B1B1FF]">درباره</h4>
               <Image alt="logo img" src="/image/logo-blue.png" width={106} height={30} />
             </div>
             <p className="text-right text-neutral-400 dark:text-gray-400 font-thin leading-7 mt-4">
@@ -135,13 +137,13 @@ export default function Footer() {
               </ul>
             </aside>
 
-            <div className="flex gap-2 md:gap-4 mt-6 flex-wrap justify-center md:justify-end">
+            <div className="flex gap-2 md:gap-4 mt-6 flex-nowrap md:flex-wrap justify-center md:justify-end overflow-x-auto max-md:overflow-y-hidden max-md:pb-2 max-md:scrollbar-thin">
               {/* نماد اعتماد الکترونیک */}
               <a
                 href="https://trustseal.enamad.ir/?id=255383&Code=kqaZmbbQG7GkAEiRVXV7yIb6uyiSFvye"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-20 h-28 rounded-lg border border-neutral-300 dark:border-gray-700 bg-white dark:bg-transparent flex items-center justify-center shadow-sm hover:shadow-md transition-shadow"
+                className="flex-shrink-0 w-20 h-28 rounded-lg border border-neutral-300 dark:border-gray-700 bg-white dark:bg-transparent flex items-center justify-center shadow-sm hover:shadow-md transition-shadow"
               >
                 <Image
                   src="/image/enamd.png"
@@ -154,7 +156,7 @@ export default function Footer() {
 
               {/* لوگو اتحادیه */}
               <a
-                className="w-20 h-28 rounded-lg border border-neutral-300 dark:border-gray-700 bg-white dark:bg-transparent flex items-center justify-center shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+                className="flex-shrink-0 w-20 h-28 rounded-lg border border-neutral-300 dark:border-gray-700 bg-white dark:bg-transparent flex items-center justify-center shadow-sm cursor-pointer hover:shadow-md transition-shadow"
                 href="https://ecunion.ir/verify/microless.ir?token=51581466884d8b19bde0"
                 target="_blank"
                 onClick={() =>
@@ -176,7 +178,7 @@ export default function Footer() {
 
               {/* لوگو ساماندهی */}
               <div
-                className="w-20 h-28 rounded-lg border border-neutral-300 dark:border-gray-700 bg-white dark:bg-transparent flex items-center justify-center shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+                className="flex-shrink-0 w-20 h-28 rounded-lg border border-neutral-300 dark:border-gray-700 bg-white dark:bg-transparent flex items-center justify-center shadow-sm cursor-pointer hover:shadow-md transition-shadow"
                 onClick={() =>
                   window.open(
                     "https://logo.samandehi.ir/Verify.aspx?id=289203&p=uiwkmcsipfvluiwkobpdxlao",
@@ -200,7 +202,7 @@ export default function Footer() {
                 href="https://qr.mojavez.ir/track/2370041"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-20 h-28 rounded-lg border border-neutral-300 dark:border-gray-700 bg-white dark:bg-transparent flex items-center justify-center shadow-sm hover:shadow-md transition-shadow"
+                className="flex-shrink-0 w-20 h-28 rounded-lg border border-neutral-300 dark:border-gray-700 bg-white dark:bg-transparent flex items-center justify-center shadow-sm hover:shadow-md transition-shadow"
               >
                 <img
                   src="/image/dargah-meli.jpg"
@@ -216,7 +218,7 @@ export default function Footer() {
                 href="https://apinovin.iranianasnaf.ir/parvaneh/07398973-eefe-46a2-b228-c715d704c6ac/html"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-20 h-28 rounded-lg border border-neutral-300 dark:border-gray-700 bg-white dark:bg-transparent flex items-center justify-center shadow-sm hover:shadow-md transition-shadow"
+                className="flex-shrink-0 w-20 h-28 rounded-lg border border-neutral-300 dark:border-gray-700 bg-white dark:bg-transparent flex items-center justify-center shadow-sm hover:shadow-md transition-shadow"
               >
                 <img src="/image/asnaf.jpg" alt="لوگو اتحادیه" width={64} height={96} className="object-contain" />
               </a>
@@ -225,21 +227,21 @@ export default function Footer() {
 
           <div className="h-0.5 bg-gray-200 dark:bg-dark-box mt-5" />
 
-          {/* Bottom Links */}
-          <div className="py-6 flex flex-col lg:flex-row justify-between items-center text-sm text-gray-600 dark:text-[#B8BECC]">
-            <div className="flex gap-y-4 md:gap-0.5 flex-wrap justify-center lg:justify-start w-full">
+          {/* Bottom Links - فونت‌ها شبیه فیگما (سایز یکدست) */}
+          <div className="py-6 flex flex-col lg:flex-row justify-between items-center text-gray-600 dark:text-[#B8BECC]">
+            <div className="flex gap-y-4 md:gap-0.5 flex-wrap justify-center lg:justify-start w-full text-sm font-normal">
               {links.map((item, index) => (
                 <Link
                   key={index}
                   href={item.href}
-                  className="hover:underline bg-white dark:bg-transparent px-4 border-l dark:border-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
+                  className="hover:underline bg-white dark:bg-transparent px-4 border-l dark:border-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors text-[13px] md:text-sm"
                 >
                   {item.title}
                 </Link>
               ))}
             </div>
             <div className="text-center mt-4 lg:mt-0">
-              <p className="text-xs text-neutral-300 dark:text-gray-500">
+              <p className="text-[12px] md:text-xs text-neutral-300 dark:text-gray-500">
                 تمامی حقوق این وب‌سایت متعلق به میکرولس می‌باشد.
               </p>
             </div>

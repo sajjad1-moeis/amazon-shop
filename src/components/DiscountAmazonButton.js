@@ -6,7 +6,7 @@ import Link from "next/link";
 
 function DiscountAmazonButton({ className }) {
   return (
-    <Link href="/products?discount=true">
+    <Link href="/outlet">
       <Button
         variant="ghost"
         className={cn("flex items-center gap-2 rounded-xl px-3 py-1 text-[#FFCD38] dark:text-[#F6992B]", className)}
