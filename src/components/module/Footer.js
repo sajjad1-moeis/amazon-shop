@@ -9,13 +9,16 @@ import { Button } from "../ui/button";
 
 const links = [
   { title: "درباره ما", href: "/about-us" },
+  { title: "وبلاگ", href: "/blogs" },
   { title: "ارتباط با ما", href: "/contact-us" },
   { title: "گیفت کارت", href: "/gift-cart" },
+  { title: "خرید از آمازون", href: "/shops/amazon" },
   { title: "خدمات ارزی", href: "/currency-services" },
   { title: "نرخ ارز", href: "/currency-rates" },
   { title: "داشبورد", href: "/dashboard" },
   { title: "تخفیف‌های آمازون", href: "/outlet" },
   { title: "تخفیف ویژه", href: "/gift-cart" },
+  { title: "کالای ناموجود", href: "/product-unavailable" },
   { title: "قوانین مرجوع کردن کالا", href: "/terms-conditions?tab=a2" },
   { title: "حریم خصوصی", href: "/terms-conditions?tab=a4" },
   { title: "پرسش‌ و پاسخ متداول", href: "/faqs" },

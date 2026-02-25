@@ -12,9 +12,11 @@ import DiscountAmazonButton from "../DiscountAmazonButton";
 import DrawerMobile from "./DrawerMobile";
 import SearchDropdown from "./SearchDropdown";
 import { useCartCount } from "@/contexts/CartCountContext";
+import { useCrispOnClick } from "./CrispChat";
 
 function Header() {
   const { cartCount } = useCartCount();
+  const { loadAndOpen: openCrisp, loading: crispLoading } = useCrispOnClick();
   return (
     <header className="w-full ">
       <div className="dark:bg-dark-header bg-primary-500 py-1.5 ">
@@ -30,15 +32,23 @@ function Header() {
               <SwitchButton />
             </div>
           </div>
-          <div className="flex-between gap-2 max-lg:hidden">
+          <button
+            type="button"
+            onClick={openCrisp}
+            disabled={crispLoading}
+            className="flex-between gap-2 max-lg:hidden hover:opacity-90 transition-opacity disabled:opacity-70"
+            aria-label="پشتیبانی 24 ساعته"
+          >
             <HeadphonesIcon className="dark:text-[#E9F0FF] text-primary-300" />
-            <p className="dark:text-[#E9F0FF] text-primary-300">پشتیبانی 24 ساعته</p>
-          </div>
+            <p className="dark:text-[#E9F0FF] text-primary-300">
+              {crispLoading ? "در حال بارگذاری..." : "پشتیبانی 24 ساعته"}
+            </p>
+          </button>
           <a
             href="https://www.paypal.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 flex-shrink-0"
+            className="flex items-center gap-2 flex-shrink-0 animate-pulse"
             aria-label="PayPal"
           >
             <Image alt="PayPal" src="/image/Header/paypal.png" width={65} height={48} />

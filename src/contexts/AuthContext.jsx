@@ -1,8 +1,11 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { authAPI } from "@/lib/api-client";
 import { saveToken, getToken, removeToken, isAuthenticated } from "@/lib/token-manager";
+import { isAdminUser } from "@/utils/authHelpers";
+import { AUTH_SESSION_EXPIRED_EVENT } from "@/services/api/client";
 import { toast } from "sonner";
 
 const AuthContext = createContext(null);
@@ -237,6 +240,7 @@ export const AuthProvider = ({ children }) => {
       user,
       loading,
       isAuthenticated: isAuthenticated() && user !== null,
+      isAdmin: isAdminUser(user),
       login,
       sendRegistrationOtp,
       verifyRegistrationOtp,

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { fieldClassName } from "./AuthModal";
 import { useAuth } from "@/contexts/AuthContext";
+import { isAdminUser } from "@/utils/authHelpers";
 import { toast } from "sonner";
 
 export default function SignupVerifyView({ onBack, onSuccess }) {
@@ -41,7 +42,8 @@ export default function SignupVerifyView({ onBack, onSuccess }) {
     if (result.success) {
       localStorage.removeItem("signup_phone");
       onSuccess?.();
-      router.push("/admin");
+      const user = result.data?.user ?? result.data;
+      router.push(isAdminUser(user) ? "/admin" : "/dashboard");
     }
   };
 

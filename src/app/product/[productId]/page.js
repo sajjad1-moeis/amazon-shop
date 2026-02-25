@@ -306,9 +306,14 @@ export default function ProductDetailPage({ params }) {
           <div className="text-center">
             <p className="text-gray-600 dark:text-gray-400 mb-2">محصول یافت نشد</p>
             {error && <p className="text-xs text-red-500 mb-4">{error}</p>}
-            <Link href="/products">
-              <Button>بازگشت به لیست محصولات</Button>
-            </Link>
+            <div className="flex flex-wrap gap-3 justify-center">
+              <Link href="/products">
+                <Button>بازگشت به لیست محصولات</Button>
+              </Link>
+              <Link href="/product-unavailable">
+                <Button variant="outline">صفحه کالای ناموجود</Button>
+              </Link>
+            </div>
           </div>
         </div>
       </IndexLayout>

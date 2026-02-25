@@ -10,6 +10,7 @@ import AuthToggle from "./AuthToggle";
 import { fieldClassName } from "./AuthModal";
 import { Google } from "iconsax-reactjs";
 import { useAuth } from "@/contexts/AuthContext";
+import { isAdminUser } from "@/utils/authHelpers";
 import { toast } from "sonner";
 
 export default function LoginView({ onGoSignup, onGoReset, onSuccess }) {
@@ -36,7 +37,8 @@ export default function LoginView({ onGoSignup, onGoReset, onSuccess }) {
     const result = await login(phone, password);
     if (result.success) {
       onSuccess?.();
-      router.push("/admin");
+      const user = result.data?.user ?? result.data;
+      router.push(isAdminUser(user) ? "/admin" : "/dashboard");
     }
   };
 

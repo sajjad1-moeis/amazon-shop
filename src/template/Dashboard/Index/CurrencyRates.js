@@ -17,20 +17,32 @@ export default function CurrencyRates() {
       .getCurrencyRates()
       .then((res) => {
         if (cancelled) return;
-        const data = unwrapApiData(res);
+        const raw = res;
+        const data = unwrapApiData(raw);
         let list =
           Array.isArray(data) ? data
           : Array.isArray(data?.rates) ? data.rates
           : Array.isArray(data?.currencies) ? data.currencies
           : Array.isArray(data?.items) ? data.items
+          : Array.isArray(data?.currencyRates) ? data.currencyRates
+          : Array.isArray(data?.result) ? data.result
+          : Array.isArray(data?.list) ? data.list
           : null;
         if (list == null && data && typeof data === "object" && !Array.isArray(data)) {
           const firstKey = Object.keys(data).find((k) => Array.isArray(data[k]));
           if (firstKey) list = data[firstKey];
         }
-        setCurrencies(list ?? []);
+        const normalized = (list ?? []).map((item) => ({
+          id: item.id ?? item.currencyId,
+          code: item.code ?? item.currencyCode ?? item.symbol ?? "",
+          name: item.name ?? item.currencyName ?? item.title ?? "",
+          rate: item.rate ?? item.value ?? item.price ?? item.rateValue ?? item.amount,
+          change: item.change ?? item.changePercent ?? item.percentChange ?? 0,
+          flag: item.flag ?? item.icon,
+        }));
+        setCurrencies(normalized);
       })
-      .catch(() => {
+      .catch((err) => {
         if (!cancelled) setCurrencies([]);
       })
       .finally(() => {
@@ -59,7 +71,13 @@ export default function CurrencyRates() {
       ) : (
         <div className="space-y-4 grid lg:grid-cols-1 md:grid-cols-2">
           {currencies.map((currency, index) => {
-            const rate = currency.rate ?? currency.value ?? currency.price ?? "-";
+            const rawRate = currency.rate ?? currency.value ?? currency.price;
+            const rate =
+              rawRate == null || rawRate === ""
+                ? "-"
+                : typeof rawRate === "number" && Number.isFinite(rawRate)
+                  ? rawRate.toLocaleString("fa-IR")
+                  : String(rawRate);
             const change = currency.change ?? currency.changePercent ?? 0;
             const isPositive = typeof change === "number" ? change >= 0 : String(change).startsWith("+");
             return (
