@@ -17,14 +17,13 @@ export default function ResetRequestView({ onBack, onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // اعتبارسنجی شماره تلفن: باید با 09 شروع شود و 11 رقم باشد
-    const phoneRegex = /^09\d{9}$/;
-    if (!phone || !phoneRegex.test(phone)) {
-      toast.error("شماره موبایل باید با 09 شروع شود و 11 رقم باشد");
+    const phoneTrim = String(phone ?? "").trim().replace(/\D/g, "");
+    if (!phoneTrim || (phoneTrim.length !== 10 && phoneTrim.length !== 11)) {
+      toast.error("شماره موبایل معتبر وارد کنید (مثال: 09123456789)");
       return;
     }
 
-    const result = await sendForgotPasswordOtp(phone);
+    const result = await sendForgotPasswordOtp(phoneTrim);
     if (result.success) {
       localStorage.setItem("reset_phone", phone);
       onSuccess?.();

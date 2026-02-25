@@ -26,11 +26,13 @@ export default function ResetVerifyView({ onBack, onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!phone) {
+    const phoneTrim = String(phone ?? "").trim();
+    const codeTrim = String(code ?? "").trim().slice(0, 6);
+    if (!phoneTrim) {
       toast.error("شماره موبایل یافت نشد");
       return;
     }
-    if (!code || code.length !== 6) {
+    if (!codeTrim || codeTrim.length !== 6) {
       toast.error("لطفاً کد تأیید ۶ رقمی را وارد کنید");
       return;
     }
@@ -49,10 +51,10 @@ export default function ResetVerifyView({ onBack, onSuccess }) {
     }
 
     const result = await resetPassword({
-      phoneNumber: phone,
-      otpCode: code,
-      newPassword: password,
-      confirmPassword: passwordRepeat,
+      phoneNumber: phoneTrim,
+      otpCode: codeTrim,
+      newPassword: password.trim(),
+      confirmPassword: passwordRepeat.trim(),
     });
     if (result.success) {
       localStorage.removeItem("reset_phone");
@@ -61,8 +63,8 @@ export default function ResetVerifyView({ onBack, onSuccess }) {
   };
 
   const handleResend = async () => {
-    if (!phone) return;
-    await resendOtp(phone, "forgot");
+    if (!phone?.trim()) return;
+    await resendOtp(phone.trim(), "forgot");
   };
 
   return (
@@ -77,7 +79,7 @@ export default function ResetVerifyView({ onBack, onSuccess }) {
             inputMode="numeric"
             placeholder="123456"
             value={code}
-            onChange={(e) => setCode(e.target.value)}
+            onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
             className={fieldClassName}
             required
             maxLength={6}

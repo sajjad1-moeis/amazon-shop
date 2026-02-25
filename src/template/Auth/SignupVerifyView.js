@@ -27,17 +27,18 @@ export default function SignupVerifyView({ onBack, onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!code || code.length !== 6) {
+    const codeTrim = String(code ?? "").trim();
+    if (!codeTrim || codeTrim.length !== 6) {
       toast.error("لطفاً کد تایید ۶ رقمی را وارد کنید");
       return;
     }
 
-    if (!phone) {
-      toast.error("شماره موبایل یافت نشد");
+    if (!phone || !/^0?9\d{9}$/.test(phone.replace(/\D/g, ""))) {
+      toast.error("شماره موبایل یافت نشد یا نامعتبر است");
       return;
     }
 
-    const result = await verifyRegistrationOtp(phone, code);
+    const result = await verifyRegistrationOtp(phone, codeTrim);
     if (result.success) {
       localStorage.removeItem("signup_phone");
       onSuccess?.();

@@ -21,19 +21,18 @@ export default function LoginView({ onGoSignup, onGoReset, onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // اعتبارسنجی شماره تلفن: باید با 09 شروع شود و 11 رقم باشد
-    const phoneRegex = /^09\d{9}$/;
-    if (!phone || !phoneRegex.test(phone)) {
-      toast.error("شماره موبایل باید با 09 شروع شود و 11 رقم باشد");
+    const phoneTrim = String(phone ?? "").trim().replace(/\D/g, "");
+    if (!phoneTrim || (phoneTrim.length !== 10 && phoneTrim.length !== 11)) {
+      toast.error("شماره موبایل معتبر وارد کنید (مثال: 09123456789)");
       return;
     }
 
-    if (!password || password.length < 6) {
-      toast.error("لطفاً رمز عبور را وارد کنید");
+    if (!password?.trim() || password.trim().length < 6) {
+      toast.error("لطفاً رمز عبور را وارد کنید (حداقل ۶ کاراکتر)");
       return;
     }
 
-    const result = await login(phone, password);
+    const result = await login(phoneTrim, password.trim());
     if (result.success) {
       onSuccess?.();
       router.push("/admin");
@@ -51,7 +50,7 @@ export default function LoginView({ onGoSignup, onGoReset, onSuccess }) {
             inputMode="tel"
             placeholder="0912xxxxxxx"
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 11))}
             className={fieldClassName}
             required
           />
