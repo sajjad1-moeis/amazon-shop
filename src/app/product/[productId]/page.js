@@ -183,6 +183,7 @@ export default function ProductDetailPage({ params }) {
   const detailsPromiseRef = useRef(null);
   const enrichedAsinRef = useRef(null);
   const detailsEnrichedAsinRef = useRef(null);
+  const detailsPersistedRef = useRef(false);
 
   // منبع داده: ASIN در URL = اسکرپینگ (صفحه جزئیات شما)، ID عددی = دیتابیس (تغییرات سجاد)
   const isAsinInUrl = productId && !/^\d+$/.test(String(productId));
@@ -253,13 +254,37 @@ export default function ProductDetailPage({ params }) {
     if (!asinForScraper || detailsEnrichedAsinRef.current === asinForScraper) return;
     detailsEnrichedAsinRef.current = asinForScraper;
     const targetAsin = asinForScraper;
+    const numericId = product?.id != null && /^\d+$/.test(String(product.id)) ? Number(product.id) : null;
+
+    const persistDetailsToDb = (res) => {
+      if (!res?.success || !numericId || detailsPersistedRef.current) return;
+      const images = Array.isArray(res.images) && res.images.length > 0
+        ? res.images
+        : getProductImages(product);
+      const hasPayload =
+        (res.description && res.description.trim()) ||
+        (images.length > 0) ||
+        (Array.isArray(res.attributes) && res.attributes.length > 0) ||
+        (Array.isArray(res.reviews) && res.reviews.length > 0) ||
+        (res.rating != null) ||
+        (res.reviews_count != null);
+      if (!hasPayload) return;
+      detailsPersistedRef.current = true;
+      productService
+        .updateFromScraperDetails(numericId, { ...res, images: images.length > 0 ? images : undefined })
+        .catch(() => { detailsPersistedRef.current = false; });
+    };
+
     const cached = getScraperDetailsCached(asinForScraper);
     if (cached) {
       mergeDetailsIntoProduct(cached);
+      persistDetailsToDb(cached);
       return;
     }
     (isAsinInUrl ? detailsPromiseRef.current : prefetchScraperDetails(asinForScraper))?.then((res) => {
-      if (detailsEnrichedAsinRef.current === targetAsin) mergeDetailsIntoProduct(res);
+      if (detailsEnrichedAsinRef.current !== targetAsin) return;
+      mergeDetailsIntoProduct(res);
+      persistDetailsToDb(res);
     });
   }, [product, loading, productId, asinForScraper, isAsinInUrl, dataSource]);
 

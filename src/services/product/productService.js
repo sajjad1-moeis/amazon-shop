@@ -353,4 +353,35 @@ export const productService = {
     const client = getPublicClient();
     return client.post("Product/SaveIfNotExists", { json: scraperProduct }).json();
   },
+
+  /**
+   * به‌روزرسانی محصول در دیتابیس با جزئیات کامل اسکرپر (عکس‌ها، توضیحات، مشخصات فنی، نظرات).
+   * بعد از merge جزئیات در UI این را صدا بزن تا همان داده در DB ذخیره شود.
+   */
+  updateFromScraperDetails: async (productId, details) => {
+    if (!details || !productId) return null;
+    const attributes = Array.isArray(details.attributes)
+      ? details.attributes.map((a) => ({
+          name: a?.name ?? a?.label ?? "",
+          value: a?.value ?? "",
+        }))
+      : undefined;
+    const reviews = Array.isArray(details.reviews)
+      ? details.reviews.map((r) => ({
+          title: r?.title ?? "",
+          body: r?.comment ?? r?.text ?? r?.body ?? r?.content ?? "",
+        }))
+      : undefined;
+    const body = {
+      productId: Number(productId),
+      description: details.description ?? undefined,
+      images: Array.isArray(details.images) && details.images.length > 0 ? details.images : undefined,
+      attributes: attributes?.length ? attributes : undefined,
+      reviews: reviews?.length ? reviews : undefined,
+      rating: details.rating != null ? Number(details.rating) : undefined,
+      reviewsCount: details.reviews_count != null ? Math.floor(Number(details.reviews_count)) : undefined,
+    };
+    const client = getPublicClient();
+    return client.post("Product/UpdateFromScraperDetails", { json: body }).json();
+  },
 };
