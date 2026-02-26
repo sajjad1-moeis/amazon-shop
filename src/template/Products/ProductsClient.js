@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import ProductsFilters from "@/template/Products/ProductsFilters";
 import HeaderSection from "@/template/Products/HeaderSection";
 import ProductList from "@/template/Products/ProductList";
+import { ProductCardSkeletonList } from "@/components/ProductCardSkeleton";
 import { productService } from "@/services/product/productService";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 
@@ -238,23 +239,7 @@ export default function ProductsClient() {
           )}
           {loading ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="animate-pulse rounded-xl border border-gray-200 dark:border-dark-stroke bg-white dark:bg-dark-box overflow-hidden"
-                >
-                  <div className="aspect-square bg-gray-200 dark:bg-gray-700" />
-                  <div className="p-3 space-y-3">
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full" />
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4" />
-                    <div className="flex justify-between items-center">
-                      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-16" />
-                      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-10" />
-                    </div>
-                    <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-24 mt-2" />
-                  </div>
-                </div>
-              ))}
+              <ProductCardSkeletonList count={8} />
             </div>
           ) : (
             <ProductList viewMode={viewMode} products={products} totalCount={totalCount} searchMode={isSearchMode} />

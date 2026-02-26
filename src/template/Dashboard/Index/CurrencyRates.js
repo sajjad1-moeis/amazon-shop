@@ -28,9 +28,25 @@ export default function CurrencyRates() {
           : Array.isArray(data?.result) ? data.result
           : Array.isArray(data?.list) ? data.list
           : null;
+
+        // اگر پاسخ به شکل { aed: {...}, usd: {...}, lastUpdate: "..." } باشد
         if (list == null && data && typeof data === "object" && !Array.isArray(data)) {
           const firstKey = Object.keys(data).find((k) => Array.isArray(data[k]));
-          if (firstKey) list = data[firstKey];
+          if (firstKey) {
+            list = data[firstKey];
+          } else {
+            // فقط مقادیری که خودشان آبجکت هستند (مثل AED, USD)، نه فیلدهایی مثل lastUpdate
+            list = Object.entries(data).reduce((acc, [key, value]) => {
+              if (!value || typeof value !== "object") return acc;
+              const v = value;
+              acc.push({
+                ...v,
+                code: v.code ?? v.currencyCode ?? key.toUpperCase(),
+                id: v.id ?? v.currencyId ?? key,
+              });
+              return acc;
+            }, []);
+          }
         }
         const normalized = (list ?? []).map((item) => ({
           id: item.id ?? item.currencyId,
@@ -63,7 +79,6 @@ export default function CurrencyRates() {
     <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-3 mb-6">
       <div className="mb-6 md:mb-8">
         <h3 className="text-sm md:text-lg text-gray-700 dark:text-dark-titre mb-1">نرخ لحظه ای ارز</h3>
-        <p className="text-xs md:text-sm text-gray-600 dark:text-dark-text">به روز رسانی هر ۵ دقیقه</p>
       </div>
 
       {currencies.length === 0 ? (
@@ -89,7 +104,16 @@ export default function CurrencyRates() {
                 )}
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-2xl md:text-3xl">{currency.flag ?? "💱"}</span>
+                  <div
+                    className={cn(
+                      "w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-xs md:text-sm font-semibold",
+                      isPositive
+                        ? "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-300"
+                        : "bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300",
+                    )}
+                  >
+                    {(currency.code ?? currency.currencyCode ?? "").toUpperCase()}
+                  </div>
                   <div>
                     <p className="text-xs text-gray-500 dark:text-caption">
                       {currency.name ?? currency.currencyName ?? ""} ({currency.code ?? currency.currencyCode ?? ""})

@@ -149,7 +149,8 @@ function ProductCard({ className, product, badges }) {
     e.preventDefault();
     e.stopPropagation();
     if (!user?.id) {
-      toast.error("برای افزودن به سبد وارد شوید");
+      toast.error("برای افزودن به سبد باید وارد شوید");
+      router.push("/");
       return;
     }
     if (!hasNumericId || !productId) {
@@ -172,19 +173,29 @@ function ProductCard({ className, product, badges }) {
   const handleWishlist = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!user?.id) {
+      toast.error("برای علاقه‌مندی‌ها باید وارد شوید");
+      router.push("/");
+      return;
+    }
     router.push("/dashboard/favorites");
   };
 
   const handleCompare = async (e) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!user?.id) {
+      toast.error("برای مقایسه باید وارد شوید");
+      router.push("/");
+      return;
+    }
     const id = hasNumericId ? Number(productId) : null;
     if (id == null) {
       router.push(`/product/${hrefId}`);
       return;
     }
     try {
-      await compareService.add({ productId: id, userId: user?.id });
+      await compareService.add({ productId: id, userId: user.id });
       toast.success("به لیست مقایسه اضافه شد");
     } catch (err) {
       toast.error(err?.message ?? "خطا در افزودن به مقایسه");
@@ -311,7 +322,7 @@ function ProductCard({ className, product, badges }) {
                   <ShoppingCart size={20} />
                 </button>
               </TooltipTrigger>
-              <TooltipContent side="top" className="border-0 bg-gray-800 dark:bg-gray-700 text-white">
+              <TooltipContent side="right" className="border-0 bg-gray-800 dark:bg-gray-700 text-white">
                 افزودن به سبد
               </TooltipContent>
             </Tooltip>
@@ -326,7 +337,7 @@ function ProductCard({ className, product, badges }) {
                   <Heart size={20} />
                 </button>
               </TooltipTrigger>
-              <TooltipContent side="top" className="border-0 bg-gray-800 dark:bg-gray-700 text-white">
+              <TooltipContent side="right" className="border-0 bg-gray-800 dark:bg-gray-700 text-white">
                 علاقه‌مندی
               </TooltipContent>
             </Tooltip>
@@ -341,7 +352,7 @@ function ProductCard({ className, product, badges }) {
                   <Layer size={20} />
                 </button>
               </TooltipTrigger>
-              <TooltipContent side="top" className="border-0 bg-gray-800 dark:bg-gray-700 text-white">
+              <TooltipContent side="right" className="border-0 bg-gray-800 dark:bg-gray-700 text-white">
                 مقایسه
               </TooltipContent>
             </Tooltip>

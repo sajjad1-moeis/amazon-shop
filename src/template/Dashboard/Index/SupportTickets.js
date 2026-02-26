@@ -29,7 +29,12 @@ export default function SupportTickets() {
       .then((res) => {
         if (cancelled) return;
         const data = unwrapApiData(res);
-        setTickets(Array.isArray(data) ? data : []);
+        let list =
+          Array.isArray(data) ? data
+          : Array.isArray(data?.tickets) ? data.tickets
+          : Array.isArray(data?.items) ? data.items
+          : null;
+        setTickets(list ?? []);
       })
       .catch(() => {
         if (!cancelled) setTickets([]);

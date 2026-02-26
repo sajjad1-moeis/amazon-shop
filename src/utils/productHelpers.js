@@ -227,3 +227,27 @@ export function generateProductSchema(product, productId) {
   return schema;
 }
 
+/**
+ * مپ ProductListDto (خروجی api/Product) به فرمت قابل استفاده در ProductCard.
+ */
+export function mapProductListDto(item) {
+  if (!item) return null;
+  return {
+    id: item.id,
+    productId: item.id,
+    title: item.title,
+    name: item.title,
+    mainImageUrl: item.mainImageUrl,
+    image: item.mainImageUrl,
+    price: item.price ?? item.finalPrice,
+    discountPrice: item.discountPrice ?? item.finalPrice,
+    original_price: item.price,
+    current_price: item.discountPrice ?? item.finalPrice,
+    rating: item.rating,
+    reviewCount: item.reviewCount,
+    reviews_count: item.reviewCount,
+    brand: item.brand,
+    categoryName: item.categoryName,
+  };
+}
+

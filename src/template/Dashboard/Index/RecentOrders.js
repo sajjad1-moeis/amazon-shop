@@ -36,7 +36,12 @@ export default function RecentOrders() {
       .then((res) => {
         if (cancelled) return;
         const data = unwrapApiData(res);
-        setOrders(Array.isArray(data) ? data : []);
+        let list =
+          Array.isArray(data) ? data
+          : Array.isArray(data?.orders) ? data.orders
+          : Array.isArray(data?.items) ? data.items
+          : null;
+        setOrders(list ?? []);
       })
       .catch(() => {
         if (!cancelled) setOrders([]);

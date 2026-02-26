@@ -40,7 +40,10 @@ export default function ProductList({ viewMode, products = [], totalCount = 0, s
         ) : (
           <div className="w-full flex flex-col gap-4">
             {products.map((product, index) => (
-              <Link key={getProductKey(product, index)} href={`/product/${product?.id ?? product?.asin ?? product?.amazonASIN ?? ""}`}>
+              <Link
+                key={getProductKey(product, index)}
+                href={`/product/${product?.id ?? product?.asin ?? product?.amazonASIN ?? ""}`}
+              >
                 <ProductRowCard product={product} />
               </Link>
             ))}

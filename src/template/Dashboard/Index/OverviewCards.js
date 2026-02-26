@@ -37,6 +37,28 @@ export default function OverviewCards() {
     return () => { cancelled = true; };
   }, []);
 
+  const formatValue = (val) => {
+    if (val == null) return "۰";
+    if (typeof val === "number") return val.toLocaleString("fa-IR");
+    return String(val);
+  };
+
+  const getValue = (key) => {
+    const s = summary || {};
+    switch (key) {
+      case "walletBalance":
+        return s.walletBalance ?? s.wallet?.balance ?? s.wallet?.amount ?? s.balance ?? 0;
+      case "activeOrdersCount":
+        return s.activeOrdersCount ?? s.orders?.activeCount ?? s.orders?.active ?? s.activeOrders ?? 0;
+      case "openTicketsCount":
+        return s.openTicketsCount ?? s.tickets?.openCount ?? s.tickets?.open ?? s.openTickets ?? 0;
+      case "wishlistCount":
+        return s.wishlistCount ?? s.favoritesCount ?? s.wishlist?.count ?? 0;
+      default:
+        return s[key] ?? 0;
+    }
+  };
+
   if (loading) {
     return (
       <div className="my-8 flex justify-center py-8">
@@ -45,18 +67,12 @@ export default function OverviewCards() {
     );
   }
 
-  const formatValue = (val) => {
-    if (val == null) return "۰";
-    if (typeof val === "number") return val.toLocaleString("fa-IR");
-    return String(val);
-  };
-
   return (
     <div className="my-8">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {cardConfig.map((card) => {
           const Icon = card.icon;
-          const value = summary?.[card.key] ?? summary?.[card.key === "walletBalance" ? "walletBalance" : card.key] ?? 0;
+          const value = getValue(card.key);
           const content = (
             <div
               className={cn(
