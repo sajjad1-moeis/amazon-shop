@@ -13,7 +13,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { isAdminUser } from "@/utils/authHelpers";
 import { toast } from "sonner";
 
-export default function LoginView({ onGoSignup, onGoReset, onSuccess }) {
+export default function LoginView({ onGoSignup, onGoReset, onSuccess, redirectTo }) {
   const { login, loading } = useAuth();
   const router = useRouter();
   const [phone, setPhone] = useState("");
@@ -38,6 +38,10 @@ export default function LoginView({ onGoSignup, onGoReset, onSuccess }) {
     if (result.success) {
       onSuccess?.();
       const user = result.data?.user ?? result.data;
+      if (redirectTo) {
+        router.push(redirectTo);
+        return;
+      }
       router.push(isAdminUser(user) ? "/admin" : "/dashboard");
     }
   };

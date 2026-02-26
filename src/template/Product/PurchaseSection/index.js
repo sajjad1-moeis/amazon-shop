@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { shoppingCartService } from "@/services/shoppingCart/shoppingCartService";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
@@ -23,27 +24,33 @@ export default function PurchaseSection({
   const [isFavorite, setIsFavorite] = useState(false);
   const { user } = useAuth();
   const { refreshCartCount } = useCartCount();
+  const router = useRouter();
 
   const finalPrice = calculateProductPrice(product, selectedColor, selectedDelivery);
   const basePrice = getBasePrice(product);
 
-  const cartProductId = Number(product?.id ?? productId);
-  const canAddToCart = !!(user?.id && Number.isFinite(cartProductId) && cartProductId > 0);
+  const rawId = product?.id ?? product?.productId ?? productId;
+  const cartProductId = typeof rawId === "number" ? rawId : Number(rawId);
+  const hasValidProductId = Number.isFinite(cartProductId) && cartProductId > 0;
+  const canAddToCart = hasValidProductId;
 
   const addToCart = async () => {
-    if (!user?.id) {
-      toast.error("برای افزودن به سبد خرید وارد شوید");
-      return;
-    }
-    if (!Number.isFinite(cartProductId) || cartProductId <= 0) {
+    if (!hasValidProductId) {
       toast.error("اطلاعات محصول نامعتبر است. صفحه را رفرش کنید.");
       return;
     }
+    if (!user?.id) {
+      toast.info("برای افزودن به سبد خرید وارد شوید");
+      const path = typeof window !== "undefined" ? window.location.pathname : "/";
+      router.push("/login?redirect=" + encodeURIComponent(path));
+      return;
+    }
+    const qty = Number(quantity) || 1;
     try {
       setLoading(true);
       await shoppingCartService.addToCart(user.id, {
         productId: cartProductId,
-        quantity: Number(quantity) || 1,
+        quantity: qty,
         hasQualityShield: false,
       });
       refreshCartCount();

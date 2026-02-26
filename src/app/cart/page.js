@@ -1,12 +1,15 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCartCount } from "@/contexts/CartCountContext";
 import { shoppingCartService } from "@/services/shoppingCart/shoppingCartService";
 import IndexLayout from "@/layout/IndexLayout";
 import InvoiceCart from "@/template/Cart/InvoiceCart";
 import ProductList from "@/template/Cart/ProductList";
+import GuestCartList from "@/template/Cart/GuestCartList";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 export default function CartPage() {
@@ -39,6 +42,8 @@ export default function CartPage() {
     fetchCart();
   }, [user?.id, fetchCart]);
 
+  const isGuest = !user?.id;
+
   return (
     <IndexLayout>
       <div className="bg-[#FAFAFA] dark:bg-dark-bg p-4 md:p-8">
@@ -54,19 +59,39 @@ export default function CartPage() {
               <img src="/image/emarat.png" className="w-5 ml-2" alt="" />
               خرید از فروشگاه امازون امارات
             </div>
-            <ProductList
-              cartItems={cart?.items ?? []}
+            {isGuest ? (
+              <GuestCartList />
+            ) : (
+              <ProductList
+                cartItems={cart?.items ?? []}
+                loading={loading}
+                userId={user?.id}
+                onRefresh={fetchCart}
+              />
+            )}
+          </div>
+          {isGuest ? (
+            <div className="sticky top-0 h-max">
+              <div className="bg-white dark:bg-dark-box rounded-xl shadow-md p-5 pb-4">
+                <h2 className="text-gray-800 text-xl font-bold dark:text-dark-title text-right mb-4">
+                  صورت حساب
+                </h2>
+                <p className="text-sm text-gray-600 dark:text-dark-text text-right mb-4">
+                  برای مشاهده جمع نهایی و پرداخت، وارد حساب کاربری شوید.
+                </p>
+                <Button asChild className="w-full bg-primary-600 hover:bg-primary-700 text-white">
+                  <Link href="/login?redirect=%2Fsteps-cart">ورود و ادامه پرداخت</Link>
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <InvoiceCart
+              cart={cart}
               loading={loading}
               userId={user?.id}
-              onRefresh={fetchCart}
+              onRefreshCart={fetchCart}
             />
-          </div>
-          <InvoiceCart
-            cart={cart}
-            loading={loading}
-            userId={user?.id}
-            onRefreshCart={fetchCart}
-          />
+          )}
         </div>
       </div>
     </IndexLayout>

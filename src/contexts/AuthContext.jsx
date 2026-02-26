@@ -6,6 +6,8 @@ import { authAPI } from "@/lib/api-client";
 import { saveToken, getToken, removeToken, isAuthenticated } from "@/lib/token-manager";
 import { isAdminUser } from "@/utils/authHelpers";
 import { AUTH_SESSION_EXPIRED_EVENT } from "@/services/api/client";
+import { mergeGuestCartToServer } from "@/lib/guestCart";
+import { shoppingCartService } from "@/services/shoppingCart/shoppingCartService";
 import { toast } from "sonner";
 
 const AuthContext = createContext(null);
@@ -74,7 +76,15 @@ export const AuthProvider = ({ children }) => {
       const token = extractToken(response.data);
       if (token) saveToken(token);
 
-      if (response.data.user) setUser(response.data.user);
+      const loggedUser = response.data.user || response.data;
+      if (loggedUser) setUser(loggedUser);
+
+      const userId = loggedUser?.id ?? loggedUser?.userId;
+      if (userId) {
+        try {
+          await mergeGuestCartToServer(userId, shoppingCartService);
+        } catch (_) {}
+      }
 
       toast.success(response.message || "ورود موفقیت‌آمیز");
       return { success: true, data: response.data };

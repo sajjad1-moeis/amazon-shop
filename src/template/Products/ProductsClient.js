@@ -7,6 +7,7 @@ import HeaderSection from "@/template/Products/HeaderSection";
 import ProductList from "@/template/Products/ProductList";
 import { ProductCardSkeletonList } from "@/components/ProductCardSkeleton";
 import { productService } from "@/services/product/productService";
+import { isScraperConfigured } from "@/services/api/client";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 
 /** map مقادیر UI به API طبق داک: price_asc, price_desc, rating, popularity, newest */
@@ -100,8 +101,16 @@ export default function ProductsClient() {
         const hasSearch = Boolean(query.search);
 
         if (hasSearch) {
-          const res = await productService.search(query.search);
-          const list = Array.isArray(res?.data) ? res.data : [];
+          let list = [];
+          if (isScraperConfigured()) {
+            const res = await productService.searchAmazon(query.search);
+            if (!res?.success && res?.message) setError(res.message);
+            const payload = res?.data;
+            list = Array.isArray(payload?.data) ? payload.data : [];
+          } else {
+            const res = await productService.search(query.search);
+            list = Array.isArray(res?.data) ? res.data : [];
+          }
           if (cancelled) return;
           extractCategoriesBrands(list);
           setProducts(list);

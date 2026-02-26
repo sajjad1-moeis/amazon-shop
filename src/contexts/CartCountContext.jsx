@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { shoppingCartService } from "@/services/shoppingCart/shoppingCartService";
+import { getGuestCartCount } from "@/lib/guestCart";
 
 function getCartItemCount(data) {
   if (!data) return 0;
@@ -23,7 +24,7 @@ export function CartCountProvider({ children }) {
 
   const refreshCartCount = useCallback(() => {
     if (!user?.id) {
-      setCartCount(0);
+      setCartCount(getGuestCartCount());
       return;
     }
     shoppingCartService

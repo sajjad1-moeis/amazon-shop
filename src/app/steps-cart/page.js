@@ -36,8 +36,8 @@ export default function Page() {
   useEffect(() => {
     if (loading) return;
     if (!user) {
-      toast.error("لطفاً وارد حساب کاربری شوید");
-      router.replace("/");
+      toast.error("برای ادامه و پرداخت وارد حساب کاربری شوید");
+      router.replace("/login?redirect=" + encodeURIComponent("/steps-cart"));
       return;
     }
   }, [loading, user, router]);

@@ -15,7 +15,10 @@ const nextConfig = {
     minimumCacheTTL: 60,
     // برای لیارا - تصاویر بدون بهینه‌سازی لود می‌شوند تا مشکل حل شود
     unoptimized: true,
-    remotePatterns: [],
+    remotePatterns: [
+      { protocol: "https", hostname: "m.media-amazon.com", pathname: "/**" },
+      { protocol: "http", hostname: "m.media-amazon.com", pathname: "/**" },
+    ],
   },
 
   // Security headers
