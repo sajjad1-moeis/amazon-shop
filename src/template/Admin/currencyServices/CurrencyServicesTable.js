@@ -59,7 +59,7 @@ export default function CurrencyServicesTable({ requests, onUpdateStatus }) {
               </TableCell>
               <TableCell className="text-gray-300">{row.userId ?? "—"}</TableCell>
               <TableCell className="text-gray-300">
-                {row.serviceTypeName || row.serviceType ?? "—"}
+                {(row.serviceTypeName || row.serviceType) ?? "—"}
               </TableCell>
               <TableCell>
                 <Badge variant="outline" className={statusInfo.className}>
