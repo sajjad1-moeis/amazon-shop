@@ -15,15 +15,26 @@ import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 
 function mapItemToProduct(item) {
+  const viewedAtDate = item.viewedAt ? new Date(item.viewedAt) : null;
+  const category = item.categoryName ?? item.category ?? "";
+  const priceValue =
+    typeof item.productPrice === "number"
+      ? item.productPrice
+      : item.productPrice != null
+        ? Number(item.productPrice)
+        : null;
   return {
     id: item.id ?? item.productId,
     productId: item.productId,
     title: item.productName ?? "-",
     price: item.productPrice != null ? String(item.productPrice) : "-",
+    priceValue: Number.isFinite(priceValue) ? priceValue : null,
     image: item.productImageUrl ?? "/image/Home/product.png",
-    lastViewed: item.viewedAt ? new Date(item.viewedAt).toLocaleDateString("fa-IR") : "-",
+    lastViewed: viewedAtDate ? viewedAtDate.toLocaleDateString("fa-IR") : "-",
+    viewedAt: viewedAtDate,
     viewCount: 1,
     inStock: true,
+    category,
   };
 }
 
@@ -98,6 +109,59 @@ export default function RecentViewsList() {
     );
   }
 
+  const filteredProducts = React.useMemo(() => {
+    let list = [...products];
+
+    // جستجو بر اساس نام محصول
+    if (filters.searchQuery && filters.searchQuery.trim()) {
+      const q = filters.searchQuery.trim().toLowerCase();
+      list = list.filter((p) => (p.title || "").toLowerCase().includes(q));
+    }
+
+    // فیلتر دسته‌بندی
+    if (filters.category) {
+      list = list.filter((p) => p.category === filters.category);
+    }
+
+    // فیلتر بازه زمانی
+    if (filters.dateRange) {
+      const now = new Date();
+      let from = null;
+      if (filters.dateRange === "today") {
+        from = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      } else if (filters.dateRange === "week") {
+        from = new Date(now);
+        from.setDate(from.getDate() - 7);
+      } else if (filters.dateRange === "month") {
+        from = new Date(now);
+        from.setMonth(from.getMonth() - 1);
+      } else if (filters.dateRange === "year") {
+        from = new Date(now);
+        from.setFullYear(from.getFullYear() - 1);
+      }
+      if (from) {
+        list = list.filter((p) => !p.viewedAt || p.viewedAt >= from);
+      }
+    }
+
+    // مرتب‌سازی
+    if (filters.sortBy === "newest") {
+      list.sort((a, b) => {
+        const av = a.viewedAt ? a.viewedAt.getTime() : 0;
+        const bv = b.viewedAt ? b.viewedAt.getTime() : 0;
+        return bv - av;
+      });
+    } else if (filters.sortBy === "oldest") {
+      list.sort((a, b) => {
+        const av = a.viewedAt ? a.viewedAt.getTime() : 0;
+        const bv = b.viewedAt ? b.viewedAt.getTime() : 0;
+        return av - bv;
+      });
+    }
+
+    return list;
+  }, [products, filters]);
+
   return (
     <DashboardLayout>
       {/* Top Section: Header with Count */}
@@ -122,7 +186,7 @@ export default function RecentViewsList() {
       <div className="flex items-center justify-between gap-2 sm:gap-4 my-4 sm:my-6 md:my-8">
         <h2 className="text-base sm:text-lg md:text-xl text-primary-700 dark:text-dark-title">لیست محصولات</h2>
         <div className="text-xs sm:text-sm text-gray-500 dark:text-dark-text">
-          تعداد بازدیدها: <span className="font-semibold text-yellow-600">{products.length}</span>
+          تعداد بازدیدها: <span className="font-semibold text-yellow-600">{filteredProducts.length}</span>
         </div>
       </div>
 
@@ -131,7 +195,7 @@ export default function RecentViewsList() {
         <div className="flex justify-center py-12">
           <Spinner size="lg" />
         </div>
-      ) : products.length === 0 ? (
+      ) : filteredProducts.length === 0 ? (
         <div
           className="bg-white dark:bg-dark-box rounded-2xl shadow-md p-6 sm:p-8 text-center mb-4 sm:mb-6"
           style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
@@ -140,7 +204,7 @@ export default function RecentViewsList() {
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <RecentViewCard
               key={product.id}
               product={product}

@@ -14,6 +14,7 @@ export default function ProductClientWrapper({
   productId,
   mainImage,
   productImages: serverProductImages,
+  imageAlt,
   imagesLoading = false,
   renderGalleryOnly = false,
   renderPurchaseOnly = false,
@@ -32,6 +33,7 @@ export default function ProductClientWrapper({
           selectedImage={selectedImage}
           setSelectedImage={setSelectedImage}
           mainImage={mainImage}
+          mainImageAlt={imageAlt}
           imagesLoading={imagesLoading}
         />
       </div>

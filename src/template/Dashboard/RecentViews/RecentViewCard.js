@@ -5,8 +5,63 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, DocumentText, Trash, Maximize } from "iconsax-reactjs";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import { useCartCount } from "@/contexts/CartCountContext";
+import { shoppingCartService } from "@/services/shoppingCart/shoppingCartService";
+import { compareService } from "@/services/compare/compareService";
+import { toast } from "sonner";
 
 export default function RecentViewCard({ product, onDelete }) {
+  const router = useRouter();
+  const { user } = useAuth();
+  const { refreshCartCount } = useCartCount();
+
+  const productId = product?.productId ?? product?.id ?? null;
+  const hasNumericId = productId != null && String(Number(productId)) === String(productId);
+
+  const handleAddToCart = async () => {
+    if (!user?.id) {
+      toast.error("برای افزودن به سبد باید وارد شوید");
+      router.push("/");
+      return;
+    }
+    if (!hasNumericId || !productId) {
+      router.push(productId ? `/product/${productId}` : "/");
+      return;
+    }
+    try {
+      await shoppingCartService.addToCart(user.id, {
+        productId: Number(productId),
+        quantity: 1,
+        hasQualityShield: false,
+      });
+      refreshCartCount();
+      toast.success("به سبد خرید اضافه شد");
+    } catch (err) {
+      toast.error(err?.message ?? "خطا در افزودن به سبد");
+    }
+  };
+
+  const handleCompare = async () => {
+    if (!user?.id) {
+      toast.error("برای مقایسه باید وارد شوید");
+      router.push("/");
+      return;
+    }
+    const id = hasNumericId ? Number(productId) : null;
+    if (id == null) {
+      router.push(productId ? `/product/${productId}` : "/");
+      return;
+    }
+    try {
+      await compareService.add({ productId: id, userId: user.id });
+      toast.success("به لیست مقایسه اضافه شد");
+    } catch (err) {
+      toast.error(err?.message ?? "خطا در افزودن به مقایسه");
+    }
+  };
+
   return (
     <div
       className={cn(
@@ -69,6 +124,8 @@ export default function RecentViewCard({ product, onDelete }) {
             size="sm"
             className="p-1.5 sm:p-2 max-md:hidden bg-gray-200 dark:bg-dark-field flex-shrink-0"
             title="مقایسه"
+            type="button"
+            onClick={handleCompare}
           >
             <Maximize size={16} className="sm:w-[18px] sm:h-[18px] text-[#292D32] dark:text-dark-titre" />
           </Button>
@@ -79,6 +136,8 @@ export default function RecentViewCard({ product, onDelete }) {
               "flex-1 gap-1 sm:gap-2 text-xs sm:text-sm",
               "bg-yellow-400 hover:bg-yellow-500 text-primary-800 border-yellow-500"
             )}
+            type="button"
+            onClick={handleAddToCart}
             disabled={!product.inStock}
           >
             <span>افزودن به سبد خرید</span>

@@ -17,15 +17,18 @@ import {
   getProductName,
   getMainImage,
   getProductImages,
+  getProductImageAlt,
   getBreadcrumbItems,
   getBasePrice,
   getProductDescription,
   parseProductNum,
-  generateProductSchema,
+  getBrandUrl,
 } from "@/utils/productHelpers";
 import { prefetchScraperImages, getScraperImagesCached, prefetchScraperDetails, getScraperDetailsCached } from "@/utils/scraperPrefetch";
 import { useAuth } from "@/contexts/AuthContext";
 import { userRecentViewService } from "@/services/userRecentView/userRecentViewService";
+import { applyProductSeoHead } from "@/utils/metadata";
+import { notFound } from "next/navigation";
 
 export default function ProductDetailPage({ params }) {
   const resolved = use(
@@ -174,6 +177,12 @@ export default function ProductDetailPage({ params }) {
     userRecentViewService.trackView(userId, { productId: numericId }).catch(() => {});
   }, [userId, product?.id, productId]);
 
+  // سئو: به‌روزرسانی title، meta description، canonical و robots طبق فیلدهای API (سند فنی)
+  useEffect(() => {
+    if (!product) return;
+    applyProductSeoHead(product);
+  }, [product]);
+
   // ==========================================
   // On-demand enrichment (FAST — parallel with product load)
   // ==========================================
@@ -295,31 +304,14 @@ export default function ProductDetailPage({ params }) {
     );
   }
 
+  // سند فنی ۲: وقتی محصول یافت نشد Status Code 404 برگردانده شود (جلوگیری از Soft 404)
   if (!product) {
-    return (
-      <IndexLayout>
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-gray-600 dark:text-gray-400 mb-2">محصول یافت نشد</p>
-            {error && <p className="text-xs text-red-500 mb-4">{error}</p>}
-            <div className="flex flex-wrap gap-3 justify-center">
-              <Link href="/products">
-                <Button>بازگشت به لیست محصولات</Button>
-              </Link>
-              <Link href="/product-unavailable">
-                <Button variant="outline">صفحه کالای ناموجود</Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </IndexLayout>
-    );
+    notFound();
   }
 
   const productImages = getProductImages(product);
   const mainImage = getMainImage(product);
   const breadcrumbItems = getBreadcrumbItems(product);
-  const productSchema = generateProductSchema(product, productId);
   const colors = product.colors || product.availableColors || [];
   const displayPrice = getBasePrice(product);
   const listPrice = parseProductNum(
@@ -337,11 +329,7 @@ export default function ProductDetailPage({ params }) {
 
   return (
     <IndexLayout>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
-      />
-
+      {/* اسکیما از سرور در layout تزریق می‌شود (سند ۳) */}
       <div className="min-h-screen bg-gray-50 dark:bg-transparent" dir="rtl">
         <BreadCrump items={breadcrumbItems} />
 
@@ -349,13 +337,23 @@ export default function ProductDetailPage({ params }) {
           <div className="sr-only">
             <Image
               src={mainImage}
-              alt={getProductName(product)}
+              alt={getProductImageAlt(product)}
               width={800}
               height={800}
               priority
               fetchPriority="high"
             />
           </div>
+
+          {/* سند ۱: وقتی کالا در آمازون لاک است — ۲۰۰ با پیام ناموجود (Soft 404 Prevention) */}
+          {(product?.isUnavailable === true ||
+            product?.IsUnavailable === true ||
+            product?.available === false ||
+            product?.status === "unavailable") && (
+            <div className="mb-4 rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 px-4 py-3 text-amber-800 dark:text-amber-200 text-sm text-right">
+              این کالا در حال حاضر ناموجود است.
+            </div>
+          )}
 
           <div className="grid grid-cols-12 gap-6">
             <div className="col-span-12 lg:col-span-3 xl:col-span-4 order-1 lg:order-1">
@@ -364,6 +362,7 @@ export default function ProductDetailPage({ params }) {
                 productId={productId}
                 mainImage={mainImage}
                 productImages={productImages}
+                imageAlt={getProductImageAlt(product)}
                 imagesLoading={imagesEnriching}
                 renderGalleryOnly={true}
               />
@@ -376,7 +375,13 @@ export default function ProductDetailPage({ params }) {
                 </h1>
                 {(product?.brand || product?.brandName) && (
                   <p className="text-sm text-gray-500 dark:text-dark-text mb-1 text-right">
-                    برند: {product?.brand || product?.brandName}
+                    برند:{" "}
+                    <Link
+                      href={getBrandUrl(product?.brand || product?.brandName)}
+                      className="text-primary-600 dark:text-primary-400 hover:underline"
+                    >
+                      {product?.brand || product?.brandName}
+                    </Link>
                   </p>
                 )}
                 {product?.englishName && (

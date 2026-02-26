@@ -5,11 +5,12 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { toast } from "sonner";
 
-export default function GallerySection({ productImages, selectedImage, setSelectedImage, mainImage, imagesLoading = false }) {
+export default function GallerySection({ productImages, selectedImage, setSelectedImage, mainImage, mainImageAlt, imagesLoading = false }) {
   const currentImage = productImages[selectedImage] || productImages[0] || mainImage || "/image/Home/product.png";
   const isFirstImage = selectedImage === 0;
   const showSkeletons = imagesLoading && productImages.length < 4;
   const totalSlots = 4;
+  const altText = mainImageAlt || `محصول - تصویر ${selectedImage + 1}`;
 
   const handleShare = async () => {
     try {
@@ -27,7 +28,7 @@ export default function GallerySection({ productImages, selectedImage, setSelect
       <div className="relative aspect-square rounded-md ">
         <Image
           src={currentImage}
-          alt={`محصول - تصویر ${selectedImage + 1}`}
+          alt={altText}
           fill
           className="object-cover rounded-md"
           priority={isFirstImage}
