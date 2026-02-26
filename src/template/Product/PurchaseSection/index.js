@@ -27,15 +27,22 @@ export default function PurchaseSection({
   const finalPrice = calculateProductPrice(product, selectedColor, selectedDelivery);
   const basePrice = getBasePrice(product);
 
+  const cartProductId = Number(product?.id ?? productId);
+  const canAddToCart = !!(user?.id && Number.isFinite(cartProductId) && cartProductId > 0);
+
   const addToCart = async () => {
     if (!user?.id) {
       toast.error("برای افزودن به سبد خرید وارد شوید");
       return;
     }
+    if (!Number.isFinite(cartProductId) || cartProductId <= 0) {
+      toast.error("اطلاعات محصول نامعتبر است. صفحه را رفرش کنید.");
+      return;
+    }
     try {
       setLoading(true);
       await shoppingCartService.addToCart(user.id, {
-        productId: Number(productId),
+        productId: cartProductId,
         quantity: Number(quantity) || 1,
         hasQualityShield: false,
       });
@@ -74,6 +81,7 @@ export default function PurchaseSection({
             onToggleFavorite={toggleFavorite}
             isFavorite={isFavorite}
             loading={loading}
+            addToCartDisabled={!canAddToCart}
           />
         </div>
       </div>

@@ -8,6 +8,7 @@ export default function ActionButtonsSection({
   onToggleFavorite,
   isFavorite,
   loading,
+  addToCartDisabled = false,
 }) {
   return (
     <>
@@ -15,7 +16,7 @@ export default function ActionButtonsSection({
       <div className="space-y-2 mt-3">
         <Button
           onClick={onAddToCart}
-          disabled={loading}
+          disabled={loading || addToCartDisabled}
           variant="ghost"
           className="w-full bg-yellow-400 text-black rounded-lg"
         >

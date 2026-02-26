@@ -320,6 +320,8 @@ export default function ProductDetailPage({ params }) {
   const mainImage = getMainImage(product);
   const breadcrumbItems = getBreadcrumbItems(product);
   const productSchema = generateProductSchema(product, productId);
+  // برای سبد خرید و درگاه پرداخت همیشه id عددی دیتابیس لازم است (هر دو مسیر اسکرپ و دیتابیس)
+  const numericProductId = product?.id ?? (/^\d+$/.test(String(productId)) ? Number(productId) : null);
   const colors = product.colors || product.availableColors || [];
   const displayPrice = getBasePrice(product);
   const listPrice = parseProductNum(
@@ -361,7 +363,7 @@ export default function ProductDetailPage({ params }) {
             <div className="col-span-12 lg:col-span-3 xl:col-span-4 order-1 lg:order-1">
               <ProductClientWrapper
                 product={product}
-                productId={productId}
+                productId={numericProductId ?? productId}
                 mainImage={mainImage}
                 productImages={productImages}
                 imagesLoading={imagesEnriching}
@@ -482,7 +484,7 @@ export default function ProductDetailPage({ params }) {
                   </div>
                   <ProductClientWrapper
                     product={product}
-                    productId={productId}
+                    productId={numericProductId ?? productId}
                     mainImage={mainImage}
                     productImages={productImages}
                     imagesLoading={imagesEnriching}
