@@ -33,7 +33,8 @@ function Page() {
       };
 
       if (filters.status && filters.status !== "all") {
-        params.status = filters.status === "open" ? 1 : filters.status === "closed" ? 2 : undefined;
+        const statusMap = { pending: 1, reviewing: 1, answered: 4, closed: 5 };
+        params.status = statusMap[filters.status];
       }
 
       if (filters.priority && filters.priority !== "all") {
@@ -54,16 +55,24 @@ function Page() {
       const response = await ticketService.getPaginated(params);
 
       if (response.success && response.data) {
-        const formattedTickets = (response.data.tickets || response.data || []).map((ticket) => ({
-          id: ticket.id,
-          ticketNumber: ticket.ticketNumber || `TKT-${ticket.id}`,
-          title: ticket.subject || ticket.title || "-",
-          date: formatDate(ticket.createdAt),
-          category: ticket.categoryName || ticket.category || "-",
-          priority: ticket.priority === 3 ? "high" : ticket.priority === 2 ? "medium" : "low",
-          status: ticket.status === 1 ? "reviewing" : ticket.status === 2 ? "closed" : "pending",
-          createdAt: ticket.createdAt,
-        }));
+        const rawList = response.data.tickets || response.data || [];
+        const formattedTickets = rawList.map((ticket) => {
+          const statusNum = ticket.status;
+          const statusStr =
+            statusNum === 5 ? "closed" : statusNum === 4 ? "answered" : statusNum === 1 || statusNum === 2 || statusNum === 3 ? "reviewing" : "pending";
+          return {
+            id: ticket.id,
+            ticketNumber: ticket.ticketNumber || `TKT-${ticket.id}`,
+            subject: ticket.subject || ticket.title || "-",
+            title: ticket.subject || ticket.title || "-",
+            date: formatDate(ticket.createdAt),
+            category: ticket.categoryName || ticket.category || "-",
+            categoryName: ticket.categoryName || ticket.category || "-",
+            priority: ticket.priority,
+            status: statusStr,
+            createdAt: ticket.createdAt,
+          };
+        });
 
         setTickets(formattedTickets);
       } else {

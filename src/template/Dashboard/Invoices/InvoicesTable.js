@@ -75,7 +75,7 @@ export default function InvoicesTable({ invoices, onView }) {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => onView?.(invoice.id)}
+                    onClick={() => onView?.(invoice.id ?? invoice.invoiceId)}
                     className="bg-gray-100 dark:text-dark-titre hover:bg-whitespace-nowrap text-gray-500 dark:bg-dark-stroke dark:hover:bg-dark-field/80  border-gray-200 dark:border-dark-stroke rounded-lg text-sm font-medium px-4 py-2"
                   >
                     مشاهده فاکتور

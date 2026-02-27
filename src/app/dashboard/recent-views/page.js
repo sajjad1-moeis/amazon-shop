@@ -71,7 +71,7 @@ export default function RecentViewsList() {
     if (userId == null) return;
     try {
       await userRecentViewService.delete(userId, productId);
-      setProducts((prev) => prev.filter((p) => p.id !== productId));
+      setProducts((prev) => prev.filter((p) => String(p.id) !== String(productId) && String(p.productId) !== String(productId)));
       toast.success("حذف شد");
     } catch (e) {
       toast.error(e?.message ?? "خطا در حذف");

@@ -129,7 +129,7 @@ export default function RecentOrders() {
                       </span>
                     </td>
                     <td className="py-4 whitespace-nowrap px-4">
-                      <Link href={`/dashboard/orders/${order.id}`}>
+                      <Link href={`/dashboard/orders/${order.id ?? order.orderId}`}>
                         <Button
                           variant="ghost"
                           className="inline-flex items-center gap-2 px-3 py-1 rounded-lg text-sm font-medium text-white bg-primary-700 dark:bg-dark-primary dark:text-white"
