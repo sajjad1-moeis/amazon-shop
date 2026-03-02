@@ -6,20 +6,29 @@ import StatusSelect from "@/components/FilterSelects/StatusSelect";
 import FilterSearchInput from "@/components/FilterSelects/FilterSearchInput";
 import FilterSection from "@/components/FilterSection";
 
-const transactionTypeOptions = [
-  { value: "charge", label: "پرداخت سرویس خارجی" },
-  { value: "withdraw", label: "انتقال حواله" },
+const SERVICE_TYPE_OPTIONS = [
+  { value: "1", label: "تبدیل ارز" },
+  { value: "2", label: "پرداخت آنلاین" },
+  { value: "3", label: "شارژ حساب ارزی" },
+  { value: "4", label: "پرداخت آمازون" },
+  { value: "5", label: "تسویه بین‌المللی" },
+  { value: "6", label: "پرداخت سرویس‌های خارجی" },
+  { value: "7", label: "پرداخت ارزی بین‌المللی" },
 ];
 
-const transactionStatusOptions = [
-  { value: "reviewing", label: "در حال بررسی" },
-  { value: "answered", label: "پاسخ داده شده" },
-  { value: "completed", label: "تکمیل شده" },
+const STATUS_OPTIONS = [
+  { value: "1", label: "در انتظار" },
+  { value: "2", label: "در حال بررسی" },
+  { value: "3", label: "تأیید شده" },
+  { value: "4", label: "در حال پردازش" },
+  { value: "5", label: "تکمیل شده" },
+  { value: "6", label: "رد شده" },
+  { value: "7", label: "لغو شده" },
 ];
 
-export default function TransactionsFilter({ filters, onFiltersChange }) {
-  const handleFilterChange = (name, value) => {
-    onFiltersChange((prev) => ({ ...prev, [name]: value }));
+export default function RequestsFilter({ filters, onFiltersChange }) {
+  const handleFilterChange = (key, value) => {
+    onFiltersChange(key, value);
   };
 
   return (
@@ -29,30 +38,30 @@ export default function TransactionsFilter({ filters, onFiltersChange }) {
         <FilterSearchInput
           value={filters.searchQuery || ""}
           onChange={(value) => handleFilterChange("searchQuery", value)}
-          placeholder="جستجو بر اساس عنوان یا شماره تیکت..."
+          placeholder="کد درخواست..."
         />
 
-        {/* Transaction Type */}
+        {/* Service Type */}
         <StatusSelect
-          value={filters.transactionType || undefined}
-          onValueChange={(value) => handleFilterChange("transactionType", value)}
+          value={filters.serviceType || ""}
+          onValueChange={(value) => handleFilterChange("serviceType", value)}
           placeholder="نوع خدمت"
-          options={transactionTypeOptions}
+          options={SERVICE_TYPE_OPTIONS}
           includeAll={true}
         />
 
         {/* Status */}
         <StatusSelect
-          value={filters.status || undefined}
+          value={filters.status || ""}
           onValueChange={(value) => handleFilterChange("status", value)}
           placeholder="وضعیت"
-          options={transactionStatusOptions}
+          options={STATUS_OPTIONS}
           includeAll={true}
         />
 
         {/* Date Range */}
         <DateFilterSelect
-          value={filters.dateRange || undefined}
+          value={filters.dateRange || ""}
           onValueChange={(value) => handleFilterChange("dateRange", value)}
           placeholder="بازه تاریخ"
           includeAll={true}

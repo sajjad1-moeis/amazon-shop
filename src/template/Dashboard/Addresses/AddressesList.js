@@ -8,7 +8,6 @@ import PageHeader from "@/template/Dashboard/Common/PageHeader";
 import { useAddresses } from "@/hooks/use-address";
 import { formatAddress, formatFullName, parseAddressData } from "@/utils/address-utlis";
 import { toast } from "sonner";
-import { mockAddresses } from "@/data";
 import ConfirmDialog from "@/components/ConfirmDialog";
 
 export default function AddressesList({

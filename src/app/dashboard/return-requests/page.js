@@ -1,19 +1,48 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
 import ReturnRequestsFilter from "@/template/Dashboard/ReturnRequests/ReturnRequestsFilter";
 import ActiveReturnCard from "@/template/Dashboard/ReturnRequests/ActiveReturnCard";
 import ReturnsTable from "@/template/Dashboard/ReturnRequests/ReturnsTable";
-import { activeReturn, initialReturns } from "@/data";
+import { returnRequestService } from "@/services/returnRequest/returnRequestService";
 import DashboardLayout from "@/layout/DashboardLayout";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Add } from "iconsax-reactjs";
 import ViewAllTable from "@/components/ViewAllTable";
+import { useAuth } from "@/contexts/AuthContext";
+import { unwrapApiData } from "@/services/api/client";
+import { Spinner } from "@/components/ui/spinner";
+import { toast } from "sonner";
+
+const STATUS_MAP = {
+  1: "pending",
+  2: "approved",
+  3: "rejected",
+  4: "completed",
+  5: "cancelled",
+};
+
+function mapApiReturn(r) {
+  if (!r) return null;
+  const status = STATUS_MAP[r.status] ?? r.status;
+  const createdAt = r.createdAt ?? r.date;
+  const dateStr = createdAt ? new Date(createdAt).toLocaleDateString("fa-IR") : "-";
+  return {
+    ...r,
+    id: r.id,
+    status,
+    date: dateStr,
+  };
+}
 
 export default function ReturnRequestsList() {
-  const [returns, setReturns] = useState(initialReturns);
+  const { user } = useAuth();
+  const userId = user?.id ?? user?.userId;
+
+  const [returns, setReturns] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     sortBy: "",
     status: "",
@@ -21,11 +50,63 @@ export default function ReturnRequestsList() {
     searchQuery: "",
   });
 
-  const handleCancelReturn = (returnId) => {
-    if (confirm("آیا از لغو این درخواست اطمینان دارید؟")) {
-      setReturns(returns.filter((r) => r.id !== returnId));
+  const fetchReturns = () => {
+    if (userId == null) return;
+    setLoading(true);
+    returnRequestService
+      .getMyReturnRequests(userId)
+      .then((res) => {
+        const data = unwrapApiData(res);
+        const list = Array.isArray(data) ? data : data?.items ?? data?.returns ?? [];
+        setReturns(list.map(mapApiReturn).filter(Boolean));
+      })
+      .catch((err) => {
+        toast.error(err?.message ?? "خطا در دریافت درخواست‌های مرجوعی");
+        setReturns([]);
+      })
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchReturns();
+  }, [userId]);
+
+  const handleCancelReturn = async (returnId) => {
+    if (!confirm("آیا از لغو این درخواست اطمینان دارید؟")) return;
+    try {
+      await returnRequestService.cancel(returnId);
+      setReturns((prev) => prev.filter((r) => r.id !== returnId));
+      toast.success("درخواست مرجوعی لغو شد");
+    } catch (err) {
+      toast.error(err?.message ?? "خطا در لغو درخواست");
     }
   };
+
+  const filteredReturns = useMemo(() => {
+    let list = [...returns];
+    if (filters.status) {
+      list = list.filter((r) => String(r.status).toLowerCase() === String(filters.status).toLowerCase());
+    }
+    if (filters.searchQuery?.trim()) {
+      const q = filters.searchQuery.trim().toLowerCase();
+      list = list.filter(
+        (r) =>
+          String(r.id ?? "").toLowerCase().includes(q) ||
+          String(r.returnNumber ?? "").toLowerCase().includes(q) ||
+          String(r.orderNumber ?? "").toLowerCase().includes(q)
+      );
+    }
+    if (filters.sortBy === "newest") {
+      list.sort((a, b) => new Date(b.createdAt ?? 0) - new Date(a.createdAt ?? 0));
+    } else if (filters.sortBy === "oldest") {
+      list.sort((a, b) => new Date(a.createdAt ?? 0) - new Date(b.createdAt ?? 0));
+    }
+    return list;
+  }, [returns, filters]);
+
+  const activeReturn = useMemo(() => {
+    return filteredReturns.find((r) => r.status === "pending" || r.status === "approved");
+  }, [filteredReturns]);
 
   const ReturnBtn = () => (
     <Link href="/dashboard/return-requests/new">
@@ -36,9 +117,16 @@ export default function ReturnRequestsList() {
     </Link>
   );
 
+  if (userId == null) {
+    return (
+      <DashboardLayout>
+        <div className="p-6 text-center text-gray-500 dark:text-dark-text">برای مشاهده درخواست‌های مرجوعی وارد شوید.</div>
+      </DashboardLayout>
+    );
+  }
+
   return (
     <DashboardLayout>
-      {/* Top Section: Header */}
       <PageHeader
         title="درخواستهای مرجوعی"
         description="تمام درخواستهایی که برای مرجوعی کالا ثبت کرده اید در این بخش قابل مشاهده و پیگیری هستند"
@@ -53,24 +141,31 @@ export default function ReturnRequestsList() {
         </div>
       </PageHeader>
 
-      {/* Filters Section with New Request Button */}
+      <ReturnRequestsFilter
+        filters={filters}
+        onFiltersChange={(key, value) =>
+          setFilters((prev) => ({ ...prev, [key]: value === "all" ? "" : value }))
+        }
+      />
 
-      <ReturnRequestsFilter filters={filters} onFiltersChange={setFilters} />
-
-      {/* Active Return Status Section */}
       {activeReturn && (
         <div className="my-8">
           <ActiveReturnCard returnData={activeReturn} onCancel={handleCancelReturn} />
         </div>
       )}
 
-      {/* Returns Table Section */}
-
       <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4">
-        <h2 className="text-lg  text-gray-900 dark:text-white mb-6">لیست درخواستهای مرجوعی</h2>
-        <ReturnsTable returns={returns} onCancel={handleCancelReturn} />
-
-        <ViewAllTable className={"xl:hidden mt-8"} />
+        <h2 className="text-lg text-gray-900 dark:text-white mb-6">لیست درخواستهای مرجوعی</h2>
+        {loading ? (
+          <div className="flex justify-center py-12">
+            <Spinner size="lg" />
+          </div>
+        ) : (
+          <>
+            <ReturnsTable returns={filteredReturns} onCancel={handleCancelReturn} />
+            <ViewAllTable className="xl:hidden mt-8" />
+          </>
+        )}
       </div>
     </DashboardLayout>
   );

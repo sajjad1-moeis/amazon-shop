@@ -199,20 +199,41 @@ export default function OrdersPage() {
     return orders
       .filter((order) => (activeTab === "all" ? true : order.status === activeTab))
       .filter((order) => {
-        if (!filters.searchQuery) return true;
-
-        const query = filters.searchQuery.toLowerCase();
+        if (!filters.searchQuery?.trim()) return true;
+        const query = filters.searchQuery.trim().toLowerCase();
         return (
-          order.orderNumber.toLowerCase().includes(query) ||
-          order.products.some((p) => p.name.toLowerCase().includes(query))
+          String(order.orderNumber ?? "").toLowerCase().includes(query) ||
+          (order.products ?? []).some((p) => String(p?.name ?? "").toLowerCase().includes(query))
         );
       })
-      .filter((order) => (filters.status && filters.status !== "all" ? order.status === filters.status : true))
+      .filter((order) => (filters.status ? order.status === filters.status : true))
       .filter((order) =>
-        filters.paymentStatus && filters.paymentStatus !== "all"
+        filters.paymentStatus
           ? order.paymentStatus === PAYMENT_STATUS_MAP[filters.paymentStatus]
           : true
-      );
+      )
+      .filter((order) => {
+        if (!filters.timeRange) return true;
+        const d = order.createdAt ?? order.orderDate ?? order.createdOn;
+        if (!d) return false;
+        const orderDate = new Date(d);
+        if (isNaN(orderDate.getTime())) return false;
+        const now = new Date();
+        let from = null;
+        if (filters.timeRange === "today") {
+          from = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        } else if (filters.timeRange === "week") {
+          from = new Date(now);
+          from.setDate(from.getDate() - 7);
+        } else if (filters.timeRange === "month") {
+          from = new Date(now);
+          from.setMonth(from.getMonth() - 1);
+        } else if (filters.timeRange === "year") {
+          from = new Date(now);
+          from.setFullYear(from.getFullYear() - 1);
+        }
+        return from ? orderDate >= from : true;
+      });
   }, [orders, activeTab, filters]);
 
   const handleDownloadInvoice = () => toast.success("فاکتور با موفقیت دانلود شد");

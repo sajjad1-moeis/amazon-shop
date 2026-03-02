@@ -107,7 +107,7 @@ export default function TransactionsTable({ transactions = fallbackTransactions 
   };
 
   return (
-    <div className "border border-gray-200 dark:border-dark-stroke rounded-lg overflow-hidden">
+    <div className="border border-gray-200 dark:border-dark-stroke rounded-lg overflow-hidden">
       <Table>
         <TableHeader className="bg-gray-50 dark:bg-dark-stroke">
           <TableRow className="border-b border-gray-200 dark:border-dark-stroke">

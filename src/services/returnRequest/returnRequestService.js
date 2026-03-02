@@ -90,6 +90,20 @@ export const returnRequestService = {
     const client = getAuthenticatedClient();
     return client.post("ReturnRequest/ProcessRefund", { json: { returnRequestId } }).json();
   },
+
+  /** POST api/ReturnRequest/Cancel — body: { returnRequestId } — Phase 18 */
+  cancel: async (returnRequestId) => {
+    const client = getAuthenticatedClient();
+    const res = await client.post("ReturnRequest/Cancel", { json: { returnRequestId } }).json();
+    return unwrapApiData(res);
+  },
+
+  /** GET api/ReturnRequest/GetOrdersEligibleForReturn — Phase 18 */
+  getOrdersEligibleForReturn: async () => {
+    const client = getAuthenticatedClient();
+    const res = await client.get("ReturnRequest/GetOrdersEligibleForReturn").json();
+    return unwrapApiData(res);
+  },
 };
 
 

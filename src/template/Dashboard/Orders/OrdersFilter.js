@@ -23,10 +23,7 @@ const paymentStatusOptions = [
 
 export default function OrdersFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
-    onFiltersChange((prev) => ({
-      ...prev,
-      [key]: value === "all" ? "" : value,
-    }));
+    onFiltersChange(key, value);
   };
 
   return (
@@ -36,7 +33,7 @@ export default function OrdersFilter({ filters, onFiltersChange }) {
         <FilterSearchInput
           value={filters.searchQuery || ""}
           onChange={(value) => handleFilterChange("searchQuery", value)}
-          placeholder="جستجو بر اساس شماره سفارش یا نام محصول..."
+          placeholder="شماره سفارش یا نام محصول..."
         />
 
         {/* Time Range Filter */}
@@ -51,7 +48,7 @@ export default function OrdersFilter({ filters, onFiltersChange }) {
         <StatusSelect
           value={filters.status || ""}
           onValueChange={(value) => handleFilterChange("status", value)}
-          placeholder="وضعیت"
+          placeholder="وضعیت سفارش"
           options={statusOptions}
           includeAll={true}
         />

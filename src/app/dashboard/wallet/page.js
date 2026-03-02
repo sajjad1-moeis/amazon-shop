@@ -26,6 +26,9 @@ export default function WalletList() {
   const [wallet, setWallet] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const refetchWallet = () => setRefreshKey((k) => k + 1);
 
   useEffect(() => {
     if (userId == null) {
@@ -67,7 +70,7 @@ export default function WalletList() {
     return () => {
       cancelled = true;
     };
-  }, [userId]);
+  }, [userId, refreshKey]);
 
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({
@@ -78,21 +81,69 @@ export default function WalletList() {
 
   const filteredTransactions = useMemo(() => {
     let list = [...transactions];
+
+    // جستجو بر اساس شماره تراکنش یا توضیحات
     if (filters.searchQuery?.trim()) {
       const q = filters.searchQuery.trim().toLowerCase();
       list = list.filter(
         (t) =>
           String(t.id ?? "").toLowerCase().includes(q) ||
-          String(t.description ?? "").toLowerCase().includes(q),
+          String(t.description ?? t.note ?? "").toLowerCase().includes(q) ||
+          String(t.referenceId ?? "").toLowerCase().includes(q),
       );
     }
+
+    // فیلتر نوع تراکنش (API: 1=Deposit, 2=Withdrawal, 3=Refund, 4=Reward, 5=Discount)
     if (filters.transactionType) {
+      const typeMap = {
+        charge: [1, "1", "charge", "deposit"],
+        withdraw: [2, "2", "withdraw", "withdrawal"],
+        payment: [3, "3", "payment", "refund"],
+        refund: [3, "3", "refund"],
+        reward: [4, "4", "reward"],
+        discount: [5, "5", "discount"],
+      };
+      const matchValues = typeMap[filters.transactionType] ?? [filters.transactionType];
+      list = list.filter((t) => {
+        const raw = t.type ?? t.transactionType ?? "";
+        const val = String(raw).toLowerCase();
+        return matchValues.some((m) => String(m).toLowerCase() === val);
+      });
+    }
+
+    // فیلتر وضعیت
+    if (filters.status) {
       list = list.filter(
-        (t) =>
-          String(t.type ?? t.transactionType ?? "").toLowerCase() ===
-          String(filters.transactionType).toLowerCase(),
+        (t) => String(t.status ?? "").toLowerCase() === String(filters.status).toLowerCase(),
       );
     }
+
+    // فیلتر بازه تاریخ
+    if (filters.dateRange) {
+      const now = new Date();
+      let from = null;
+      if (filters.dateRange === "today") {
+        from = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      } else if (filters.dateRange === "week") {
+        from = new Date(now);
+        from.setDate(from.getDate() - 7);
+      } else if (filters.dateRange === "month") {
+        from = new Date(now);
+        from.setMonth(from.getMonth() - 1);
+      } else if (filters.dateRange === "year") {
+        from = new Date(now);
+        from.setFullYear(from.getFullYear() - 1);
+      }
+      if (from) {
+        list = list.filter((t) => {
+          const d = t.createdAt ?? t.date ?? t.transactionDate;
+          if (!d) return false;
+          const txDate = new Date(d);
+          return !isNaN(txDate.getTime()) && txDate >= from;
+        });
+      }
+    }
+
     return list;
   }, [transactions, filters]);
 
@@ -107,7 +158,7 @@ export default function WalletList() {
           <h3 className="text-lg  text-gray-900 dark:text-white">موجودی کیف پول</h3>
 
           {/* Action Buttons */}
-          <WalletActions />
+          <WalletActions userId={userId} onRechargeSuccess={refetchWallet} onWithdrawSuccess={refetchWallet} />
         </div>
 
         {/* Overview Cards */}

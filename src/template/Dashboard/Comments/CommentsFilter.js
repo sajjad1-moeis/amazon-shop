@@ -13,10 +13,7 @@ const statusOptions = [
 
 export default function CommentsFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
-    onFiltersChange((prev) => ({
-      ...prev,
-      [key]: value === "all" ? "" : value,
-    }));
+    onFiltersChange(key, value);
   };
 
   return (

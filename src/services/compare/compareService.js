@@ -16,9 +16,9 @@ export const compareService = {
     return client.post("Compare/remove", { json: data }).json();
   },
 
-  /** GET api/Compare/list — Query: userId?, sessionId? */
+  /** GET api/Compare/list — Query: userId?, sessionId? — برای داشبورد از توکن استفاده می‌شود */
   list: async (params = {}) => {
-    const client = getPublicClient();
+    const client = params.userId != null ? getAuthenticatedClient() : getPublicClient();
     const qs = new URLSearchParams();
     if (params.userId != null) qs.append("userId", String(params.userId));
     if (params.sessionId != null) qs.append("sessionId", params.sessionId);

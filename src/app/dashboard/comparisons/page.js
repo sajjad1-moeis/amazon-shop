@@ -2,22 +2,66 @@
 
 import DashboardLayout from "@/layout/DashboardLayout";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ComparisonCard from "@/template/Dashboard/Comparisons/ComparisonCard";
 import { Button } from "@/components/ui/button";
 import { Trash, Add } from "iconsax-reactjs";
 import { toast } from "sonner";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
-import { initialComparisons } from "@/data";
 import { useRouter } from "next/navigation";
+import { compareService } from "@/services/compare/compareService";
+import { unwrapApiData } from "@/services/api/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { Spinner } from "@/components/ui/spinner";
+
+function mapApiToComparison(item) {
+  const products = item?.products ?? item?.items ?? [];
+  const first = products[0];
+  const second = products[1];
+  return {
+    id: item.id ?? item.comparisonId,
+    title: item.title ?? item.name ?? "مقایسه",
+    category: item.category ?? item.categoryName ?? "-",
+    products: [
+      { id: first?.id, title: first?.title ?? first?.name ?? "-", image: first?.image ?? first?.imageUrl },
+      { id: second?.id, title: second?.title ?? second?.name ?? "-", image: second?.image ?? second?.imageUrl },
+    ],
+    productsCount: item.productsCount ?? products.length ?? 0,
+    saveDate: item.saveDate ?? item.createdAt ? new Date(item.createdAt).toLocaleDateString("fa-IR") : "-",
+  };
+}
 
 export default function ComparisonsList() {
-  const [comparisons, setComparisons] = useState(initialComparisons);
+  const { user } = useAuth();
+  const userId = user?.id ?? user?.userId;
+  const [comparisons, setComparisons] = useState([]);
+  const [loading, setLoading] = useState(true);
   const route = useRouter();
+
+  useEffect(() => {
+    if (userId == null) {
+      setComparisons([]);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    compareService
+      .list({ userId })
+      .then((res) => {
+        const data = unwrapApiData(res);
+        const list = Array.isArray(data) ? data : data?.items ?? data?.comparisons ?? [];
+        setComparisons(list.map(mapApiToComparison));
+      })
+      .catch(() => {
+        setComparisons([]);
+        toast.error("خطا در دریافت مقایسه‌ها");
+      })
+      .finally(() => setLoading(false));
+  }, [userId]);
 
   const handleDelete = (comparisonId) => {
     if (confirm("آیا از حذف این مقایسه اطمینان دارید؟")) {
-      setComparisons(comparisons.filter((c) => c.id !== comparisonId));
+      setComparisons((prev) => prev.filter((c) => c.id !== comparisonId));
       toast.success("مقایسه با موفقیت حذف شد");
     }
   };
@@ -72,7 +116,11 @@ export default function ComparisonsList() {
       <div className="mb-8" />
 
       {/* Comparisons Grid */}
-      {comparisons.length === 0 ? (
+      {loading ? (
+        <div className="flex justify-center py-12">
+          <Spinner size="lg" />
+        </div>
+      ) : comparisons.length === 0 ? (
         <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-6 sm:p-8 text-center">
           <p className="text-sm sm:text-base text-gray-500 dark:text-dark-text">هیچ مقایسه‌ای ذخیره نشده است</p>
         </div>

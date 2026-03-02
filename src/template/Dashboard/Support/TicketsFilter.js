@@ -32,12 +32,12 @@ export default function TicketsFilter({ filters, onFiltersChange }) {
       <FilterSearchInput
         value={filters.searchQuery || ""}
         onChange={(value) => handleFilterChange("searchQuery", value)}
-        placeholder="جستجو بر اساس شماره تیکت یا موضوع..."
+        placeholder="شماره تیکت یا موضوع..."
       />
 
       {/* Priority */}
       <StatusSelect
-        value={filters.priority || undefined}
+        value={filters.priority || ""}
         onValueChange={(value) => handleFilterChange("priority", value)}
         placeholder="اولویت"
         options={ticketPriorityOptions}
@@ -46,7 +46,7 @@ export default function TicketsFilter({ filters, onFiltersChange }) {
 
       {/* Status */}
       <StatusSelect
-        value={filters.status || undefined}
+        value={filters.status || ""}
         onValueChange={(value) => handleFilterChange("status", value)}
         placeholder="وضعیت"
         options={ticketStatusOptions}
@@ -55,9 +55,9 @@ export default function TicketsFilter({ filters, onFiltersChange }) {
 
       {/* Sort By */}
       <SortBySelect
-        value={filters.sortBy || undefined}
+        value={filters.sortBy || ""}
         onValueChange={(value) => handleFilterChange("sortBy", value)}
-        placeholder="مرتب سازی"
+        placeholder="مرتب‌سازی"
         includeAll={true}
       />
     </FilterSection>

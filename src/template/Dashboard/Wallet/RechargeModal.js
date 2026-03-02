@@ -9,6 +9,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CardPos, Building } from "iconsax-reactjs";
 import { cn } from "@/lib/utils";
 import { filterInputStyles } from "@/utils/filterStyles";
+import { userWalletService } from "@/services/userWallet/userWalletService";
+import { toast } from "sonner";
 
 const PAYMENT_METHODS = [
   {
@@ -25,16 +27,49 @@ const PAYMENT_METHODS = [
   },
 ];
 
-export default function RechargeModal({ isOpen, onClose }) {
+export default function RechargeModal({ isOpen, onClose, userId, onSuccess }) {
+  const router = useRouter();
   const [amount, setAmount] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("online");
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!amount) return;
-
-    // submit logic here
-    onClose();
+    if (!amount) {
+      toast.error("مبلغ شارژ را وارد کنید");
+      return;
+    }
+    const numAmount = parseInt(String(amount).replace(/\D/g, ""), 10);
+    if (isNaN(numAmount) || numAmount < 1000) {
+      toast.error("حداقل مبلغ شارژ ۱۰۰۰ ریال است");
+      return;
+    }
+    if (!userId) {
+      toast.error("لطفاً وارد حساب کاربری شوید");
+      return;
+    }
+    if (paymentMethod !== "online") {
+      toast.info("برای واریز به حساب بانکی با پشتیبانی تماس بگیرید");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const data = await userWalletService.requestChargeWallet(userId, {
+        amount: numAmount,
+        description: "شارژ کیف پول",
+      });
+      if (data?.paymentUrl) {
+        onClose();
+        onSuccess?.();
+        window.location.href = data.paymentUrl;
+      } else {
+        toast.error("خطا در دریافت آدرس پرداخت");
+      }
+    } catch (err) {
+      toast.error(err?.message ?? "خطا در درخواست شارژ کیف پول");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -115,8 +150,8 @@ export default function RechargeModal({ isOpen, onClose }) {
               لغو
             </Button>
 
-            <Button type="submit" className="w-full bg-primary-600 hover:bg-primary-700 text-white">
-              ادامه پرداخت
+            <Button type="submit" disabled={submitting} className="w-full bg-primary-600 hover:bg-primary-700 text-white">
+              {submitting ? "در حال ارسال..." : "ادامه پرداخت"}
             </Button>
           </DialogFooter>
         </form>

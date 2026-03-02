@@ -134,6 +134,18 @@ export const userService = {
     return client.post(`Users/AdminChangePassword?id=${id}`, { json: passwordData }).json();
   },
 
+  /** GET api/Users/GetProfile — پروفایل کاربر جاری — Phase 18 */
+  getProfile: async () => {
+    const client = getAuthenticatedClient();
+    return client.get("Users/GetProfile").json();
+  },
+
+  /** GET api/Users/GetVerificationStatus — وضعیت احراز هویت — Phase 18 */
+  getVerificationStatus: async () => {
+    const client = getAuthenticatedClient();
+    return client.get("Users/GetVerificationStatus").json();
+  },
+
   chargeUserWallet: async (id, walletData) => {
     const client = getAuthenticatedClient();
     return client.post(`Users/ChargeUserWallet?id=${id}`, { json: walletData }).json();
