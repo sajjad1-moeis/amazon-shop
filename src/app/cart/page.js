@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCartCount } from "@/contexts/CartCountContext";
 import { shoppingCartService } from "@/services/shoppingCart/shoppingCartService";
+import { AuthModal } from "@/template/Auth/AuthModal";
 import IndexLayout from "@/layout/IndexLayout";
 import InvoiceCart from "@/template/Cart/InvoiceCart";
 import ProductList from "@/template/Cart/ProductList";
@@ -13,24 +13,28 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 export default function CartPage() {
-  const { user, loading: authLoading } = useAuth();
+  const { user } = useAuth();
   const { refreshCartCount } = useCartCount();
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
-  const fetchCart = useCallback(async () => {
+  const fetchCart = useCallback(async (options = {}) => {
+    const { silent = false } = options;
     if (!user?.id) return;
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
       const data = await shoppingCartService.getCart(user.id);
       setCart(data);
       refreshCartCount();
     } catch (error) {
-      setCart(null);
-      toast.error(error?.message ?? "خطا در دریافت سبد خرید");
+      if (!silent) {
+        setCart(null);
+        toast.error(error?.message ?? "خطا در دریافت سبد خرید");
+      }
       console.error("Error fetching cart:", error);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   }, [user?.id, refreshCartCount]);
 
@@ -66,7 +70,7 @@ export default function CartPage() {
                 cartItems={cart?.items ?? []}
                 loading={loading}
                 userId={user?.id}
-                onRefresh={fetchCart}
+                onRefresh={() => fetchCart({ silent: true })}
               />
             )}
           </div>
@@ -79,8 +83,11 @@ export default function CartPage() {
                 <p className="text-sm text-gray-600 dark:text-dark-text text-right mb-4">
                   برای مشاهده جمع نهایی و پرداخت، وارد حساب کاربری شوید.
                 </p>
-                <Button asChild className="w-full bg-primary-600 hover:bg-primary-700 text-white">
-                  <Link href="/login?redirect=%2Fsteps-cart">ورود و ادامه پرداخت</Link>
+                <Button
+                  onClick={() => setAuthModalOpen(true)}
+                  className="w-full bg-primary-600 hover:bg-primary-700 text-white"
+                >
+                  ورود و ادامه پرداخت
                 </Button>
               </div>
             </div>
@@ -89,11 +96,16 @@ export default function CartPage() {
               cart={cart}
               loading={loading}
               userId={user?.id}
-              onRefreshCart={fetchCart}
+              onRefreshCart={() => fetchCart({ silent: true })}
             />
           )}
         </div>
       </div>
+      <AuthModal
+        open={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        redirectTo="/steps-cart"
+      />
     </IndexLayout>
   );
 }

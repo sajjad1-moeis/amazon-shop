@@ -48,6 +48,29 @@ export function getAbsoluteImageUrl(imageUrl) {
 }
 
 /**
+ * نام کوتاه برند برای نمایش کنار «برند:» (همان چیزی که در آمازون جلوی Brand: است).
+ * اگر مقدار ذخیره‌شده طولانی یا شبیه عنوان باشد، فقط قسمت اول (احتمالاً نام برند) برگردانده می‌شود.
+ * @param {object} product - شیء محصول با فیلدهای brand یا brandName
+ * @returns {string}
+ */
+export function getDisplayBrand(product) {
+  const raw = product?.brand || product?.brandName || "";
+  if (!raw || typeof raw !== "string") return "";
+  let s = raw.trim();
+  if (!s) return "";
+  if (/^unknown$/i.test(s)) return "";
+  // حذف پیشوند "Brand:" در صورت وجود
+  if (/^Brand:\s*/i.test(s)) s = s.replace(/^Brand:\s*/i, "").trim();
+  // اگر شامل جداکننده عنوان است (مثلاً "GameTime – 400 Games...") فقط قسمت اول = نام برند
+  const sep = s.includes(" – ") ? " – " : s.includes(" | ") ? " | " : null;
+  if (sep) return s.split(sep)[0].trim();
+  // متن خیلی طولانی بدون جداکننده → برش با حداکثر طول
+  const maxLen = 50;
+  if (s.length > maxLen) return s.slice(0, maxLen).trim() + "…";
+  return s;
+}
+
+/**
  * Convert array of image URLs to absolute URLs
  */
 export function getAbsoluteImageUrls(imageUrls) {
@@ -104,10 +127,15 @@ export function getProductDescription(product) {
 }
 
 /**
- * Get breadcrumb items for product — اسکرپر: category
+ * Get breadcrumb items for product — اسکرپر: category_path_str یا category
  */
 export function getBreadcrumbItems(product) {
-  const category = product?.categoryName || product?.category || "کالای دیجیتال";
+  const pathStr = product?.category_path_str;
+  const category =
+    product?.categoryName ||
+    product?.category ||
+    (pathStr ? pathStr.split(" > ").pop()?.trim() || pathStr : null) ||
+    "کالای دیجیتال";
   return [
     { label: product?.parentCategoryName || "کالای دیجیتال", href: "/categories" },
     { label: category, href: "/categories" },
@@ -248,6 +276,10 @@ export function mapProductListDto(item) {
     reviews_count: item.reviewCount,
     brand: item.brand,
     categoryName: item.categoryName,
+    discountPercentage: item.discountPercentage,
+    discount_percentage: item.discountPercentage ?? item.discount_percentage,
+    isBestSeller: item.isBestSeller,
+    amazonASIN: item.amazonASIN,
   };
 }
 

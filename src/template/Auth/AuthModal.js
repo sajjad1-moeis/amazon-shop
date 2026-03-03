@@ -12,7 +12,7 @@ import ResetVerifyView from "./ResetVerifyView";
 export const fieldClassName =
   "h-10 rounded-lg bg-gray-50 border text-right placeholder:text-xs dark:bg-dark-field dark:border-dark-stroke";
 
-export function AuthModal({ open, onClose }) {
+export function AuthModal({ open, onClose, redirectTo }) {
   const [view, setView] = useState(VIEWS.LOGIN);
 
   const [phone, setPhone] = useState("");
@@ -51,6 +51,8 @@ export function AuthModal({ open, onClose }) {
             onChangePassword={setPassword}
             onGoSignup={() => goTo(VIEWS.SIGNUP)}
             onGoReset={() => goTo(VIEWS.RESET_REQUEST)}
+            redirectTo={redirectTo}
+            onSuccess={() => onClose()}
           />
         )}
 

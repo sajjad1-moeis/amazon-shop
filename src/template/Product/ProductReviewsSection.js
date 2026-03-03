@@ -55,7 +55,7 @@ export default function ProductReviewsSection({ product, dataSource = "db" }) {
     }).catch(() => {});
   }, [productId, dataSource]);
 
-  // مسیر اسکرپینگ: همگام‌سازی با داده اسکرپر وقتی از product می‌رسد
+  // مسیر اسکرپینگ: همگام‌سازی با داده اسکرپر وقتی از product می‌رسد (اولویت با نظرات اسکرپر)
   const scraperReviews = dataSource === "scraper" ? product?.reviews : undefined;
   const scraperReviewsCount = dataSource === "scraper" ? (product?.reviews_count ?? product?.reviewCount) : undefined;
   const scraperRating = dataSource === "scraper" ? product?.rating : undefined;
@@ -63,7 +63,7 @@ export default function ProductReviewsSection({ product, dataSource = "db" }) {
   useEffect(() => {
     if (dataSource !== "scraper") return;
     if (Array.isArray(scraperReviews) && scraperReviews.length > 0) {
-      setProductReviews((prev) => (prev.length === 0 ? scraperReviews : prev));
+      setProductReviews(scraperReviews);
     }
   }, [dataSource, scraperReviews]);
 
@@ -210,7 +210,9 @@ export default function ProductReviewsSection({ product, dataSource = "db" }) {
         <div className="lg:col-span-2 space-y-6">
           {productReviews.length > 0 && (
             <p className="text-sm text-gray-500 dark:text-dark-text text-right mb-2">
-              نمونه نظرات از آمازون
+              {totalReviews > productReviews.length
+                ? `نمایش ${productReviews.length.toLocaleString("fa-IR")} نظر از ${totalReviews.toLocaleString("fa-IR")} نظر (از آمازون)`
+                : "نمونه نظرات از آمازون"}
             </p>
           )}
           {productReviews.length === 0 && !hasRealCount && (

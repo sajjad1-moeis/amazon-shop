@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Bag2, CardPos, Shield, Truck } from "iconsax-reactjs";
-import { getProductDescription } from "@/utils/productHelpers";
+import { getProductDescription, getDisplayBrand } from "@/utils/productHelpers";
 
 const serviceGuarantees = [
   { icon: Bag2, title: "خرید مستقیم از آمازون" },
@@ -35,7 +35,8 @@ function buildSpecsFromProduct(product, dataSource) {
       });
   }
   const manual = [];
-  if (product.brand || product.brandName) manual.push({ label: "برند", value: product.brand || product.brandName });
+  const displayBrand = getDisplayBrand(product);
+  if (displayBrand) manual.push({ label: "برند", value: displayBrand });
   if (product.category || product.categoryName) manual.push({ label: "دسته‌بندی", value: product.category || product.categoryName });
   if (product.weight_kg) manual.push({ label: "وزن", value: `${product.weight_kg} کیلوگرم` });
   if (product.availability) manual.push({ label: "وضعیت", value: product.availability });

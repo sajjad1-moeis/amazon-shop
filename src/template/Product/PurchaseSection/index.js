@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { shoppingCartService } from "@/services/shoppingCart/shoppingCartService";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCartCount } from "@/contexts/CartCountContext";
+import { AuthModal } from "@/template/Auth/AuthModal";
 import DeliveryTypeSection from "./DeliveryTypeSection";
 import PriceDisplaySection from "./PriceDisplaySection";
 import ActionButtonsSection from "./ActionButtonsSection";
@@ -22,9 +23,10 @@ export default function PurchaseSection({
 }) {
   const [loading, setLoading] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const pathname = usePathname();
   const { user } = useAuth();
   const { refreshCartCount } = useCartCount();
-  const router = useRouter();
 
   const finalPrice = calculateProductPrice(product, selectedColor, selectedDelivery);
   const basePrice = getBasePrice(product);
@@ -40,9 +42,7 @@ export default function PurchaseSection({
       return;
     }
     if (!user?.id) {
-      toast.info("برای افزودن به سبد خرید وارد شوید");
-      const path = typeof window !== "undefined" ? window.location.pathname : "/";
-      router.push("/login?redirect=" + encodeURIComponent(path));
+      setAuthModalOpen(true);
       return;
     }
     const qty = Number(quantity) || 1;
@@ -94,6 +94,8 @@ export default function PurchaseSection({
       </div>
 
       <SidebarActions />
+
+      <AuthModal open={authModalOpen} onClose={() => setAuthModalOpen(false)} redirectTo={pathname} />
     </div>
   );
 }

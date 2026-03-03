@@ -22,6 +22,12 @@ function ProductCard({ className, product, badges }) {
   const { refreshCartCount } = useCartCount();
 
   const productId = product?.id ?? product?.productId ?? null;
+  const asin = product?.asin ?? product?.ASIN ?? product?.amazonASIN ?? null;
+  // API GetById فقط int (حداکثر ۲۱۴۷۴۸۳۶۴۷) را قبول می‌کند؛ اگر id بزرگتر باشد از ASIN برای لینک استفاده کن
+  const MAX_SAFE_INT32 = 2147483647;
+  const numericId = productId != null ? Number(productId) : NaN;
+  const idOutOfRange = Number.isFinite(numericId) && (numericId > MAX_SAFE_INT32 || numericId < -MAX_SAFE_INT32);
+  const hrefId = idOutOfRange && asin ? asin : (productId ?? asin ?? "0");
   const image =
     product?.image_url_hq ||
     product?.image_url ||
@@ -43,20 +49,38 @@ function ProductCard({ className, product, badges }) {
   const reviewCount = Math.max(0, Math.floor(reviewCountNum));
 
   const rawBadges = badges !== undefined ? badges : product?.badges;
-  const fromScraper = [
-    product?.is_prime && "انتخاب آمازون",
-    product?.is_free_delivery && "ارسال رایگان",
-    product?.discount_percentage &&
-      parseProductNum(product.discount_percentage) > 0 &&
-      `${Math.round(parseProductNum(product.discount_percentage))}٪ تخفیف`,
-  ]
-    .filter(Boolean)
-    .slice(0, 3);
-  const productBadges = Array.isArray(rawBadges)
+  const isPrime =
+    product?.is_prime ?? product?.isPrimeEligible ?? product?.is_prime_delivery ?? false;
+  const isFreeDelivery =
+    product?.is_free_delivery ?? product?.isFreeDelivery ?? false;
+  const hasInternational =
+    product?.hasInternationalShipping ?? product?.is_international ?? false;
+  const shipsFromUAE =
+    product?.shipsFromUAE ?? product?.is_local_dubai ?? false;
+  const hasQualityShield = product?.hasQualityShield ?? false;
+  const isBestSeller = product?.isBestSeller ?? false;
+  const isNewArrival = product?.isNewArrival ?? false;
+  const discountPct =
+    product?.discount_percentage != null
+      ? parseProductNum(product.discount_percentage)
+      : product?.discountPercentage != null
+        ? parseProductNum(product.discountPercentage)
+        : null;
+  const fromProduct = [
+    isPrime && "انتخاب آمازون",
+    isFreeDelivery && "ارسال رایگان",
+    discountPct != null && Number(discountPct) > 0 &&
+      `${Math.round(Number(discountPct))}٪ تخفیف`,
+    hasInternational && "ارسال بین المللی",
+    shipsFromUAE && "ارسال از امارات",
+    hasQualityShield && "ضمانت کیفیت",
+    isBestSeller && "پرفروش ترین",
+    isNewArrival && "تازه وارد",
+  ].filter(Boolean);
+  const fromScraper = fromProduct.slice(0, 5);
+  const productBadges = Array.isArray(rawBadges) && rawBadges.length > 0
     ? rawBadges.filter((b) => typeof b === "string").slice(0, 5)
-    : fromScraper.length > 0
-      ? fromScraper
-      : ["ارسال بین المللی"];
+    : fromScraper;
   const seller = product?.seller || "amazon";
   const sellerCountry = product?.sellerCountry || "🇦🇪";
 
@@ -80,7 +104,7 @@ function ProductCard({ className, product, badges }) {
     e.preventDefault();
 
     const asin = product?.asin || product?.ASIN || product?.amazonASIN || product?.amazonAsin;
-    const hasNumericId = productId != null && String(Number(productId)) === String(productId);
+    const hasNumericId = productId != null && String(Number(productId)) === String(productId) && !idOutOfRange;
 
     // محصول از قبل در DB است (id عددی داریم) → مستقیم برو، بدون انتظار
     if (hasNumericId && productId) {
@@ -136,14 +160,11 @@ function ProductCard({ className, product, badges }) {
     router.push(`/product/${productId ?? "0"}`);
   };
 
-  const hrefId = productId ?? product?.asin ?? product?.ASIN ?? "0";
-
   const handleMouseEnter = () => {
-    const asin = product?.asin || product?.ASIN || product?.amazonASIN;
     if (asin) prefetchScraperImages(asin);
   };
 
-  const hasNumericId = productId != null && String(Number(productId)) === String(productId);
+  const hasNumericId = productId != null && String(Number(productId)) === String(productId) && !idOutOfRange;
 
   const handleAddToCart = async (e) => {
     e.preventDefault();
@@ -230,12 +251,18 @@ function ProductCard({ className, product, badges }) {
                     <span
                       key={index}
                       className={cn(
-                        "text-xs  px-2 py-1 rounded text-white whitespace-nowrap",
+                        "text-xs px-2 py-1 rounded text-white whitespace-nowrap",
                         badge === "انتخاب آمازون"
                           ? "bg-green-600 dark:bg-green-700"
                           : badge === "پرفروش ترین"
                             ? "bg-orange-500 dark:bg-orange-600"
-                            : "bg-primary-600 dark:bg-primary-700",
+                            : badge === "ارسال از امارات"
+                              ? "bg-blue-600 dark:bg-blue-700"
+                              : badge === "ضمانت کیفیت"
+                                ? "bg-emerald-600 dark:bg-emerald-700"
+                                : badge === "تازه وارد"
+                                  ? "bg-violet-600 dark:bg-violet-700"
+                                  : "bg-primary-600 dark:bg-primary-700",
                       )}
                     >
                       {badge}

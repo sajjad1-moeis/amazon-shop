@@ -340,7 +340,7 @@ export const productService = {
     try {
       const scraper = getScraperClient();
       return await scraper
-        .get(`api/product/${encodeURIComponent(asin)}/details`, { timeout: 20000 })
+        .get(`api/product/${encodeURIComponent(asin)}/details`, { timeout: 28000 })
         .json();
     } catch (err) {
       console.error("Error fetching scraper product details:", err);
@@ -348,9 +348,57 @@ export const productService = {
     }
   },
 
+  /**
+   * نرمال کردن payload برای API بک‌اند: ScraperProductDto فیلدهای rating، reviews_count،
+   * current_price، original_price، weight_kg را به صورت string انتظار دارد.
+   */
+  _normalizeScraperPayloadForApi(payload) {
+    if (!payload || typeof payload !== "object") return payload;
+    const out = { ...payload };
+    if (out.rating != null && typeof out.rating !== "string")
+      out.rating = String(out.rating);
+    if (out.reviews_count != null && typeof out.reviews_count !== "string")
+      out.reviews_count = String(out.reviews_count);
+    if (out.current_price != null && typeof out.current_price !== "string")
+      out.current_price = String(out.current_price);
+    if (out.original_price != null && typeof out.original_price !== "string")
+      out.original_price = String(out.original_price);
+    if (out.weight_kg != null && typeof out.weight_kg !== "string")
+      out.weight_kg = String(out.weight_kg);
+    if (out.savings_amount != null && typeof out.savings_amount !== "string")
+      out.savings_amount = String(out.savings_amount);
+    if (out.discount_percentage != null && typeof out.discount_percentage !== "string")
+      out.discount_percentage = String(out.discount_percentage);
+    return out;
+  },
+
   // ذخیره محصول اسکرپ شده در صورت عدم وجود (برای محصولات باز شده از Amazon)
   saveIfNotExistsFromScraper: async (scraperProduct) => {
     const client = getPublicClient();
-    return client.post("Product/SaveIfNotExists", { json: scraperProduct }).json();
+    const body = productService._normalizeScraperPayloadForApi(scraperProduct);
+    return client.post("Product/SaveIfNotExists", { json: body }).json();
+  },
+
+  /**
+   * به‌روزرسانی محصول موجود در DB با جزئیات کامل اسکرپر (عکس‌ها، توضیحات، نظرات، مشخصات).
+   * وقتی محصول با ID باز شده ولی در DB ناقص است استفاده می‌شود.
+   */
+  updateFromScraperDetails: async (productId, details) => {
+    if (!productId || !details) return null;
+    const client = getPublicClient();
+    const body = {
+      productId: Number(productId),
+      description: details.description ?? null,
+      images: Array.isArray(details.images) ? details.images : null,
+      attributes: Array.isArray(details.attributes)
+        ? details.attributes.map((a) => ({ name: a?.name ?? a?.Name ?? "", value: a?.value ?? a?.Value ?? "" }))
+        : null,
+      reviews: Array.isArray(details.reviews)
+        ? details.reviews.map((r) => ({ title: r?.title ?? r?.Title ?? "", body: r?.body ?? r?.Body ?? "" }))
+        : null,
+      rating: details.rating != null ? Number(details.rating) : null,
+      reviewsCount: details.reviews_count != null ? Number(details.reviews_count) : null,
+    };
+    return client.post("Product/UpdateFromScraperDetails", { json: body }).json();
   },
 };
