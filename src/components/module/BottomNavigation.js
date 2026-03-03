@@ -3,16 +3,17 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { BitcoinConvert, BoxTick, Home, Profile, ShoppingCart } from "iconsax-reactjs";
+import { BitcoinConvert, BoxTick, Heart, Home, Profile, ShoppingCart } from "iconsax-reactjs";
 import Link from "next/link";
 import { useCartCount } from "@/contexts/CartCountContext";
 
 const navigationItems = [
   { id: "home", label: "خانه", icon: Home, href: "/" },
   { id: "dashboard", label: "داشبورد", icon: Profile, href: "/dashboard" },
+  { id: "favorites", label: "علاقه‌مندی", icon: Heart, href: "/dashboard/favorites" },
   { id: "cart", label: "سبد خرید", icon: ShoppingCart, href: "/cart" },
   { id: "tracking", label: "پیگیری سفارش", icon: BoxTick, href: "/tracking" },
-  { id: "currency", label: "خدمات ارزی", icon: BitcoinConvert, href: "/currency-services" },
+  // { id: "currency", label: "خدمات ارزی", icon: BitcoinConvert, href: "/currency-services" },
 ];
 
 export default function BottomNavigation() {
@@ -37,8 +38,8 @@ export default function BottomNavigation() {
     const activeBtn = itemRefs.current[activeId];
     if (activeBtn) {
       requestAnimationFrame(() => {
-      const rect = activeBtn.getBoundingClientRect();
-      setOffset({ left: rect.left, width: rect.width });
+        const rect = activeBtn.getBoundingClientRect();
+        setOffset({ left: rect.left, width: rect.width });
       });
     }
   }, [activeId, pathname]);
@@ -64,7 +65,7 @@ export default function BottomNavigation() {
                 ref={(el) => (itemRefs.current[item.id] = el)}
                 className={cn(
                   "relative flex flex-col text-center items-center justify-center gap-1.5 flex-1 py-2 transition-all duration-300 z-10",
-                  isActive && "text-blue-600"
+                  isActive && "text-blue-600",
                 )}
               >
                 <span className="relative inline-flex">
@@ -82,7 +83,7 @@ export default function BottomNavigation() {
                 <span
                   className={cn(
                     "text-xs font-medium transition-colors duration-300",
-                    isActive ? "text-blue-600" : "text-gray-500"
+                    isActive ? "text-blue-600" : "text-gray-500",
                   )}
                 >
                   {item.label}

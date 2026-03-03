@@ -2,17 +2,15 @@
 
 import React from "react";
 import { AMAZON_REGIONS, getRegionSearchUrl } from "@/data/amazonRegions";
+import Image from "next/image";
 
 const DEFAULT_TITLE = "محصول خود را پیدا نکردید؟";
 const DEFAULT_DESCRIPTION =
-  "با استفاده از دکمه‌های زیر، می‌توانید نتایج به‌روزتری را با جستجوی لحظه‌ای در آمازون کشورهای زیر مشاهده کنید.";
+  "با استفاده از دکمه‌های زیر می‌توانید نتایج به‌روزتری را با جستجوی لحظه‌ای در آمازون کشورهای زیر مشاهده کنید.";
 
 /**
- * بخش «محصول خود را پیدا نکردید؟» — داینامیک و کامپوننت‌بندی شده.
+ * بخش «محصول خود را پیدا نکردید؟» — چهار دکمه جستجو در آمازون (آلمان، انگلستان، آمریکا، امارات)
  * @param {string} [searchQuery] - عبارت جستجو (در لینک دکمه‌ها استفاده می‌شود)
- * @param {Array<{ id: string, name: string, flag: string, baseUrl: string, searchParam?: string }>} [regions] - لیست مناطق آمازون (پیش‌فرض: AMAZON_REGIONS)
- * @param {string} [title]
- * @param {string} [description]
  */
 export default function ProductNotFoundSection({
   searchQuery = "",
@@ -23,42 +21,37 @@ export default function ProductNotFoundSection({
   const regions = Array.isArray(regionsProp) && regionsProp.length > 0 ? regionsProp : AMAZON_REGIONS;
 
   return (
-    <section
-      className="mt-12 pt-10 border-t border-gray-200 dark:border-gray-700"
-      aria-labelledby="product-not-found-title"
-    >
-      <h2
-        id="product-not-found-title"
-        className="text-xl md:text-2xl font-bold text-primary-700 dark:text-[#B1B1FF] text-center mb-2"
-      >
+    <section className="mt-12 pt-10" aria-labelledby="product-not-found-title">
+      <h2 id="product-not-found-title" className="text-xl md:text-2xl text-dark-primary dark:text-[#B1B1FF] mb-2">
         {title}
       </h2>
-      <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base text-center mb-8 max-w-2xl mx-auto">
-        {description}
-      </p>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base  mb-8  ">{description}</p>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {regions.map((region) => {
           const href = getRegionSearchUrl(region, searchQuery);
           return (
-            <div
+            <a
               key={region.id}
-              className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-dark-field p-5 flex flex-col items-center text-center"
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center justify-center p-2 sm:p-5 rounded-xl border border-gray-200 dark:border-dark-stroke bg-gray-50 dark:bg-dark-box hover:bg-gray-100 dark:hover:bg-dark-field/80 transition-colors"
             >
-              <span className="text-3xl mb-3" role="img" aria-hidden>
-                {region.flag}
-              </span>
-              <p className="text-gray-800 dark:text-gray-200 text-sm font-medium mb-4">
-                {region.name}
+              {/* آیکون ذره‌بین با پرچم داخل لنز */}
+              <div className="relative w-14 h-14 sm:w-16 sm:h-16 mb-3 flex items-center justify-center">
+                <div className="relative">
+                  <Image
+                    src={`/image/Products${region.src}`}
+                    width={1200}
+                    height={600}
+                    className="w-full h-auto object-cover"
+                  />
+                </div>
+              </div>
+              <p className="text-gray-800 dark:text-gray-200 text-sm font-medium text-center">
+                جستجو در <span className="text-dark-primary dark:text-dark-title">{region.name}</span>
               </p>
-              <a
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-2.5 px-4 rounded-lg bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white text-sm font-medium transition-colors"
-              >
-                مشاهده وبسایت
-              </a>
-            </div>
+            </a>
           );
         })}
       </div>

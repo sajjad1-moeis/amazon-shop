@@ -13,6 +13,8 @@ const links = [
   { title: "ارتباط با ما", href: "/contact-us" },
   { title: "گیفت کارت", href: "/gift-cart" },
   { title: "خرید از آمازون", href: "/shops/amazon" },
+  { title: "خرید اختصاصی آمازون", href: "/dashboard/exclusive-amazon" },
+  { title: "پی‌پال", href: "/paypal-cashout" },
   { title: "خدمات ارزی", href: "/currency-services" },
   { title: "نرخ ارز", href: "/currency-rates" },
   { title: "داشبورد", href: "/dashboard" },

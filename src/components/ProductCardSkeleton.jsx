@@ -16,20 +16,20 @@ function ProductCardSkeleton({ className }) {
         className,
       )}
     >
-      <Skeleton className="aspect-square flex-shrink-0 rounded-none rounded-t-xl w-full" />
+      <Skeleton className="aspect-square flex-shrink-0 rounded-none rounded-t-xl w-full dark:bg-dark-bg" />
       <div className="p-3 lg:p-4 flex flex-col gap-2.5 flex-grow">
-        <Skeleton className="h-4 w-full rounded" />
-        <Skeleton className="h-4 w-2/3 rounded" />
+        <Skeleton className="h-4 w-full rounded dark:bg-dark-bg" />
+        <Skeleton className="h-4 w-2/3 rounded dark:bg-dark-bg" />
         <div className="flex items-center justify-between">
-          <Skeleton className="h-3 w-16 rounded" />
-          <Skeleton className="h-3 w-10 rounded" />
+          <Skeleton className="h-3 w-16 rounded dark:bg-dark-bg" />
+          <Skeleton className="h-3 w-10 rounded dark:bg-dark-bg" />
         </div>
         <div className="flex flex-col gap-1.5 mt-auto">
           <div className="flex justify-between items-center">
-            <Skeleton className="h-5 w-24 rounded" />
-            <Skeleton className="h-4 w-8 rounded" />
+            <Skeleton className="h-5 w-24 rounded dark:bg-dark-bg" />
+            <Skeleton className="h-4 w-8 rounded dark:bg-dark-bg" />
           </div>
-          <Skeleton className="h-3 w-28 rounded mt-1" />
+          <Skeleton className="h-3 w-28 rounded mt-1 dark:bg-dark-bg" />
         </div>
       </div>
     </div>

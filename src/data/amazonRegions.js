@@ -1,32 +1,43 @@
 /**
  * لیست داینامیک آمازون کشورها برای بخش «محصول خود را پیدا نکردید؟»
- * با اضافه/حذف آیتم می‌توان بخش را بدون تغییر کامپوننت به‌روز کرد.
+ * ترتیب: آلمان، انگلستان، آمریکا، امارات (طبق فیگما)
  */
 export const AMAZON_REGIONS = [
   {
+    id: "de",
+    name: "آمازون آلمان",
+    flag: "🇩🇪",
+    baseUrl: "https://www.amazon.de",
+    searchParam: "k",
+    src: "/german.png",
+  },
+  {
+    id: "uk",
+    name: "آمازون انگلستان",
+    flag: "🇬🇧",
+    baseUrl: "https://www.amazon.co.uk",
+    searchParam: "k",
+    src: "/englis.png",
+  },
+  {
     id: "us",
-    name: "جستجوی مستقیم در آمازون آمریکا",
+    name: "آمازون آمریکا",
     flag: "🇺🇸",
     baseUrl: "https://www.amazon.com",
     searchParam: "k",
-  },
-  {
-    id: "tr",
-    name: "جستجوی مستقیم در آمازون ترکیه",
-    flag: "🇹🇷",
-    baseUrl: "https://www.amazon.com.tr",
-    searchParam: "k",
+    src: "/usa.png",
   },
   {
     id: "ae",
-    name: "جستجوی مستقیم در آمازون امارات",
+    name: "آمازون امارات",
     flag: "🇦🇪",
     baseUrl: "https://www.amazon.ae",
     searchParam: "k",
+    src: "/emarat.png",
   },
 ];
 
-/** ساخت لینک جستجو برای یک منطقه (با عبارت جستجو در صورت وجود) */
+/** ساخت لینک جستجو برای یک منطقه (با عبارت صورت وجود) */
 export function getRegionSearchUrl(region, searchQuery = "") {
   const q = typeof searchQuery === "string" ? searchQuery.trim() : "";
   const param = region.searchParam || "k";

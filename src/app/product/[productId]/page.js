@@ -28,7 +28,8 @@ import { prefetchScraperImages, getScraperImagesCached, prefetchScraperDetails, 
 import { useAuth } from "@/contexts/AuthContext";
 import { userRecentViewService } from "@/services/userRecentView/userRecentViewService";
 import { applyProductSeoHead } from "@/utils/metadata";
-import { notFound } from "next/navigation";
+import NotFoundView from "@/components/NotFoundView";
+import { getNotFoundPreset } from "@/data/notFoundPresets";
 
 export default function ProductDetailPage({ params }) {
   const resolved = use(
@@ -304,9 +305,22 @@ export default function ProductDetailPage({ params }) {
     );
   }
 
-  // سند فنی ۲: وقتی محصول یافت نشد Status Code 404 برگردانده شود (جلوگیری از Soft 404)
   if (!product) {
-    notFound();
+    const preset = getNotFoundPreset("product");
+    return (
+      <IndexLayout>
+        <div className="container">
+          <NotFoundView
+            title={preset.title}
+            description={preset.description}
+            primaryButton={preset.primaryButton}
+            secondaryButton={preset.secondaryButton}
+            imageSrc={preset.imageSrc}
+            imageAlt={preset.imageAlt}
+          />
+        </div>
+      </IndexLayout>
+    );
   }
 
   const productImages = getProductImages(product);

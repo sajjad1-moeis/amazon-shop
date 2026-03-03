@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import ProductsFilters from "@/template/Products/ProductsFilters";
 import HeaderSection from "@/template/Products/HeaderSection";
 import ProductList from "@/template/Products/ProductList";
+import ProductNotFoundSection from "@/template/Products/ProductNotFoundSection";
 import { ProductCardSkeletonList } from "@/components/ProductCardSkeleton";
 import { productService } from "@/services/product/productService";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
@@ -244,6 +245,10 @@ export default function ProductsClient() {
           ) : (
             <ProductList viewMode={viewMode} products={products} totalCount={totalCount} searchMode={isSearchMode} />
           )}
+          {/* بخش «محصول خود را پیدا نکردید؟» — انتهای صفحه محصولات */}
+          <div className="max-lg:px-4 lg:container pb-12">
+            <ProductNotFoundSection searchQuery={query.search} />
+          </div>
         </div>
       </div>
     </>

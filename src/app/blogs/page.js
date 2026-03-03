@@ -5,6 +5,8 @@ import IndexLayout from "@/layout/IndexLayout";
 import BlogList from "@/template/Blogs/BlogList";
 import PaginationBlogs from "@/template/Blogs/PaginationBlogs";
 import Image from "next/image";
+import NotFoundView from "@/components/NotFoundView";
+import { getNotFoundPreset } from "@/data/notFoundPresets";
 import { blogService } from "@/services/blog/blogService";
 import { blogCategoryService } from "@/services/blog/blogCategoryService";
 import BlogCard from "@/components/BlogCard";
@@ -58,6 +60,9 @@ export default function Page() {
     fetchData();
   }, [pageNumber, selectedCategory, sortBy]);
 
+  const preset = getNotFoundPreset("blog");
+  const noBlogs = !loading && (!blogs || blogs.length === 0);
+
   return (
     <IndexLayout>
       <div className="bg-gray-50 pb-20 dark:bg-dark-bg">
@@ -65,6 +70,19 @@ export default function Page() {
           <Image src="/image/Blogs/blogBg.png" alt="بلاگ" fill className="object-cover" />
         </div>
 
+        {noBlogs ? (
+          <div className="container">
+            <NotFoundView
+              title={preset.title}
+              description={preset.description}
+              primaryButton={preset.primaryButton}
+              secondaryButton={preset.secondaryButton}
+              imageSrc={preset.imageSrc}
+              imageAlt={preset.imageAlt}
+            />
+          </div>
+        ) : (
+          <>
         <BlogList
           blogs={blogs}
           categories={categories}
@@ -107,6 +125,8 @@ export default function Page() {
           totalPages={totalPages}
           onPageChange={setPageNumber}
         />
+          </>
+        )}
       </div>
     </IndexLayout>
   );

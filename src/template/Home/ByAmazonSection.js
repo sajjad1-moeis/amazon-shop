@@ -4,15 +4,16 @@ import React, { useState } from "react";
 import Image from "next/image";
 import ByAmazonSlider from "./ByAmazonSlider";
 import QualityShieldModal from "./QualityShieldModal";
+import { HOMEPAGE_IMAGES } from "@/config/homepageImages";
 
 export default function AmazonSection() {
   const [isQualityShieldOpen, setIsQualityShieldOpen] = useState(false);
   return (
-    <div className="w-full bg-white  dark:bg-dark-bg">
-      {/* Hero Section */}
+    <div className="w-full bg-white dark:bg-dark-bg">
+      {/* Hero Section — مسیر از config/homepageImages (طبق فیگما قابل تعویض) */}
       <button onClick={() => setIsQualityShieldOpen(true)} className="block w-full cursor-pointer">
         <Image
-          src="/image/Home/amazonBg.jpg"
+          src={HOMEPAGE_IMAGES.heroBanner}
           alt="سپر کیفیت میکرولس"
           width={1200}
           height={600}

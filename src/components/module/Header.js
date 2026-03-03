@@ -21,17 +21,15 @@ function Header() {
     <header className="w-full ">
       <div className="dark:bg-dark-header bg-primary-500 py-1.5 ">
         <div className="flex-between xl:container max-2xl:px-4 ">
-          <div className="flex-between gap-2">
-            <p className="dark:text-[#D4F4FF] text-info-200 font-thin text-sm max-lg:hidden">
-              تخفیف ویژه خرید اولی‌ها! تا ۵٪ هزینه خدمات کمتر برای اولین سفارش شما 🎁
-            </p>
-          </div>
-          <div className="flex-between ">
-            <DiscountAmazonButton className={"max-md:hidden lg:hidden"} />
-            <div className="lg:hidden">
-              <SwitchButton />
-            </div>
-          </div>
+          <Link
+            href="/paypal-cashout"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 flex-shrink-0 animate-pulse"
+            aria-label="PayPal"
+          >
+            <Image alt="PayPal" src="/image/Header/paypal.png" width={65} height={48} />
+            <p className="dark:text-[#D4F4FF] text-info-200 font-thin text-sm hidden sm:inline">داری، کلیک کن</p>
+          </Link>
           <button
             type="button"
             onClick={openCrisp}
@@ -44,16 +42,17 @@ function Header() {
               {crispLoading ? "در حال بارگذاری..." : "پشتیبانی 24 ساعته"}
             </p>
           </button>
-          <a
-            href="https://www.paypal.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 flex-shrink-0 animate-pulse"
-            aria-label="PayPal"
-          >
-            <Image alt="PayPal" src="/image/Header/paypal.png" width={65} height={48} />
-            <p className="dark:text-[#D4F4FF] text-info-200 font-thin text-sm hidden sm:inline">داری، کلیک کن</p>
-          </a>
+          <Link href={"/products"} className="flex-between gap-2">
+            <p className="dark:text-[#D4F4FF] text-info-200 font-thin text-sm max-lg:hidden">
+              تخفیف ویژه خرید اولی‌ها! تا ۵٪ هزینه خدمات کمتر برای اولین سفارش شما 🎁
+            </p>
+          </Link>
+          <div className="flex-between lg:hidden">
+            <DiscountAmazonButton className={"max-md:hidden lg:hidden"} />
+            <div className="lg:hidden">
+              <SwitchButton />
+            </div>
+          </div>
         </div>
       </div>
       <div

@@ -24,9 +24,7 @@ export default function DashboardHeader({ onMenuClick }) {
       .getUnreadCount(userId)
       .then((res) => {
         const data = unwrapApiData(res);
-        setUnreadCount(
-          typeof data === "number" ? data : (data?.unreadCount ?? data?.count ?? 0)
-        );
+        setUnreadCount(typeof data === "number" ? data : (data?.unreadCount ?? data?.count ?? 0));
       })
       .catch(() => setUnreadCount(0));
   }, [userId]);
@@ -54,17 +52,6 @@ export default function DashboardHeader({ onMenuClick }) {
               className="w-full lg:h-10 h-9 md:min-w-36 lg:min-w-[150px]"
               priority
             />
-          </Link>
-          <Link href="/">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-white hover:bg-white/10 dark:hover:bg-dark-box/20 gap-1.5 h-9"
-              title="صفحه اصلی"
-            >
-              <Home2 className="h-4 w-4 md:h-5 md:w-5" />
-              <span className="hidden md:inline text-sm">صفحه اصلی</span>
-            </Button>
           </Link>
         </div>
 
