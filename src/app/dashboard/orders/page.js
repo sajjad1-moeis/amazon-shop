@@ -9,6 +9,7 @@ import OrdersTabs from "@/template/Dashboard/Orders/OrdersTabs";
 import OrdersFilter from "@/template/Dashboard/Orders/OrdersFilter";
 import OrderCard from "@/template/Dashboard/Orders/OrderCard";
 import { orderService } from "@/services/order/orderService";
+import { invoiceService } from "@/services/invoice/invoiceService";
 import { useAuth } from "@/contexts/AuthContext";
 import { Spinner } from "@/components/ui/spinner";
 
@@ -236,7 +237,21 @@ export default function OrdersPage() {
       });
   }, [orders, activeTab, filters]);
 
-  const handleDownloadInvoice = () => toast.success("فاکتور با موفقیت دانلود شد");
+  const handleDownloadInvoice = async (orderId) => {
+    if (orderId == null) return;
+    try {
+      const { blob, filename } = await invoiceService.downloadInvoice({ orderId });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success("فاکتور با موفقیت دانلود شد");
+    } catch (err) {
+      toast.error(err?.message || "دانلود فاکتور ناموفق بود");
+    }
+  };
   const handleSecondPayment = (orderId) => toast.info(`پرداخت مرحله دوم سفارش ${orderId}`);
 
   return (

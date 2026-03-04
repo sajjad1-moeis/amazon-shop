@@ -1,25 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Image from "next/image";
 import { User, Edit2, Profile } from "iconsax-reactjs";
 import { Button } from "@/components/ui/button";
 import EditBasicInfoModal from "./EditBasicInfoModal";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
-const initialData = {
-  fullName: "محمد داوری",
-  phone: "۰۹۱۲۴۵۲۲۴۵۶",
+const defaultData = {
+  fullName: "",
+  phone: "",
   email: "",
-  nationalId: "۶۶۰۰۳۴۵۶۷۸",
-  verificationStatusText: "تکمیل شده",
-  membershipDate: "۱۴۰۲/۰۴/۲۱",
+  nationalId: "",
+  verificationStatusText: "در انتظار",
+  membershipDate: "",
   avatar: "",
 };
 
-export default function BasicInfoCard() {
-  const [data, setData] = useState(initialData);
+export default function BasicInfoCard({ data: dataProp, onProfileUpdated }) {
+  const [data, setData] = useState(defaultData);
   const [open, setOpen] = useState(false);
+  const displayData = useMemo(() => ({ ...defaultData, ...dataProp, ...data }), [dataProp, data]);
 
   return (
     <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4">
@@ -44,44 +46,47 @@ export default function BasicInfoCard() {
       {/* Main Info */}
       <div className="mb-3  md:hidden">
         <div className="size-16 rounded-lg overflow-hidden border border-gray-200 dark:border-dark-stroke bg-gray-100 dark:bg-dark-field flex items-center justify-center flex-shrink-0">
-          {data.avatar ? (
-            <Image src={data.avatar} alt="avatar" width={64} height={64} className="object-cover" />
+          {displayData.avatar ? (
+            <Image src={displayData.avatar} alt="avatar" width={64} height={64} className="object-cover" />
           ) : (
             <User size={24} className="sm:w-7 sm:h-7 text-gray-400" />
           )}
         </div>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-5 xl:gap-0">
-        {/* Avatar */}
         <div className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3">
           <div className="size-10 lg:size-16 max-md:hidden rounded-lg overflow-hidden border border-gray-200 dark:border-dark-stroke bg-gray-100 dark:bg-dark-field flex items-center justify-center flex-shrink-0">
-            {data.avatar ? (
-              <Image src={data.avatar} alt="avatar" width={64} height={64} className="object-cover" />
+            {displayData.avatar ? (
+              <Image src={displayData.avatar} alt="avatar" width={64} height={64} className="object-cover" />
             ) : (
               <User size={24} className="sm:w-7 sm:h-7 text-gray-400" />
             )}
           </div>
-          {/* Fields */}
-          <Row className={"sm:mx-0"} label="نام و نام خانوادگی" value={data.fullName} />
+          <Row className={"sm:mx-0"} label="نام و نام خانوادگی" value={displayData.fullName || "—"} />
         </div>
-        <Row className={"md:mx-auto sm:mx-0"} label="شماره تماس" value={data.phone} />
-        <Row className={"md:mx-auto sm:mx-0 max-xl:hidden"} label="ایمیل" value={data.email || "---"} />
-        <Row className={"xl:mx-auto sm:mx-0"} label="کد ملی" value={data.nationalId} />
+        <Row className={"md:mx-auto sm:mx-0"} label="شماره تماس" value={displayData.phone || "—"} />
+        <Row className={"md:mx-auto sm:mx-0 max-xl:hidden"} label="ایمیل" value={displayData.email || "—"} />
+        <Row className={"xl:mx-auto sm:mx-0"} label="کد ملی" value={displayData.nationalId || "—"} />
         <div className="text-xs sm:text-sm flex flex-col lg:items-center">
           <p className="mb-1 sm:mb-2 px-2 sm:px-3 py-1 w-max rounded-md bg-green-100 dark:bg-green-900/30 dark:text-green-300 text-green-700 text-xs font-medium">
-            {data.verificationStatusText}
+            {displayData.verificationStatusText}
           </p>
           <p className="text-gray-400 dark:text-caption lg:text-center text-xs">وضعیت احراز هویت</p>
         </div>
-        <Row className={"md:mx-auto sm:mx-0"} label="تاریخ عضویت" value={data.membershipDate} />
+        <Row className={"md:mx-auto sm:mx-0"} label="تاریخ عضویت" value={displayData.membershipDate || "—"} />
       </div>
 
-      {/* Modal */}
       <EditBasicInfoModal
         isOpen={open}
         onClose={() => setOpen(false)}
-        initialData={data}
-        onSave={(values) => setData({ ...data, ...values })}
+        initialData={displayData}
+        onSave={async (values) => {
+          setData((prev) => ({ ...prev, ...values }));
+          if (onProfileUpdated) onProfileUpdated();
+          toast.info(
+            "در فاز ۱۹ اندپوینتی برای به‌روزرسانی پروفایل تعریف نشده است. تغییرات فقط در همین صفحه اعمال شد. برای ذخیرهٔ واقعی، بک‌اند باید اندپوینت (مثلاً POST Users/UpdateProfile) را پیاده کند."
+          );
+        }}
       />
     </div>
   );

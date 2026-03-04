@@ -41,4 +41,10 @@ export const compareService = {
     const client = getPublicClient();
     return client.post("Compare/clear", { json: data }).json();
   },
+
+  /** DELETE api/Compare/{compareId} — حذف یک لیست مقایسه (Phase 19). compareId از پاسخ list. */
+  deleteByCompareId: async (compareId) => {
+    const client = getAuthenticatedClient();
+    return client.delete(`Compare/${compareId}`).json();
+  },
 };

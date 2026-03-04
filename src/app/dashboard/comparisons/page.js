@@ -20,6 +20,7 @@ function mapApiToComparison(item) {
   const second = products[1];
   return {
     id: item.id ?? item.comparisonId,
+    compareId: item.compareId ?? item.id,
     title: item.title ?? item.name ?? "مقایسه",
     category: item.category ?? item.categoryName ?? "-",
     products: [
@@ -59,11 +60,19 @@ export default function ComparisonsList() {
       .finally(() => setLoading(false));
   }, [userId]);
 
-  const handleDelete = (comparisonId) => {
-    if (confirm("آیا از حذف این مقایسه اطمینان دارید؟")) {
-      setComparisons((prev) => prev.filter((c) => c.id !== comparisonId));
-      toast.success("مقایسه با موفقیت حذف شد");
-    }
+  const handleDelete = (comparison) => {
+    const compareId = comparison.compareId ?? comparison.id;
+    if (!compareId) return;
+    if (!confirm("آیا از حذف این مقایسه اطمینان دارید؟")) return;
+    compareService
+      .deleteByCompareId(compareId)
+      .then(() => {
+        setComparisons((prev) => prev.filter((c) => (c.compareId ?? c.id) !== compareId));
+        toast.success("مقایسه با موفقیت حذف شد");
+      })
+      .catch((err) => {
+        toast.error(err?.message || "مقایسه یافت نشد یا دسترسی غیرمجاز.");
+      });
   };
 
   const handleDeleteAll = () => {
@@ -127,7 +136,7 @@ export default function ComparisonsList() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {comparisons.map((comparison) => (
-            <ComparisonCard key={comparison.id} comparison={comparison} onDelete={() => handleDelete(comparison.id)} />
+            <ComparisonCard key={comparison.id} comparison={comparison} onDelete={() => handleDelete(comparison)} />
           ))}
         </div>
       )}

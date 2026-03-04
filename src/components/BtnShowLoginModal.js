@@ -95,7 +95,7 @@ export default function BtnShowLoginModal() {
           "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
         )}
       >
-        <div className="px-4 pt-3 pb-2 flex-between text-dark-title">
+        <div className="px-4 pt-3 pb-2 flex-between text-dark-primary dark:text-dark-title">
           <p className="flex items-center gap-2  text-sm mb-1">
             <Wallet3 size={18} />
             موجودی:

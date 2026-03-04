@@ -15,6 +15,7 @@ import SecondPaymentCard from "@/template/Dashboard/OrderDetail/SecondPaymentCar
 import SupportCard from "@/template/Dashboard/OrderDetail/SupportCard";
 import { toast } from "sonner";
 import { orderService } from "@/services/order/orderService";
+import { invoiceService } from "@/services/invoice/invoiceService";
 import { Spinner } from "@/components/ui/spinner";
 
 export default function OrderDetail({ params }) {
@@ -46,8 +47,20 @@ export default function OrderDetail({ params }) {
     };
   }, [orderId]);
 
-  const handleDownloadInvoice = () => {
-    toast.success("فاکتور با موفقیت دانلود شد");
+  const handleDownloadInvoice = async () => {
+    if (orderId == null) return;
+    try {
+      const { blob, filename } = await invoiceService.downloadInvoice({ orderId });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success("فاکتور با موفقیت دانلود شد");
+    } catch (err) {
+      toast.error(err?.message || "دانلود فاکتور ناموفق بود");
+    }
   };
 
   const handleCancelOrder = async () => {

@@ -1,19 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Edit2, Cards } from "iconsax-reactjs";
 import EditFinancialInfoModal from "./EditFinancialInfoModal";
 import { Row } from "../BasicInfo/BasicInfoCard";
 
-const financialData = {
-  shaba: "IR۸۲۰۵۴۰۱۰۲۶۸۰۰۲۰۸۱۷۹۰۹۰۰۲",
-  cardNumber: "۶۰۳۷ **** **** ۱۸۲۴",
+const defaultFinancialData = {
+  shaba: "—",
+  cardNumber: "—",
 };
 
-export default function FinancialInfoCard() {
+export default function FinancialInfoCard({ data: dataProp, bankAccounts, onUpdated }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [financialInfo, setFinancialInfo] = useState(financialData);
+  const [financialInfo, setFinancialInfo] = useState(defaultFinancialData);
+
+  const displayFinancial = useMemo(() => {
+    if (dataProp) return { ...defaultFinancialData, ...dataProp };
+    return { ...defaultFinancialData, ...financialInfo };
+  }, [dataProp, financialInfo]);
 
   const handleSave = (data) => {
     setFinancialInfo((prev) => ({
@@ -23,6 +28,7 @@ export default function FinancialInfoCard() {
         ? `${data.cardNumber.substring(0, 4)} **** **** ${data.cardNumber.substring(data.cardNumber.length - 4)}`
         : prev.cardNumber,
     }));
+    if (onUpdated) onUpdated();
   };
 
   return (
@@ -46,16 +52,16 @@ export default function FinancialInfoCard() {
 
       {/* Card Content */}
       <div className="flex-between">
-        <Row label="شماره شبا" value={financialInfo.shaba} />
-        <Row label="کارت بانکی جهت پرداخت" value={financialInfo.cardNumber} />
+        <Row label="شماره شبا" value={displayFinancial.shaba} />
+        <Row label="کارت بانکی جهت پرداخت" value={displayFinancial.cardNumber} />
       </div>
 
-      {/* Edit Modal */}
       <EditFinancialInfoModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        initialData={financialInfo}
+        initialData={displayFinancial}
         onSave={handleSave}
+        bankAccounts={bankAccounts}
       />
     </div>
   );

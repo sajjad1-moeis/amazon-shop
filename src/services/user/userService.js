@@ -146,6 +146,12 @@ export const userService = {
     return client.get("Users/GetVerificationStatus").json();
   },
 
+  /** POST api/Users/ChangePassword — تغییر رمز عبور کاربر جاری؛ پس از موفقیت توکن‌های جدید در data برمی‌گردد (Phase 19) */
+  changePassword: async (body) => {
+    const client = getAuthenticatedClient();
+    return client.post("Users/ChangePassword", { json: body }).json();
+  },
+
   chargeUserWallet: async (id, walletData) => {
     const client = getAuthenticatedClient();
     return client.post(`Users/ChargeUserWallet?id=${id}`, { json: walletData }).json();

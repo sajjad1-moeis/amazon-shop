@@ -10,8 +10,15 @@ import TwoFactorToggle from "./TwoFactorToggle";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { filterInputStyles } from "@/utils/filterStyles";
+import { useAuth } from "@/contexts/AuthContext";
+import { userService } from "@/services/user/userService";
 
-export default function EditSecurityModal({ isOpen, onClose }) {
+const MIN_PASSWORD_LENGTH = 6;
+const MAX_PASSWORD_LENGTH = 50;
+const PASSWORD_REGEX = /^(?=.*[a-zA-Z])(?=.*\d).+$/;
+
+export default function EditSecurityModal({ isOpen, onClose, onSave }) {
+  const { updateSession } = useAuth();
   const [formData, setFormData] = useState({
     currentPassword: "",
     newPassword: "",
@@ -24,15 +31,61 @@ export default function EditSecurityModal({ isOpen, onClose }) {
     new: false,
     confirm: false,
   });
+  const [loading, setLoading] = useState(false);
 
   const toggle = (key) => setShow((p) => ({ ...p, [key]: !p[key] }));
 
   const handleChange = (key, value) => setFormData((p) => ({ ...p, [key]: value }));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    toast.success("تغییرات با موفقیت ذخیره شد");
-    onClose();
+    const { currentPassword, newPassword, confirmPassword } = formData;
+    if (!currentPassword?.trim()) {
+      toast.error("رمز عبور فعلی الزامی است.");
+      return;
+    }
+    if (!newPassword?.trim()) {
+      toast.error("رمز عبور جدید الزامی است.");
+      return;
+    }
+    if (newPassword.length < MIN_PASSWORD_LENGTH || newPassword.length > MAX_PASSWORD_LENGTH) {
+      toast.error("رمز عبور جدید باید بین ۶ تا ۵۰ کاراکتر باشد.");
+      return;
+    }
+    if (!PASSWORD_REGEX.test(newPassword)) {
+      toast.error("رمز عبور جدید باید شامل حرف و عدد باشد.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast.error("تکرار رمز عبور جدید با رمز جدید یکسان نیست.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await userService.changePassword({
+        currentPassword: currentPassword.trim(),
+        newPassword: newPassword.trim(),
+      });
+      if (response?.success && response?.data) {
+        updateSession(response.data);
+        toast.success(response.message || "رمز عبور با موفقیت تغییر کرد.");
+        if (typeof onSave === "function") onSave({ twoFactorEnabled: formData.twoFactorEnabled });
+        setFormData({
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+          twoFactorEnabled: formData.twoFactorEnabled,
+        });
+        onClose();
+      } else {
+        toast.error(response?.message || "خطا در تغییر رمز عبور.");
+      }
+    } catch (err) {
+      const msg = err?.data?.message || err?.message || "خطا در تغییر رمز عبور.";
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -53,7 +106,9 @@ export default function EditSecurityModal({ isOpen, onClose }) {
                 type={show.current ? "text" : "password"}
                 placeholder="رمز عبور فعلی خود را وارد کنید ..."
                 className={cn("h-10 sm:h-12 bg-gray-50 pr-4 pl-10 text-sm", filterInputStyles)}
+                value={formData.currentPassword}
                 onChange={(e) => handleChange("currentPassword", e.target.value)}
+                disabled={loading}
               />
               <button
                 type="button"
@@ -78,7 +133,9 @@ export default function EditSecurityModal({ isOpen, onClose }) {
                   type={show.new ? "text" : "password"}
                   placeholder="رمز عبور جدید را وارد کنید ..."
                   className={cn("h-10 sm:h-12 bg-gray-50 pr-4 pl-10 text-sm", filterInputStyles)}
+                  value={formData.newPassword}
                   onChange={(e) => handleChange("newPassword", e.target.value)}
+                  disabled={loading}
                 />
                 <button
                   type="button"
@@ -101,7 +158,9 @@ export default function EditSecurityModal({ isOpen, onClose }) {
                   type={show.confirm ? "text" : "password"}
                   placeholder="تکرار رمز عبور جدید ..."
                   className={cn("h-10 sm:h-12 bg-gray-50 pr-4 pl-10 text-sm", filterInputStyles)}
+                  value={formData.confirmPassword}
                   onChange={(e) => handleChange("confirmPassword", e.target.value)}
+                  disabled={loading}
                 />
                 <button
                   type="button"
@@ -135,9 +194,10 @@ export default function EditSecurityModal({ isOpen, onClose }) {
             </Button>
             <Button
               type="submit"
+              disabled={loading}
               className="bg-primary-600 w-full hover:bg-primary-700 text-white text-sm sm:text-base"
             >
-              ذخیره تغییرات
+              {loading ? "در حال تغییر..." : "ذخیره تغییرات"}
             </Button>
           </DialogFooter>
         </form>

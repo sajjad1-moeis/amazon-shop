@@ -1,4 +1,5 @@
-import { getAuthenticatedClient } from "../api/client";
+import { getAuthenticatedClient, API_BASE_URL } from "../api/client";
+import { getToken } from "@/lib/token-manager";
 
 /**
  * Phase 9: api/Invoice — CreateInvoiceFromOrder, GetInvoiceById, GetInvoiceByInvoiceNumber,
@@ -102,5 +103,41 @@ export const invoiceService = {
   getTotalPaidInvoiceAmount: async () => {
     const client = getAuthenticatedClient();
     return client.get("Invoice/GetTotalPaidInvoiceAmount").json();
+  },
+
+  /**
+   * GET api/Invoice/Download?orderId=... یا ?invoiceId=... — دانلود فاکتور به‌صورت فایل (Phase 19).
+   * پاسخ موفق: فایل با Content-Disposition؛ خطا: JSON با message.
+   * @param {{ orderId?: number, invoiceId?: number }} params — حداقل یکی الزامی
+   * @returns {{ blob: Blob, filename: string }}
+   */
+  downloadInvoice: async (params = {}) => {
+    const { orderId, invoiceId } = params;
+    if (orderId == null && invoiceId == null) {
+      throw new Error("Either orderId or invoiceId is required");
+    }
+    const qs = new URLSearchParams();
+    if (orderId != null) qs.append("orderId", String(orderId));
+    if (invoiceId != null) qs.append("invoiceId", String(invoiceId));
+    const token = getToken();
+    if (!token) throw new Error("Access token not found");
+    const url = `${API_BASE_URL}/Invoice/Download?${qs.toString()}`;
+    const res = await fetch(url, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) {
+      const contentType = res.headers.get("Content-Type") || "";
+      if (contentType.includes("application/json")) {
+        const errBody = await res.json();
+        throw new Error(errBody.message || "دانلود فاکتور ناموفق بود");
+      }
+      throw new Error("دانلود فاکتور ناموفق بود");
+    }
+    const blob = await res.blob();
+    const disposition = res.headers.get("Content-Disposition") || "";
+    const match = disposition.match(/filename="?([^";\s]+)"?/);
+    const filename = match ? match[1].trim() : "invoice.json";
+    return { blob, filename };
   },
 };

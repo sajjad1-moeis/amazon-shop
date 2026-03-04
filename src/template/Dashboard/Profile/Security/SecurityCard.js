@@ -7,19 +7,18 @@ import EditSecurityModal from "./EditSecurityModal";
 import ConnectedDevicesModal from "./ConnectedDevicesModal";
 import { Row } from "../BasicInfo/BasicInfoCard";
 
-const securityData = {
+const defaultSecurityData = {
   password: "******",
-  twoFactorAuth: "active",
   twoFactorAuthText: "فعال",
   activeDevices: 1,
   activeDevicesText: "۱ دستگاه متصل",
-  lastPasswordChange: "۳ ماه پیش",
+  lastPasswordChange: "—",
 };
 
-export default function SecurityCard() {
+export default function SecurityCard({ data: dataProp }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDevicesModalOpen, setIsDevicesModalOpen] = useState(false);
-  const [securityInfo, setSecurityInfo] = useState(securityData);
+  const [securityInfo, setSecurityInfo] = useState(defaultSecurityData);
 
   const handleSave = (data) => {
     setSecurityInfo((prev) => ({
@@ -27,6 +26,8 @@ export default function SecurityCard() {
       twoFactorAuthText: data.twoFactorEnabled ? "فعال" : "غیرفعال",
     }));
   };
+
+  const info = dataProp ?? securityInfo;
 
   return (
     <div className="bg-white dark:bg-dark-box rounded-2xl shadow-box p-4">
@@ -49,18 +50,18 @@ export default function SecurityCard() {
 
       {/* Card Content */}
       <div className=" grid grid-cols-2 md:flex lg:grid xl:flex flex-row sm:items-center sm:justify-between gap-4 sm:gap-5">
-        <Row label="رمز عبور" value={securityInfo.password} className="w-full sm:w-auto" />
-        <Row label="تأیید دو مرحله ای" value={securityInfo.twoFactorAuthText} className="w-full sm:w-auto" />
+        <Row label="رمز عبور" value={info.password ?? "******"} className="w-full sm:w-auto" />
+        <Row label="تأیید دو مرحله ای" value={info.twoFactorAuthText} className="w-full sm:w-auto" />
         <div className="flex flex-col items-start">
           <span
             onClick={() => setIsDevicesModalOpen(true)}
             className="text-xs sm:text-sm font-medium text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 p-0 h-auto cursor-pointer"
           >
-            {securityInfo.activeDevices} دستگاه متصل
+            {info.activeDevicesText ?? `${info.activeDevices ?? 0} دستگاه متصل`}
           </span>
           <p className="text-xs  text-gray-400 dark:text-caption mt-1 sm:mt-2">تعداد دستگاه‌های فعال</p>
         </div>
-        <Row label={"آخرین تغییر رمز"} value={securityInfo.lastPasswordChange} className="w-full sm:w-auto" />
+        <Row label="آخرین تغییر رمز" value={info.lastPasswordChange} className="w-full sm:w-auto" />
       </div>
 
       {/* Edit Modal */}

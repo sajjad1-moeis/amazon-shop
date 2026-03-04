@@ -233,6 +233,13 @@ export const AuthProvider = ({ children }) => {
 
   const getAuthToken = () => getToken();
 
+  /** به‌روزرسانی سشن پس از تغییر رمز — ذخیره توکن جدید و کاربر (Phase 19) */
+  const updateSession = (data) => {
+    const token = data?.tokens?.accessToken || data?.tokens?.token || data?.accessToken || data?.token;
+    if (token) saveToken(token);
+    if (data?.user) setUser(data.user);
+  };
+
   /* ---------- Context Value ---------- */
 
   const value = useMemo(
@@ -249,6 +256,7 @@ export const AuthProvider = ({ children }) => {
       resendOtp,
       logout,
       getAuthToken,
+      updateSession,
     }),
     [user, loading]
   );
