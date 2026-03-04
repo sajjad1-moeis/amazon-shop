@@ -98,19 +98,6 @@ export function getProductImageAlt(product) {
   );
 }
 
-/**
- * متن alt تصویر محصول — دیتابیس: imageAlt, seoImageAlt؛ اسکرپر: image_alt؛ وگرنه نام محصول
- */
-export function getProductImageAlt(product) {
-  return (
-    product?.imageAlt ??
-    product?.seoImageAlt ??
-    product?.image_alt ??
-    product?.ImageAlt ??
-    getProductName(product)
-  );
-}
-
 const NO_TITLE_FA = "بدون عنوان";
 
 /**
