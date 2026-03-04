@@ -538,7 +538,7 @@ export default function ProductDetailPage({ params }) {
             <div className="col-span-12 lg:col-span-6 xl:col-span-5 order-2 lg:order-2 space-y-6">
               <div>
                 <h1 className="md:text-2xl text-gray-900 dark:text-dark-titre mb-2 text-right">
-                  {product?.title || product?.name || "نام محصول"}
+                  {getProductName(product)}
                 </h1>
                 {getDisplayBrand(product) && (
                   <p className="text-sm text-gray-500 dark:text-dark-text mb-1 text-right">

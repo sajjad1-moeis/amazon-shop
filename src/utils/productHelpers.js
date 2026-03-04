@@ -97,11 +97,36 @@ export function getProductImageAlt(product) {
   );
 }
 
+const NO_TITLE_FA = "بدون عنوان";
+
 /**
- * Get product name (fallback to title) — اسکرپر: title
+ * عنوان نمایشی از واریانت‌ها (سایز/رنگ/استایل) وقتی API عنوان خالی برمی‌گرداند.
+ */
+function getTitleFromVariationDimensions(product) {
+  const dims = product?.variation_dimensions ?? product?.variations ?? product?.variationDimensions;
+  if (!dims || typeof dims !== "object") return "";
+  const currentAsin = (product?.asin ?? product?.amazonASIN ?? product?.ASIN ?? "").toString().trim();
+  if (!currentAsin) return "";
+  const labels = [];
+  for (const dim of Object.values(dims)) {
+    if (!dim?.options || !Array.isArray(dim.options)) continue;
+    const opt = dim.options.find((o) => (o.asin || "").toString().trim() === currentAsin);
+    if (opt?.label) labels.push(opt.label);
+  }
+  return labels.length ? labels.join(" — ") : "";
+}
+
+/**
+ * Get product name (fallback to title) — اسکرپر: title.
+ * اگر عنوان خالی یا «بدون عنوان» باشد، از برچسب واریانت (سایز/رنگ) استفاده می‌کند.
  */
 export function getProductName(product) {
-  return product?.name || product?.title || "محصول";
+  const raw = product?.name || product?.title || "";
+  const t = typeof raw === "string" ? raw.trim() : "";
+  if (t && t !== NO_TITLE_FA) return raw;
+  const fromVariations = getTitleFromVariationDimensions(product);
+  if (fromVariations) return fromVariations;
+  return t === NO_TITLE_FA ? fromVariations || "محصول" : "محصول";
 }
 
 /**
