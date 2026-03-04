@@ -85,6 +85,19 @@ export function getProductUrl(productId) {
 }
 
 /**
+ * متن alt تصویر محصول — دیتابیس: imageAlt, seoImageAlt؛ اسکرپر: image_alt؛ وگرنه نام محصول
+ */
+export function getProductImageAlt(product) {
+  return (
+    product?.imageAlt ??
+    product?.seoImageAlt ??
+    product?.image_alt ??
+    product?.ImageAlt ??
+    getProductName(product)
+  );
+}
+
+/**
  * Get product name (fallback to title) — اسکرپر: title
  */
 export function getProductName(product) {
@@ -127,17 +140,22 @@ export function getProductDescription(product) {
 }
 
 /**
- * Get breadcrumb items for product — اسکرپر: category_path_str یا category
+ * Get breadcrumb items for product
+ * دیتابیس: primaryCategoryName, categoryName, parentCategoryName
+ * اسکرپر: category_path_str (مثلاً "الکترونیک > موبایل > گوشی") یا category
  */
 export function getBreadcrumbItems(product) {
   const pathStr = product?.category_path_str;
+  const fromPath = pathStr ? pathStr.split(" > ").pop()?.trim() || pathStr : null;
   const category =
-    product?.categoryName ||
-    product?.category ||
-    (pathStr ? pathStr.split(" > ").pop()?.trim() || pathStr : null) ||
+    product?.primaryCategoryName ??
+    product?.categoryName ??
+    product?.category ??
+    fromPath ??
     "کالای دیجیتال";
+  const parentLabel = product?.parentCategoryName ?? "کالای دیجیتال";
   return [
-    { label: product?.parentCategoryName || "کالای دیجیتال", href: "/categories" },
+    { label: parentLabel, href: "/categories" },
     { label: category, href: "/categories" },
     { label: getProductName(product) },
   ];

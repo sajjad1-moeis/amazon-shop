@@ -240,8 +240,8 @@ function ProductCard({ className, product, badges }) {
           style={{ boxShadow: "0px 2px 4px 0px #0000001A" }}
         >
           {/* Product Image */}
-          <div className="relative aspect-square flex-shrink-0">
-            <Image src={image} alt={title} fill className="object-cover rounded-t-xl" />
+          <div className="relative aspect-square flex-shrink-0 bg-gray-50 dark:bg-dark-field overflow-hidden">
+            <Image src={image} alt={title} fill className="object-contain rounded-t-xl" />
 
             {/* Badges - Top of Image */}
             {productBadges && productBadges.length > 0 && (

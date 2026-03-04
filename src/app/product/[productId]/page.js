@@ -11,18 +11,19 @@ import RelatedSlider from "@/template/Product/RelatedSlider";
 import AccessoriesSlider from "@/template/Product/AccessoriesSlider";
 import BreadCrump from "@/template/Product/BreadCrump";
 import ProductClientWrapper from "@/template/Product/ProductClientWrapper";
+import ProductVariationDimensions from "@/template/Product/ProductVariationDimensions";
 import { Button } from "@/components/ui/button";
 import { productService } from "@/services/product/productService";
 import {
   getProductName,
   getMainImage,
   getProductImages,
+  getProductImageAlt,
   getBreadcrumbItems,
   getBasePrice,
   getProductDescription,
   getDisplayBrand,
   parseProductNum,
-  generateProductSchema,
 } from "@/utils/productHelpers";
 import { prefetchScraperDetails, getScraperDetailsCached } from "@/utils/scraperPrefetch";
 import { useAuth } from "@/contexts/AuthContext";
@@ -39,7 +40,7 @@ export default function ProductDetailPage({ params }) {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [detailsEnriching, setDetailsEnriching] = useState(false);
+  const [imagesEnriching, setImagesEnriching] = useState(false);
   const [selectedColor, setSelectedColor] = useState("navy");
   const [selectedDelivery, setSelectedDelivery] = useState("express");
   const [selectedImage, setSelectedImage] = useState(0);
@@ -102,6 +103,17 @@ export default function ProductDetailPage({ params }) {
     }
 
     // پارامتر ASIN است (مثلاً از کلیک روی نتایج اسکرپ) — اول لود کامل (عکس‌ها + جزئیات)، بعد یک‌بار ذخیره
+    const readSessionPayload = () => {
+      try {
+        const raw = typeof sessionStorage !== "undefined" ? sessionStorage.getItem(`scraperProduct_${productId}`) : null;
+        return raw ? JSON.parse(raw) : null;
+      } catch (_) {
+        return null;
+      }
+    };
+    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+    const isAsinFormat = (id) => /^[A-Z0-9]{10}$/.test(String(id || ""));
+
     productService
       .getByASIN(productId)
       .then((response) => {
@@ -112,16 +124,64 @@ export default function ProductDetailPage({ params }) {
       })
       .catch(() => {
         if (cancelled) return;
-        let payload = null;
-        try {
-          const raw = typeof sessionStorage !== "undefined" ? sessionStorage.getItem(`scraperProduct_${productId}`) : null;
-          if (raw) payload = JSON.parse(raw);
-        } catch (_) {}
+        let payload = readSessionPayload();
+        // رفع ریس: گاهی بعد از کلیک از نتایج جستجو، sessionStorage یک لحظه دیر ست می‌شود
         if (!payload?.asin) {
+          return wait(280).then(() => {
+            if (cancelled) return null;
+            payload = readSessionPayload();
+            return payload;
+          });
+        }
+        return Promise.resolve(payload);
+      })
+      .then((payload) => {
+        if (cancelled) return;
+        if (!payload?.asin) {
+          // هنوز نداشتیم — اگر آدرس شبیه ASIN است مستقیم از اسکرپر لود کن
+          if (isAsinFormat(productId)) {
+            return (productService.getScraperProductDetails(productId) || Promise.resolve(null)).then((detailsRes) => {
+              if (cancelled) return null;
+              if (!detailsRes?.success) {
+                fail("محصول یافت نشد");
+                done();
+                return null;
+              }
+              const d = detailsRes;
+              const payload = {
+                asin: productId,
+                title: d.title ?? d.name,
+                brand: d.brand,
+                current_price: d.current_price ?? d.price ?? d.discountPrice,
+                original_price: d.original_price ?? d.price,
+                image_url: d.image_url ?? d.mainImage ?? (Array.isArray(d.images) ? d.images[0] : null),
+                image_url_hq: d.image_url_hq ?? d.image_url,
+                images: Array.isArray(d.images) ? d.images : undefined,
+                image_urls: Array.isArray(d.image_urls) ? d.image_urls : d.images,
+                product_url: d.product_url ?? d.amazonUrl,
+                rating: d.rating,
+                reviews_count: d.reviews_count ?? d.reviewCount,
+                category: d.category ?? d.category_path_str,
+                currency: d.currency ?? d.currency_symbol,
+                seller: d.seller,
+                amazonShopName: d.amazonShopName,
+                description: d.description ?? d.shortDescription,
+                attributes: d.attributes,
+                reviews: d.reviews,
+              };
+              if (d.variation_dimensions && Object.keys(d.variation_dimensions).length > 0)
+                payload.variation_dimensions = d.variation_dimensions;
+              return payload;
+            });
+          }
           fail("محصول یافت نشد");
           done();
-          return;
+          return null;
         }
+        return payload;
+      })
+      .then((payload) => {
+        if (cancelled || !payload?.asin) return;
         // صبر برای لود کامل: اول جزئیات را بگیر؛ اگر ناقص بود چند ثانیه صبر کن و دوباره بگیر؛ کامل‌ترین پاسخ را استفاده کن، بعد ذخیره
         const FULL_DETAILS_WAIT_MS = 5000;
         const isDetailsComplete = (d) => {
@@ -138,8 +198,7 @@ export default function ProductDetailPage({ params }) {
         };
         const fetchDetails = () =>
           productService.getScraperProductDetails(productId) || prefetchScraperDetails(productId) || Promise.resolve(null);
-        const wait = (ms) => new Promise((r) => setTimeout(r, ms));
-        fetchDetails()
+        return fetchDetails()
           .then((first) => {
             if (cancelled) return null;
             if (isDetailsComplete(first)) return first;
@@ -174,6 +233,8 @@ export default function ProductDetailPage({ params }) {
               if (details.weight_kg != null) fullPayload.weight_kg = details.weight_kg;
               if (details.weight_category) fullPayload.weight_category = details.weight_category;
               if (details.dimensions) fullPayload.dimensions = details.dimensions;
+              if (details.variation_dimensions && Object.keys(details.variation_dimensions).length > 0)
+                fullPayload.variation_dimensions = details.variation_dimensions;
             }
             return productService.saveIfNotExistsFromScraper(fullPayload).then((res) => ({ res, fullPayload }));
           })
@@ -189,7 +250,11 @@ export default function ProductDetailPage({ params }) {
             if (res?.success && savedId != null) {
               return productService.getById(savedId).then((response) => ({ response, payload: fullPayload }));
             }
-            throw new Error("ذخیره محصول انجام نشد");
+            // اگر سرور savedId برنگرداند (مثلاً محصول از قبل وجود داشته)، باز هم جزئیات (ازجمله variation_dimensions) را روی state اعمال کن
+            if (fullPayload && typeof fullPayload === "object") {
+              setProduct((prev) => (prev ? { ...prev, ...fullPayload } : prev));
+            }
+            return null;
           })
           .then((data) => {
             if (cancelled || !data) return;
@@ -213,6 +278,8 @@ export default function ProductDetailPage({ params }) {
               if (payload.weight_kg != null) dto.weight_kg = payload.weight_kg;
               if (payload.weight_category) dto.weight_category = payload.weight_category;
               if (payload.dimensions) dto.dimensions = payload.dimensions;
+              if (payload.variation_dimensions && Object.keys(payload.variation_dimensions).length > 0)
+                dto.variation_dimensions = payload.variation_dimensions;
               if (payload.product_url) dto.amazonUrl = dto.amazonUrl || payload.product_url;
             }
             applyProduct(dto);
@@ -253,7 +320,13 @@ export default function ProductDetailPage({ params }) {
 
   const isAsinInUrl = productId && !/^\d+$/.test(String(productId));
   const dataSource = isAsinInUrl ? "scraper" : "db";
-  const asinForScraper = isAsinInUrl ? productId : (product?.asin ?? null);
+  const asinFromProduct =
+    product?.asin ??
+    product?.amazonASIN ??
+    product?.ASIN ??
+    (Array.isArray(product?.attributes) && product.attributes.find((a) => (a?.name || "").toUpperCase() === "ASIN")?.value) ??
+    null;
+  const asinForScraper = isAsinInUrl ? productId : asinFromProduct;
 
   // فقط details را از اول صدا بزن (یک درخواست؛ عکس‌ها داخل همان پاسخ هستند)
   useEffect(() => {
@@ -270,7 +343,7 @@ export default function ProductDetailPage({ params }) {
 
   const mergeDetailsIntoProduct = (res) => {
     if (!res?.success) return;
-    setDetailsEnriching(false);
+    setImagesEnriching(false);
     setProduct((prev) => {
       if (!prev) return prev;
       const next = { ...prev };
@@ -289,12 +362,14 @@ export default function ProductDetailPage({ params }) {
       if (res.weight_kg != null) next.weight_kg = res.weight_kg;
       if (res.weight_category) next.weight_category = res.weight_category;
       if (res.dimensions) next.dimensions = res.dimensions;
+      if (res.variation_dimensions && Object.keys(res.variation_dimensions).length > 0)
+        next.variation_dimensions = res.variation_dimensions;
       return next;
     });
   };
 
+  // انریچ با جزئیات اسکرپر (عکس، توضیحات، variation_dimensions) — هم برای لود با ASIN هم برای لود با ID عددی وقتی asin داریم
   useEffect(() => {
-    if (dataSource !== "scraper") return;
     if (!product || loading) return;
     if (!asinForScraper || detailsEnrichedAsinRef.current === asinForScraper) return;
     detailsEnrichedAsinRef.current = asinForScraper;
@@ -304,10 +379,10 @@ export default function ProductDetailPage({ params }) {
       mergeDetailsIntoProduct(cached);
       return;
     }
-    setDetailsEnriching(true);
+    setImagesEnriching(true);
     (isAsinInUrl ? detailsPromiseRef.current : prefetchScraperDetails(asinForScraper))?.then((res) => {
       if (detailsEnrichedAsinRef.current === targetAsin) mergeDetailsIntoProduct(res);
-    }).catch(() => setDetailsEnriching(false));
+    }).catch(() => setImagesEnriching(false));
   }, [product, loading, productId, asinForScraper, isAsinInUrl, dataSource]);
 
   // وقتی محصول با ID بارگذاری شده ولی در DB ناقص است (فقط یک عکس، بدون توضیحات کامل) — جزئیات را از اسکرپر بگیر و در DB ذخیره کن
@@ -339,6 +414,8 @@ export default function ProductDetailPage({ params }) {
               if (res.reviews_count != null) next.reviews_count = res.reviews_count;
               if (res.rating != null) next.rating = res.rating;
               if (res.brand != null && String(res.brand).trim()) next.brand = String(res.brand).trim();
+              if (res.variation_dimensions && Object.keys(res.variation_dimensions).length > 0)
+                next.variation_dimensions = res.variation_dimensions;
               next.isFullStored = true;
               return next;
             });
@@ -406,7 +483,9 @@ export default function ProductDetailPage({ params }) {
   const productImages = getProductImages(product);
   const mainImage = getMainImage(product);
   const breadcrumbItems = getBreadcrumbItems(product);
-  const productSchema = generateProductSchema(product, productId);
+  const variationDimensions =
+    product?.variation_dimensions ?? product?.variations ?? product?.variationDimensions ?? null;
+  const hasVariations = variationDimensions && typeof variationDimensions === "object" && Object.keys(variationDimensions).length > 0;
   // برای سبد خرید و درگاه پرداخت همیشه id عددی دیتابیس لازم است (در محدوده int32)
   const rawNumId = /^\d+$/.test(String(productId)) ? Number(productId) : null;
   const safeNumId = rawNumId != null && rawNumId <= 2147483647 && rawNumId >= -2147483648 ? rawNumId : null;
@@ -428,11 +507,6 @@ export default function ProductDetailPage({ params }) {
 
   return (
     <IndexLayout>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
-      />
-
       <div className="min-h-screen bg-gray-50 dark:bg-transparent" dir="rtl">
         <BreadCrump items={breadcrumbItems} />
 
@@ -455,7 +529,8 @@ export default function ProductDetailPage({ params }) {
                 productId={numericProductId ?? productId}
                 mainImage={mainImage}
                 productImages={productImages}
-                imagesLoading={detailsEnriching}
+                imageAlt={getProductImageAlt(product)}
+                imagesLoading={imagesEnriching}
                 renderGalleryOnly={true}
               />
             </div>
@@ -493,6 +568,16 @@ export default function ProductDetailPage({ params }) {
                     </span>
                   )}
                 </div>
+                {hasVariations && (
+                  <ProductVariationDimensions
+                    variationDimensions={variationDimensions}
+                    currentAsin={
+                      typeof productId === "string" && /^[A-Z0-9]{10}$/i.test(productId)
+                        ? productId
+                        : product?.asin ?? product?.amazonASIN ?? product?.ASIN
+                    }
+                  />
+                )}
                 {description && (
                   <div className="mb-6">
                     <h3 className="mb-2 text-gray-800 dark:text-dark-titre md:text-lg text-right">
@@ -600,7 +685,8 @@ export default function ProductDetailPage({ params }) {
                     productId={numericProductId ?? productId}
                     mainImage={mainImage}
                     productImages={productImages}
-                    imagesLoading={detailsEnriching}
+                    imageAlt={getProductImageAlt(product)}
+                    imagesLoading={imagesEnriching}
                     renderPurchaseOnly={true}
                   />
                 </div>

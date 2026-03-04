@@ -117,12 +117,12 @@ function ProductRowCard({ product }) {
     <div className="group relative">
       <Card className="rounded-xl border overflow-hidden border-gray-200 dark:border-dark-field  dark:bg-dark-box shadow-sm hover:shadow-md transition p-0">
         <div className="p-3 grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="relative aspect-square max-h-48 md:max-h-64 w-full max-w-[200px] md:max-w-none mx-auto md:mx-0">
+          <div className="relative aspect-square max-h-48 md:max-h-64 w-full max-w-[200px] md:max-w-none mx-auto md:mx-0 bg-gray-50 dark:bg-dark-field overflow-hidden">
             <Image
               src={image}
               alt={title}
               fill
-              className="object-cover rounded-md"
+              className="object-contain rounded-md"
               sizes="(max-width: 768px) 50vw, 240px"
             />
           </div>
