@@ -19,8 +19,8 @@ const returnStatusOptions = [
 ];
 
 export default function ReturnRequestsFilter({ filters, onFiltersChange, placeholder }) {
-  const handleFilterChange = (name, value) => {
-    onFiltersChange((prev) => ({ ...prev, [name]: value === "all" ? "" : value }));
+  const handleFilterChange = (key, value) => {
+    onFiltersChange(key, value);
   };
 
   return (

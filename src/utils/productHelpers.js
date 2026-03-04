@@ -78,10 +78,24 @@ export function getAbsoluteImageUrls(imageUrls) {
 }
 
 /**
- * Get product URL
+ * Get product URL (با trailing slash طبق سند ۲)
  */
 export function getProductUrl(productId) {
-  return `${SITE_URL}/product/${productId}`;
+  const base = SITE_URL.replace(/\/$/, "");
+  return `${base}/product/${productId}/`;
+}
+
+/**
+ * متن alt تصویر محصول — سند ۱: از فیلد سئو/داده (imageAlt, seoImageAlt) یا نام محصول
+ */
+export function getProductImageAlt(product) {
+  return (
+    product?.imageAlt ??
+    product?.seoImageAlt ??
+    product?.image_alt ??
+    product?.ImageAlt ??
+    getProductName(product)
+  );
 }
 
 /**
@@ -241,7 +255,21 @@ export function getBasePrice(product) {
 }
 
 /**
- * Generate Product JSON-LD schema
+ * سند ۳: شناسه sku = ASIN؛ availability از وضعیت ناموجود
+ */
+function getProductAvailability(product) {
+  const unavailable =
+    product?.isUnavailable === true ||
+    product?.IsUnavailable === true ||
+    product?.available === false ||
+    product?.status === "unavailable";
+  const inStock =
+    product?.isInStock ?? product?.is_in_stock ?? product?.inStock ?? true;
+  return unavailable || !inStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock";
+}
+
+/**
+ * Generate Product JSON-LD schema — سند ۳: name, image, sku=ASIN, brand, offers با IRR و availability
  */
 export function generateProductSchema(product, productId) {
   const productImages = getProductImages(product);
@@ -250,8 +278,7 @@ export function generateProductSchema(product, productId) {
   const oneYearLater = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
 
   const priceVal = getBasePrice(product);
-  const inStock =
-    product?.isInStock ?? product?.is_in_stock ?? product?.inStock ?? true;
+  const availability = getProductAvailability(product);
 
   const schema = {
     "@context": "https://schema.org",
@@ -261,24 +288,22 @@ export function generateProductSchema(product, productId) {
     image: getAbsoluteImageUrls(productImages),
     brand: {
       "@type": "Brand",
-      name: product?.brandName || product?.brand || "نامشخص",
+      name: product?.brandName ?? product?.brand ?? "نامشخص",
     },
-    category: product?.categoryName || product?.category || "",
-    sku: product?.id || product?.asin || productId,
-    mpn: product?.id || product?.asin || productId,
+    category: product?.categoryName ?? product?.category ?? "",
+    sku: product?.asin ?? product?.amazonASIN ?? product?.id ?? productId,
+    mpn: product?.id ?? product?.asin ?? productId,
     offers: {
       "@type": "Offer",
       url: productUrl,
       priceCurrency: "IRR",
       price: String(priceVal),
       priceValidUntil: oneYearLater,
-      availability: inStock
-        ? "https://schema.org/InStock"
-        : "https://schema.org/OutOfStock",
+      availability,
       itemCondition: "https://schema.org/NewCondition",
       seller: {
         "@type": "Organization",
-        name: product?.seller || "میکرولس",
+        name: product?.seller ?? "میکرولس",
       },
     },
   };
@@ -296,6 +321,34 @@ export function generateProductSchema(product, productId) {
   }
 
   return schema;
+}
+
+/**
+ * سند ۳: BreadcrumbList JSON-LD — Home > Cat > SubCat > Product برای گوگل
+ * @param {Array<{ label: string, href?: string }>} items
+ * @param {string} currentPageUrl - آدرس کامل صفحه فعلی (برای آیتم آخر بدون href)
+ */
+export function generateBreadcrumbListSchema(items, currentPageUrl) {
+  const base = SITE_URL.replace(/\/$/, "");
+  if (!items || items.length === 0) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.label,
+      item: item.href ? `${base}${item.href.startsWith("/") ? "" : "/"}${item.href}` : currentPageUrl,
+    })),
+  };
+}
+
+/**
+ * سند ۳: لینک به صفحه برند برای Auto-Interlinking — /products?brand=
+ */
+export function getBrandUrl(brand) {
+  if (!brand || typeof brand !== "string") return "/products/";
+  return `/products/?brand=${encodeURIComponent(brand.trim())}`;
 }
 
 /**

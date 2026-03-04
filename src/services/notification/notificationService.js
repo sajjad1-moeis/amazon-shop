@@ -79,4 +79,10 @@ export const notificationService = {
     const qs = new URLSearchParams({ userId: String(userId), type: String(type) });
     return client.get(`Notification/GetNotificationsByType?${qs.toString()}`).json();
   },
+
+  /** POST api/Notification/DeleteAll — حذف همه اعلان‌ها — Phase 18 */
+  deleteAll: async () => {
+    const client = getAuthenticatedClient();
+    return client.post("Notification/DeleteAll").json();
+  },
 };

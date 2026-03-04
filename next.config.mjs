@@ -3,6 +3,9 @@ const nextConfig = {
   reactStrictMode: false,
   reactCompiler: true,
 
+  // سند فنی ۲: یکپارچگی آدرس‌ها و ریدایرکت با trailing slash
+  trailingSlash: true,
+
   // Enable standalone output only for Docker (not for Vercel)
   // Vercel handles deployment automatically, standalone is not needed
   ...(process.env.VERCEL ? {} : { output: "standalone" }),

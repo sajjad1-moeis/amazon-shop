@@ -16,6 +16,9 @@ export const metadata = {
   title: "میکرولس | خرید مطمئن از آمازون",
   description:
     "میکرولس پلتفرم مطمئن خرید از آمازون آمریکا و امارات با ارسال سریع به ایران، پشتیبانی واقعی و تضمین اصالت کالا.",
+  icons: {
+    icon: "/image/Frame.png",
+  },
 };
 
 export const viewport = {

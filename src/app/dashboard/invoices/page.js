@@ -53,7 +53,7 @@ export default function InvoicesPage() {
   };
 
   const filteredInvoices = useMemo(() => {
-    let list = invoices;
+    let list = [...invoices];
     if (filters.searchQuery?.trim()) {
       const q = filters.searchQuery.trim().toLowerCase();
       list = list.filter(
@@ -62,8 +62,45 @@ export default function InvoicesPage() {
           String(inv.orderNumber ?? "").toLowerCase().includes(q)
       );
     }
+    if (filters.dateRange) {
+      const now = new Date();
+      let from = null;
+      if (filters.dateRange === "today") {
+        from = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      } else if (filters.dateRange === "week") {
+        from = new Date(now);
+        from.setDate(from.getDate() - 7);
+      } else if (filters.dateRange === "month") {
+        from = new Date(now);
+        from.setMonth(from.getMonth() - 1);
+      } else if (filters.dateRange === "year") {
+        from = new Date(now);
+        from.setFullYear(from.getFullYear() - 1);
+      }
+      if (from) {
+        list = list.filter((inv) => {
+          const d = inv.issueDate ?? inv.date ?? inv.createdAt;
+          if (!d) return false;
+          const invDate = new Date(d);
+          return invDate >= from;
+        });
+      }
+    }
+    if (filters.sortBy === "newest") {
+      list.sort((a, b) => {
+        const da = new Date(a.issueDate ?? a.date ?? a.createdAt ?? 0).getTime();
+        const db = new Date(b.issueDate ?? b.date ?? b.createdAt ?? 0).getTime();
+        return db - da;
+      });
+    } else if (filters.sortBy === "oldest") {
+      list.sort((a, b) => {
+        const da = new Date(a.issueDate ?? a.date ?? a.createdAt ?? 0).getTime();
+        const db = new Date(b.issueDate ?? b.date ?? b.createdAt ?? 0).getTime();
+        return da - db;
+      });
+    }
     return list;
-  }, [invoices, filters.searchQuery]);
+  }, [invoices, filters.searchQuery, filters.dateRange, filters.sortBy]);
 
   if (userId == null) {
     return (

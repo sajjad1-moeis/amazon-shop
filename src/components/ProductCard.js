@@ -13,6 +13,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useCartCount } from "@/contexts/CartCountContext";
 import { shoppingCartService } from "@/services/shoppingCart/shoppingCartService";
 import { compareService } from "@/services/compare/compareService";
+import { userWishlistService } from "@/services/userWishlist/userWishlistService";
 import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -191,7 +192,7 @@ function ProductCard({ className, product, badges }) {
     }
   };
 
-  const handleWishlist = (e) => {
+  const handleWishlist = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     if (!user?.id) {
@@ -199,7 +200,16 @@ function ProductCard({ className, product, badges }) {
       router.push("/");
       return;
     }
-    router.push("/dashboard/favorites");
+    if (!hasNumericId || !productId) {
+      router.push(`/product/${hrefId}`);
+      return;
+    }
+    try {
+      await userWishlistService.addToWishlist(user.id, { productId: Number(productId) });
+      toast.success("به علاقه‌مندی‌ها اضافه شد");
+    } catch (err) {
+      toast.error(err?.message ?? "خطا در افزودن به علاقه‌مندی‌ها");
+    }
   };
 
   const handleCompare = async (e) => {

@@ -28,6 +28,9 @@ import {
 import { prefetchScraperDetails, getScraperDetailsCached } from "@/utils/scraperPrefetch";
 import { useAuth } from "@/contexts/AuthContext";
 import { userRecentViewService } from "@/services/userRecentView/userRecentViewService";
+import { applyProductSeoHead } from "@/utils/metadata";
+import NotFoundView from "@/components/NotFoundView";
+import { getNotFoundPreset } from "@/data/notFoundPresets";
 
 export default function ProductDetailPage({ params }) {
   const resolved = use(
@@ -311,6 +314,12 @@ export default function ProductDetailPage({ params }) {
     userRecentViewService.trackView(userId, { productId: numericId }).catch(() => {});
   }, [userId, product?.id, productId]);
 
+  // سئو: به‌روزرسانی title، meta description، canonical و robots طبق فیلدهای API (سند فنی)
+  useEffect(() => {
+    if (!product) return;
+    applyProductSeoHead(product);
+  }, [product]);
+
   // ==========================================
   // On-demand enrichment — فقط یک درخواست /details (عکس + توضیحات + برند + مشخصات)
   // مثل استراتژی عکس‌ها؛ همهٔ جزئیات با هم و سریع لود می‌شوند.
@@ -460,21 +469,18 @@ export default function ProductDetailPage({ params }) {
   }
 
   if (!product) {
+    const preset = getNotFoundPreset("product");
     return (
       <IndexLayout>
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-gray-600 dark:text-gray-400 mb-2">محصول یافت نشد</p>
-            {error && <p className="text-xs text-red-500 mb-4">{error}</p>}
-            <div className="flex flex-wrap gap-3 justify-center">
-              <Link href="/products">
-                <Button>بازگشت به لیست محصولات</Button>
-              </Link>
-              <Link href="/product-unavailable">
-                <Button variant="outline">صفحه کالای ناموجود</Button>
-              </Link>
-            </div>
-          </div>
+        <div className="container">
+          <NotFoundView
+            title={preset.title}
+            description={preset.description}
+            primaryButton={preset.primaryButton}
+            secondaryButton={preset.secondaryButton}
+            imageSrc={preset.imageSrc}
+            imageAlt={preset.imageAlt}
+          />
         </div>
       </IndexLayout>
     );
@@ -514,13 +520,23 @@ export default function ProductDetailPage({ params }) {
           <div className="sr-only">
             <Image
               src={mainImage}
-              alt={getProductName(product)}
+              alt={getProductImageAlt(product)}
               width={800}
               height={800}
               priority
               fetchPriority="high"
             />
           </div>
+
+          {/* سند ۱: وقتی کالا در آمازون لاک است — ۲۰۰ با پیام ناموجود (Soft 404 Prevention) */}
+          {(product?.isUnavailable === true ||
+            product?.IsUnavailable === true ||
+            product?.available === false ||
+            product?.status === "unavailable") && (
+            <div className="mb-4 rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 px-4 py-3 text-amber-800 dark:text-amber-200 text-sm text-right">
+              این کالا در حال حاضر ناموجود است.
+            </div>
+          )}
 
           <div className="grid grid-cols-12 gap-6">
             <div className="col-span-12 lg:col-span-3 xl:col-span-4 order-1 lg:order-1">

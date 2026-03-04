@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { Edit2, Lock1, Notification, NotificationBing } from "iconsax-reactjs";
+import { Edit2, NotificationBing } from "iconsax-reactjs";
 import EditNotificationSettingsModal from "./EditNotificationSettingsModal";
 import { Row } from "../BasicInfo/BasicInfoCard";
 
-const notificationData = {
-  notificationTypes: ["orders"], // فقط سفارش‌ها انتخاب شده
-  notificationMethods: ["site", "telegram"], // نوتیفیکیشن داخل سایت و تلگرام
-  telegramConnected: false, // تلگرام متصل نشده
+const defaultNotificationData = {
+  notificationTypes: ["orders"],
+  notificationMethods: ["site", "telegram"],
+  telegramConnected: false,
 };
 
 const getNotificationTypesText = (types) => {
@@ -32,12 +32,18 @@ const getNotificationMethodsText = (methods) => {
   return methods.map((method) => labels[method] || method).join(" / ");
 };
 
-export default function NotificationSettingsCard() {
+export default function NotificationSettingsCard({ data: dataProp, onUpdated }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [notificationInfo, setNotificationInfo] = useState(notificationData);
+  const [notificationInfo, setNotificationInfo] = useState(defaultNotificationData);
+
+  const displayNotification = useMemo(() => {
+    if (dataProp) return { ...defaultNotificationData, ...dataProp };
+    return { ...defaultNotificationData, ...notificationInfo };
+  }, [dataProp, notificationInfo]);
 
   const handleSave = (data) => {
     setNotificationInfo(data);
+    if (onUpdated) onUpdated();
   };
 
   return (
@@ -61,26 +67,25 @@ export default function NotificationSettingsCard() {
 
       {/* Card Content */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-5">
-        <Row label="نوع اعلان ها" value={getNotificationTypesText(notificationInfo.notificationTypes)} className="" />
+        <Row label="نوع اعلان ها" value={getNotificationTypesText(displayNotification.notificationTypes)} className="" />
         <Row
           label="روش دریافت نوتیفیکیشن"
-          value={getNotificationMethodsText(notificationInfo.notificationMethods)}
+          value={getNotificationMethodsText(displayNotification.notificationMethods)}
           className=""
         />
 
         <div className="text-xs sm:text-sm flex flex-col gap-1">
           <p className="mb-1 sm:mb-2 px-2 sm:px-3 py-1 w-max rounded-md dark:bg-green-900/30 dark:text-green-300 bg-green-100 text-green-700 text-xs font-medium">
-            {notificationInfo.telegramConnected ? "متصل شده" : "متصل نشده"}
+            {displayNotification.telegramConnected ? "متصل شده" : "متصل نشده"}
           </p>
           <p className="text-gray-400 dark:text-caption text-xs">اتصال به تلگرام</p>
         </div>
       </div>
 
-      {/* Edit Modal */}
       <EditNotificationSettingsModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        initialData={notificationInfo}
+        initialData={displayNotification}
         onSave={handleSave}
       />
     </div>

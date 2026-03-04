@@ -20,10 +20,7 @@ const trackingStatusOptions = [
 
 export default function FavoritesFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
-    onFiltersChange((prev) => ({
-      ...prev,
-      [key]: value === "all" ? "" : value,
-    }));
+    onFiltersChange(key, value);
   };
 
   return (
@@ -33,7 +30,7 @@ export default function FavoritesFilter({ filters, onFiltersChange }) {
         <FilterSearchInput
           value={filters.searchQuery || ""}
           onChange={(value) => handleFilterChange("searchQuery", value)}
-          placeholder="جستجو بر اساس نام محصول..."
+          placeholder="نام محصول..."
         />
 
         {/* Brand */}
@@ -58,7 +55,7 @@ export default function FavoritesFilter({ filters, onFiltersChange }) {
         <SortBySelect
           value={filters.sortBy || ""}
           onValueChange={(value) => handleFilterChange("sortBy", value)}
-          placeholder="مرتب سازی"
+          placeholder="مرتب‌سازی"
           includeAll={true}
         />
       </FilterSection>

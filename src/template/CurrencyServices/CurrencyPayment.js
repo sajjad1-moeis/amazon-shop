@@ -9,6 +9,10 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { currencyService } from "@/services/currency/currencyService";
+import { unwrapApiData } from "@/services/api/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   service: z.string().min(1, { message: "لطفاً سرویس را انتخاب کنید." }),
@@ -31,7 +35,10 @@ const services = [
 ];
 
 export default function CurrencyPaymentForm({ removeDesc }) {
+  const { user } = useAuth();
+  const userId = user?.id ?? user?.userId;
   const [amount, setAmount] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const exchangeRate = 114350; // نرخ ارز
 
   const form = useForm({
@@ -44,8 +51,29 @@ export default function CurrencyPaymentForm({ removeDesc }) {
     },
   });
 
-  const onSubmit = (values) => {
-    console.log(values);
+  const onSubmit = async (values) => {
+    if (!userId) {
+      toast.error("لطفاً وارد حساب کاربری شوید");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const data = await currencyService.create({
+        userId,
+        serviceType: values.service,
+        currencyType: values.currency,
+        amount: parseFloat(String(values.amount).replace(/,/g, "")) || 0,
+        description: values.description?.trim() || undefined,
+      });
+      const result = unwrapApiData(data);
+      toast.success("درخواست با موفقیت ثبت شد");
+      form.reset({ service: "", currency: "usd", amount: "", description: "" });
+      setAmount("");
+    } catch (err) {
+      toast.error(err?.message ?? "خطا در ثبت درخواست");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const calculateTotal = () => {
@@ -188,9 +216,10 @@ export default function CurrencyPaymentForm({ removeDesc }) {
           </div>
           <Button
             type="submit"
-            className="w-full  bg-yellow-400 hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600 text-gray-900 px-8 py-2 md:py-6 md:text-lg rounded-xl"
+            disabled={submitting}
+            className="w-full bg-yellow-400 hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600 text-gray-900 px-8 py-2 md:py-6 md:text-lg rounded-xl"
           >
-            پرداخت
+            {submitting ? "در حال ارسال..." : "پرداخت"}
           </Button>
         </form>
       </Form>

@@ -72,10 +72,15 @@ export default function NotificationsList() {
 
   const handleDeleteAll = () => setDeleteAllDialogOpen(true);
 
-  const handleDeleteAllConfirm = () => {
+  const handleDeleteAllConfirm = async () => {
     setDeleteAllDialogOpen(false);
-    setNotifications([]);
-    toast.success("همه اعلان‌ها حذف شدند");
+    try {
+      await notificationService.deleteAll();
+      setNotifications([]);
+      toast.success("همه اعلان‌ها حذف شدند");
+    } catch (e) {
+      toast.error(e?.message ?? "خطا در حذف اعلان‌ها");
+    }
   };
 
   const handleMarkAllAsRead = async () => {

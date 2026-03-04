@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,24 +14,67 @@ import {
   filterSelectTriggerStyles,
   filterSelectContentStyles,
 } from "@/utils/filterStyles";
+import { userBankAccountService } from "@/services/userBankAccount/userBankAccountService";
+import { userWalletService } from "@/services/userWallet/userWalletService";
+import { toast } from "sonner";
 
-const shabaNumbers = [
-  { id: "1", number: "IR123456789012345678901234" },
-  { id: "2", number: "IR987654321098765432109876" },
-];
-
-export default function WithdrawModal({ isOpen, onClose }) {
+export default function WithdrawModal({ isOpen, onClose, userId, onSuccess }) {
   const [amount, setAmount] = useState("");
-  const [shaba, setShaba] = useState("");
+  const [userBankAccountId, setUserBankAccountId] = useState("");
   const [description, setDescription] = useState("");
+  const [bankAccounts, setBankAccounts] = useState([]);
+  const [loadingAccounts, setLoadingAccounts] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    if (isOpen) {
+      setLoadingAccounts(true);
+      userBankAccountService
+        .getList()
+        .then((data) => {
+          const list = Array.isArray(data) ? data : data?.items ?? [];
+          setBankAccounts(list);
+          if (list.length && !userBankAccountId) {
+            setUserBankAccountId(String(list[0].id ?? list[0].userBankAccountId ?? ""));
+          }
+        })
+        .catch(() => {
+          setBankAccounts([]);
+          toast.error("خطا در دریافت لیست حساب‌های بانکی");
+        })
+        .finally(() => setLoadingAccounts(false));
+    }
+  }, [isOpen]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!amount || !shaba) {
+    if (!amount || !userBankAccountId) {
+      toast.error("مبلغ و شماره شبا را انتخاب کنید");
       return;
     }
-    // Handle withdraw logic here
-    onClose();
+    const numAmount = parseInt(String(amount).replace(/\D/g, ""), 10);
+    if (isNaN(numAmount) || numAmount <= 0) {
+      toast.error("مبلغ معتبر وارد کنید");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await userWalletService.requestWithdraw({
+        amount: numAmount,
+        userBankAccountId: Number(userBankAccountId) || userBankAccountId,
+        description: description?.trim() || undefined,
+      });
+      toast.success("درخواست برداشت با موفقیت ثبت شد");
+      onClose();
+      onSuccess?.();
+      setAmount("");
+      setUserBankAccountId("");
+      setDescription("");
+    } catch (err) {
+      toast.error(err?.message ?? "خطا در ثبت درخواست برداشت");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -63,18 +106,25 @@ export default function WithdrawModal({ isOpen, onClose }) {
             <Label htmlFor="shaba" className="text-sm font-medium text-gray-700 dark:text-dark-text">
               شماره شبا
             </Label>
-            <Select value={shaba} onValueChange={setShaba}>
+            <Select value={userBankAccountId} onValueChange={setUserBankAccountId} disabled={loadingAccounts}>
               <SelectTrigger id="shaba" className={cn("!w-full", filterSelectTriggerStyles)} dir="rtl">
-                <SelectValue placeholder="شماره شبا خود را انتخاب کنید" />
+                <SelectValue placeholder={loadingAccounts ? "در حال بارگذاری..." : "شماره شبا خود را انتخاب کنید"} />
               </SelectTrigger>
               <SelectContent className={filterSelectContentStyles} dir="rtl">
-                {shabaNumbers.map((shabaItem) => (
-                  <SelectItem key={shabaItem.id} value={shabaItem.id}>
-                    {shabaItem.number}
-                  </SelectItem>
-                ))}
+                {bankAccounts.map((acc) => {
+                  const id = String(acc.id ?? acc.userBankAccountId ?? "");
+                  const display = acc.iban ?? acc.shaba ?? acc.accountNumber ?? id;
+                  return (
+                    <SelectItem key={id} value={id}>
+                      {display}
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
+            {!loadingAccounts && bankAccounts.length === 0 && (
+              <p className="text-xs text-amber-600 dark:text-amber-400">هیچ حساب بانکی تأییدشده‌ای ثبت نشده است.</p>
+            )}
           </div>
 
           {/* Optional Description */}
@@ -103,8 +153,8 @@ export default function WithdrawModal({ isOpen, onClose }) {
             >
               لغو
             </Button>
-            <Button type="submit" className="bg-primary-600 w-full hover:bg-primary-700 text-white">
-              ثبت درخواست
+            <Button type="submit" disabled={submitting || bankAccounts.length === 0} className="bg-primary-600 w-full hover:bg-primary-700 text-white">
+              {submitting ? "در حال ارسال..." : "ثبت درخواست"}
             </Button>
           </DialogFooter>
         </form>

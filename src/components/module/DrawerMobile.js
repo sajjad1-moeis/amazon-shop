@@ -11,6 +11,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "..
 const blogPages = [
   { title: "صفحه اصلی", href: "/" },
   { title: "وبلاگ‌ها", href: "/blogs" },
+  { title: "پی‌پال", href: "/paypal-cashout" },
   { title: "محصولات", href: "/products" },
   { title: "دسته‌بندی‌ها", href: "/categories" },
   { title: "داشبورد", href: "/dashboard" },
@@ -25,6 +26,7 @@ const blogPages = [
 
 const shopLinks = [
   { title: "خرید از آمازون", href: "/shops/amazon" },
+  { title: "خرید اختصاصی آمازون", href: "/dashboard/exclusive-amazon" },
   { title: "خرید از ایبی", href: "/shops/ebay" },
   { title: "خرید از علی اکسپرس", href: "/shops/ali-express" },
   { title: "خرید از شین", href: "/shops/shein" },

@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 import IndexLayout from "@/layout/IndexLayout";
 import GuideArticle from "@/template/Blog/GuideArticle";
 import ReviewsAndShare from "@/template/Blog/ReviewsAndShare";
+import NotFoundView from "@/components/NotFoundView";
+import { getNotFoundPreset } from "@/data/notFoundPresets";
 import { blogService } from "@/services/blog/blogService";
 import { blogCommentService } from "@/services/blog/blogCommentService";
 
@@ -76,9 +78,19 @@ export default function BlogDetailPage() {
   }
 
   if (!blog) {
+    const preset = getNotFoundPreset("blog");
     return (
       <IndexLayout>
-        <div className="container p-8 text-center text-gray-400">بلاگ یافت نشد</div>
+        <div className="container">
+          <NotFoundView
+            title={preset.title}
+            description={preset.description}
+            primaryButton={preset.primaryButton}
+            secondaryButton={preset.secondaryButton}
+            imageSrc={preset.imageSrc}
+            imageAlt={preset.imageAlt}
+          />
+        </div>
       </IndexLayout>
     );
   }

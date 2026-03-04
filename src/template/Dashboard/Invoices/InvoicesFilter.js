@@ -14,10 +14,7 @@ const paymentStatusOptions = [
 
 export default function InvoicesFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
-    onFiltersChange((prev) => ({
-      ...prev,
-      [key]: value === "all" ? "" : value,
-    }));
+    onFiltersChange(key, value);
   };
 
   return (
@@ -27,7 +24,7 @@ export default function InvoicesFilter({ filters, onFiltersChange }) {
         <FilterSearchInput
           value={filters.searchQuery || ""}
           onChange={(value) => handleFilterChange("searchQuery", value)}
-          placeholder="جستجو بر اساس شماره فاکتور..."
+          placeholder="شماره فاکتور یا سفارش..."
         />
 
         {/* Payment Status Filter */}

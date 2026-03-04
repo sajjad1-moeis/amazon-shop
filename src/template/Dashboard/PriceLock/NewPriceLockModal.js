@@ -1,38 +1,67 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { filterInputStyles } from "@/utils/filterStyles";
 import ProductPreviewCard from "./ProductPreviewCard";
+import { productService } from "@/services/product/productService";
+import { unwrapApiData } from "@/services/api/client";
+import { toast } from "sonner";
 
-export default function NewPriceLockModal({ open, onOpenChange }) {
+function mapApiProduct(p) {
+  const price = p.price ?? p.finalPrice ?? p.discountPrice ?? 0;
+  const priceStr = typeof price === "number" ? price.toLocaleString("fa-IR") : String(price);
+  return {
+    id: p.id,
+    title: p.title ?? p.name ?? "-",
+    brand: p.brandName ?? p.brand ?? "-",
+    price: priceStr,
+    weight: p.weight ? `${p.weight} kg` : "-",
+    image: p.image ?? p.imageUrl ?? "/image/Home/product.png",
+    downPayment: p.downPayment ?? "-",
+    lockable: true,
+    rawPrice: typeof price === "number" ? price : parseInt(String(price).replace(/\D/g, ""), 10) || 0,
+  };
+}
+
+export default function NewPriceLockModal({ open, onOpenChange, onSubmit }) {
   const [search, setSearch] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [duration, setDuration] = useState("12");
   const [accepted, setAccepted] = useState(true);
+  const [searching, setSearching] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  // mock — بعداً از API میاد
-  const mockProduct = {
-    id: 1,
-    title: "Sony PlayStation 5 Slim – Advanced Edition Gaming Console",
-    brand: "SONY",
-    price: "۲۷,۴۵۰,۰۰۰",
-    weight: "۲.۵ kg",
-    image: "/image/Home/product.png",
-    downPayment: "۳,۵۰۰,۰۰۰",
-    lockable: true,
-  };
-
-  const handleSearch = () => {
-    if (search.trim()) setSelectedProduct(mockProduct);
+  const handleSearch = async () => {
+    const q = search.trim();
+    if (!q || q.length < 2) {
+      toast.error("حداقل ۲ کاراکتر برای جستجو وارد کنید");
+      return;
+    }
+    setSearching(true);
+    try {
+      const res = await productService.search(q);
+      const data = unwrapApiData(res);
+      const list = Array.isArray(data) ? data : data?.products ?? data?.items ?? [];
+      const first = list[0];
+      if (first) {
+        setSelectedProduct(mapApiProduct(first));
+      } else {
+        toast.info("محصولی یافت نشد");
+        setSelectedProduct(null);
+      }
+    } catch (err) {
+      toast.error(err?.message ?? "خطا در جستجو");
+      setSelectedProduct(null);
+    } finally {
+      setSearching(false);
+    }
   };
 
   return (
@@ -57,10 +86,12 @@ export default function NewPriceLockModal({ open, onOpenChange }) {
                 placeholder="Sony PlayStation 5 Slim – Advanced Edition Gaming Console"
               />
               <Button
+                type="button"
                 onClick={handleSearch}
+                disabled={searching}
                 className="bg-primary-600 hover:bg-primary-700 text-white dark:bg-dark-primary dark:hover:bg-primary-600 w-auto text-xs sm:text-sm h-10 sm:h-11"
               >
-                جستجو
+                {searching ? "در حال جستجو..." : "جستجو"}
               </Button>
             </div>
           </div>
@@ -130,10 +161,29 @@ export default function NewPriceLockModal({ open, onOpenChange }) {
 
             {/* Submit */}
             <Button
-              disabled={!accepted}
+              type="button"
+              disabled={!accepted || !selectedProduct || submitting}
+              onClick={async () => {
+                if (!selectedProduct || !onSubmit) return;
+                setSubmitting(true);
+                try {
+                  await onSubmit({
+                    productId: selectedProduct.id,
+                    targetPrice: selectedProduct.rawPrice || selectedProduct.price,
+                    lockedPrice: selectedProduct.rawPrice || selectedProduct.price,
+                    durationHours: parseInt(duration, 10) || 12,
+                  });
+                  setSearch("");
+                  setSelectedProduct(null);
+                  setDuration("12");
+                  onOpenChange?.(false);
+                } finally {
+                  setSubmitting(false);
+                }
+              }}
               className="w-full rounded-lg bg-primary-700 py-2.5 sm:py-3 text-white hover:bg-primary-800 dark:bg-dark-primary dark:hover:bg-primary-600 disabled:opacity-50 text-xs sm:text-sm sm:text-base h-10 sm:h-12"
             >
-              پرداخت و فعال‌سازی قفل
+              {submitting ? "در حال ثبت..." : "پرداخت و فعال‌سازی قفل"}
             </Button>
           </div>
         </div>

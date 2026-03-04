@@ -32,8 +32,20 @@ export default function InvoiceDetailPage({ params }) {
       .finally(() => setLoading(false));
   }, [invoiceId]);
 
-  const handleDownload = () => {
-    toast.success("فاکتور با موفقیت دانلود شد");
+  const handleDownload = async () => {
+    if (invoiceId == null) return;
+    try {
+      const { blob, filename } = await invoiceService.downloadInvoice({ invoiceId });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success("فاکتور با موفقیت دانلود شد");
+    } catch (err) {
+      toast.error(err?.message || "دانلود فاکتور ناموفق بود");
+    }
   };
 
   if (loading) {

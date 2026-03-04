@@ -5,11 +5,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { cn } from "@/lib/utils";
 import StatusBadge from "@/components/StatusBadge";
 
-const transactions = [
+const fallbackTransactions = [
   {
     id: "TRX-001",
     type: "charge",
-    amount: "۵۰۰,۰۰۰",
+    amount: 500000,
     date: "۱۴۰۳/۱۰/۰۹ - ۰۹:۱۲",
     description: "پرداخت آنلاین",
     status: "reviewing",
@@ -17,32 +17,49 @@ const transactions = [
   {
     id: "TRX-002",
     type: "withdraw",
-    amount: "۳۰۰,۰۰۰",
+    amount: 300000,
     date: "۱۴۰۳/۱۰/۰۸ - ۱۲:۴۲",
     description: "انتقال به شماره شبا",
     status: "answered",
   },
 ];
 
-export default function TransactionsTable() {
+export default function TransactionsTable({ transactions = fallbackTransactions }) {
+  const normalizeType = (type) => {
+    if (type === 1 || type === "1") return "charge";
+    if (type === 2 || type === "2") return "withdraw";
+    if (type === 3 || type === "3") return "refund";
+    if (type === 4 || type === "4") return "reward";
+    if (type === 5 || type === "5") return "discount";
+    return String(type || "").toLowerCase();
+  };
+
   const getTypeLabel = (type) => {
-    switch (type) {
+    const t = normalizeType(type);
+    switch (t) {
       case "charge":
         return "شارژ کیف پول";
       case "withdraw":
         return "برداشت";
       case "payment":
         return "پرداخت";
+      case "refund":
+        return "بازگشت وجه";
+      case "reward":
+        return "پاداش";
+      case "discount":
+        return "تخفیف";
       default:
-        return type;
+        return t || "-";
     }
   };
 
-  // StatusBadge component is used instead
-
   const getAmountColor = (type) => {
-    switch (type) {
+    const t = normalizeType(type);
+    switch (t) {
       case "charge":
+      case "refund":
+      case "reward":
         return "text-green-600 dark:text-green-400";
       case "withdraw":
         return "text-red-600 dark:text-red-400";
@@ -52,14 +69,41 @@ export default function TransactionsTable() {
   };
 
   const getAmountSign = (type) => {
-    switch (type) {
+    const t = normalizeType(type);
+    switch (t) {
       case "charge":
+      case "refund":
+      case "reward":
         return "+";
       case "withdraw":
         return "-";
       default:
         return "";
     }
+  };
+
+  const formatAmount = (val) => {
+    if (val == null) return "۰";
+    const n = typeof val === "number" ? val : Number(val);
+    if (!Number.isFinite(n)) return String(val);
+    return n.toLocaleString("fa-IR");
+  };
+
+  const formatDate = (val) => {
+    if (!val) return "-";
+    if (val instanceof Date) return val.toLocaleString("fa-IR");
+    try {
+      const d = new Date(val);
+      if (!isNaN(d.getTime())) {
+        return `${d.toLocaleDateString("fa-IR")} - ${d.toLocaleTimeString("fa-IR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}`;
+      }
+    } catch {
+      // ignore
+    }
+    return String(val);
   };
 
   return (
@@ -97,20 +141,25 @@ export default function TransactionsTable() {
                 )}
               >
                 <TableCell className="text-sm text-gray-900 dark:text-dark-titre py-4 px-4">
-                  {getTypeLabel(transaction.type)}
+                  {getTypeLabel(transaction.type ?? transaction.transactionType)}
                 </TableCell>
-                <TableCell className={cn("text-sm font-medium py-4 px-4", getAmountColor(transaction.type))}>
-                  {getAmountSign(transaction.type)}
-                  {transaction.amount} تومان
+                <TableCell
+                  className={cn(
+                    "text-sm font-medium py-4 px-4",
+                    getAmountColor(transaction.type ?? transaction.transactionType)
+                  )}
+                >
+                  {getAmountSign(transaction.type ?? transaction.transactionType)}
+                  {formatAmount(transaction.amount ?? transaction.value)} تومان
                 </TableCell>
                 <TableCell className="text-sm text-gray-600 dark:text-dark-text py-4 px-4">
-                  {transaction.date}
+                  {formatDate(transaction.date ?? transaction.createdAt)}
                 </TableCell>
                 <TableCell className="text-sm text-gray-600 dark:text-dark-text py-4 px-4">
-                  {transaction.description}
+                  {transaction.description ?? transaction.note ?? "-"}
                 </TableCell>
                 <TableCell className="py-4 px-4">
-                  <StatusBadge status={transaction.status} />
+                  <StatusBadge status={transaction.status ?? "reviewing"} />
                 </TableCell>
               </TableRow>
             ))

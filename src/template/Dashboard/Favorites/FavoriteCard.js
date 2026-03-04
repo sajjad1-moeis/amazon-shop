@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Trash } from "iconsax-reactjs";
 
 export default function FavoriteCard({ product, onRemove }) {
+  const trackingStatusLabel = product.trackingStatus === "inactive" ? "غیرفعال" : "فعال";
+
   const InfosCard = () => (
     <div className="w-full  flex-wrap flex flex-row items-stretch sm:items-center justify-between gap-2 lg:gap-3">
       {/* Box 1 */}
@@ -50,12 +52,12 @@ export default function FavoriteCard({ product, onRemove }) {
 
             <div className="flex items-center gap-2">
               <span className="text-gray-600 dark:text-dark-text text-xs">برند:</span>
-              <p>SONY</p>
+              <p>{product.brand || "SONY"}</p>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-gray-600 dark:text-dark-text text-xs">وضعیت ردیابی</span>
-              <span className="bg-green-100 dark:bg-dark-green dark: dark:text-green-300 text-green-700 text-xs px-3 py-1 rounded-lg">
-                فعال
+              <span className="bg-green-100 dark:bg-dark-green dark:text-green-300 text-green-700 text-xs px-3 py-1 rounded-lg">
+                {trackingStatusLabel}
               </span>
             </div>
           </div>
@@ -81,10 +83,10 @@ export default function FavoriteCard({ product, onRemove }) {
                 <Image src={"/image/amazonLogo.png"} alt="brand logo" fill className="object-contain" />
               </div>
               <div className="flex items-center gap-2 ">
-                <span className="text-gray-600 dark:text-dark-text text-sm">وضعیت ردیابی</span>
-                <span className="bg-green-100 dark:bg-dark-green dark: dark:text-green-300 text-green-700 text-xs px-3 py-1 rounded-lg">
-                  فعال
-                </span>
+              <span className="text-gray-600 dark:text-dark-text text-sm">وضعیت ردیابی</span>
+              <span className="bg-green-100 dark:bg-dark-green dark:text-green-300 text-green-700 text-xs px-3 py-1 rounded-lg">
+                {trackingStatusLabel}
+              </span>
               </div>
             </div>
           </div>

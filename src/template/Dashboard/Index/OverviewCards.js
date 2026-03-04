@@ -9,7 +9,7 @@ import { Spinner } from "@/components/ui/spinner";
 import Link from "next/link";
 
 const cardConfig = [
-  { id: "wallet", title: "موجودی کیف پول", key: "walletBalance", type: "تومان", icon: Wallet, iconColor: "text-yellow-500", bgColor: "bg-yellow-50 dark:bg-yellow-950/20" },
+  { id: "wallet", title: "موجودی کیف پول", key: "walletBalance", type: "تومان", icon: Wallet, iconColor: "text-yellow-500", bgColor: "bg-yellow-50 dark:bg-yellow-950/20", link: "/dashboard/wallet" },
   { id: "orders", title: "سفارش های فعال", key: "activeOrdersCount", type: "سفارش", icon: Box, iconColor: "text-green-500", bgColor: "bg-green-50 dark:bg-green-950/20", link: "/dashboard/orders" },
   { id: "tickets", title: "تیکت های باز", key: "openTicketsCount", type: "تیکت", icon: Sms, iconColor: "text-blue-500", bgColor: "bg-blue-50 dark:bg-blue-950/20", link: "/dashboard/support" },
   { id: "wishlist", title: "علاقه مندی ها", key: "wishlistCount", type: "کالا", icon: Heart, iconColor: "text-red-500", bgColor: "bg-red-50 dark:bg-red-950/20", link: "/dashboard/favorites" },

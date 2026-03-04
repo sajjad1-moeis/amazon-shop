@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import WalletActions from "@/template/Dashboard/Wallet/WalletActions";
 import WalletOverviewCards from "@/template/Dashboard/Wallet/WalletOverviewCards";
 import TransactionsFilter from "@/template/Dashboard/Wallet/TransactionsFilter";
@@ -8,14 +8,69 @@ import TransactionsTable from "@/template/Dashboard/Wallet/TransactionsTable";
 import DashboardLayout from "@/layout/DashboardLayout";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
 import ViewAllTable from "@/components/ViewAllTable";
+import { userWalletService } from "@/services/userWallet/userWalletService";
+import { useAuth } from "@/contexts/AuthContext";
+import { Spinner } from "@/components/ui/spinner";
+import { toast } from "sonner";
 
 export default function WalletList() {
+  const { user } = useAuth();
+  const userId = user?.id ?? user?.userId;
+
   const [filters, setFilters] = useState({
     searchQuery: "",
     dateRange: "",
     status: "",
     transactionType: "",
   });
+  const [wallet, setWallet] = useState(null);
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const refetchWallet = () => setRefreshKey((k) => k + 1);
+
+  useEffect(() => {
+    if (userId == null) {
+      setWallet(null);
+      setTransactions([]);
+      setLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setLoading(true);
+    userWalletService
+      .getWalletWithTransactions(userId)
+      .then((data) => {
+        if (cancelled) return;
+        if (data && typeof data === "object") {
+          setWallet(data.wallet ?? data);
+          const list =
+            Array.isArray(data.transactions) && data.transactions.length
+              ? data.transactions
+              : Array.isArray(data) && data.length
+                ? data
+                : [];
+          setTransactions(list);
+        } else {
+          setWallet(null);
+          setTransactions([]);
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          toast.error(err?.message ?? "خطا در دریافت اطلاعات کیف پول");
+          setWallet(null);
+          setTransactions([]);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [userId, refreshKey]);
 
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({
@@ -23,6 +78,74 @@ export default function WalletList() {
       [key]: value === "all" ? "" : value,
     }));
   };
+
+  const filteredTransactions = useMemo(() => {
+    let list = [...transactions];
+
+    // جستجو بر اساس شماره تراکنش یا توضیحات
+    if (filters.searchQuery?.trim()) {
+      const q = filters.searchQuery.trim().toLowerCase();
+      list = list.filter(
+        (t) =>
+          String(t.id ?? "").toLowerCase().includes(q) ||
+          String(t.description ?? t.note ?? "").toLowerCase().includes(q) ||
+          String(t.referenceId ?? "").toLowerCase().includes(q),
+      );
+    }
+
+    // فیلتر نوع تراکنش (API: 1=Deposit, 2=Withdrawal, 3=Refund, 4=Reward, 5=Discount)
+    if (filters.transactionType) {
+      const typeMap = {
+        charge: [1, "1", "charge", "deposit"],
+        withdraw: [2, "2", "withdraw", "withdrawal"],
+        payment: [3, "3", "payment", "refund"],
+        refund: [3, "3", "refund"],
+        reward: [4, "4", "reward"],
+        discount: [5, "5", "discount"],
+      };
+      const matchValues = typeMap[filters.transactionType] ?? [filters.transactionType];
+      list = list.filter((t) => {
+        const raw = t.type ?? t.transactionType ?? "";
+        const val = String(raw).toLowerCase();
+        return matchValues.some((m) => String(m).toLowerCase() === val);
+      });
+    }
+
+    // فیلتر وضعیت
+    if (filters.status) {
+      list = list.filter(
+        (t) => String(t.status ?? "").toLowerCase() === String(filters.status).toLowerCase(),
+      );
+    }
+
+    // فیلتر بازه تاریخ
+    if (filters.dateRange) {
+      const now = new Date();
+      let from = null;
+      if (filters.dateRange === "today") {
+        from = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      } else if (filters.dateRange === "week") {
+        from = new Date(now);
+        from.setDate(from.getDate() - 7);
+      } else if (filters.dateRange === "month") {
+        from = new Date(now);
+        from.setMonth(from.getMonth() - 1);
+      } else if (filters.dateRange === "year") {
+        from = new Date(now);
+        from.setFullYear(from.getFullYear() - 1);
+      }
+      if (from) {
+        list = list.filter((t) => {
+          const d = t.createdAt ?? t.date ?? t.transactionDate;
+          if (!d) return false;
+          const txDate = new Date(d);
+          return !isNaN(txDate.getTime()) && txDate >= from;
+        });
+      }
+    }
+
+    return list;
+  }, [transactions, filters]);
 
   return (
     <DashboardLayout>
@@ -35,12 +158,12 @@ export default function WalletList() {
           <h3 className="text-lg  text-gray-900 dark:text-white">موجودی کیف پول</h3>
 
           {/* Action Buttons */}
-          <WalletActions />
+          <WalletActions userId={userId} onRechargeSuccess={refetchWallet} onWithdrawSuccess={refetchWallet} />
         </div>
 
         {/* Overview Cards */}
         <div className="mt-6">
-          <WalletOverviewCards />
+          <WalletOverviewCards wallet={wallet} />
         </div>
       </div>
 
@@ -56,8 +179,16 @@ export default function WalletList() {
 
         {/* Transactions Table */}
         <div className="mt-6">
-          <TransactionsTable />
-          <ViewAllTable />
+          {loading ? (
+            <div className="flex justify-center py-8">
+              <Spinner size="lg" />
+            </div>
+          ) : (
+            <>
+              <TransactionsTable transactions={filteredTransactions} />
+              <ViewAllTable />
+            </>
+          )}
         </div>
       </div>
     </DashboardLayout>

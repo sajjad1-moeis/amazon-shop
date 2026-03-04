@@ -4,20 +4,23 @@ import React from "react";
 import ProductRowCard from "./ProductRowCard";
 import ProductCard from "@/components/ProductCard";
 import Link from "next/link";
-import Image from "next/image";
+import NotFoundView from "@/components/NotFoundView";
+import { getNotFoundPreset } from "@/data/notFoundPresets";
 
 export default function ProductList({ viewMode, products = [], totalCount = 0, searchMode = false }) {
   const getProductKey = (product, index) =>
     product?.asin || product?.id || product?.productId || `product-${index}`;
 
   if (!products || products.length === 0) {
+    const preset = getNotFoundPreset("products");
     return (
-      <div className="p-8 text-center text-gray-400 dark:text-gray-500">
-        <p>محصولی یافت نشد</p>
-        {searchMode && (
-          <p className="mt-2 text-sm">عبارت جستجو را تغییر دهید یا بعداً تلاش کنید.</p>
-        )}
-      </div>
+      <NotFoundView
+        title={preset.title}
+        description={preset.description}
+        primaryButton={preset.primaryButton}
+        secondaryButton={preset.secondaryButton}
+        className="min-h-0 py-8"
+      />
     );
   }
 

@@ -1,21 +1,45 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
 import ReturnReasonForm from "../ReturnReasonForm";
 import FileUploadSection from "../FileUploadSection";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { mockOrders } from "@/data";
 import OrderSelectorSection from "./OrderSelectorSection";
 import TermsAndSupportSection from "./TermsAndSupportSection";
 import BottomActions from "./BottomActions";
 import ReturnRequestsFilter from "../ReturnRequestsFilter";
+import { orderService } from "@/services/order/orderService";
+import { returnRequestService } from "@/services/returnRequest/returnRequestService";
+import { useAuth } from "@/contexts/AuthContext";
+import { unwrapApiData } from "@/services/api/client";
+import { Spinner } from "@/components/ui/spinner";
+
+function mapOrderForSelector(apiOrder) {
+  const items = apiOrder.items ?? apiOrder.orderItems ?? apiOrder.products ?? [];
+  return {
+    id: apiOrder.id ?? apiOrder.orderId,
+    orderNumber: apiOrder.orderNumber ?? apiOrder.id,
+    items: items.map((item, idx) => ({
+      id: item.id ?? item.orderItemId ?? item.productId ?? idx,
+      productId: item.productId ?? item.id,
+      productName: item.productName ?? item.title ?? item.name ?? "محصول",
+      quantity: item.quantity ?? item.count ?? 1,
+    })),
+  };
+}
 
 export default function NewReturnRequest() {
   const router = useRouter();
+  const { user } = useAuth();
+  const userId = user?.id ?? user?.userId;
+
+  const [orders, setOrders] = useState([]);
+  const [ordersLoading, setOrdersLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     packagingStatus: "",
     returnReason: "",
@@ -25,9 +49,24 @@ export default function NewReturnRequest() {
     termsAccepted: false,
   });
 
-  // Handle selection from OrderProductSelector
+  useEffect(() => {
+    if (userId == null) {
+      setOrdersLoading(false);
+      return;
+    }
+    orderService
+      .getUserOrders(userId)
+      .then((res) => {
+        const data = unwrapApiData(res);
+        const list = Array.isArray(data?.orders) ? data.orders : Array.isArray(data) ? data : [];
+        setOrders(list.map(mapOrderForSelector).filter((o) => o.items?.length > 0));
+      })
+      .catch(() => setOrders([]))
+      .finally(() => setOrdersLoading(false));
+  }, [userId]);
+
   const handleItemSelect = ({ orderId, productId }) => {
-    const order = mockOrders.find((o) => o.id === orderId);
+    const order = orders.find((o) => o.id === orderId || String(o.id) === String(orderId));
     if (order) {
       setSelectedOrder(order);
       setSelectedProductId(productId);
@@ -97,31 +136,23 @@ export default function NewReturnRequest() {
     }
 
     try {
-      // Prepare submission data
-      const submissionData = {
-        orderId: selectedOrder.id,
-        productId: selectedProductId,
-        product: selectedProduct,
-        packagingStatus: formData.packagingStatus,
-        returnReason: formData.returnReason,
-        description: formData.description,
-        images: formData.images,
-        invoice: formData.invoice,
-        submittedAt: new Date().toISOString(),
-      };
-
-      // TODO: Replace with actual API call
-      // await submitReturnRequest(submissionData);
-
+      setSubmitting(true);
+      const files = [...(formData.images ?? []), formData.invoice].filter(Boolean);
+      await returnRequestService.create(
+        {
+          userId,
+          orderId: selectedOrder.id,
+          orderItemId: selectedProductId,
+          description: [formData.returnReason, formData.description].filter(Boolean).join(" — ") || "مرجوعی",
+        },
+        files
+      );
       toast.success("درخواست مرجوعی با موفقیت ثبت شد");
-
-      // Navigate to return requests list after a short delay
-      setTimeout(() => {
-        router.push("/dashboard/return-requests");
-      }, 1000);
+      router.push("/dashboard/return-requests");
     } catch (error) {
-      toast.error("خطا در ثبت درخواست. لطفاً دوباره تلاش کنید.");
-      console.error("Error submitting return request:", error);
+      toast.error(error?.message ?? "خطا در ثبت درخواست. لطفاً دوباره تلاش کنید.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -131,6 +162,16 @@ export default function NewReturnRequest() {
     category: "",
     searchQuery: "",
   });
+
+  const handleFiltersChange = (key, value) => {
+    setFilters((prev) => ({ ...prev, [key]: value === "all" ? "" : value }));
+  };
+
+  if (userId == null) {
+    return (
+      <div className="p-6 text-center text-gray-500 dark:text-dark-text">برای ثبت درخواست مرجوعی وارد شوید.</div>
+    );
+  }
 
   return (
     <div dir="rtl">
@@ -143,9 +184,15 @@ export default function NewReturnRequest() {
         {/* Main Card */}
         <div>
           {/* Order Selector */}
-          <ReturnRequestsFilter filters={filters} onFiltersChange={setFilters} placeholder={"جستجو در سفارش‌ها..."} />
+          <ReturnRequestsFilter filters={filters} onFiltersChange={handleFiltersChange} placeholder="جستجو در سفارش‌ها..." />
 
-          <OrderSelectorSection orders={mockOrders} selectedItem={selectedItem} onSelect={handleItemSelect} />
+          {ordersLoading ? (
+            <div className="flex justify-center py-12">
+              <Spinner size="lg" />
+            </div>
+          ) : (
+            <OrderSelectorSection orders={orders} selectedItem={selectedItem} onSelect={handleItemSelect} />
+          )}
 
           {/* Reason & Files Sections */}
           {selectedProductId && (
@@ -170,7 +217,7 @@ export default function NewReturnRequest() {
         </div>
 
         {/* Bottom Sticky Actions */}
-        {selectedProductId && <BottomActions />}
+        {selectedProductId && <BottomActions disabled={submitting} />}
       </form>
     </div>
   );

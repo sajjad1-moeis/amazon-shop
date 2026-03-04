@@ -87,4 +87,11 @@ export const userWalletService = {
     const res = await client.post("UserWallet/AddTransaction", { json: body }).json();
     return unwrapApiData(res);
   },
+
+  /** POST api/UserWallet/RequestWithdraw — درخواست برداشت — Phase 18 */
+  requestWithdraw: async (body) => {
+    const client = getAuthenticatedClient();
+    const res = await client.post("UserWallet/RequestWithdraw", { json: body }).json();
+    return unwrapApiData(res);
+  },
 };

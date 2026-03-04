@@ -9,21 +9,21 @@ import FilterSection from "@/components/FilterSection";
 const transactionTypeOptions = [
   { value: "charge", label: "شارژ کیف پول" },
   { value: "withdraw", label: "برداشت" },
-  { value: "payment", label: "پرداخت" },
+  { value: "refund", label: "بازگشت وجه" },
+  { value: "reward", label: "پاداش" },
+  { value: "discount", label: "تخفیف" },
 ];
 
 const transactionStatusOptions = [
-  { value: "reviewing", label: "در حال بررسی" },
-  { value: "answered", label: "پاسخ داده شده" },
+  { value: "pending", label: "در انتظار" },
+  { value: "processing", label: "در حال پردازش" },
   { value: "completed", label: "تکمیل شده" },
+  { value: "failed", label: "ناموفق" },
 ];
 
 export default function TransactionsFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
-    onFiltersChange((prev) => ({
-      ...prev,
-      [key]: value === "all" ? "" : value,
-    }));
+    onFiltersChange(key, value);
   };
 
   return (
@@ -33,7 +33,7 @@ export default function TransactionsFilter({ filters, onFiltersChange }) {
         <FilterSearchInput
           value={filters.searchQuery || ""}
           onChange={(value) => handleFilterChange("searchQuery", value)}
-          placeholder="جستجو بر اساس عنوان یا شماره تراکنش..."
+          placeholder="شماره یا عنوان تراکنش..."
         />
 
         {/* Transaction Type */}

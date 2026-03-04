@@ -8,10 +8,7 @@ import FilterSection from "@/components/FilterSection";
 
 export default function PurchasesFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
-    onFiltersChange((prev) => ({
-      ...prev,
-      [key]: value === "all" ? "" : value,
-    }));
+    onFiltersChange(key, value === "all" ? "" : value);
   };
 
   return (

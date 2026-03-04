@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -78,6 +78,19 @@ export default function EditBasicInfoModal({ isOpen, onClose, initialData, onSav
   });
   const [errors, setErrors] = useState({});
 
+  useEffect(() => {
+    if (isOpen && initialData) {
+      const empty = (v) => (v == null || v === "—" ? "" : v);
+      setFormData({
+        fullName: empty(initialData.fullName),
+        phone: empty(initialData.phone),
+        email: empty(initialData.email),
+        nationalId: empty(initialData.nationalId),
+        profileImage: empty(initialData.avatar),
+      });
+    }
+  }, [isOpen, initialData]);
+
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
@@ -85,11 +98,12 @@ export default function EditBasicInfoModal({ isOpen, onClose, initialData, onSav
     }
   };
 
-  const handleSubmit = (e) => {
+  const [saving, setSaving] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
-    // Validate all fields dynamically
     formFields.forEach((field) => {
       const error = field.validation(formData[field.id]);
       if (error) newErrors[field.id] = error;
@@ -101,11 +115,21 @@ export default function EditBasicInfoModal({ isOpen, onClose, initialData, onSav
     }
 
     if (onSave) {
-      onSave(formData);
+      setSaving(true);
+      try {
+        const result = onSave(formData);
+        if (result && typeof result.then === "function") await result;
+        toast.success("اطلاعات با موفقیت به‌روزرسانی شد");
+        onClose();
+      } catch (err) {
+        toast.error(err?.message || err?.data?.message || "خطا در به‌روزرسانی");
+      } finally {
+        setSaving(false);
+      }
+    } else {
+      toast.success("اطلاعات با موفقیت به‌روزرسانی شد");
+      onClose();
     }
-
-    toast.success("اطلاعات با موفقیت به‌روزرسانی شد");
-    onClose();
   };
 
   const handleClose = () => {
@@ -185,9 +209,10 @@ export default function EditBasicInfoModal({ isOpen, onClose, initialData, onSav
             </Button>
             <Button
               type="submit"
+              disabled={saving}
               className="bg-primary-600 w-full hover:bg-primary-700 text-white text-sm sm:text-base"
             >
-              ذخیره تغییرات
+              {saving ? "در حال ذخیره..." : "ذخیره تغییرات"}
             </Button>
           </DialogFooter>
         </form>

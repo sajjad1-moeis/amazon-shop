@@ -1,24 +1,21 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { TickCircle, CloseCircle } from "iconsax-reactjs";
 import { cn } from "@/lib/utils";
+import { userService } from "@/services/user/userService";
+import { unwrapApiData } from "@/services/api/client";
+import { Spinner } from "@/components/ui/spinner";
 
-const verificationData = [
-  {
-    key: "mobile",
-    label: "شماره موبایل",
-    value: "۰۱۹۳۴۵۸۷۶۲۴",
-    status: "done",
-  },
-  {
-    key: "nationalId",
-    label: "کد ملی",
-    value: "",
-    status: "not-done",
-  },
-];
+function buildVerificationItems(data) {
+  const isPhone = data?.isPhoneVerified ?? false;
+  const isEmail = data?.isEmailVerified ?? false;
+  return [
+    { key: "mobile", label: "شماره موبایل", value: isPhone ? "تأیید شده" : "", status: isPhone ? "done" : "not-done" },
+    { key: "email", label: "ایمیل", value: isEmail ? "تأیید شده" : "", status: isEmail ? "done" : "not-done" },
+  ];
+}
 
 const StatusIcon = ({ status }) => {
   if (status === "done") {
@@ -29,6 +26,20 @@ const StatusIcon = ({ status }) => {
 };
 
 export default function IdentityVerification() {
+  const [verificationData, setVerificationData] = useState(buildVerificationItems(null));
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    userService
+      .getVerificationStatus()
+      .then((res) => {
+        const data = unwrapApiData(res);
+        setVerificationData(buildVerificationItems(data ?? {}));
+      })
+      .catch(() => setVerificationData(buildVerificationItems(null)))
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <div className="bg-white dark:bg-dark-box dark:border-dark-stroke border border-gray-300 rounded-2xl p-3 sm:p-4 mt-4 sm:mt-6 md:mt-8">
       {/* Header */}
@@ -41,6 +52,11 @@ export default function IdentityVerification() {
       </div>
 
       {/* Fields */}
+      {loading ? (
+        <div className="flex justify-center py-8">
+          <Spinner size="md" />
+        </div>
+      ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         {verificationData.map((item) => {
           const isDone = item.status === "done";
@@ -74,6 +90,7 @@ export default function IdentityVerification() {
           );
         })}
       </div>
+      )}
     </div>
   );
 }

@@ -15,10 +15,7 @@ const statusOptions = [
 
 export default function ExclusiveAmazonFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
-    onFiltersChange((prev) => ({
-      ...prev,
-      [key]: value === "all" ? "" : value,
-    }));
+    onFiltersChange(key, value === "all" ? "" : value);
   };
 
   return (

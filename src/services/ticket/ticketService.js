@@ -45,13 +45,16 @@ export const ticketService = {
   },
 
   getPaginated: async (params = {}) => {
-    const { pageNumber = 1, pageSize = 20, status, priority } = params;
+    const { pageNumber = 1, pageSize = 20, status, priority, searchTerm, sortBy, sortColumn } = params;
     const searchParams = new URLSearchParams({
       pageNumber: pageNumber.toString(),
       pageSize: pageSize.toString(),
     });
     if (status !== undefined && status !== null) searchParams.append("status", status.toString());
     if (priority !== undefined && priority !== null) searchParams.append("priority", priority.toString());
+    if (searchTerm != null && String(searchTerm).trim()) searchParams.append("searchTerm", String(searchTerm).trim());
+    if (sortBy != null && String(sortBy)) searchParams.append("sortBy", String(sortBy));
+    if (sortColumn != null && String(sortColumn)) searchParams.append("sortColumn", String(sortColumn));
     const client = getAuthenticatedClient();
     return client.get(`Ticket/GetPaginated?${searchParams.toString()}`).json();
   },
