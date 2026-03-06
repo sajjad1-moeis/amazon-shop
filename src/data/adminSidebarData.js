@@ -138,11 +138,6 @@ export const ADMIN_SIDEBAR_ITEMS = [
     color: "#F59E0B",
     href: "/admin/reviews",
     key: "review",
-    children: [
-      { name: "همه نظرات", href: "/admin/reviews" },
-      { name: "نظرات در انتظار تایید", href: "/admin/reviews/pending" },
-      { name: "نظرات تایید شده", href: "/admin/reviews/approved" },
-    ],
   },
 
   {
@@ -176,12 +171,6 @@ export const ADMIN_SIDEBAR_ITEMS = [
     color: "#10b981",
     href: "/admin/payments",
     key: "payment",
-    children: [
-      { name: "همه پرداخت‌ها", href: "/admin/payments" },
-      { name: "پرداخت‌های موفق", href: "/admin/payments/success" },
-      { name: "پرداخت‌های ناموفق", href: "/admin/payments/failed" },
-      { name: "درخواست‌های بازگشت وجه", href: "/admin/payments/refunds" },
-    ],
   },
   {
     name: "انبار و موجودی",
@@ -189,12 +178,6 @@ export const ADMIN_SIDEBAR_ITEMS = [
     color: "#F59E0B",
     href: "/admin/inventory",
     key: "inventory",
-    children: [
-      { name: "موجودی محصولات", href: "/admin/inventory" },
-      { name: "ورود کالا", href: "/admin/inventory/stock-in" },
-      { name: "خروج کالا", href: "/admin/inventory/stock-out" },
-      { name: "گزارش موجودی", href: "/admin/inventory/reports" },
-    ],
   },
 
   {

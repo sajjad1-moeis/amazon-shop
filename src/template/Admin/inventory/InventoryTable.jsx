@@ -27,7 +27,6 @@ const getInventoryStatusBadge = (currentStock, minStock) => {
 };
 
 export default function InventoryTable({ inventory }) {
-
   if (inventory.length === 0) {
     return <div className="p-8 text-center text-gray-400">موجودی‌ای یافت نشد</div>;
   }
@@ -36,9 +35,11 @@ export default function InventoryTable({ inventory }) {
     <Table>
       <TableHeader>
         <TableRow className="border-gray-700 hover:bg-gray-700/50">
+          <TableHead className="text-gray-300">شناسه</TableHead>
           <TableHead className="text-gray-300">محصول</TableHead>
           <TableHead className="text-gray-300">موجودی فعلی</TableHead>
           <TableHead className="text-gray-300">حداقل موجودی</TableHead>
+          <TableHead className="text-gray-300">کسری تا حداقل</TableHead>
           <TableHead className="text-gray-300">وضعیت</TableHead>
         </TableRow>
       </TableHeader>
@@ -46,13 +47,18 @@ export default function InventoryTable({ inventory }) {
         {inventory.map((item) => {
           const currentStock = item.currentStock || item.quantity || item.stock || 0;
           const minStock = item.minStock || item.minimumStock || item.minStockLevel || 0;
+          const shortage = Math.max(0, Number(minStock) - Number(currentStock));
           return (
             <TableRow key={item.id || item.productId} className="border-gray-700 hover:bg-gray-700/50">
+              <TableCell className="text-gray-400 font-mono">
+                {item.productId || item.id || "-"}
+              </TableCell>
               <TableCell className="text-white font-medium">
                 {item.productName || item.productTitle || item.name || "-"}
               </TableCell>
               <TableCell className="text-gray-300">{currentStock}</TableCell>
               <TableCell className="text-gray-300">{minStock}</TableCell>
+              <TableCell className="text-gray-300">{shortage}</TableCell>
               <TableCell>{getInventoryStatusBadge(currentStock, minStock)}</TableCell>
             </TableRow>
           );

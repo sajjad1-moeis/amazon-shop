@@ -17,7 +17,7 @@ import AdminOrderDetailAddress from "@/template/Admin/orders/OrderDetailAddress"
 import AdminOrderDetailPayment from "@/template/Admin/orders/OrderDetailPayment";
 import AdminOrderDetailShipping from "@/template/Admin/orders/OrderDetailShipping";
 import AdminOrderDetailDocuments from "@/template/Admin/orders/OrderDetailDocuments";
-import OrderRawData from "@/template/Admin/orders/OrderRawData";
+import AdminOrderDetailMeta from "@/template/Admin/orders/OrderDetailMeta";
 
 export default function AdminOrderDetailPage() {
   const router = useRouter();
@@ -119,6 +119,8 @@ export default function AdminOrderDetailPage() {
 
       <AdminOrderDetailInfo order={order} />
 
+      <AdminOrderDetailMeta order={order} rawResponse={rawResponse} />
+
       <AdminOrderDetailProducts products={products} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -129,8 +131,6 @@ export default function AdminOrderDetailPage() {
       <AdminOrderDetailShipping trackingCodes={trackingCodes} order={order} onUpdated={handleOrderUpdated} />
 
       {documents?.length > 0 && <AdminOrderDetailDocuments documents={documents} />}
-
-      <OrderRawData rawResponse={rawResponse} order={order} />
     </div>
   );
 }

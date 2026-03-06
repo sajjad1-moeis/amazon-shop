@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import PageHeader from "@/template/Admin/PageHeader";
 import PaymentsTable from "@/template/Admin/payments/PaymentsTable";
+import PaymentsFilters from "@/template/Admin/payments/PaymentsFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import { paymentService } from "@/services/payment/paymentService";
@@ -12,55 +12,71 @@ import { paymentService } from "@/services/payment/paymentService";
 export default function PaymentsPage() {
   const searchParams = useSearchParams();
   const statusParam = searchParams.get("status");
+  const statusFilter =
+    statusParam && statusParam !== "all"
+      ? statusParam === "success"
+        ? 1
+        : statusParam === "failed"
+          ? 2
+          : statusParam === "pending"
+            ? 3
+            : statusParam === "refund"
+              ? "refund"
+              : undefined
+      : undefined;
+  const searchTerm = searchParams.get("search") || "";
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
 
-  const fetchPayments = async () => {
-    try {
-      setLoading(true);
-      const status = statusParam === "success" ? 1 : statusParam === "failed" ? 2 : undefined;
-      const response = await paymentService.getPaginated({
-        pageNumber,
-        pageSize,
-        status,
-        searchTerm: searchTerm || undefined,
-      });
+  useEffect(() => {
+    setPageNumber(1);
+  }, [searchTerm, statusFilter]);
 
-      if (response.success && response.data) {
-        setPayments(response.data.payments || response.data || []);
-        setTotalPages(response.data.totalPages || 1);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        setLoading(true);
+        const response = await paymentService.getPaginated({
+          pageNumber,
+          pageSize,
+          status: statusFilter,
+          searchTerm: searchTerm || undefined,
+        });
+
+        if (cancelled) return;
+        if (response.success && response.data) {
+          setPayments(response.data.payments || response.data || []);
+          setTotalPages(response.data.totalPages || 1);
+        } else {
+          setPayments([]);
+          setTotalPages(1);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          toast.error(error.message || "خطا در دریافت پرداخت‌ها");
+          console.error("Error fetching payments:", error);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-    } catch (error) {
-      toast.error(error.message || "خطا در دریافت پرداخت‌ها");
-      console.error("Error fetching payments:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    })();
 
-  useEffect(() => {
-    if (searchTerm) {
-      setPageNumber(1);
-    }
-  }, [searchTerm]);
-
-  useEffect(() => {
-    fetchPayments();
-  }, [pageNumber, searchTerm, statusParam]);
+    return () => {
+      cancelled = true;
+    };
+  }, [pageNumber, pageSize, searchTerm, statusFilter]);
 
   return (
     <div className="space-y-6">
       <div className="">
-        <PageHeader
-          title="پرداخت‌ها"
-          searchPlaceholder="جستجو ..."
-          searchValue={searchTerm}
-          onSearchChange={setSearchTerm}
-        />
+        <div className="mb-5">
+          <h1 className="text-lg md:text-xl text-gray-100 mb-4">پرداخت‌ها</h1>
+          <PaymentsFilters />
+        </div>
 
         {loading ? (
           <div className="p-8 text-center text-gray-400">

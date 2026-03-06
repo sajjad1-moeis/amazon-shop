@@ -32,16 +32,19 @@ export default function CompleteInspectionModal({ open, onOpenChange, service, o
   const [inspectionNotes, setInspectionNotes] = useState("");
   const [photoPath, setPhotoPath] = useState("");
   const [videoPath, setVideoPath] = useState("");
+  const serviceId = service?.id;
+  const orderLabel = service?.orderNumber || service?.orderId || "-";
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!serviceId) return;
     const body = {
       result: Number(result),
       inspectionNotes: inspectionNotes.trim() || undefined,
       photoPath: photoPath.trim() || undefined,
       videoPath: videoPath.trim() || undefined,
     };
-    onSubmit(service.id, body);
+    onSubmit(serviceId, body);
   };
 
   useEffect(() => {
@@ -63,7 +66,7 @@ export default function CompleteInspectionModal({ open, onOpenChange, service, o
     onOpenChange(next);
   };
 
-  if (!service) return null;
+  if (!open || !service) return null;
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -71,7 +74,7 @@ export default function CompleteInspectionModal({ open, onOpenChange, service, o
         <DialogHeader>
           <DialogTitle className="text-white">تکمیل بررسی سپر کیفیت</DialogTitle>
         </DialogHeader>
-        <p className="text-gray-400 text-sm">سرویس #{service.id} · سفارش {service.orderNumber || service.orderId}</p>
+        <p className="text-gray-400 text-sm">سرویس #{serviceId} · سفارش {orderLabel}</p>
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div>
             <Label className="text-gray-300">نتیجه بررسی *</Label>

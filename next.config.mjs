@@ -61,6 +61,11 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ["iconsax-reactjs", "lucide-react"],
   },
+
+  // Keep Turbopack root scoped to this project when it is used explicitly.
+  turbopack: {
+    root: process.cwd(),
+  },
 };
 
 export default nextConfig;

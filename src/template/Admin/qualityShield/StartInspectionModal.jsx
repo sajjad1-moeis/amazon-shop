@@ -15,11 +15,13 @@ import { Spinner } from "@/components/ui/spinner";
 
 export default function StartInspectionModal({ open, onOpenChange, service, onSubmit, loading }) {
   const [inspectorName, setInspectorName] = useState("");
+  const serviceId = service?.id;
+  const orderLabel = service?.orderNumber || service?.orderId || "-";
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!inspectorName?.trim()) return;
-    onSubmit(service.id, { inspectorName: inspectorName.trim() });
+    if (!inspectorName?.trim() || !serviceId) return;
+    onSubmit(serviceId, { inspectorName: inspectorName.trim() });
   };
 
   useEffect(() => {
@@ -31,7 +33,7 @@ export default function StartInspectionModal({ open, onOpenChange, service, onSu
     onOpenChange(next);
   };
 
-  if (!service) return null;
+  if (!open || !service) return null;
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -39,7 +41,7 @@ export default function StartInspectionModal({ open, onOpenChange, service, onSu
         <DialogHeader>
           <DialogTitle className="text-white">شروع بررسی سپر کیفیت</DialogTitle>
         </DialogHeader>
-        <p className="text-gray-400 text-sm">سرویس #{service.id} · سفارش {service.orderNumber || service.orderId}</p>
+        <p className="text-gray-400 text-sm">سرویس #{serviceId} · سفارش {orderLabel}</p>
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div>
             <Label className="text-gray-300">نام بازرس *</Label>

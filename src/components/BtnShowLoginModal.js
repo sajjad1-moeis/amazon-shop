@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { userWalletService } from "@/services/userWallet/userWalletService";
-import { USER_MENU_ITEMS } from "@/data/userMenuItems";
+import { ADMIN_MENU_ITEM, USER_MENU_ITEMS } from "@/data/userMenuItems";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -40,11 +40,12 @@ function useWalletBalance(userId, enabled) {
 
 export default function BtnShowLoginModal() {
   const [popoverOpen, setPopoverOpen] = useState(false);
-  const { user, isAuthenticated, logout, openAuthModal } = useAuth();
+  const { user, isAuthenticated, isAdmin, logout, openAuthModal } = useAuth();
 
   const displayName = user?.userName || user?.fullName || user?.firstName || user?.name || user?.phoneNumber || "کاربر";
   const userId = user?.id ?? user?.userId;
   const balance = useWalletBalance(userId, popoverOpen && isAuthenticated);
+  const menuItems = isAdmin ? [ADMIN_MENU_ITEM, ...USER_MENU_ITEMS] : USER_MENU_ITEMS;
 
   const handleLogout = async () => {
     setPopoverOpen(false);
@@ -102,7 +103,7 @@ export default function BtnShowLoginModal() {
         </div>
         <Separator />
         <div className="py-1">
-          {USER_MENU_ITEMS.map(({ label, href, icon: Icon }) => (
+          {menuItems.map(({ label, href, icon: Icon }) => (
             <Link
               key={href}
               href={href}
