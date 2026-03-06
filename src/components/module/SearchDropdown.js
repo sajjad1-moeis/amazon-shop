@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { SearchNormal1 } from "iconsax-reactjs";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItemRadio, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // لیست فروشگاه‌ها — گزینهٔ اول: جستجوی مهم در دیتابیس میکرولس (فیگما)
 const shops = [
@@ -14,6 +14,7 @@ const shops = [
     placeholder: "جستجو در محصولات سایت",
     image: "/image/logo.png",
     isImportant: true,
+    lightLogo: true,
   },
   {
     id: "amazon",
@@ -38,6 +39,7 @@ const shops = [
     name: "شین",
     placeholder: "جستجو در شین",
     image: "/image/Header/Shein.png",
+    lightLogo: true,
   },
   {
     id: "noon",
@@ -77,14 +79,21 @@ export default function SearchDropdown() {
             </div>
           </SelectValue>
         </SelectTrigger>
-        <SelectContent className=" p-1 bg-white dark:bg-dark-box rounded-xl shadow-xl border border-gray-200 dark:border-dark-stroke relative z-50">
+        <SelectContent className="w-52 p-2 flex flex-col gap-2 bg-white dark:bg-dark-box rounded-xl shadow-xl border border-gray-200 dark:border-dark-stroke relative z-50">
           {shops.map((shop) => (
-            <SelectItem key={shop.id} value={shop.id}>
-              <div className="flex items-center gap-3">
-                <Image src={shop.image} alt={shop.name} width={24} height={24} className="object-contain shadow-md" />
-                <span>{shop.name}</span>
+            <SelectItemRadio key={shop.id} value={shop.id}>
+              <div className="flex items-center justify-center w-full">
+                <Image
+                  src={shop.image}
+                  alt={shop.name}
+                  width={48}
+                  height={48}
+                  className={`object-contain max-w-[48px] max-h-[48px] ${
+                    shop.lightLogo ? "brightness-0 dark:brightness-100" : ""
+                  }`}
+                />
               </div>
-            </SelectItem>
+            </SelectItemRadio>
           ))}
         </SelectContent>
       </Select>

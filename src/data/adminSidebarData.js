@@ -101,14 +101,6 @@ export const ADMIN_SIDEBAR_ITEMS = [
     color: "#F59E0B",
     href: "/admin/orders",
     key: "order",
-    children: [
-      { name: "همه سفارشات", href: "/admin/orders" },
-      { name: "سفارشات در انتظار", href: "/admin/orders/pending" },
-      { name: "سفارشات در حال پردازش", href: "/admin/orders/processing" },
-      { name: "سفارشات ارسال شده", href: "/admin/orders/shipped" },
-      { name: "سفارشات تحویل شده", href: "/admin/orders/delivered" },
-      { name: "سفارشات لغو شده", href: "/admin/orders/cancelled" },
-    ],
   },
   {
     name: "درخواست‌های مرجوعی",

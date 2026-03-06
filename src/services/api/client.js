@@ -23,7 +23,7 @@ const apiClient = ky.create({
   },
   timeout: 30000,
   retry: {
-    limit: 2,
+    limit: 0,
     methods: ["get", "post"],
     statusCodes: [408, 413, 429, 500, 502, 503, 504],
   },
@@ -45,38 +45,37 @@ const apiClient = ky.create({
 });
 
 /** کلاینت مخصوص اسکرپر پایتون (جستجو و عکس — انتقال بهینه با gzip) */
-const scraperClient =
-  SCRAPER_BASE_URL
-    ? ky.create({
-        prefixUrl: SCRAPER_BASE_URL,
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "Accept-Encoding": "gzip, deflate, br",
-        },
-        timeout: 30000,
-        retry: {
-          limit: 1,
-          methods: ["get"],
-          statusCodes: [408, 500, 502, 503, 504],
-        },
-        hooks: {
-          beforeError: [
-            async (error) => {
-              const { response } = error;
-              if (response && response.body) {
-                try {
-                  const body = await response.json();
-                  error.message = body.message || body.error || error.message;
-                  error.data = body;
-                } catch {}
-              }
-              return error;
-            },
-          ],
-        },
-      })
-    : null;
+const scraperClient = SCRAPER_BASE_URL
+  ? ky.create({
+      prefixUrl: SCRAPER_BASE_URL,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "Accept-Encoding": "gzip, deflate, br",
+      },
+      timeout: 30000,
+      retry: {
+        limit: 1,
+        methods: ["get"],
+        statusCodes: [408, 500, 502, 503, 504],
+      },
+      hooks: {
+        beforeError: [
+          async (error) => {
+            const { response } = error;
+            if (response && response.body) {
+              try {
+                const body = await response.json();
+                error.message = body.message || body.error || error.message;
+                error.data = body;
+              } catch {}
+            }
+            return error;
+          },
+        ],
+      },
+    })
+  : null;
 
 export const getScraperClient = () => scraperClient;
 export const isScraperConfigured = () => Boolean(SCRAPER_BASE_URL);

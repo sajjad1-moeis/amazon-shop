@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -9,12 +10,15 @@ import { Eye } from "iconsax-reactjs";
 const getOrderStatusBadge = (status) => {
   const statusMap = {
     1: { label: "در انتظار", className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" },
-    2: { label: "در حال پردازش", className: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
-    3: { label: "ارسال شده", className: "bg-purple-500/20 text-purple-400 border-purple-500/30" },
-    4: { label: "تحویل شده", className: "bg-green-500/20 text-green-400 border-green-500/30" },
-    5: { label: "لغو شده", className: "bg-red-500/20 text-red-400 border-red-500/30" },
+    2: { label: "پرداخت شده", className: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
+    3: { label: "در حال پردازش", className: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
+    4: { label: "ارسال شده", className: "bg-purple-500/20 text-purple-400 border-purple-500/30" },
+    5: { label: "تحویل شده", className: "bg-green-500/20 text-green-400 border-green-500/30" },
+    6: { label: "لغو شده", className: "bg-red-500/20 text-red-400 border-red-500/30" },
+    7: { label: "بازگشت داده شده", className: "bg-orange-500/20 text-orange-400 border-orange-500/30" },
+    8: { label: "ناموفق", className: "bg-red-500/20 text-red-400 border-red-500/30" },
   };
-  const statusInfo = statusMap[status] || statusMap[1];
+  const statusInfo = statusMap[status] || { label: "نامشخص", className: "bg-gray-500/20 text-gray-400 border-gray-500/30" };
   return (
     <Badge variant="outline" className={statusInfo.className}>
       {statusInfo.label}
@@ -64,7 +68,7 @@ export default function OrdersTable({ orders }) {
             </TableCell>
             <TableCell className="text-gray-300">{order.itemsCount || order.itemCount || 0}</TableCell>
             <TableCell className="text-gray-300">
-              {order.totalAmount ? `${order.totalAmount.toLocaleString()} تومان` : "-"}
+              {order.totalAmount != null ? `${Number(order.totalAmount).toLocaleString("fa-IR")} تومان` : "-"}
             </TableCell>
             <TableCell>{getOrderStatusBadge(order.status)}</TableCell>
             <TableCell>{getPaymentStatusBadge(order.paymentStatus)}</TableCell>
@@ -74,8 +78,10 @@ export default function OrdersTable({ orders }) {
                 : order.date || "-"}
             </TableCell>
             <TableCell>
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-400 hover:bg-blue-400/20">
-                <Eye size={18} />
+              <Button asChild variant="ghost" size="icon" className="h-8 w-8 text-blue-400 hover:bg-blue-400/20">
+                <Link href={`/admin/orders/${order.id}`}>
+                  <Eye size={18} />
+                </Link>
               </Button>
             </TableCell>
           </TableRow>

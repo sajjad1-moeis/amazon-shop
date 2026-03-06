@@ -12,6 +12,7 @@ import { orderService } from "@/services/order/orderService";
 export default function OrdersPage() {
   const searchParams = useSearchParams();
   const statusParam = searchParams.get("status");
+  const statusFilter = statusParam && statusParam !== "all" ? statusParam : undefined;
   const searchTerm = searchParams.get("search") || "";
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,7 +22,7 @@ export default function OrdersPage() {
 
   useEffect(() => {
     setPageNumber(1);
-  }, [statusParam, searchTerm]);
+  }, [statusFilter, searchTerm]);
 
   useEffect(() => {
     let cancelled = false;
@@ -31,7 +32,7 @@ export default function OrdersPage() {
         const response = await orderService.getPaginated({
           pageNumber,
           pageSize,
-          status: statusParam || undefined,
+          status: statusFilter,
           searchTerm: searchTerm || undefined,
         });
         if (cancelled) return;
@@ -49,7 +50,7 @@ export default function OrdersPage() {
       }
     })();
     return () => { cancelled = true; };
-  }, [pageNumber, statusParam, searchTerm, pageSize]);
+  }, [pageNumber, statusFilter, searchTerm, pageSize]);
 
   return (
     <div className="space-y-6">

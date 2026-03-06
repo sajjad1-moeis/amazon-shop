@@ -77,6 +77,12 @@ export const orderService = {
     return unwrapApiData(res);
   },
 
+  /** همان GetOrderById اما بدون unwrap — برای نمایش ریسپانس خام */
+  getOrderByIdRaw: async (orderId) => {
+    const client = getAuthenticatedClient();
+    return client.get(`Order/GetOrderById?${qs({ orderId })}`).json();
+  },
+
   /** GET api/Order/GetOrderByOrderNumber?orderNumber={number} */
   getOrderByOrderNumber: async (orderNumber) => {
     const client = getAuthenticatedClient();
