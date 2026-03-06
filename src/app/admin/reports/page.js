@@ -53,6 +53,26 @@ export default function ReportsPage() {
             </CardContent>
           </Card>
         </Link>
+        <Link href="/admin/reports/shipping">
+          <Card className="bg-gray-800 border-gray-700 hover:bg-gray-700/50 cursor-pointer transition-colors">
+            <CardHeader>
+              <CardTitle className="text-white">گزارش ارسال</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-400">گزارشات ارسال و تحویل</p>
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href="/admin/reports/inventory">
+          <Card className="bg-gray-800 border-gray-700 hover:bg-gray-700/50 cursor-pointer transition-colors">
+            <CardHeader>
+              <CardTitle className="text-white">گزارش موجودی</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-400">وضعیت موجودی انبار</p>
+            </CardContent>
+          </Card>
+        </Link>
         <Link href="/admin/reports/rate-limits">
           <Card className="bg-gray-800 border-gray-700 hover:bg-gray-700/50 cursor-pointer transition-colors">
             <CardHeader>

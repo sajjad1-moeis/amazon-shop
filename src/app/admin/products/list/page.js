@@ -11,6 +11,7 @@ import BulkImportModal from "@/template/Admin/products/list/BulkImportModal";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import { productService } from "@/services/product/productService";
+import { Button } from "@/components/ui/button";
 
 export default function ProductsListPage() {
   const router = useRouter();
@@ -200,11 +201,7 @@ export default function ProductsListPage() {
           onConfirm={handleDeleteConfirm}
           loading={deleteLoading}
         />
-        <AddByLinkModal
-          open={addByLinkOpen}
-          onOpenChange={setAddByLinkOpen}
-          onSuccess={fetchProducts}
-        />
+        <AddByLinkModal open={addByLinkOpen} onOpenChange={setAddByLinkOpen} onSuccess={fetchProducts} />
         <BulkImportModal open={bulkImportOpen} onOpenChange={setBulkImportOpen} />
       </div>
     </div>

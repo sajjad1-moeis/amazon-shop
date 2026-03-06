@@ -1,6 +1,5 @@
 "use client";
 
-import { AuthModal } from "@/template/Auth/AuthModal";
 import { User, LogoutCurve, ArrowDown2, Wallet3 } from "iconsax-reactjs";
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -40,9 +39,8 @@ function useWalletBalance(userId, enabled) {
 }
 
 export default function BtnShowLoginModal() {
-  const [open, setOpen] = useState(false);
   const [popoverOpen, setPopoverOpen] = useState(false);
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout, openAuthModal } = useAuth();
 
   const displayName = user?.userName || user?.fullName || user?.firstName || user?.name || user?.phoneNumber || "کاربر";
   const userId = user?.id ?? user?.userId;
@@ -59,19 +57,16 @@ export default function BtnShowLoginModal() {
 
   if (!isAuthenticated) {
     return (
-      <>
-        <button
-          onClick={() => setOpen(true)}
-          className={cn(
-            "p-3 rounded-lg border-2 border-white dark:border-[#898989]",
-            "text-white dark:text-[#898989] hover:opacity-90 transition-opacity",
-          )}
-          aria-label="ورود"
-        >
-          <User />
-        </button>
-        <AuthModal open={open} onClose={() => setOpen(false)} />
-      </>
+      <button
+        onClick={() => openAuthModal()}
+        className={cn(
+          "p-3 rounded-lg border-2 border-white dark:border-[#898989]",
+          "text-white dark:text-[#898989] hover:opacity-90 transition-opacity",
+        )}
+        aria-label="ورود"
+      >
+        <User />
+      </button>
     );
   }
 

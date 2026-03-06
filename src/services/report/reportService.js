@@ -42,6 +42,23 @@ export const reportService = {
     const client = getAuthenticatedClient();
     return client.get(`Report/GetFinancialReport?${searchParams.toString()}`).json();
   },
+
+  /** GET api/Report/GetShippingReport (Phase 20) */
+  getShippingReport: async (params = {}) => {
+    const { startDate, endDate } = params;
+    const searchParams = new URLSearchParams();
+    if (startDate) searchParams.append("startDate", startDate);
+    if (endDate) searchParams.append("endDate", endDate);
+
+    const client = getAuthenticatedClient();
+    return client.get(`Report/GetShippingReport?${searchParams.toString()}`).json();
+  },
+
+  /** GET api/Report/GetInventoryReport (Phase 20) */
+  getInventoryReport: async () => {
+    const client = getAuthenticatedClient();
+    return client.get("Report/GetInventoryReport").json();
+  },
 };
 
 

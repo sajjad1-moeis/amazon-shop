@@ -14,15 +14,14 @@ function Page() {
       <div className="relative max-md:bg-[url(/image/CurrencyServices/CurrencyServicesBg.jpg)] bg-cover max-md:py-20">
         <LinerBg />
 
-<Image
-  src="/image/CurrencyServices/CurrencyServicesBg.jpg"
-  alt=""
-  width={1920}      // عرض واقعی یا تقریبی تصویر
-  height={801}      // ارتفاع واقعی تصویر
-  className="w-full h-auto  max-md:hidden"
-  priority
-/>
-
+        <Image
+          src="/image/CurrencyServices/CurrencyServicesBg.jpg"
+          alt=""
+          width={1920} // عرض واقعی یا تقریبی تصویر
+          height={801} // ارتفاع واقعی تصویر
+          className="w-full h-auto  max-md:hidden"
+          priority
+        />
       </div>
       <div className="max-md:p-4">
         <div className="mb-20 max-w-5xl mx-auto md:-mt-[18%]  relative rounded-xl">
@@ -46,7 +45,7 @@ function Page() {
                 value={tab.value}
                 className="pt-5 m-0  dark:bg-white/10 dark:bg-dark-box bg-white"
               >
-                <tab.componnet />
+                <tab.componnet tabValue={tab.value} />
               </TabsContent>
             ))}
           </Tabs>

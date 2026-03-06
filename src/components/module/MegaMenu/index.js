@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -199,6 +200,28 @@ export default function MegaMenu({ trigger }) {
               className="w-full p-0 bg-white dark:bg-dark-box rounded-xl shadow-xl border border-gray-200 dark:border-dark-stroke relative z-50"
               dir="rtl"
             >
+              {/* همه محصولات + فیلتر امارات و امریکا (فیگما) */}
+              <div className="flex flex-wrap items-center gap-2 px-4 py-3 border-b border-gray-200 dark:border-dark-stroke bg-gray-50 dark:bg-dark-field/50">
+                <Link
+                  href="/products"
+                  className="text-sm font-medium text-primary-600 dark:text-primary-400 hover:underline"
+                >
+                  همه محصولات
+                </Link>
+                <span className="text-gray-400 dark:text-gray-500">|</span>
+                <Link
+                  href="/products?region=ae"
+                  className="text-sm text-gray-700 dark:text-dark-text hover:text-primary-600 dark:hover:text-primary-400 px-2 py-1 rounded-md hover:bg-primary-50 dark:hover:bg-dark-field"
+                >
+                  امارات
+                </Link>
+                <Link
+                  href="/products?region=us"
+                  className="text-sm text-gray-700 dark:text-dark-text hover:text-primary-600 dark:hover:text-primary-400 px-2 py-1 rounded-md hover:bg-primary-50 dark:hover:bg-dark-field"
+                >
+                  امریکا
+                </Link>
+              </div>
               {/* Content Layout */}
               <div className="flex">
                 {/* Right Side: Main Categories + Search */}

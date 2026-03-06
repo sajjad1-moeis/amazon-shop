@@ -152,6 +152,42 @@ export const userService = {
     return client.post("Users/ChangePassword", { json: body }).json();
   },
 
+  /** PUT api/Users/UpdateProfile — ویرایش اطلاعات اصلی پروفایل (Phase 20) */
+  updateProfile: async (body) => {
+    const client = getAuthenticatedClient();
+    return client.put("Users/UpdateProfile", { json: body }).json();
+  },
+
+  /** PUT api/Users/UpdateFinancialInfo — ذخیره حساب بانکی ترجیحی (Phase 20) */
+  updateFinancialInfo: async (body) => {
+    const client = getAuthenticatedClient();
+    return client.put("Users/UpdateFinancialInfo", { json: body }).json();
+  },
+
+  /** GET api/Users/NotificationSettings — دریافت تنظیمات نوتیفیکیشن (Phase 20) */
+  getNotificationSettings: async () => {
+    const client = getAuthenticatedClient();
+    return client.get("Users/NotificationSettings").json();
+  },
+
+  /** PUT api/Users/NotificationSettings — به‌روزرسانی تنظیمات نوتیفیکیشن (Phase 20) */
+  updateNotificationSettings: async (body) => {
+    const client = getAuthenticatedClient();
+    return client.put("Users/NotificationSettings", { json: body }).json();
+  },
+
+  /** GET api/Users/ConnectedDevices — لیست دستگاه‌های متصل (Phase 20) */
+  getConnectedDevices: async () => {
+    const client = getAuthenticatedClient();
+    return client.get("Users/ConnectedDevices").json();
+  },
+
+  /** POST api/Users/LogoutDevice?deviceId= — خروج از یک دستگاه (Phase 20) */
+  logoutDevice: async (deviceId) => {
+    const client = getAuthenticatedClient();
+    return client.post(`Users/LogoutDevice?deviceId=${encodeURIComponent(deviceId)}`).json();
+  },
+
   chargeUserWallet: async (id, walletData) => {
     const client = getAuthenticatedClient();
     return client.post(`Users/ChargeUserWallet?id=${id}`, { json: walletData }).json();

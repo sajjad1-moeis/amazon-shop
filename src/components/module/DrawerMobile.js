@@ -13,6 +13,7 @@ const blogPages = [
   { title: "وبلاگ‌ها", href: "/blogs" },
   { title: "پی‌پال", href: "/paypal-cashout" },
   { title: "محصولات", href: "/products" },
+  { title: "تخفیف‌های آمازون", href: "/outlet" },
   { title: "دسته‌بندی‌ها", href: "/categories" },
   { title: "داشبورد", href: "/dashboard" },
   { title: "گیفت کارت", href: "/gift-cart" },

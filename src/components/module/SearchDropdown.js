@@ -6,8 +6,15 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-// لیست فروشگاه‌ها
+// لیست فروشگاه‌ها — گزینهٔ اول: جستجوی مهم در دیتابیس میکرولس (فیگما)
 const shops = [
+  {
+    id: "microless",
+    name: "میکرولس",
+    placeholder: "جستجو در محصولات سایت",
+    image: "/image/logo.png",
+    isImportant: true,
+  },
   {
     id: "amazon",
     name: "آمازون",

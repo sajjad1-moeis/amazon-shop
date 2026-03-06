@@ -7,51 +7,47 @@ import { Spinner } from "@/components/ui/spinner";
 import { reportService } from "@/services/report/reportService";
 import { unwrapApiData } from "@/services/api/client";
 
-export default function ProductsReportsPage() {
+export default function InventoryReportsPage() {
   const [loading, setLoading] = useState(true);
   const [report, setReport] = useState({
-    totalProducts: 0,
-    soldCount: 0,
-    topSellingCount: 0,
+    totalStock: 0,
+    lowStockCount: 0,
+    outOfStockCount: 0,
   });
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
-    const end = new Date();
-    const start = new Date(end);
-    start.setMonth(start.getMonth() - 1);
 
     reportService
-      .getProductsReport({
-        startDate: start.toISOString(),
-        endDate: end.toISOString(),
-      })
+      .getInventoryReport()
       .then((res) => {
         if (cancelled) return;
         const data = unwrapApiData(res);
         if (data) {
           setReport({
-            totalProducts: data.totalProducts ?? 0,
-            soldCount: data.soldCount ?? 0,
-            topSellingCount: data.topSellingCount ?? 0,
+            totalStock: data.totalStock ?? 0,
+            lowStockCount: data.lowStockCount ?? 0,
+            outOfStockCount: data.outOfStockCount ?? 0,
           });
         }
       })
       .catch((err) => {
-        if (!cancelled) toast.error(err?.message || "خطا در دریافت گزارش محصولات");
+        if (!cancelled) toast.error(err?.message || "خطا در دریافت گزارش موجودی");
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">گزارش محصولات</h1>
-        <p className="text-gray-400">گزارشات محصولات و موجودی</p>
+        <h1 className="text-3xl font-bold text-white mb-2">گزارش موجودی</h1>
+        <p className="text-gray-400">وضعیت موجودی انبار و محصولات</p>
       </div>
 
       {loading ? (
@@ -62,26 +58,26 @@ export default function ProductsReportsPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card className="bg-gray-800 border-gray-700">
             <CardHeader>
-              <CardTitle className="text-white text-lg">کل محصولات</CardTitle>
+              <CardTitle className="text-white text-lg">مجموع موجودی</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold text-white">{report.totalProducts.toLocaleString()}</p>
+              <p className="text-3xl font-bold text-white">{report.totalStock.toLocaleString()}</p>
             </CardContent>
           </Card>
           <Card className="bg-gray-800 border-gray-700">
             <CardHeader>
-              <CardTitle className="text-white text-lg">محصولات فروخته شده (بازه)</CardTitle>
+              <CardTitle className="text-white text-lg">موجودی کم</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold text-white">{report.soldCount.toLocaleString()}</p>
+              <p className="text-3xl font-bold text-amber-400">{report.lowStockCount.toLocaleString()}</p>
             </CardContent>
           </Card>
           <Card className="bg-gray-800 border-gray-700">
             <CardHeader>
-              <CardTitle className="text-white text-lg">محصولات پرفروش</CardTitle>
+              <CardTitle className="text-white text-lg">ناموجود</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold text-white">{report.topSellingCount.toLocaleString()}</p>
+              <p className="text-3xl font-bold text-red-400">{report.outOfStockCount.toLocaleString()}</p>
             </CardContent>
           </Card>
         </div>
@@ -89,4 +85,3 @@ export default function ProductsReportsPage() {
     </div>
   );
 }
-

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Image from "next/image";
 import { Trash } from "iconsax-reactjs";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
@@ -6,21 +7,20 @@ import { Switch } from "../ui/switch";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 
 const shops = [
-  { name: "همه", id: "a1", value: "all" },
-  { name: "آمازون امارات", id: "a2", value: "uae" },
-  { name: "آمازون آمریکا", id: "a3", value: "us" },
+  { name: "همه", id: "a1", value: "all", flagSrc: null },
+  { name: "آمازون امارات", id: "a2", value: "uae", flagSrc: "/image/Products/emarat.png" },
+  { name: "آمازون آمریکا", id: "a3", value: "us", flagSrc: "/image/Products/usa.png" },
 ];
 
 function FiltersSection({ dynamicFilters, isInventory, filters = {}, onFilterChange, onClearAll }) {
-  const hasActiveFilters =
-    !!(
-      filters.categoryId ||
-      filters.brandId ||
-      filters.minPrice ||
-      filters.maxPrice ||
-      filters.inStock ||
-      filters.shop
-    );
+  const hasActiveFilters = !!(
+    filters.categoryId ||
+    filters.brandId ||
+    filters.minPrice ||
+    filters.maxPrice ||
+    filters.inStock ||
+    filters.shop
+  );
 
   const handleClearAll = () => {
     if (onClearAll) {
@@ -79,7 +79,11 @@ function FiltersSection({ dynamicFilters, isInventory, filters = {}, onFilterCha
                   onFilterChange("shop", next === "all" ? "" : next);
                 }}
               />
-              <Label className="cursor-pointer text-gray-700 dark:text-gray-300" htmlFor={shop.id}>
+              <Label
+                className="cursor-pointer text-gray-700 dark:text-gray-300 flex items-center gap-2"
+                htmlFor={shop.id}
+              >
+                {shop.flagSrc && <Image src={shop.flagSrc} alt="" width={28} height={28} className="object-cover" />}
                 {shop.name}
               </Label>
             </div>

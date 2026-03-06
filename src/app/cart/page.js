@@ -4,7 +4,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCartCount } from "@/contexts/CartCountContext";
 import { shoppingCartService } from "@/services/shoppingCart/shoppingCartService";
-import { AuthModal } from "@/template/Auth/AuthModal";
 import IndexLayout from "@/layout/IndexLayout";
 import InvoiceCart from "@/template/Cart/InvoiceCart";
 import ProductList from "@/template/Cart/ProductList";
@@ -17,7 +16,6 @@ export default function CartPage() {
   const { refreshCartCount } = useCartCount();
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   const fetchCart = useCallback(async (options = {}) => {
     const { silent = false } = options;
@@ -84,7 +82,7 @@ export default function CartPage() {
                   برای مشاهده جمع نهایی و پرداخت، وارد حساب کاربری شوید.
                 </p>
                 <Button
-                  onClick={() => setAuthModalOpen(true)}
+                  onClick={() => openAuthModal("/steps-cart")}
                   className="w-full bg-primary-600 hover:bg-primary-700 text-white"
                 >
                   ورود و ادامه پرداخت
@@ -101,11 +99,6 @@ export default function CartPage() {
           )}
         </div>
       </div>
-      <AuthModal
-        open={authModalOpen}
-        onClose={() => setAuthModalOpen(false)}
-        redirectTo="/steps-cart"
-      />
     </IndexLayout>
   );
 }

@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import EditBasicInfoModal from "./EditBasicInfoModal";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { userService } from "@/services/user/userService";
+import { unwrapApiData } from "@/services/api/client";
 
 const defaultData = {
   fullName: "",
@@ -81,11 +83,15 @@ export default function BasicInfoCard({ data: dataProp, onProfileUpdated }) {
         onClose={() => setOpen(false)}
         initialData={displayData}
         onSave={async (values) => {
+          const res = await userService.updateProfile({
+            fullName: values.fullName?.trim() || undefined,
+            phoneNumber: values.phone?.trim() || undefined,
+            email: values.email?.trim() || undefined,
+            nationalId: values.nationalId?.trim() || undefined,
+          });
+          unwrapApiData(res);
           setData((prev) => ({ ...prev, ...values }));
           if (onProfileUpdated) onProfileUpdated();
-          toast.info(
-            "در فاز ۱۹ اندپوینتی برای به‌روزرسانی پروفایل تعریف نشده است. تغییرات فقط در همین صفحه اعمال شد. برای ذخیرهٔ واقعی، بک‌اند باید اندپوینت (مثلاً POST Users/UpdateProfile) را پیاده کند."
-          );
         }}
       />
     </div>

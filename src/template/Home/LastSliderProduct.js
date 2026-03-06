@@ -7,6 +7,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation, Autoplay } from "swiper/modules";
+import SliderNavButton from "@/components/SliderNavButton";
+import { SLIDER_AUTOPLAY_DELAY } from "@/config/sliderConfig";
 import { productService } from "@/services/product/productService";
 import { unwrapApiData } from "@/services/api/client";
 import { mapProductListDto } from "@/utils/productHelpers";
@@ -21,12 +23,12 @@ function LastSliderProduct() {
   useEffect(() => {
     let cancelled = false;
     productService
-      .getBestSellers(12)
+      .getBestSellers(24)
       .then((res) => {
         if (cancelled) return;
         const data = unwrapApiData(res);
         const list = Array.isArray(data) ? data : [];
-        setProducts(list.slice(0, 12).map(mapProductListDto).filter(Boolean));
+        setProducts(list.slice(0, 24).map(mapProductListDto).filter(Boolean));
       })
       .catch(() => {
         if (!cancelled) setProducts([]);
@@ -43,7 +45,7 @@ function LastSliderProduct() {
 
   return (
     <div className="container mb-22">
-      <div className="mt-22 categories relative border-2 border-primary-600 dark:bg-[#191C24] bg-primary-50 rounded-2xl overflow-hidden">
+      <div className="mt-22 last-slider-product relative border-2 border-primary-600 dark:bg-[#191C24] bg-primary-50 rounded-2xl overflow-hidden">
         <div className="bg-primary-600 dark:bg-[#32419166] p-4 flex-between">
           <p className="text-xl lg:text-2xl text-white">{SECTION_TITLE}</p>
           <div className="grid grid-cols-4 gap-4 max-lg:hidden">
@@ -65,26 +67,36 @@ function LastSliderProduct() {
               {displayProducts.length === 0 ? (
                 <div className="col-span-4 text-center py-8 text-gray-500 dark:text-dark-text">محصولی یافت نشد.</div>
               ) : (
-                displayProducts
-                  .slice(0, 4)
-                  .map((product) => (
-                    <ProductCard key={product.id} product={product} className="bg-white border-0 dark:bg-dark-box" />
-                  ))
+                displayProducts.slice(0, 4).map((product) => <ProductCard key={product.id} product={product} />)
               )}
             </div>
 
-            <div className="lg:hidden p-4">
+            <div className="lg:hidden p-4 relative">
+              {displayProducts.length > 0 && (
+                <>
+                  <SliderNavButton
+                    direction="next"
+                    className="next-slide absolute left-4 top-1/2 -translate-y-1/2 z-10"
+                    size={20}
+                  />
+                  <SliderNavButton
+                    direction="prev"
+                    className="prev-slide absolute right-4 top-1/2 -translate-y-1/2 z-10"
+                    size={20}
+                  />
+                </>
+              )}
               {displayProducts.length === 0 ? (
                 <div className="text-center py-8 text-gray-500 dark:text-dark-text">محصولی یافت نشد.</div>
               ) : (
                 <Swiper
                   slidesPerView={1.5}
                   spaceBetween={10}
-                  autoplay={{ delay: 3000, disableOnInteraction: false }}
+                  autoplay={{ delay: SLIDER_AUTOPLAY_DELAY, disableOnInteraction: false }}
                   loop={displayProducts.length > 1}
                   navigation={{
-                    nextEl: ".categories .next-slide",
-                    prevEl: ".categories .prev-slide",
+                    nextEl: ".last-slider-product .next-slide",
+                    prevEl: ".last-slider-product .prev-slide",
                   }}
                   breakpoints={{
                     640: { slidesPerView: 2, spaceBetween: 20 },

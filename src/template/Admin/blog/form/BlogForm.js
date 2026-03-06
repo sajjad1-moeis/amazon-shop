@@ -16,6 +16,7 @@ export default function BlogForm({
   onSubmit,
   onChange,
   onSelectChange,
+  onContentChange,
   onTagToggle,
   onFileChange,
   isEdit = false,
@@ -38,6 +39,7 @@ export default function BlogForm({
             formData={formData}
             onChange={onChange}
             onSelectChange={onSelectChange}
+            onContentChange={onContentChange}
             optionsData={optionsData}
             styles={FORM_STYLES}
           />
@@ -47,6 +49,7 @@ export default function BlogForm({
             formData={formData}
             onChange={onChange}
             onSelectChange={onSelectChange}
+            onContentChange={onContentChange}
             styles={FORM_STYLES}
           />
 
@@ -55,6 +58,7 @@ export default function BlogForm({
             formData={formData}
             onChange={onChange}
             onSelectChange={onSelectChange}
+            onContentChange={onContentChange}
             styles={FORM_STYLES}
           />
 

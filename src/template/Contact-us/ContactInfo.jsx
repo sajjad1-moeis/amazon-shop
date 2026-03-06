@@ -11,8 +11,8 @@ const CONTACT_INFO = [
   },
   {
     icon: CallCalling,
-    title: "تلفن",
-    content: "۰۹۱۶۱۵۸۷۱۶۴",
+    title: "شماره تلفن",
+    content: "02191017163",
   },
   {
     icon: Sms,
@@ -21,8 +21,9 @@ const CONTACT_INFO = [
   },
   {
     icon: Whatsapp,
-    title: "پشتیبانی واتساپ",
-    content: "+98 913 437 5878",
+    title: "شماره واتساپ",
+    content: "+989941235729",
+    whatsappLink: "https://wa.me/+989941235729",
   },
 ];
 
@@ -47,7 +48,18 @@ export default function ContactInfo() {
                 <Icon />
                 <p className="text-xl">{info.title}</p>
               </div>
-              <p className="font-medium leading-7 mt-3 text-gray-50 dark:text-dark-titre">{info.content}</p>
+              {info.whatsappLink ? (
+                <a
+                  href={info.whatsappLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium leading-7 mt-3 text-gray-50 dark:text-dark-titre hover:underline inline-flex items-center gap-1"
+                >
+                  {info.content}
+                </a>
+              ) : (
+                <p className="font-medium leading-7 mt-3 text-gray-50 dark:text-dark-titre">{info.content}</p>
+              )}
             </div>
           );
         })}

@@ -1,8 +1,17 @@
+const isEmptyHtml = (str) => {
+  if (!str || typeof str !== "string") return true;
+  const stripped = str.replace(/<[^>]*>/g, "").trim();
+  return stripped === "";
+};
+
 export const validateBlogForm = (formData, requiredFields = ["title", "shortDescription", "content", "categoryId"]) => {
   const errors = [];
-  
+
   requiredFields.forEach((field) => {
-    if (!formData[field] || (typeof formData[field] === "string" && formData[field].trim() === "")) {
+    const value = formData[field];
+    if (field === "content") {
+      if (isEmptyHtml(value)) errors.push(field);
+    } else if (!value || (typeof value === "string" && value.trim() === "")) {
       errors.push(field);
     }
   });

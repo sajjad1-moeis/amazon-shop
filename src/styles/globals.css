@@ -290,6 +290,60 @@ img {
   }
 }
 
+/* TipTap Rich Text Editor */
+.rich-text-editor-content .tiptap {
+  min-height: 350px;
+}
+.rich-text-editor-content .tiptap p {
+  margin: 0.5em 0;
+}
+.rich-text-editor-content .tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: right;
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}
+.rich-text-editor-content .tiptap h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 1em 0 0.5em;
+}
+.rich-text-editor-content .tiptap h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0.8em 0 0.4em;
+}
+.rich-text-editor-content .tiptap h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0.6em 0 0.3em;
+}
+.rich-text-editor-content .tiptap ul,
+.rich-text-editor-content .tiptap ol {
+  padding-right: 1.5em;
+  margin: 0.5em 0;
+}
+.rich-text-editor-content .tiptap blockquote {
+  border-right: 4px solid #4b5563;
+  padding-right: 1em;
+  margin: 0.5em 0;
+  color: #d1d5db;
+}
+.rich-text-editor-content .tiptap pre {
+  background: #1f2937;
+  padding: 1em;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 0.5em 0;
+}
+.rich-text-editor-content .tiptap code {
+  background: #374151;
+  padding: 0.2em 0.4em;
+  border-radius: 0.25rem;
+  font-size: 0.9em;
+}
+
 /* رفع مشکل sticky positioning در Safari */
 @supports (-webkit-touch-callout: none) {
   .sticky,

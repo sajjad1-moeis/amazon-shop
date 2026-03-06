@@ -6,7 +6,6 @@ import { shoppingCartService } from "@/services/shoppingCart/shoppingCartService
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCartCount } from "@/contexts/CartCountContext";
-import { AuthModal } from "@/template/Auth/AuthModal";
 import DeliveryTypeSection from "./DeliveryTypeSection";
 import PriceDisplaySection from "./PriceDisplaySection";
 import ActionButtonsSection from "./ActionButtonsSection";
@@ -23,9 +22,8 @@ export default function PurchaseSection({
 }) {
   const [loading, setLoading] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [authModalOpen, setAuthModalOpen] = useState(false);
   const pathname = usePathname();
-  const { user } = useAuth();
+  const { user, openAuthModal } = useAuth();
   const { refreshCartCount } = useCartCount();
 
   const finalPrice = calculateProductPrice(product, selectedColor, selectedDelivery);
@@ -42,7 +40,7 @@ export default function PurchaseSection({
       return;
     }
     if (!user?.id) {
-      setAuthModalOpen(true);
+      openAuthModal(pathname);
       return;
     }
     const qty = Number(quantity) || 1;
@@ -94,8 +92,6 @@ export default function PurchaseSection({
       </div>
 
       <SidebarActions />
-
-      <AuthModal open={authModalOpen} onClose={() => setAuthModalOpen(false)} redirectTo={pathname} />
     </div>
   );
 }

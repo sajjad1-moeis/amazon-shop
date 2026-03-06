@@ -1,8 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
-import { useRouter } from "next/navigation";
 import { authAPI } from "@/lib/api-client";
+import { AuthModal } from "@/template/Auth/AuthModal";
 import { saveToken, getToken, removeToken, isAuthenticated } from "@/lib/token-manager";
 import { isAdminUser } from "@/utils/authHelpers";
 import { AUTH_SESSION_EXPIRED_EVENT } from "@/services/api/client";
@@ -26,6 +26,18 @@ const extractToken = (data) =>
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authModalRedirect, setAuthModalRedirect] = useState(null);
+
+  const openAuthModal = (redirectTo = null) => {
+    setAuthModalRedirect(redirectTo || null);
+    setAuthModalOpen(true);
+  };
+
+  const closeAuthModal = () => {
+    setAuthModalOpen(false);
+    setAuthModalRedirect(null);
+  };
 
   /* ---------- Init Auth ---------- */
   useEffect(() => {
@@ -258,6 +270,8 @@ export const AuthProvider = ({ children }) => {
       loading,
       isAuthenticated: isAuthenticated() && user !== null,
       isAdmin: isAdminUser(user),
+      openAuthModal,
+      closeAuthModal,
       login,
       sendRegistrationOtp,
       verifyRegistrationOtp,
@@ -271,5 +285,14 @@ export const AuthProvider = ({ children }) => {
     [user, loading]
   );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+      <AuthModal
+        open={authModalOpen}
+        onClose={closeAuthModal}
+        redirectTo={authModalRedirect}
+      />
+    </AuthContext.Provider>
+  );
 };

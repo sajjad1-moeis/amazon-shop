@@ -8,6 +8,7 @@ export default function FormSection({
   formData,
   onChange,
   onSelectChange,
+  onContentChange,
   optionsData = {},
   styles,
 }) {
@@ -31,6 +32,7 @@ export default function FormSection({
           formData={formData}
           onChange={onChange}
           onSelectChange={onSelectChange}
+          onContentChange={onContentChange}
           options={getFieldOptions(field)}
           styles={styles}
         />

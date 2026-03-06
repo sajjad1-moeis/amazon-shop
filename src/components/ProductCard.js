@@ -50,14 +50,10 @@ function ProductCard({ className, product, badges }) {
   const reviewCount = Math.max(0, Math.floor(reviewCountNum));
 
   const rawBadges = badges !== undefined ? badges : product?.badges;
-  const isPrime =
-    product?.is_prime ?? product?.isPrimeEligible ?? product?.is_prime_delivery ?? false;
-  const isFreeDelivery =
-    product?.is_free_delivery ?? product?.isFreeDelivery ?? false;
-  const hasInternational =
-    product?.hasInternationalShipping ?? product?.is_international ?? false;
-  const shipsFromUAE =
-    product?.shipsFromUAE ?? product?.is_local_dubai ?? false;
+  const isPrime = product?.is_prime ?? product?.isPrimeEligible ?? product?.is_prime_delivery ?? false;
+  const isFreeDelivery = product?.is_free_delivery ?? product?.isFreeDelivery ?? false;
+  const hasInternational = product?.hasInternationalShipping ?? product?.is_international ?? false;
+  const shipsFromUAE = product?.shipsFromUAE ?? product?.is_local_dubai ?? false;
   const hasQualityShield = product?.hasQualityShield ?? false;
   const isBestSeller = product?.isBestSeller ?? false;
   const isNewArrival = product?.isNewArrival ?? false;
@@ -70,8 +66,7 @@ function ProductCard({ className, product, badges }) {
   const fromProduct = [
     isPrime && "انتخاب آمازون",
     isFreeDelivery && "ارسال رایگان",
-    discountPct != null && Number(discountPct) > 0 &&
-      `${Math.round(Number(discountPct))}٪ تخفیف`,
+    discountPct != null && Number(discountPct) > 0 && `${Math.round(Number(discountPct))}٪ تخفیف`,
     hasInternational && "ارسال بین المللی",
     shipsFromUAE && "ارسال از امارات",
     hasQualityShield && "ضمانت کیفیت",
@@ -79,9 +74,10 @@ function ProductCard({ className, product, badges }) {
     isNewArrival && "تازه وارد",
   ].filter(Boolean);
   const fromScraper = fromProduct.slice(0, 5);
-  const productBadges = Array.isArray(rawBadges) && rawBadges.length > 0
-    ? rawBadges.filter((b) => typeof b === "string").slice(0, 5)
-    : fromScraper;
+  const productBadges =
+    Array.isArray(rawBadges) && rawBadges.length > 0
+      ? rawBadges.filter((b) => typeof b === "string").slice(0, 5)
+      : fromScraper;
   const seller = product?.seller || "amazon";
   const sellerCountry = product?.sellerCountry || "🇦🇪";
 
@@ -243,7 +239,7 @@ function ProductCard({ className, product, badges }) {
       >
         <div
           className={cn(
-            "shadow-box rounded-xl flex flex-col cursor-pointer transition-all duration-200 bg-white dark:bg-dark-box h-full",
+            "shadow-box rounded-xl overflow-hidden flex flex-col cursor-pointer transition-all duration-200 bg-white dark:bg-dark-box h-full",
             "hover:shadow-lg hover:ring-2 hover:ring-primary-500/30 hover:border-primary-500/50",
             className || "border border-gray-200 dark:border-dark-stroke",
           )}

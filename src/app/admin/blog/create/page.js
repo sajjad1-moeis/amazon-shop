@@ -11,6 +11,7 @@ export default function CreateBlogPage() {
   const router = useRouter();
   const {
     formData,
+    setFormData,
     categories,
     tags,
     loading,
@@ -47,6 +48,7 @@ export default function CreateBlogPage() {
         onSubmit={handleSubmit}
         onChange={handleChange}
         onSelectChange={handleSelectChange}
+        onContentChange={(name, content) => setFormData((prev) => ({ ...prev, [name]: content }))}
         onTagToggle={handleTagToggle}
         onFileChange={handleFileChange}
         isEdit={false}

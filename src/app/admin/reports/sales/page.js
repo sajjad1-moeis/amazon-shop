@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { reportService } from "@/services/report/reportService";
+import { unwrapApiData } from "@/services/api/client";
 
 export default function SalesReportsPage() {
   const [loading, setLoading] = useState(true);
@@ -33,16 +34,18 @@ export default function SalesReportsPage() {
         }),
       ]);
 
-      if (todayRes.success && todayRes.data) {
+      const todayData = unwrapApiData(todayRes);
+      const monthData = unwrapApiData(monthRes);
+
+      if (todayData) {
         setReport((prev) => ({
           ...prev,
-          todaySales: todayRes.data.totalSales || 0,
+          todaySales: todayData.totalSales ?? 0,
         }));
       }
-
-      if (monthRes.success && monthRes.data) {
-        const totalSales = monthRes.data.totalSales || 0;
-        const totalOrders = monthRes.data.totalOrders || 0;
+      if (monthData) {
+        const totalSales = monthData.totalSales ?? 0;
+        const totalOrders = monthData.totalOrders ?? 0;
         setReport((prev) => ({
           ...prev,
           monthSales: totalSales,
@@ -51,8 +54,7 @@ export default function SalesReportsPage() {
         }));
       }
     } catch (error) {
-      toast.error(error.message || "خطا در دریافت گزارش");
-      console.error("Error fetching sales report:", error);
+      toast.error(error?.message || "خطا در دریافت گزارش");
     } finally {
       setLoading(false);
     }

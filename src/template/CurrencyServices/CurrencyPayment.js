@@ -9,6 +9,8 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { DiscountShape } from "iconsax-reactjs";
+import OtherServicesModal from "./OtherServicesModal";
 import { currencyService } from "@/services/currency/currencyService";
 import { unwrapApiData } from "@/services/api/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -34,12 +36,18 @@ const services = [
   { value: "swift", label: "SWIFT" },
 ];
 
-export default function CurrencyPaymentForm({ removeDesc }) {
+export default function CurrencyPaymentForm({ removeDesc, tabValue }) {
   const { user } = useAuth();
   const userId = user?.id ?? user?.userId;
   const [amount, setAmount] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [showDiscountSection, setShowDiscountSection] = useState(false);
+  const [discountCodeInput, setDiscountCodeInput] = useState("");
+  const [applyingDiscount, setApplyingDiscount] = useState(false);
+  const [otherServicesModalOpen, setOtherServicesModalOpen] = useState(false);
+  const [selectedOtherService, setSelectedOtherService] = useState(null);
   const exchangeRate = 114350; // نرخ ارز
+  const isOtherTab = tabValue === "other";
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -69,6 +77,7 @@ export default function CurrencyPaymentForm({ removeDesc }) {
       toast.success("درخواست با موفقیت ثبت شد");
       form.reset({ service: "", currency: "usd", amount: "", description: "" });
       setAmount("");
+      if (tabValue === "other") setSelectedOtherService(null);
     } catch (err) {
       toast.error(err?.message ?? "خطا در ثبت درخواست");
     } finally {
@@ -83,7 +92,34 @@ export default function CurrencyPaymentForm({ removeDesc }) {
     return "۰";
   };
 
+  const handleApplyDiscount = async () => {
+    const code = discountCodeInput?.trim();
+    if (!code) {
+      toast.error("لطفاً کد تخفیف را وارد کنید.");
+      return;
+    }
+    setApplyingDiscount(true);
+    try {
+      // TODO: وقتی API اعمال کد تخفیف برای خدمات ارزی آماده شد، اینجا فراخوانی شود.
+      await new Promise((r) => setTimeout(r, 600));
+      toast.success("کد تخفیف با موفقیت اعمال شد.");
+      setDiscountCodeInput("");
+      setShowDiscountSection(false);
+    } catch (err) {
+      toast.error(err?.message ?? "کد تخفیف معتبر نیست یا منقضی شده است.");
+    } finally {
+      setApplyingDiscount(false);
+    }
+  };
+
   const selectedCurrencyData = currencies.find((c) => c.value === form.watch("currency")) || currencies[0];
+
+  const handleSelectOtherService = (item) => {
+    if (!item) return;
+    form.setValue("service", item.value);
+    setSelectedOtherService(item);
+    setOtherServicesModalOpen(false);
+  };
 
   return (
     <div className="w-full  rounded-2xl  px-4 pb-4" dir="rtl">
@@ -91,31 +127,61 @@ export default function CurrencyPaymentForm({ removeDesc }) {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Top Row: Services and Amount */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Services Select */}
-            <FormField
-              control={form.control}
-              name="service"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base text-gray-900 dark:text-white mb-2 block">خدمات</FormLabel>
-                  <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="h-[51px] bg-gray-50 dark:bg-dark-field border-2 border-gray-200 dark:border-dark-stroke rounded-xl text-right">
-                        <SelectValue placeholder="انتخاب کنید" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {services.map((service) => (
-                          <SelectItem key={service.value} value={service.value}>
-                            {service.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* خدمات: در تب «خدمات دیگر» یک باکس مثل فیلد (دکمه + متن)، در بقیه سلکت */}
+            {isOtherTab ? (
+              <FormField
+                control={form.control}
+                name="service"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base text-gray-900 dark:text-white mb-2 block">خدمات</FormLabel>
+                    <FormControl>
+                      <div
+                        className="flex items-center h-[51px] border-2 border-gray-200 dark:border-dark-stroke bg-gray-50 dark:bg-dark-field rounded-xl overflow-hidden"
+                        dir="rtl"
+                      >
+                        <span className="flex-1 text-right px-4 text-sm text-gray-500 dark:text-gray-400 truncate">
+                          {selectedOtherService ? selectedOtherService.label : "انتخاب کنید"}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setOtherServicesModalOpen(true)}
+                          className="h-full px-4 shrink-0 bg-[#E0E3F3] dark:bg-primary-900/40 text-[#4B55A9] dark:text-primary-400 font-medium text-sm hover:bg-[#D0D5EB] dark:hover:bg-primary-800/50 transition-colors"
+                        >
+                          مشاهده همه خدمات
+                        </button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ) : (
+              <FormField
+                control={form.control}
+                name="service"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base text-gray-900 dark:text-white mb-2 block">خدمات</FormLabel>
+                    <FormControl>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger className="h-[51px] bg-gray-50 dark:bg-dark-field border-2 border-gray-200 dark:border-dark-stroke rounded-xl text-right">
+                          <SelectValue placeholder="انتخاب کنید" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {services.map((service) => (
+                            <SelectItem key={service.value} value={service.value}>
+                              {service.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             {/* Amount Section */}
             <div>
@@ -207,6 +273,40 @@ export default function CurrencyPaymentForm({ removeDesc }) {
             />
           )}
 
+          {/* افزودن کد تخفیف — دکمه/لینک */}
+          <button
+            type="button"
+            onClick={() => setShowDiscountSection((prev) => !prev)}
+            className="inline-flex items-center gap-2 text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 font-medium md:text-lg transition-colors"
+          >
+            <span>افزودن کد تخفیف</span>
+            <DiscountShape size={20} variant="Bold" className="shrink-0 text-primary-600 dark:text-primary-400" />
+          </button>
+
+          {/* باکس اعمال کد تخفیف */}
+          {showDiscountSection && (
+            <div className="rounded-xl bg-white dark:bg-[#333333] dark:border dark:border-gray-600 p-2 border border-gray-200 shadow-sm">
+              <div className="flex flex-col sm:flex-row gap-3 w-full">
+                <Input
+                  type="text"
+                  placeholder="کد تخفیف را وارد کنید"
+                  value={discountCodeInput}
+                  onChange={(e) => setDiscountCodeInput(e.target.value)}
+                  className="flex-1 h-10 outline-none border-0  bg-white dark:bg-[#333333] text-right placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                  dir="rtl"
+                />
+                <Button
+                  type="button"
+                  onClick={handleApplyDiscount}
+                  disabled={applyingDiscount}
+                  className="h-10 px-6 rounded-lg bg-[#FFC107] hover:bg-[#E6AC00] text-gray-900 font-medium shrink-0"
+                >
+                  {applyingDiscount ? "در حال اعمال..." : "اعمال کد تخفیف"}
+                </Button>
+              </div>
+            </div>
+          )}
+
           {/* Payment Summary and Button */}
           <div className="flex-between gap-2">
             <span className="text-gray-600 dark:text-dark-text font-medium max-md:text-sm">مبلغ قابل پرداخت:</span>
@@ -223,6 +323,14 @@ export default function CurrencyPaymentForm({ removeDesc }) {
           </Button>
         </form>
       </Form>
+
+      {isOtherTab && (
+        <OtherServicesModal
+          open={otherServicesModalOpen}
+          onOpenChange={setOtherServicesModalOpen}
+          onSelect={handleSelectOtherService}
+        />
+      )}
     </div>
   );
 }

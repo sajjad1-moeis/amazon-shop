@@ -16,6 +16,7 @@ export default function EditBlogPage() {
   const blogId = params.id;
   const {
     formData,
+    setFormData,
     categories,
     tags,
     loading,
@@ -88,6 +89,7 @@ export default function EditBlogPage() {
         onSubmit={handleSubmit}
         onChange={handleChange}
         onSelectChange={handleSelectChange}
+        onContentChange={(name, content) => setFormData((prev) => ({ ...prev, [name]: content }))}
         onTagToggle={handleTagToggle}
         onFileChange={handleFileChange}
         isEdit={true}

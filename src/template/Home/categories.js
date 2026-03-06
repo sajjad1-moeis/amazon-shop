@@ -5,12 +5,13 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 import { Navigation, Autoplay } from "swiper/modules";
+import { SLIDER_AUTOPLAY_DELAY } from "@/config/sliderConfig";
 import Image from "next/image";
-import { ArrowLeft2, ArrowRight2 } from "iconsax-reactjs";
+import SliderNavButton from "@/components/SliderNavButton";
 
 function Categories() {
   return (
-    <div className=" mt-14 lg:mt-20 container categories relative">
+    <div className="mt-14 lg:mt-20 container categories-slider relative">
       <h2 className="text-primary-600 text-xl lg:text-3xl text-center mb-8 font-semibold dark:text-dark-title">
         دسته بندی{" "}
       </h2>
@@ -26,13 +27,13 @@ function Categories() {
           slidesPerView={1}
           spaceBetween={10}
           autoplay={{
-            delay: 3000,
+            delay: SLIDER_AUTOPLAY_DELAY,
             disableOnInteraction: false,
           }}
           loop={true}
           navigation={{
-            nextEl: ".categories .next-slide",
-            prevEl: ".categories .prev-slide",
+            nextEl: ".categories-slider .next-slide",
+            prevEl: ".categories-slider .prev-slide",
           }}
           breakpoints={{
             640: { slidesPerView: 2, spaceBetween: 20 },
@@ -56,12 +57,14 @@ function Categories() {
           ))}
         </Swiper>
 
-        <button className="next-slide  text-gray-600 p-2 mt-4 absolute top-1/2 -translate-y-1/2  xl:-left-5 2xl:left-5 left-5 z-50">
-          <ArrowLeft2 />
-        </button>
-        <button className="prev-slide  text-gray-600 p-2 mt-4 absolute top-1/2 -translate-y-1/2 z-50  xl:-right-5 2xl:right-5 right-5">
-          <ArrowRight2 />
-        </button>
+        <SliderNavButton
+          direction="next"
+          className="next-slide absolute top-1/2 -translate-y-1/2 xl:-left-3 2xl:left-8 left-6 z-50"
+        />
+        <SliderNavButton
+          direction="prev"
+          className="prev-slide absolute top-1/2 -translate-y-1/2 z-50 xl:-right-3 2xl:right-8 right-6"
+        />
       </div>
     </div>
   );

@@ -17,6 +17,7 @@ import { useCrispOnClick } from "./CrispChat";
 function Header() {
   const { cartCount } = useCartCount();
   const { loadAndOpen: openCrisp, loading: crispLoading } = useCrispOnClick();
+  
   return (
     <header className="w-full ">
       <div className="dark:bg-dark-header bg-primary-500 py-1.5 ">

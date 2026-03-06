@@ -68,7 +68,7 @@ export default function CreateCategoryPage() {
         </div>
       </div>
 
-      <Card className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl">
+      <Card className="bg-gray-800 border-gray-700 shadow-lg rounded-xl">
         <CardHeader>
           <CardTitle className="text-white text-xl">اضافه کردن دسته‌بندی</CardTitle>
         </CardHeader>
@@ -84,7 +84,7 @@ export default function CreateCategoryPage() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="نام دسته‌بندی را وارد کنید"
-                className="bg-gray-800 bg-opacity-50 border border-gray-700 text-white rounded-lg"
+                className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 rounded-lg"
                 required
               />
             </div>
@@ -99,7 +99,7 @@ export default function CreateCategoryPage() {
                 value={formData.slug}
                 onChange={handleChange}
                 placeholder="اگر خالی باشد، از نام ساخته می‌شود"
-                className="bg-gray-800 bg-opacity-50 border border-gray-700 text-white rounded-lg"
+                className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 rounded-lg"
               />
             </div>
 

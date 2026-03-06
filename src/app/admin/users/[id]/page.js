@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { userService } from "@/services/user/userService";
+import { unwrapApiData } from "@/services/api/client";
 import UserDetailHeader from "@/template/Admin/users/[id]/UserDetailHeader";
 import UserInfoSection from "@/template/Admin/users/[id]/UserInfoSection";
 import UserStatsSection from "@/template/Admin/users/[id]/UserStatsSection";
@@ -33,16 +34,12 @@ export default function UserDetailPage() {
   const fetchUser = async () => {
     try {
       setLoading(true);
-      const response = await userService.getUserDetailForAdmin(userId);
-      if (response.success && response.data) {
-        setUser(response.data);
-      } else {
-        toast.error(response.message || "خطا در دریافت اطلاعات کاربر");
-        router.push("/admin/users");
-      }
+      const res = await userService.getUserDetailForAdmin(userId);
+      const data = unwrapApiData(res);
+      setUser(data ?? null);
+      if (!data) router.push("/admin/users");
     } catch (error) {
-      toast.error(error.message || "خطا در دریافت اطلاعات کاربر");
-      console.error("Error fetching user:", error);
+      toast.error(error?.message || "خطا در دریافت اطلاعات کاربر");
       router.push("/admin/users");
     } finally {
       setLoading(false);
@@ -51,33 +48,25 @@ export default function UserDetailPage() {
 
   const handleUpdateUser = async (userData) => {
     try {
-      const response = await userService.adminUpdateUser(userId, userData);
-      if (response.success) {
-        toast.success("اطلاعات کاربر با موفقیت به‌روزرسانی شد");
-        setEditMode(false);
-        fetchUser();
-        router.replace(`/admin/users/${userId}`);
-      } else {
-        toast.error(response.message || "خطا در به‌روزرسانی کاربر");
-      }
+      const res = await userService.adminUpdateUser(userId, userData);
+      unwrapApiData(res);
+      toast.success("اطلاعات کاربر با موفقیت به‌روزرسانی شد");
+      setEditMode(false);
+      fetchUser();
+      router.replace(`/admin/users/${userId}`);
     } catch (error) {
-      toast.error(error.message || "خطا در به‌روزرسانی کاربر");
-      console.error("Error updating user:", error);
+      toast.error(error?.message || "خطا در به‌روزرسانی کاربر");
     }
   };
 
   const handleChangePassword = async (passwordData) => {
     try {
-      const response = await userService.adminChangePassword(userId, passwordData);
-      if (response.success) {
-        toast.success("رمز عبور کاربر با موفقیت تغییر یافت");
-        setShowChangePassword(false);
-      } else {
-        toast.error(response.message || "خطا در تغییر رمز عبور");
-      }
+      const res = await userService.adminChangePassword(userId, passwordData);
+      unwrapApiData(res);
+      toast.success("رمز عبور کاربر با موفقیت تغییر یافت");
+      setShowChangePassword(false);
     } catch (error) {
-      toast.error(error.message || "خطا در تغییر رمز عبور");
-      console.error("Error changing password:", error);
+      toast.error(error?.message || "خطا در تغییر رمز عبور");
     }
   };
 

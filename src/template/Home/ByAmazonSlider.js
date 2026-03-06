@@ -2,8 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import "swiper/css";
+import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
+import { Autoplay, Navigation } from "swiper/modules";
+import { SLIDER_AUTOPLAY_DELAY } from "@/config/sliderConfig";
+import SliderNavButton from "@/components/SliderNavButton";
 import ProductCard from "@/components/ProductCard";
 import { ProductCardSkeletonList } from "@/components/ProductCardSkeleton";
 import { productService } from "@/services/product/productService";
@@ -16,7 +19,7 @@ export default function ByAmazonSlider() {
 
   useEffect(() => {
     productService
-      .getFeatured(12)
+      .getFeatured(24)
       .then((res) => {
         const data = unwrapApiData(res);
         const list = Array.isArray(data) ? data : [];
@@ -31,7 +34,7 @@ export default function ByAmazonSlider() {
   }, []);
 
   return (
-    <>
+    <div className="by-amazon-slider relative w-full">
       {loading ? (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 w-full">
           <ProductCardSkeletonList count={4} className="border-[#D1D9FF]" />
@@ -41,10 +44,14 @@ export default function ByAmazonSlider() {
           slidesPerView={1.5}
           spaceBetween={10}
           autoplay={{
-            delay: 3000,
+            delay: SLIDER_AUTOPLAY_DELAY,
             disableOnInteraction: false,
           }}
           loop={products.length > 1}
+          navigation={{
+            nextEl: ".by-amazon-slider .next-slide",
+            prevEl: ".by-amazon-slider .prev-slide",
+          }}
           breakpoints={{
             640: {
               slidesPerView: 2.5,
@@ -54,16 +61,30 @@ export default function ByAmazonSlider() {
               slidesPerView: 4.5,
             },
           }}
-          modules={[Autoplay]}
+          modules={[Autoplay, Navigation]}
           className="mySwiper"
         >
           {products.map((product) => (
             <SwiperSlide key={product.id}>
-              <ProductCard product={product} className="border-[#D1D9FF]" />
+              <ProductCard product={product} />
             </SwiperSlide>
           ))}
         </Swiper>
       )}
-    </>
+      {!loading && products.length > 1 && (
+        <>
+          <SliderNavButton
+            direction="next"
+            className="next-slide absolute left-4 top-1/2 -translate-y-1/2 z-10"
+            size={20}
+          />
+          <SliderNavButton
+            direction="prev"
+            className="prev-slide absolute right-4 top-1/2 -translate-y-1/2 z-10"
+            size={20}
+          />
+        </>
+      )}
+    </div>
   );
 }
