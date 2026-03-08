@@ -3,11 +3,13 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { ShoppingCart } from "iconsax-reactjs";
 import OrdersTable from "@/template/Admin/orders/OrdersTable";
 import OrdersFilters from "@/template/Admin/orders/OrdersFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import { orderService } from "@/services/order/orderService";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 
 export default function OrdersPage() {
   const searchParams = useSearchParams();
@@ -54,12 +56,10 @@ export default function OrdersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="">
-        <div className="mb-5">
-          <h1 className="text-lg md:text-xl text-gray-100 mb-4">فاکتور ها</h1>
-          <OrdersFilters />
-        </div>
-
+      <AdminPageHeader title="فاکتورها و سفارشات" subtitle="مشاهده و مدیریت سفارشات" icon={ShoppingCart}>
+        <OrdersFilters />
+      </AdminPageHeader>
+      <AdminSectionCard title="لیست سفارشات">
         {loading ? (
           <div className="p-8 text-center text-gray-400">
             <Spinner size="lg" />
@@ -67,12 +67,12 @@ export default function OrdersPage() {
         ) : (
           <>
             <OrdersTable orders={orders} />
-            <div className="pt-4 border-t border-gray-700">
+            <div className="pt-4 mt-4 border-t border-gray-600">
               <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
             </div>
           </>
         )}
-      </div>
+      </AdminSectionCard>
     </div>
   );
 }

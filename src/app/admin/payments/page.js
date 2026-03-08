@@ -3,11 +3,13 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { Wallet3 } from "iconsax-reactjs";
 import PaymentsTable from "@/template/Admin/payments/PaymentsTable";
 import PaymentsFilters from "@/template/Admin/payments/PaymentsFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import { paymentService } from "@/services/payment/paymentService";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 
 export default function PaymentsPage() {
   const searchParams = useSearchParams();
@@ -72,12 +74,10 @@ export default function PaymentsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="">
-        <div className="mb-5">
-          <h1 className="text-lg md:text-xl text-gray-100 mb-4">پرداخت‌ها</h1>
-          <PaymentsFilters />
-        </div>
-
+      <AdminPageHeader title="پرداخت‌ها" subtitle="مشاهده تراکنش‌ها و وضعیت پرداخت" icon={Wallet3}>
+        <PaymentsFilters />
+      </AdminPageHeader>
+      <AdminSectionCard title="لیست پرداخت‌ها">
         {loading ? (
           <div className="p-8 text-center text-gray-400">
             <Spinner size="lg" />
@@ -85,12 +85,12 @@ export default function PaymentsPage() {
         ) : (
           <>
             <PaymentsTable payments={payments} />
-            <div className="pt-4 border-t border-gray-700">
+            <div className="pt-4 mt-4 border-t border-gray-600">
               <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
             </div>
           </>
         )}
-      </div>
+      </AdminSectionCard>
     </div>
   );
 }

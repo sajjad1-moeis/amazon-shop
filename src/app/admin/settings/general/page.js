@@ -2,32 +2,39 @@
 
 import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Setting2 } from "iconsax-reactjs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { settingsService } from "@/services/settings/settingsService";
+import { unwrapApiData } from "@/services/api/client";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
+
+const DEFAULT_GENERAL = {
+  siteName: "",
+  siteDescription: "",
+  siteUrl: "",
+  logoUrl: "",
+  adminEmail: "",
+  phoneNumber: "",
+  address: "",
+  maintenanceMode: false,
+  timeZone: "Asia/Tehran",
+};
 
 export default function GeneralSettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [settings, setSettings] = useState({
-    siteName: "",
-    siteDescription: "",
-    siteUrl: "",
-    adminEmail: "",
-    phoneNumber: "",
-    address: "",
-  });
+  const [settings, setSettings] = useState(DEFAULT_GENERAL);
 
   const fetchSettings = async () => {
     try {
       setLoading(true);
       const response = await settingsService.getGeneral();
-
-      if (response.success && response.data) {
-        setSettings(response.data);
+      const data = unwrapApiData(response);
+      if (data && typeof data === "object") {
+        setSettings((prev) => ({ ...DEFAULT_GENERAL, ...prev, ...data }));
       }
     } catch (error) {
       toast.error(error.message || "خطا در دریافت تنظیمات");
@@ -45,10 +52,9 @@ export default function GeneralSettingsPage() {
     e.preventDefault();
     setSaving(true);
     try {
-      const response = await settingsService.updateGeneral(settings);
-      if (response.success) {
-        toast.success("تنظیمات با موفقیت به‌روزرسانی شد");
-      }
+      const res = await settingsService.updateGeneral(settings);
+      unwrapApiData(res);
+      toast.success("تنظیمات با موفقیت به‌روزرسانی شد");
     } catch (error) {
       toast.error(error.message || "خطا در به‌روزرسانی تنظیمات");
     } finally {
@@ -63,110 +69,56 @@ export default function GeneralSettingsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">تنظیمات عمومی</h1>
-        <p className="text-gray-400">تنظیمات کلی سیستم</p>
-      </div>
-
-      <Card className="bg-gray-800 border-gray-700">
-        <CardHeader>
-          <CardTitle className="text-white">فرم تنظیمات</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <div className="p-8 text-center text-gray-400">
-              <Spinner size="lg" />
+      <AdminPageHeader title="تنظیمات عمومی" subtitle="تنظیمات کلی سیستم" icon={Setting2} />
+      <AdminSectionCard title="فرم تنظیمات">
+        {loading ? (
+          <div className="p-8 text-center text-gray-400">
+            <Spinner size="lg" />
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="siteName" className="text-gray-300">نام سایت</Label>
+                <Input id="siteName" name="siteName" value={settings.siteName || ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+              </div>
+              <div>
+                <Label htmlFor="siteUrl" className="text-gray-300">آدرس سایت</Label>
+                <Input id="siteUrl" name="siteUrl" value={settings.siteUrl || ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+              </div>
+              <div>
+                <Label htmlFor="logoUrl" className="text-gray-300">آدرس لوگو</Label>
+                <Input id="logoUrl" name="logoUrl" value={settings.logoUrl || ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+              </div>
+              <div>
+                <Label htmlFor="timeZone" className="text-gray-300">منطقه زمانی</Label>
+                <Input id="timeZone" name="timeZone" value={settings.timeZone || ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+              </div>
+              <div className="md:col-span-2">
+                <Label htmlFor="siteDescription" className="text-gray-300">توضیحات سایت</Label>
+                <Input id="siteDescription" name="siteDescription" value={settings.siteDescription || ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+              </div>
+              <div>
+                <Label htmlFor="adminEmail" className="text-gray-300">ایمیل مدیر</Label>
+                <Input id="adminEmail" name="adminEmail" type="email" value={settings.adminEmail || ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+              </div>
+              <div>
+                <Label htmlFor="phoneNumber" className="text-gray-300">شماره تماس</Label>
+                <Input id="phoneNumber" name="phoneNumber" value={settings.phoneNumber || ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+              </div>
+              <div className="md:col-span-2">
+                <Label htmlFor="address" className="text-gray-300">آدرس</Label>
+                <Input id="address" name="address" value={settings.address || ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+              </div>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="siteName" className="text-gray-300">
-                    نام سایت
-                  </Label>
-                  <Input
-                    id="siteName"
-                    name="siteName"
-                    value={settings.siteName}
-                    onChange={handleChange}
-                    className="bg-gray-800 border-gray-700 text-white"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="siteUrl" className="text-gray-300">
-                    آدرس سایت
-                  </Label>
-                  <Input
-                    id="siteUrl"
-                    name="siteUrl"
-                    value={settings.siteUrl}
-                    onChange={handleChange}
-                    className="bg-gray-800 border-gray-700 text-white"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <Label htmlFor="siteDescription" className="text-gray-300">
-                    توضیحات سایت
-                  </Label>
-                  <Input
-                    id="siteDescription"
-                    name="siteDescription"
-                    value={settings.siteDescription}
-                    onChange={handleChange}
-                    className="bg-gray-800 border-gray-700 text-white"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="adminEmail" className="text-gray-300">
-                    ایمیل مدیر
-                  </Label>
-                  <Input
-                    id="adminEmail"
-                    name="adminEmail"
-                    type="email"
-                    value={settings.adminEmail}
-                    onChange={handleChange}
-                    className="bg-gray-800 border-gray-700 text-white"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="phoneNumber" className="text-gray-300">
-                    شماره تماس
-                  </Label>
-                  <Input
-                    id="phoneNumber"
-                    name="phoneNumber"
-                    value={settings.phoneNumber}
-                    onChange={handleChange}
-                    className="bg-gray-800 border-gray-700 text-white"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <Label htmlFor="address" className="text-gray-300">
-                    آدرس
-                  </Label>
-                  <Input
-                    id="address"
-                    name="address"
-                    value={settings.address}
-                    onChange={handleChange}
-                    className="bg-gray-800 border-gray-700 text-white"
-                  />
-                </div>
-              </div>
-              <div className="flex justify-end pt-4">
-                <Button
-                  type="submit"
-                  disabled={saving}
-                  className="bg-green-500 hover:bg-green-600 text-white"
-                >
-                  {saving ? "در حال ذخیره..." : "ذخیره تنظیمات"}
-                </Button>
-              </div>
-            </form>
-          )}
-        </CardContent>
-      </Card>
+            <div className="flex justify-end pt-4">
+              <Button type="submit" disabled={saving} className="bg-amber-500 hover:bg-amber-600 text-gray-900">
+                {saving ? "در حال ذخیره..." : "ذخیره تنظیمات"}
+              </Button>
+            </div>
+          </form>
+        )}
+      </AdminSectionCard>
     </div>
   );
 }

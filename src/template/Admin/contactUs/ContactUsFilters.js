@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import StatusSelect from "@/components/FilterSelects/StatusSelect";
 import FilterSection from "@/components/FilterSection";
 import FilterSearchInput from "@/components/FilterSelects/FilterSearchInput";
-import { productCategoryService } from "@/services/product/productCategoryService";
-import { productBrandService } from "@/services/product/productBrandService";
+
+const CONTACT_US_PATH = "/admin/contact-us";
 
 const FILTER_OPTIONS = [
   { value: "all", label: "همه درخواست‌ها" },
@@ -14,40 +14,12 @@ const FILTER_OPTIONS = [
   { value: "read", label: "خوانده شده" },
 ];
 
-export default function ProductsFilters({ isInDrawer = false }) {
+export default function ContactUsFilters({ isInDrawer = false }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [categories, setCategories] = useState([]);
-  const [brands, setBrands] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  const filterCategory = searchParams.get("category") || "all";
-  const filterBrand = searchParams.get("brand") || "all";
-
-  useEffect(() => {
-    fetchFilters();
-  }, []);
-
-  const fetchFilters = async () => {
-    try {
-      setLoading(true);
-      const [categoriesRes, brandsRes] = await Promise.all([
-        productCategoryService.getAll(),
-        productBrandService.getAll(),
-      ]);
-
-      if (categoriesRes.success && categoriesRes.data) {
-        setCategories(categoriesRes.data || []);
-      }
-      if (brandsRes.success && brandsRes.data) {
-        setBrands(brandsRes.data || []);
-      }
-    } catch (error) {
-      console.error("Error fetching filters:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const filterValue = searchParams.get("filter") || "all";
+  const searchValue = searchParams.get("search") || "";
 
   const updateURL = (params) => {
     const newParams = new URLSearchParams(searchParams.toString());
@@ -59,35 +31,31 @@ export default function ProductsFilters({ isInDrawer = false }) {
       }
     });
     newParams.delete("page");
-    router.push(`/admin/products/list?${newParams.toString()}`);
+    router.push(`${CONTACT_US_PATH}?${newParams.toString()}`);
   };
 
   const handleStatusChange = (value) => {
-    updateURL({ category: filterCategory, status: value, brand: filterBrand });
+    updateURL({ filter: value, search: searchValue });
   };
 
-  const searchValue = searchParams.get("search") || "";
-
   const handleSearchChange = (value) => {
-    const newParams = new URLSearchParams(searchParams.toString());
-    if (value) {
-      newParams.set("search", value);
-    } else {
-      newParams.delete("search");
-    }
-    newParams.delete("page");
-    router.push(`/admin/products/list?${newParams.toString()}`);
+    updateURL({ search: value, filter: filterValue });
   };
 
   return (
     <FilterSection isAdmin>
-      <FilterSearchInput value={searchValue} onChange={handleSearchChange} isAdmin placeholder="جستجو محصول..." />
-
+      <FilterSearchInput
+        value={searchValue}
+        onChange={handleSearchChange}
+        isAdmin
+        placeholder="جستجو نام، ایمیل یا متن پیام..."
+      />
       <StatusSelect
+        value={filterValue}
         onValueChange={handleStatusChange}
         placeholder="وضعیت"
         options={FILTER_OPTIONS}
-        includeAll={true}
+        includeAll={false}
         isInDrawer={isInDrawer}
         isAdmin
       />

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { Add } from "iconsax-reactjs";
+import { Add, Profile2User } from "iconsax-reactjs";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import AdminPagination from "@/components/ui/AdminPagination";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { Spinner } from "@/components/ui/spinner";
 import { roleService } from "@/services/role/roleService";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 
 export default function RolesPage() {
   const router = useRouter();
@@ -160,12 +161,10 @@ export default function RolesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="">
-        <div className="mb-5">
-          <h1 className="text-lg md:text-xl text-gray-100 mb-4">مدیریت نقش‌ها</h1>
-          <RolesFilters filters={filters} onFilterChange={setFilters} />
-        </div>
-
+      <AdminPageHeader title="مدیریت نقش‌ها" subtitle="تعریف و ویرایش نقش‌ها و دسترسی‌ها" icon={Profile2User}>
+        <RolesFilters filters={filters} onFilterChange={setFilters} />
+      </AdminPageHeader>
+      <AdminSectionCard title="لیست نقش‌ها">
         {loading ? (
           <div className="flex justify-center items-center py-12">
             <Spinner size="lg" />
@@ -180,13 +179,13 @@ export default function RolesPage() {
               onView={handleView}
             />
             {totalPages > 1 && (
-              <div className="pt-4 border-t border-gray-700">
+              <div className="pt-4 mt-4 border-t border-gray-600">
                 <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
               </div>
             )}
           </>
         )}
-      </div>
+      </AdminSectionCard>
 
       <ConfirmDialog
         open={deleteDialogOpen}

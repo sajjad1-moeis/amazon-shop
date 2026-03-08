@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { ShoppingBag } from "iconsax-reactjs";
 import ProductsTable from "@/template/Admin/products/list/ProductsTable";
 import ProductsFilters from "@/template/Admin/products/list/ProductsFilters";
 import DeleteProductDialog from "@/template/Admin/products/list/DeleteProductDialog";
@@ -12,6 +13,7 @@ import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import { productService } from "@/services/product/productService";
 import { Button } from "@/components/ui/button";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 
 export default function ProductsListPage() {
   const router = useRouter();
@@ -37,6 +39,22 @@ export default function ProductsListPage() {
   const filterStatus = statusParam || "all";
   const filterBrand = brandParam || "all";
 
+  const categoryId =
+    filterCategory !== "all" && filterCategory
+      ? (() => {
+          const n = parseInt(filterCategory, 10);
+          return Number.isNaN(n) ? undefined : n;
+        })()
+      : undefined;
+
+  const statusNumber =
+    filterStatus !== "all" && filterStatus
+      ? (() => {
+          const n = parseInt(filterStatus, 10);
+          return Number.isNaN(n) ? undefined : n;
+        })()
+      : undefined;
+
   useEffect(() => {
     const page = searchParams.get("page");
     if (page) {
@@ -54,9 +72,9 @@ export default function ProductsListPage() {
       const response = await productService.getPaginated({
         pageNumber,
         pageSize,
-        categoryId: filterCategory !== "all" ? filterCategory : undefined,
+        categoryId,
         brandId: filterBrand !== "all" ? filterBrand : undefined,
-        status: filterStatus !== "all" ? parseInt(filterStatus) : undefined,
+        status: statusNumber,
         searchTerm: searchTerm || undefined,
       });
 
@@ -73,14 +91,11 @@ export default function ProductsListPage() {
     } finally {
       setLoading(false);
     }
-  }, [pageNumber, pageSize, filterCategory, filterBrand, filterStatus, searchParams]);
+  }, [pageNumber, pageSize, categoryId, filterBrand, statusNumber, searchParams]);
 
   useEffect(() => {
-    const search = searchParams.get("search");
-    if (search) {
-      setPageNumber(1);
-    }
-  }, [searchParams]);
+    setPageNumber(1);
+  }, [categoryParam, statusParam, searchTerm]);
 
   useEffect(() => {
     fetchProducts();
@@ -130,57 +145,53 @@ export default function ProductsListPage() {
 
   return (
     <div className="space-y-6">
-      <div className="">
-        <div className="mb-5">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
-            <h1 className="text-lg md:text-xl text-gray-100">لیست محصولات</h1>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                size="sm"
-                className="bg-yellow-500 hover:bg-yellow-600 text-gray-900"
-                onClick={() => setAddByLinkOpen(true)}
-              >
-                افزودن با لینک/دادهٔ اسکرپر
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                className="border-yellow-500 text-yellow-400 hover:bg-yellow-500/10"
-                onClick={() => setBulkImportOpen(true)}
-              >
-                ورود گروهی محصولات
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                className="border-gray-500 text-gray-300 hover:bg-gray-600/40"
-                onClick={async () => {
-                  const input = window.prompt("تعداد محصولات تستی (۱ تا ۵۰):", "20");
-                  if (!input) return;
-                  const count = Number(input);
-                  if (Number.isNaN(count) || count < 1 || count > 50) {
-                    alert("عدد نامعتبر است. مقدار باید بین ۱ تا ۵۰ باشد.");
-                    return;
-                  }
-                  try {
-                    const { adminProductService } = await import("@/services/admin/adminProductService");
-                    const { unwrapApiData } = await import("@/services/api/client");
-                    const res = await adminProductService.seedTestData(count);
-                    const data = unwrapApiData(res);
-                    alert(`محصولات تستی ایجاد شد. تعداد ایجاد شده: ${data?.createdCount ?? "?"}`);
-                    fetchProducts();
-                  } catch (e) {
-                    alert(e?.message || "خطا در ساخت داده تستی");
-                  }
-                }}
-              >
-                داده تستی
-              </Button>
-            </div>
-          </div>
-          <ProductsFilters />
+      <AdminPageHeader title="لیست محصولات" subtitle="مدیریت کاتالوگ و موجودی محصولات" icon={ShoppingBag}>
+        <div className="flex flex-wrap gap-2 mb-4">
+          <Button
+            size="sm"
+            className="bg-yellow-500 hover:bg-yellow-600 text-gray-900"
+            onClick={() => setAddByLinkOpen(true)}
+          >
+            افزودن با لینک/دادهٔ اسکرپر
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            className="border-yellow-500 text-yellow-400 hover:bg-yellow-500/10"
+            onClick={() => setBulkImportOpen(true)}
+          >
+            ورود گروهی محصولات
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            className="border-gray-500 text-gray-300 hover:bg-gray-600/40"
+            onClick={async () => {
+              const input = window.prompt("تعداد محصولات تستی (۱ تا ۵۰):", "20");
+              if (!input) return;
+              const count = Number(input);
+              if (Number.isNaN(count) || count < 1 || count > 50) {
+                alert("عدد نامعتبر است. مقدار باید بین ۱ تا ۵۰ باشد.");
+                return;
+              }
+              try {
+                const { adminProductService } = await import("@/services/admin/adminProductService");
+                const { unwrapApiData } = await import("@/services/api/client");
+                const res = await adminProductService.seedTestData(count);
+                const data = unwrapApiData(res);
+                alert(`محصولات تستی ایجاد شد. تعداد ایجاد شده: ${data?.createdCount ?? "?"}`);
+                fetchProducts();
+              } catch (e) {
+                alert(e?.message || "خطا در ساخت داده تستی");
+              }
+            }}
+          >
+            داده تستی
+          </Button>
         </div>
-
+        <ProductsFilters />
+      </AdminPageHeader>
+      <AdminSectionCard title="جدول محصولات">
         {loading ? (
           <div className="p-8 text-center text-gray-400">
             <Spinner size="lg" />
@@ -188,22 +199,22 @@ export default function ProductsListPage() {
         ) : (
           <>
             <ProductsTable products={products} onEdit={handleEdit} onDelete={handleDeleteClick} onView={handleView} />
-            <div className="pt-4 border-t border-gray-700">
+            <div className="pt-4 mt-4 border-t border-gray-600">
               <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={handlePageChange} />
             </div>
           </>
         )}
+      </AdminSectionCard>
 
-        <DeleteProductDialog
-          open={deleteDialogOpen}
-          onOpenChange={setDeleteDialogOpen}
-          product={selectedProduct}
-          onConfirm={handleDeleteConfirm}
-          loading={deleteLoading}
-        />
-        <AddByLinkModal open={addByLinkOpen} onOpenChange={setAddByLinkOpen} onSuccess={fetchProducts} />
-        <BulkImportModal open={bulkImportOpen} onOpenChange={setBulkImportOpen} />
-      </div>
+      <DeleteProductDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        product={selectedProduct}
+        onConfirm={handleDeleteConfirm}
+        loading={deleteLoading}
+      />
+      <AddByLinkModal open={addByLinkOpen} onOpenChange={setAddByLinkOpen} onSuccess={fetchProducts} />
+      <BulkImportModal open={bulkImportOpen} onOpenChange={setBulkImportOpen} />
     </div>
   );
 }

@@ -27,10 +27,10 @@ export default function ProductsTable({ products, onEdit, onDelete, onView }) {
   }
 
   return (
-    <Table>
+    <Table className="table-fixed">
       <TableHeader>
         <TableRow className="border-gray-700 hover:bg-gray-700/50">
-          <TableHead className="text-gray-300">نام محصول</TableHead>
+          <TableHead className="text-gray-300 w-[28%]">نام محصول</TableHead>
           <TableHead className="text-gray-300">دسته‌بندی</TableHead>
           <TableHead className="text-gray-300">برند</TableHead>
           <TableHead className="text-gray-300">قیمت</TableHead>
@@ -43,7 +43,9 @@ export default function ProductsTable({ products, onEdit, onDelete, onView }) {
       <TableBody>
         {products.map((product) => (
           <TableRow key={product.id} className="border-gray-700 hover:bg-gray-700/50">
-            <TableCell className="text-white font-medium">{product.name || product.title}</TableCell>
+            <TableCell className="text-white font-medium overflow-hidden" title={product.name || product.title || ""}>
+              <span className="block truncate">{product.name || product.title || "—"}</span>
+            </TableCell>
             <TableCell className="text-gray-300">{product.categoryName || product.category || "-"}</TableCell>
             <TableCell className="text-gray-300">{product.brandName || product.brand || "-"}</TableCell>
             <TableCell className="text-gray-300">

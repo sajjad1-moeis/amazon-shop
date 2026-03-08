@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Add } from "iconsax-reactjs";
+import Link from "next/link";
+import { Add, Truck } from "iconsax-reactjs";
 import { toast } from "sonner";
-import PageHeader from "@/template/Admin/PageHeader";
+import { Button } from "@/components/ui/button";
 import ShippingZonesTable from "@/template/Admin/shipping/zones/ShippingZonesTable";
 import { Spinner } from "@/components/ui/spinner";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 import { shippingService } from "@/services/shipping/shippingService";
 
 export default function ShippingZonesPage() {
@@ -34,9 +36,16 @@ export default function ShippingZonesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="">
-        <PageHeader title="مناطق ارسال" buttonText="منطقه جدید" buttonIcon={<Add size={20} className="ml-2" />} />
+      <AdminPageHeader title="مناطق ارسال" subtitle="مدیریت مناطق و هزینه ارسال" icon={Truck}>
+        <Link href="/admin/shipping/zones/create">
+          <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+            <Add size={20} className="ml-2" />
+            منطقه جدید
+          </Button>
+        </Link>
+      </AdminPageHeader>
 
+      <AdminSectionCard title="لیست مناطق">
         {loading ? (
           <div className="p-8 text-center text-gray-400">
             <Spinner size="lg" />
@@ -44,7 +53,7 @@ export default function ShippingZonesPage() {
         ) : (
           <ShippingZonesTable zones={zones} />
         )}
-      </div>
+      </AdminSectionCard>
     </div>
   );
 }

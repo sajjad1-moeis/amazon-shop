@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Eye } from "iconsax-reactjs";
+import { formatDateFa } from "@/utils/adminDateUtils";
 
 const getOrderStatusBadge = (status) => {
   const statusMap = {
@@ -73,9 +74,7 @@ export default function OrdersTable({ orders }) {
             <TableCell>{getOrderStatusBadge(order.status)}</TableCell>
             <TableCell>{getPaymentStatusBadge(order.paymentStatus)}</TableCell>
             <TableCell className="text-gray-300">
-              {order.createdAt
-                ? new Date(order.createdAt).toLocaleDateString("fa-IR")
-                : order.date || "-"}
+              {order.createdAt ? formatDateFa(order.createdAt) : order.date || "-"}
             </TableCell>
             <TableCell>
               <Button asChild variant="ghost" size="icon" className="h-8 w-8 text-blue-400 hover:bg-blue-400/20">

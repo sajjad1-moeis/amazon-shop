@@ -3,12 +3,14 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { RotateRight } from "iconsax-reactjs";
 import ReturnRequestsTable from "@/template/Admin/returnRequests/ReturnRequestsTable";
 import ReturnRequestsFilters from "@/template/Admin/returnRequests/ReturnRequestsFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { returnRequestService } from "@/services/returnRequest/returnRequestService";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 
 export default function ReturnRequestsPage() {
   const searchParams = useSearchParams();
@@ -36,13 +38,22 @@ export default function ReturnRequestsPage() {
       if (response.success && response.data) {
         const raw = response.data;
         let filtered = Array.isArray(raw) ? raw : (raw?.returnRequests ?? []);
-        if (searchTerm) {
+        if (searchTerm.trim()) {
+          const term = searchTerm.trim().toLowerCase();
+          const match = (s) => s && String(s).toLowerCase().includes(term);
+          const matchPhone = (s) => s && String(s).replace(/\s/g, "").includes(term.replace(/\s/g, ""));
           filtered = filtered.filter(
             (request) =>
-              request.returnNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              request.orderNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              request.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              request.userFullName?.toLowerCase().includes(searchTerm.toLowerCase())
+              match(request.returnNumber) ||
+              match(request.orderNumber) ||
+              match(request.customerName) ||
+              match(request.userFullName) ||
+              match(request.userName) ||
+              match(request.recipientName) ||
+              matchPhone(request.userPhoneNumber) ||
+              matchPhone(request.phoneNumber) ||
+              matchPhone(request.mobile) ||
+              match(request.description)
           );
         }
         const startIndex = (pageNumber - 1) * pageSize;
@@ -77,13 +88,22 @@ export default function ReturnRequestsPage() {
         if (response.success && response.data) {
           const raw = response.data;
           let filtered = Array.isArray(raw) ? raw : (raw?.returnRequests ?? []);
-          if (searchTerm) {
+          if (searchTerm.trim()) {
+            const term = searchTerm.trim().toLowerCase();
+            const match = (s) => s && String(s).toLowerCase().includes(term);
+            const matchPhone = (s) => s && String(s).replace(/\s/g, "").includes(term.replace(/\s/g, ""));
             filtered = filtered.filter(
               (request) =>
-                request.returnNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                request.orderNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                request.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                request.userFullName?.toLowerCase().includes(searchTerm.toLowerCase())
+                match(request.returnNumber) ||
+                match(request.orderNumber) ||
+                match(request.customerName) ||
+                match(request.userFullName) ||
+                match(request.userName) ||
+                match(request.recipientName) ||
+                matchPhone(request.userPhoneNumber) ||
+                matchPhone(request.phoneNumber) ||
+                matchPhone(request.mobile) ||
+                match(request.description)
             );
           }
           const startIndex = (pageNumber - 1) * pageSize;
@@ -164,12 +184,10 @@ export default function ReturnRequestsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="">
-        <div className="mb-5">
-          <h1 className="text-lg md:text-xl text-gray-100 mb-4">درخواست‌های مرجوعی</h1>
-          <ReturnRequestsFilters />
-        </div>
-
+      <AdminPageHeader title="درخواست‌های مرجوعی" subtitle="تأیید، رد و پرداخت مرجوعی" icon={RotateRight}>
+        <ReturnRequestsFilters />
+      </AdminPageHeader>
+      <AdminSectionCard title="لیست درخواست‌ها">
         {loading ? (
           <div className="p-8 text-center text-gray-400">
             <Spinner size="lg" />
@@ -182,12 +200,12 @@ export default function ReturnRequestsPage() {
               onReject={handleReject}
               onProcessRefund={handleProcessRefund}
             />
-            <div className="pt-4 border-t border-gray-700">
+            <div className="pt-4 mt-4 border-t border-gray-600">
               <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
             </div>
           </>
         )}
-      </div>
+      </AdminSectionCard>
 
       <ConfirmDialog
         open={refundDialogOpen}

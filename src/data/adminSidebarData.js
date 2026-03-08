@@ -129,7 +129,6 @@ export const ADMIN_SIDEBAR_ITEMS = [
     children: [
       { name: "کوپن جدید", href: "/admin/discounts/create" },
       { name: "لیست کوپن‌ها", href: "/admin/discounts/list" },
-      { name: "تخفیف‌های ویژه", href: "/admin/discounts/special" },
     ],
   },
   {

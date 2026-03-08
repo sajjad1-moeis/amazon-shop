@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { Add } from "iconsax-reactjs";
+import { Add, MessageQuestion } from "iconsax-reactjs";
 import { toast } from "sonner";
-import PageHeader from "@/template/Admin/PageHeader";
+import { Button } from "@/components/ui/button";
 import TicketCategoriesTable from "@/template/Admin/tickets/categories/TicketCategoriesTable";
 import CreateTicketCategoryModal from "@/template/Admin/tickets/categories/CreateTicketCategoryModal";
 import AdminPagination from "@/components/ui/AdminPagination";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 import { ticketCategoryService } from "@/services/ticket/ticketCategoryService";
 
 export default function TicketCategoriesPage() {
@@ -114,17 +115,20 @@ export default function TicketCategoriesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="">
-        <PageHeader
-          title="دسته‌بندی‌های تیکت"
-          buttonText="دسته‌بندی جدید"
-          buttonIcon={<Add size={20} className="ml-2" />}
-          onButtonClick={() => {
+      <AdminPageHeader title="دسته‌بندی‌های تیکت" subtitle="مدیریت دسته‌بندی‌های تیکت پشتیبانی" icon={MessageQuestion}>
+        <Button
+          className="bg-blue-600 hover:bg-blue-700 text-white"
+          onClick={() => {
             setEditingCategory(null);
             setIsModalOpen(true);
           }}
-        />
+        >
+          <Add size={20} className="ml-2" />
+          دسته‌بندی جدید
+        </Button>
+      </AdminPageHeader>
 
+      <AdminSectionCard title="لیست دسته‌بندی‌ها">
         {loading ? (
           <div className="p-8 text-center text-gray-400">در حال بارگذاری...</div>
         ) : (
@@ -135,7 +139,7 @@ export default function TicketCategoriesPage() {
               onDelete={handleDelete}
               onToggleActive={handleToggleActive}
             />
-            <div className="pt-4 border-t border-gray-700">
+            <div className="pt-4 border-t border-gray-600 mt-4">
               <AdminPagination
                 currentPage={pageNumber}
                 totalPages={Math.ceil(categories.length / pageSize) || 1}
@@ -144,7 +148,7 @@ export default function TicketCategoriesPage() {
             </div>
           </>
         )}
-      </div>
+      </AdminSectionCard>
 
       <CreateTicketCategoryModal
         isOpen={isModalOpen}

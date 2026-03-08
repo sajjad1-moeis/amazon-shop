@@ -11,7 +11,10 @@ export const handleBlogSubmit = async ({
   skipValidation = false,
 }) => {
   if (!skipValidation) {
-    const validation = validateBlogForm(formData);
+    const requiredFields = isEdit
+      ? ["title", "shortDescription", "content", "categoryId"]
+      : ["title", "shortDescription", "content", "categoryId", "authorId"];
+    const validation = validateBlogForm(formData, requiredFields);
     if (!validation.isValid) {
       toast.error("لطفاً تمام فیلدهای الزامی را پر کنید");
       return { success: false, error: "Validation failed" };

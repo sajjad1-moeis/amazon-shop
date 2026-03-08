@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Edit } from "iconsax-reactjs";
+import { formatDateFa } from "@/utils/adminDateUtils";
 
 const STATUS_MAP = {
   1: { label: "در انتظار", className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" },
@@ -15,15 +16,6 @@ const STATUS_MAP = {
   6: { label: "رد شده", className: "bg-red-500/20 text-red-400 border-red-500/30" },
   7: { label: "لغو شده", className: "bg-gray-500/20 text-gray-400 border-gray-500/30" },
 };
-
-function formatDate(str) {
-  if (!str) return "—";
-  try {
-    return new Date(str).toLocaleDateString("fa-IR");
-  } catch {
-    return str;
-  }
-}
 
 function formatNum(n) {
   if (n == null || Number.isNaN(n)) return "—";
@@ -73,7 +65,7 @@ export default function CurrencyServicesTable({ requests, onUpdateStatus }) {
                   ? `${formatNum(row.amountInToman)} تومان`
                   : "—"}
               </TableCell>
-              <TableCell className="text-gray-300">{formatDate(row.createdAt)}</TableCell>
+              <TableCell className="text-gray-300">{formatDateFa(row.createdAt)}</TableCell>
               <TableCell>
                 {onUpdateStatus && (
                   <Button

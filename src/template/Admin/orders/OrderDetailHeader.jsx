@@ -18,6 +18,7 @@ import {
 import { toast } from "sonner";
 import OrderStatusDialog from "./OrderStatusDialog";
 import OrderShippingDialog from "./OrderShippingDialog";
+import { formatDateTimeFa } from "@/utils/adminDateUtils";
 
 const ORDER_STATUS_LABELS = {
   [OrderStatus.Pending]: "در انتظار",
@@ -52,17 +53,6 @@ const getStatusBadgeClass = (status) => {
   return map[status] || "bg-gray-500/20 text-gray-400 border-gray-500/30";
 };
 
-const formatDate = (val) => {
-  if (!val) return "-";
-  const d = new Date(val);
-  return d.toLocaleDateString("fa-IR", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
 
 export default function AdminOrderDetailHeader({ order, onDownloadInvoice, onOrderUpdated }) {
   const [statusDialogOpen, setStatusDialogOpen] = useState(false);
@@ -111,7 +101,7 @@ export default function AdminOrderDetailHeader({ order, onDownloadInvoice, onOrd
               سفارش #{order?.orderNumber ?? order?.id}
             </h1>
             <p className="text-gray-400 text-sm mt-1">
-              تاریخ ثبت: {formatDate(order?.createdAt ?? order?.orderDate)}
+              تاریخ ثبت: {formatDateTimeFa(order?.createdAt ?? order?.orderDate)}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">

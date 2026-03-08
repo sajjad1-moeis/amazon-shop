@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Notification } from "iconsax-reactjs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import AdminPagination from "@/components/ui/AdminPagination";
@@ -10,6 +10,8 @@ import { Spinner } from "@/components/ui/spinner";
 import { useAuth } from "@/contexts/AuthContext";
 import { notificationService } from "@/services/notification/notificationService";
 import { unwrapApiData } from "@/services/api/client";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
+import { formatDateFa } from "@/utils/adminDateUtils";
 
 export default function NotificationsPage() {
   const { user } = useAuth();
@@ -21,7 +23,10 @@ export default function NotificationsPage() {
   const [totalPages, setTotalPages] = useState(1);
 
   const fetchNotifications = async () => {
-    if (userId == null) return;
+    if (userId == null) {
+      setLoading(false);
+      return;
+    }
     try {
       setLoading(true);
       const response = await notificationService.getPaginated({
@@ -32,9 +37,10 @@ export default function NotificationsPage() {
       const data = unwrapApiData(response);
       const list = data?.notifications ?? (Array.isArray(data) ? data : []);
       setNotifications(Array.isArray(list) ? list : []);
-      setTotalPages(data?.totalPages ?? 1);
+      setTotalPages(Math.max(1, data?.totalPages ?? 1));
     } catch (error) {
       toast.error(error.message || "خطا در دریافت اعلان‌ها");
+      setTotalPages(1);
     } finally {
       setLoading(false);
     }
@@ -56,62 +62,55 @@ export default function NotificationsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">اعلان‌ها</h1>
-        <p className="text-gray-400">مدیریت اعلان‌های سیستم</p>
-      </div>
-
-      <Card className="bg-gray-800 border-gray-700">
-        <CardHeader>
-          <CardTitle className="text-white">اعلان‌های اخیر</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <div className="p-8 text-center text-gray-400">
-              <Spinner size="lg" />
-            </div>
-          ) : (
-            <>
-              <div className="space-y-4">
-                {notifications.map((notif) => (
-                  <div
-                    key={notif.id}
-                    className={`p-4 rounded-lg border ${
-                      notif.isRead ? "bg-gray-700/50 border-gray-600" : "bg-gray-700 border-gray-500"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-white font-medium">{notif.title || notif.subject || "-"}</h3>
-                          {!notif.isRead && <Badge variant="default">جدید</Badge>}
-                        </div>
-                        <p className="text-gray-400 text-sm">{notif.message || notif.content || notif.body || "-"}</p>
-                        <p className="text-gray-500 text-xs mt-2">
-                          {notif.createdAt ? new Date(notif.createdAt).toLocaleDateString("fa-IR") : notif.date || "-"}
-                        </p>
-                      </div>
-                      {!notif.isRead && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleMarkAsRead(notif.id)}
-                          className="text-green-400 hover:text-green-300"
-                        >
-                          خوانده شد
-                        </Button>
-                      )}
+      <AdminPageHeader title="اعلان‌ها" subtitle="مدیریت اعلان‌های سیستم" icon={Notification} />
+      <AdminSectionCard title="اعلان‌های اخیر">
+        {loading ? (
+          <div className="p-8 text-center text-gray-400">
+            <Spinner size="lg" />
+          </div>
+        ) : notifications.length === 0 ? (
+          <div className="p-8 text-center text-gray-400">هیچ اعلانی وجود ندارد</div>
+        ) : (
+          <div className="space-y-4">
+            {notifications.map((notif) => (
+              <div
+                key={notif.id}
+                className={`p-4 rounded-lg border ${
+                  notif.isRead ? "bg-gray-700/50 border-gray-600" : "bg-gray-700 border-gray-500"
+                }`}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="text-white font-medium">{notif.title || notif.subject || "-"}</h3>
+                      {!notif.isRead && <Badge variant="default">جدید</Badge>}
                     </div>
+                    <p className="text-gray-400 text-sm">{notif.message || notif.content || notif.body || "-"}</p>
+                    <p className="text-gray-500 text-xs mt-2">
+                      {notif.createdAt ? formatDateFa(notif.createdAt) : notif.date || "-"}
+                    </p>
                   </div>
-                ))}
+                  {!notif.isRead && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleMarkAsRead(notif.id)}
+                      className="text-green-400 hover:text-green-300"
+                    >
+                      خوانده شد
+                    </Button>
+                  )}
+                </div>
               </div>
-              <div className="pt-4 border-t border-gray-700">
-                <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
-              </div>
-            </>
-          )}
-        </CardContent>
-      </Card>
+            ))}
+          </div>
+        )}
+        {!loading && (
+          <div className="pt-4 mt-4 border-t border-gray-600">
+            <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
+          </div>
+        )}
+      </AdminSectionCard>
     </div>
   );
 }

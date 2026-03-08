@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { contactService } from "@/services/contact/contactService";
-import { formatDate } from "@/utils/dateFormatter";
+import { formatDateFa } from "@/utils/adminDateUtils";
 import ContactDetailHeader from "@/template/Admin/contactUs/ContactDetailHeader";
 import ContactInfoCard from "@/template/Admin/contactUs/ContactInfoCard";
 import MessageSection from "@/template/Admin/contactUs/MessageSection";
@@ -107,9 +107,9 @@ export default function ContactUsDetailPage() {
             isLink
             href={`mailto:${contact.email}`}
           />
-          <ContactInfoCard icon={Calendar} label="تاریخ ارسال" value={formatDate(contact.createdAt)} />
+          <ContactInfoCard icon={Calendar} label="تاریخ ارسال" value={formatDateFa(contact.createdAt)} />
           {contact.isRead && contact.readAt && (
-            <ContactInfoCard icon={TickCircle} label="تاریخ خوانده شدن" value={formatDate(contact.readAt)} />
+            <ContactInfoCard icon={TickCircle} label="تاریخ خوانده شدن" value={formatDateFa(contact.readAt)} />
           )}
         </div>
 

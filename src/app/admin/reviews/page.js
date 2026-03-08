@@ -3,12 +3,14 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { Star } from "iconsax-reactjs";
 import ReviewsTable from "@/template/Admin/reviews/ReviewsTable";
 import ReviewsFilters from "@/template/Admin/reviews/ReviewsFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import { reviewService } from "@/services/review/reviewService";
 import { unwrapApiData } from "@/services/api/client";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 
 export default function ReviewsPage() {
   const searchParams = useSearchParams();
@@ -66,12 +68,10 @@ export default function ReviewsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="">
-        <div className="mb-5">
-          <h1 className="text-lg md:text-xl text-gray-100 mb-4">نظرات و امتیازات</h1>
-          <ReviewsFilters />
-        </div>
-
+      <AdminPageHeader title="نظرات و امتیازات" subtitle="مدیریت نظرات و تأیید/رد" icon={Star}>
+        <ReviewsFilters />
+      </AdminPageHeader>
+      <AdminSectionCard title="لیست نظرات">
         {loading ? (
           <div className="p-8 text-center text-gray-400">
             <Spinner size="lg" />
@@ -79,12 +79,12 @@ export default function ReviewsPage() {
         ) : (
           <>
             <ReviewsTable reviews={reviews} />
-            <div className="pt-4 border-t border-gray-700">
+            <div className="pt-4 mt-4 border-t border-gray-600">
               <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
             </div>
           </>
         )}
-      </div>
+      </AdminSectionCard>
     </div>
   );
 }

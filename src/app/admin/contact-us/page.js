@@ -3,17 +3,20 @@
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { MessageText } from "iconsax-reactjs";
 import ContactUsTable from "@/template/Admin/contactUs/ContactUsTable";
 import ContactUsFilters from "@/template/Admin/contactUs/ContactUsFilters";
 import ContactStats from "@/template/Admin/contactUs/ContactStats";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import { contactService } from "@/services/contact/contactService";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 
 export default function ContactUsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const filterParam = searchParams.get("filter");
+  const searchParam = searchParams.get("search") || "";
   const pageParam = searchParams.get("page");
 
   const [contacts, setContacts] = useState([]);
@@ -43,6 +46,7 @@ export default function ContactUsPage() {
         pageNumber,
         pageSize,
         isRead: isReadFilter,
+        searchTerm: searchParam.trim() || undefined,
       });
 
       if (response.success && response.data) {
@@ -105,16 +109,14 @@ export default function ContactUsPage() {
     fetchContacts();
     fetchUnreadCount();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageNumber, pageSize, isReadFilter]);
+  }, [pageNumber, pageSize, isReadFilter, searchParam]);
 
   return (
     <div className="space-y-6">
-      <div className="">
-        <div className="mb-5 flex  justify-between flex-col max-md:items-start md:gap-4">
-          <h1 className="text-lg md:text-xl text-gray-100">درخواست‌های ارتباط با ما</h1>
-          <ContactUsFilters />
-        </div>
-
+      <AdminPageHeader title="درخواست‌های ارتباط با ما" subtitle="مشاهده و پاسخ به پیام‌های ارسالی" icon={MessageText}>
+        <ContactUsFilters />
+      </AdminPageHeader>
+      <AdminSectionCard>
         {loading ? (
           <div className="p-8 text-center text-gray-400">
             <Spinner size="lg" />
@@ -133,12 +135,12 @@ export default function ContactUsPage() {
               onMarkAsRead={handleMarkAsRead}
               markAsReadLoading={markAsReadLoading}
             />
-            <div className="pt-4 border-t border-gray-700">
+            <div className="pt-4 mt-4 border-t border-gray-600">
               <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={handlePageChange} />
             </div>
           </>
         )}
-      </div>
+      </AdminSectionCard>
     </div>
   );
 }

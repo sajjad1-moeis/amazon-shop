@@ -51,11 +51,11 @@ export function useBlogForm(initialData = null) {
   }, []);
 
   useEffect(() => {
-    if (user?.user?.id) {
-      setFormData((prev) => ({ ...prev, authorId: user.user.id }));
+    const currentUserId = user?.id ?? user?.userId ?? user?.user?.id;
+    if (currentUserId != null) {
+      setFormData((prev) => ({ ...prev, authorId: Number(currentUserId) }));
     }
   }, [user]);
-  console.log(user);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;

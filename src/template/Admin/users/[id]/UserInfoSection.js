@@ -2,7 +2,7 @@
 
 import React from "react";
 import { User, Sms, Call, Calendar, TickCircle, CloseCircle, Image as ImageIcon } from "iconsax-reactjs";
-import { formatDate } from "@/utils/dateFormatter";
+import { formatDateFa } from "@/utils/adminDateUtils";
 import UserInfoCard from "./UserInfoCard";
 
 export default function UserInfoSection({ user }) {
@@ -17,8 +17,8 @@ export default function UserInfoSection({ user }) {
         isLink
         href={`tel:${user.phoneNumber}`}
       />
-      <UserInfoCard icon={Calendar} label="تاریخ ثبت‌نام" value={formatDate(user.createdAt)} />
-      <UserInfoCard icon={Calendar} label="آخرین ورود" value={user.lastLogin ? formatDate(user.lastLogin) : "هرگز"} />
+      <UserInfoCard icon={Calendar} label="تاریخ ثبت‌نام" value={formatDateFa(user.createdAt)} />
+      <UserInfoCard icon={Calendar} label="آخرین ورود" value={user.lastLogin ? formatDateFa(user.lastLogin) : "هرگز"} />
       <UserInfoCard
         icon={TickCircle}
         label="وضعیت ایمیل"
@@ -44,7 +44,7 @@ export default function UserInfoSection({ user }) {
       {user.roles && user.roles.length > 0 && <UserInfoCard icon={User} label="نقش‌ها" value={user.roles.join(", ")} />}
       {user.isBanned && (
         <>
-          {user.bannedAt && <UserInfoCard icon={CloseCircle} label="تاریخ بن" value={formatDate(user.bannedAt)} />}
+          {user.bannedAt && <UserInfoCard icon={CloseCircle} label="تاریخ بن" value={formatDateFa(user.bannedAt)} />}
           {user.banReason && <UserInfoCard icon={CloseCircle} label="دلیل بن" value={user.banReason} />}
         </>
       )}

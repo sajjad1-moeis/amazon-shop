@@ -3,6 +3,7 @@
 import React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { formatDateTimeFa } from "@/utils/adminDateUtils";
 
 const getLogStatusBadge = (status) => {
   const statusMap = {
@@ -40,17 +41,13 @@ export default function LogsTable({ logs }) {
               {log.action || log.message || log.description || "-"}
             </TableCell>
             <TableCell className="text-gray-300">
-              {log.userName || log.user || log.userFullName || "-"}
+              {log.userName || log.userFullName || log.user || (log.userId != null ? `#${log.userId}` : "-")}
             </TableCell>
             <TableCell className="text-gray-300">{log.ipAddress || log.ip || "-"}</TableCell>
             <TableCell className="text-gray-300">
-              {log.createdAt
-                ? new Date(log.createdAt).toLocaleDateString("fa-IR") +
-                  " " +
-                  new Date(log.createdAt).toLocaleTimeString("fa-IR")
-                : log.date || "-"}
+              {log.createdAt ? formatDateTimeFa(log.createdAt) : log.date || "-"}
             </TableCell>
-            <TableCell>{getLogStatusBadge(log.status)}</TableCell>
+            <TableCell>{log.level ? <span className="text-gray-400">{log.level}</span> : getLogStatusBadge(log.status)}</TableCell>
           </TableRow>
         ))}
       </TableBody>

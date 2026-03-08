@@ -9,6 +9,7 @@ import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import { inventoryService } from "@/services/inventory/inventoryService";
 import { Box, Box1, Danger } from "iconsax-reactjs";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 
 const getInventoryStatus = (item) => {
   const currentStock = Number(item?.currentStock ?? item?.quantity ?? item?.stock ?? 0);
@@ -94,19 +95,16 @@ export default function InventoryPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <div className="mb-5">
-          <h1 className="text-lg md:text-xl text-gray-100 mb-4">انبار و موجودی</h1>
-          <InventoryFilters />
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-          <SummaryCard icon={Box1} label="کل اقلام این صفحه" value={summary.total} className="text-white" />
-          <SummaryCard icon={Box} label="موجودی کافی" value={summary.enough} className="text-green-400" />
-          <SummaryCard icon={Danger} label="موجودی کم" value={summary.low} className="text-yellow-400" />
-          <SummaryCard icon={Danger} label="ناموجود" value={summary.out} className="text-red-400" />
-        </div>
-
+      <AdminPageHeader title="انبار و موجودی" subtitle="مدیریت موجودی و هشدار کمبود" icon={Box}>
+        <InventoryFilters />
+      </AdminPageHeader>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        <SummaryCard icon={Box1} label="کل اقلام این صفحه" value={summary.total} className="text-white" />
+        <SummaryCard icon={Box} label="موجودی کافی" value={summary.enough} className="text-green-400" />
+        <SummaryCard icon={Danger} label="موجودی کم" value={summary.low} className="text-yellow-400" />
+        <SummaryCard icon={Danger} label="ناموجود" value={summary.out} className="text-red-400" />
+      </div>
+      <AdminSectionCard title="جدول موجودی">
         {loading ? (
           <div className="p-8 text-center text-gray-400">
             <Spinner size="lg" />
@@ -114,12 +112,12 @@ export default function InventoryPage() {
         ) : (
           <>
             <InventoryTable inventory={filteredInventory} />
-            <div className="pt-4 border-t border-gray-700">
+            <div className="pt-4 mt-4 border-t border-gray-600">
               <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
             </div>
           </>
         )}
-      </div>
+      </AdminSectionCard>
     </div>
   );
 }

@@ -19,6 +19,7 @@ export const adminTicketService = {
   },
 
   // نسخه قبلی صفحه‌بندی (در صورت نیاز برای سازگاری)
+  /** GET api/AdminTicket/GetPaginated — فاز ۲۲ با query params */
   getPaginated: async (params = {}) => {
     const {
       pageNumber = 1,
@@ -26,6 +27,7 @@ export const adminTicketService = {
       status,
       priority,
       categoryId,
+      userId,
       assignedToUserId,
       searchTerm,
       startDate,
@@ -42,6 +44,7 @@ export const adminTicketService = {
     if (status !== undefined && status !== null) searchParams.append("status", status.toString());
     if (priority !== undefined && priority !== null) searchParams.append("priority", priority.toString());
     if (categoryId) searchParams.append("categoryId", categoryId.toString());
+    if (userId) searchParams.append("userId", userId.toString());
     if (assignedToUserId) searchParams.append("assignedToUserId", assignedToUserId.toString());
     if (searchTerm) searchParams.append("searchTerm", searchTerm);
     if (startDate) searchParams.append("startDate", startDate);

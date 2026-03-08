@@ -7,32 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
-import {
-  DollarCircle,
-  MoneyRecive,
-  Refresh2,
-  WalletMoney,
-} from "iconsax-reactjs";
+import { DollarCircle, MoneyRecive, Refresh2, WalletMoney } from "iconsax-reactjs";
 import { dollarRateService } from "@/services/currency/dollarRateService";
 import { currencyRateService } from "@/services/currency/currencyRateService";
 import { unwrapApiData } from "@/services/api/client";
-
-function formatDate(str) {
-  if (!str) return "—";
-  try {
-    const date = new Date(str);
-    if (Number.isNaN(date.getTime())) return str;
-    return new Intl.DateTimeFormat("fa-IR", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date);
-  } catch {
-    return str;
-  }
-}
+import { formatDateTimeFa } from "@/utils/adminDateUtils";
 
 function formatNum(n) {
   if (n == null || Number.isNaN(n)) return "—";
@@ -113,7 +92,9 @@ export default function AdminCurrencyRatesPage() {
       await Promise.all([loadDollar(), loadRates()]);
       if (!cancelled) setLoading(false);
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleSetManual = async (e) => {
@@ -219,7 +200,7 @@ export default function AdminCurrencyRatesPage() {
           icon={DollarCircle}
           label="نرخ فعلی دلار"
           value={`${formatNum(dollar?.rate)} تومان`}
-          hint={dollar?.lastUpdated ? `آخرین بروزرسانی: ${formatDate(dollar.lastUpdated)}` : "—"}
+          hint={dollar?.lastUpdated ? `آخرین بروزرسانی: ${formatDateTimeFa(dollar.lastUpdated)}` : "—"}
         />
         <StatCard
           icon={WalletMoney}
@@ -237,7 +218,7 @@ export default function AdminCurrencyRatesPage() {
         <StatCard
           icon={Refresh2}
           label="آخرین بروزرسانی ارزها"
-          value={latestRateUpdate ? formatDate(latestRateUpdate) : "—"}
+          value={latestRateUpdate ? formatDateTimeFa(latestRateUpdate) : "—"}
           hint="آخرین زمان ثبت‌شده در لیست ارزها"
           valueClassName="text-sm md:text-base text-white leading-7"
         />
@@ -272,7 +253,7 @@ export default function AdminCurrencyRatesPage() {
               </div>
               <div>
                 <p className="text-gray-500 mb-1">آخرین بروزرسانی</p>
-                <p className="text-gray-300">{formatDate(dollar?.lastUpdated)}</p>
+                <p className="text-gray-300">{formatDateTimeFa(dollar?.lastUpdated)}</p>
               </div>
             </div>
           </div>
@@ -316,7 +297,10 @@ export default function AdminCurrencyRatesPage() {
         </SectionCard>
 
         <SectionCard title="ویرایش نرخ ارزها" icon={MoneyRecive}>
-          <form onSubmit={handleUpdateCurrency} className="grid grid-cols-1 sm:grid-cols-[120px_1fr_auto] gap-3 items-end">
+          <form
+            onSubmit={handleUpdateCurrency}
+            className="grid grid-cols-1 sm:grid-cols-[120px_1fr_auto] gap-3 items-end"
+          >
             <ActionField label="کد ارز">
               <Input
                 value={editCurrency}
@@ -342,8 +326,8 @@ export default function AdminCurrencyRatesPage() {
           </form>
 
           <div className="rounded-lg border border-dashed border-gray-600 bg-gray-800/30 p-4 text-sm text-gray-400">
-            برای ویرایش مستقیم، کد ارز را وارد کنید و نرخ جدید را ثبت کنید. تاریخ‌ها در جدول پایین به فرمت فارسی
-            نمایش داده می‌شوند.
+            برای ویرایش مستقیم، کد ارز را وارد کنید و نرخ جدید را ثبت کنید. تاریخ‌ها در جدول پایین به فرمت فارسی نمایش
+            داده می‌شوند.
           </div>
         </SectionCard>
       </div>
@@ -367,11 +351,9 @@ export default function AdminCurrencyRatesPage() {
                     className={`border-b border-gray-700/70 last:border-0 ${index % 2 === 0 ? "bg-gray-800/20" : "bg-transparent"}`}
                   >
                     <td className="p-3 text-white font-medium">{r.currencyName || r.currency || "—"}</td>
-                    <td className="p-3 text-gray-300 font-mono" dir="ltr">
-                      {r.currency || "—"}
-                    </td>
+                    <td className="p-3 text-gray-300 font-mono text-right">{r.currency || "—"}</td>
                     <td className="p-3 text-gray-200">{formatNum(r.rate)} تومان</td>
-                    <td className="p-3 text-gray-400">{formatDate(r.updatedAt || r.createdAt)}</td>
+                    <td className="p-3 text-gray-400">{formatDateTimeFa(r.updatedAt || r.createdAt)}</td>
                   </tr>
                 ))}
               </tbody>

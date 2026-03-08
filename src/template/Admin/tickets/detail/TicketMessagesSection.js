@@ -2,7 +2,7 @@
 
 import React from "react";
 import { MessageText } from "iconsax-reactjs";
-import { formatDate } from "@/utils/dateFormatter";
+import { formatDateTimeFa } from "@/utils/adminDateUtils";
 
 export default function TicketMessagesSection({ messages }) {
   return (
@@ -28,7 +28,7 @@ export default function TicketMessagesSection({ messages }) {
                 <span className="text-white font-medium">
                   {msg.isFromAdmin || msg.sender === "admin" ? "ادمین" : msg.senderName || "کاربر"}
                 </span>
-                <span className="text-gray-400 text-sm">{formatDate(msg.createdAt || msg.time)}</span>
+                <span className="text-gray-400 text-sm">{formatDateTimeFa(msg.createdAt || msg.time)}</span>
               </div>
               <p className="text-gray-300 whitespace-pre-wrap">{msg.message || msg.text || "-"}</p>
             </div>

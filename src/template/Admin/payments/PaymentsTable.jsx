@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Eye } from "iconsax-reactjs";
+import { formatDateFa } from "@/utils/adminDateUtils";
 
 const getPaymentStatusBadge = (status) => {
   const statusMap = {
@@ -53,9 +54,7 @@ export default function PaymentsTable({ payments }) {
             </TableCell>
             <TableCell>{getPaymentStatusBadge(payment.status)}</TableCell>
             <TableCell className="text-gray-300">
-              {payment.createdAt
-                ? new Date(payment.createdAt).toLocaleDateString("fa-IR")
-                : payment.date || "-"}
+              {payment.createdAt ? formatDateFa(payment.createdAt) : payment.date || "-"}
             </TableCell>
             <TableCell>
               <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-400 hover:bg-blue-400/20">

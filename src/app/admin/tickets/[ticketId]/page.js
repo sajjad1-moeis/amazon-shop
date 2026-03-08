@@ -6,7 +6,6 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { adminTicketService } from "@/services/ticket/adminTicketService";
-import { ticketService } from "@/services/ticket/ticketService";
 import { unwrapApiData } from "@/services/api/client";
 import TicketDetailHeader from "@/template/Admin/tickets/detail/TicketDetailHeader";
 import TicketInfoCards from "@/template/Admin/tickets/detail/TicketInfoCards";
@@ -34,14 +33,11 @@ export default function TicketDetailPage() {
   const fetchTicket = async () => {
     try {
       setLoading(true);
-
-      const ticketResponse = await ticketService.getById(ticketId);
-      const ticketData = unwrapApiData(ticketResponse);
+      const response = await adminTicketService.getTicketWithMessages(ticketId);
+      const data = unwrapApiData(response);
+      const ticketData = data?.ticket ?? data;
       setTicket(ticketData);
-
-      const messagesResponse = await adminTicketService.getMessages(ticketId);
-      const messagesData = unwrapApiData(messagesResponse);
-      const raw = Array.isArray(messagesData) ? messagesData : messagesData?.messages ?? [];
+      const raw = Array.isArray(data?.messages) ? data.messages : [];
       const mapped = raw.map((msg) => ({
         ...msg,
         isFromAdmin: msg.messageType === 2 || msg.messageTypeName === "Support",

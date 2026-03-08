@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MessageText } from "iconsax-reactjs";
 import TableActions from "../TableActions";
+import { formatDateFa } from "@/utils/adminDateUtils";
 
 const getPriorityBadge = (priority) => {
   const priorityMap = {
@@ -67,7 +68,7 @@ export default function TicketsTable({ tickets, onView }) {
             <TableCell>{getTicketStatusBadge(ticket.status)}</TableCell>
             <TableCell className="text-gray-300">{ticket.messagesCount || ticket.messageCount || 0}</TableCell>
             <TableCell className="text-gray-300">
-              {ticket.updatedAt ? new Date(ticket.updatedAt).toLocaleDateString("fa-IR") : ticket.lastUpdate || "-"}
+              {ticket.updatedAt ? formatDateFa(ticket.updatedAt) : ticket.lastUpdate || "-"}
             </TableCell>
             <TableCell>
               <TableActions onView={() => onView(ticket.id)} showEdit={false} showDelete={false} />

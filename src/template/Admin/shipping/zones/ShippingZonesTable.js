@@ -4,7 +4,7 @@ import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Eye, Edit, Trash } from "lucide-react";
-import { formatDate } from "@/utils/dateFormatter";
+import { formatDateFa } from "@/utils/adminDateUtils";
 
 export default function ShippingZonesTable({ zones }) {
   if (!zones || zones.length === 0) {
@@ -60,7 +60,7 @@ export default function ShippingZonesTable({ zones }) {
                   </Badge>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                  {zone.createdAt ? formatDate(zone.createdAt) : "-"}
+                  {zone.createdAt ? formatDateFa(zone.createdAt) : "-"}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <div className="flex items-center gap-2">

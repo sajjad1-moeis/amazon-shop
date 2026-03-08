@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { TickCircle, CloseCircle, MoneyRecive } from "iconsax-reactjs";
+import { formatDateFa } from "@/utils/adminDateUtils";
 
 export default function ReturnRequestsTable({ returnRequests, onApprove, onReject, onProcessRefund }) {
   const getStatusBadge = (status) => {
@@ -21,11 +22,6 @@ export default function ReturnRequestsTable({ returnRequests, onApprove, onRejec
         {statusInfo.label}
       </Badge>
     );
-  };
-
-  const formatDate = (dateString) => {
-    if (!dateString) return "-";
-    return new Date(dateString).toLocaleDateString("fa-IR");
   };
 
   if (returnRequests.length === 0) {
@@ -65,7 +61,7 @@ export default function ReturnRequestsTable({ returnRequests, onApprove, onRejec
                 : "-"}
             </TableCell>
             <TableCell>{getStatusBadge(request.status)}</TableCell>
-            <TableCell className="text-gray-300">{formatDate(request.createdAt)}</TableCell>
+            <TableCell className="text-gray-300">{formatDateFa(request.createdAt)}</TableCell>
             <TableCell>
               <div className="flex items-center gap-2">
                 {request.status === 1 && (

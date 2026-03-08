@@ -3,13 +3,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { People } from "iconsax-reactjs";
 import UsersTable from "@/template/Admin/users/UsersTable";
 import UsersFilters from "@/template/Admin/users/UsersFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import { userService } from "@/services/user/userService";
-import FilterSection from "@/components/FilterSection";
-import FilterSearchInput from "@/components/FilterSelects/FilterSearchInput";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 
 export default function UsersPage() {
   const router = useRouter();
@@ -84,13 +84,10 @@ export default function UsersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="">
-        <div className="mb-5">
-          <h1 className="text-lg md:text-xl text-gray-100 mb-4">لیست کاربران</h1>
-
-          <UsersFilters />
-        </div>
-
+      <AdminPageHeader title="لیست کاربران" subtitle="مدیریت و جستجوی کاربران سیستم" icon={People}>
+        <UsersFilters />
+      </AdminPageHeader>
+      <AdminSectionCard title="جدول کاربران">
         {loading ? (
           <div className="p-8 text-center text-gray-400">
             <Spinner size="lg" />
@@ -98,12 +95,12 @@ export default function UsersPage() {
         ) : (
           <>
             <UsersTable users={users} />
-            <div className="pt-4 border-t border-gray-700">
+            <div className="pt-4 mt-4 border-t border-gray-600">
               <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={handlePageChange} />
             </div>
           </>
         )}
-      </div>
+      </AdminSectionCard>
     </div>
   );
 }

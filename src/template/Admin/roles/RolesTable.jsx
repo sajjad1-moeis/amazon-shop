@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EyeSlash, Eye, CloseCircle, TickCircle } from "iconsax-reactjs";
 import TableActions from "../TableActions";
-import { formatDate } from "@/utils/dateFormatter";
+import { formatDateFa } from "@/utils/adminDateUtils";
 
 export default function RolesTable({ roles, onEdit, onDelete, onToggleActive, onView }) {
   if (roles.length === 0) {
@@ -31,7 +31,7 @@ export default function RolesTable({ roles, onEdit, onDelete, onToggleActive, on
             <TableCell className="text-white font-medium">{role.name}</TableCell>
             <TableCell className="text-gray-300 max-w-xs truncate">{role.description || "-"}</TableCell>
             <TableCell className="text-gray-300">{role.userCount || 0}</TableCell>
-            <TableCell className="text-gray-300">{formatDate(role.createdAt)}</TableCell>
+            <TableCell className="text-gray-300">{formatDateFa(role.createdAt)}</TableCell>
             <TableCell>
               <Badge
                 variant="outline"

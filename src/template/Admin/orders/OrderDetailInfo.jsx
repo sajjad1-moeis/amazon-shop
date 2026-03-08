@@ -3,18 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { User, Sms, Call, Calendar, ReceiptEdit } from "iconsax-reactjs";
-
-const formatDate = (val) => {
-  if (!val) return "-";
-  const d = new Date(val);
-  return d.toLocaleDateString("fa-IR", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
+import { formatDateTimeFa } from "@/utils/adminDateUtils";
 
 const InfoRow = ({ icon: Icon, label, value, href }) => {
   const content = (
@@ -78,7 +67,7 @@ export default function AdminOrderDetailInfo({ order }) {
           value={customerPhone}
           href={customerPhone && customerPhone !== "-" ? `tel:${customerPhone}` : undefined}
         />
-        <InfoRow icon={Calendar} label="تاریخ ثبت سفارش" value={formatDate(order?.createdAt ?? order?.orderDate)} />
+        <InfoRow icon={Calendar} label="تاریخ ثبت سفارش" value={formatDateTimeFa(order?.createdAt ?? order?.orderDate)} />
         {userId && (
           <InfoRow
             icon={User}

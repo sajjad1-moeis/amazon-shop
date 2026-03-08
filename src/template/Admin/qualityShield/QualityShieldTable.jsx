@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PlayCircle, TickCircle } from "iconsax-reactjs";
+import { formatDateFa } from "@/utils/adminDateUtils";
 
 const STATUS_MAP = {
   1: { label: "در انتظار", className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" },
@@ -19,15 +20,6 @@ const RESULT_MAP = {
   2: { label: "رد", className: "bg-red-500/20 text-red-400" },
   3: { label: "مشروط", className: "bg-amber-500/20 text-amber-400" },
 };
-
-function formatDate(str) {
-  if (!str) return "—";
-  try {
-    return new Date(str).toLocaleDateString("fa-IR");
-  } catch {
-    return str;
-  }
-}
 
 function formatMoney(n) {
   if (n == null || Number.isNaN(n)) return "—";
@@ -82,7 +74,7 @@ export default function QualityShieldTable({ list, onStartInspection, onComplete
                   "—"
                 )}
               </TableCell>
-              <TableCell className="text-gray-300">{formatDate(row.purchasedAt)}</TableCell>
+              <TableCell className="text-gray-300">{formatDateFa(row.purchasedAt)}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-1">
                   {row.status === 1 && onStartInspection && (

@@ -2,17 +2,20 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { Document } from "iconsax-reactjs";
 import { blogTagService } from "@/services/blog/blogTagService";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
+import { Spinner } from "@/components/ui/spinner";
+import { FORM_STYLES } from "@/template/Admin/formStyles";
 
 export default function EditTagPage() {
   const params = useParams();
   const router = useRouter();
-  const tagId = params.id;
+  const tagId = params?.id;
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [formData, setFormData] = useState({
@@ -22,10 +25,10 @@ export default function EditTagPage() {
 
   useEffect(() => {
     const fetchTag = async () => {
+      if (!tagId) return;
       try {
         setFetching(true);
         const response = await blogTagService.getById(tagId);
-
         if (response.success && response.data) {
           const tag = response.data;
           setFormData({
@@ -35,15 +38,11 @@ export default function EditTagPage() {
         }
       } catch (error) {
         toast.error(error.message || "خطا در دریافت اطلاعات تگ");
-        console.error("Error fetching tag:", error);
       } finally {
         setFetching(false);
       }
     };
-
-    if (tagId) {
-      fetchTag();
-    }
+    fetchTag();
   }, [tagId]);
 
   const handleChange = (e) => {
@@ -53,22 +52,16 @@ export default function EditTagPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-
-    if (!formData.name) {
+    if (!formData.name?.trim()) {
       toast.error("لطفاً نام تگ را وارد کنید");
-      setLoading(false);
       return;
     }
-
+    setLoading(true);
     try {
-      const tagData = {
-        name: formData.name,
-        slug: formData.slug || undefined,
-      };
-
-      const response = await blogTagService.update(tagId, tagData);
-
+      const response = await blogTagService.update(tagId, {
+        name: formData.name.trim(),
+        slug: formData.slug?.trim() || undefined,
+      });
       if (response.success) {
         toast.success("تگ با موفقیت به‌روزرسانی شد");
         router.push("/admin/blog/tags");
@@ -77,7 +70,6 @@ export default function EditTagPage() {
       }
     } catch (error) {
       toast.error(error.message || "خطا در به‌روزرسانی تگ");
-      console.error("Error updating tag:", error);
     } finally {
       setLoading(false);
     }
@@ -86,80 +78,73 @@ export default function EditTagPage() {
   if (fetching) {
     return (
       <div className="space-y-6">
-        <div className="p-8 text-center text-gray-400">در حال بارگذاری...</div>
+        <AdminPageHeader title="ویرایش تگ" subtitle="در حال بارگذاری..." icon={Document} />
+        <div className="p-12 flex flex-col items-center justify-center text-gray-400 gap-3 rounded-xl border border-gray-600 bg-gray-700/30">
+          <Spinner size="lg" />
+          <span>در حال بارگذاری اطلاعات تگ...</span>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">ویرایش تگ</h1>
-          <p className="text-gray-400">ویرایش تگ بلاگ</p>
-        </div>
-      </div>
+      <AdminPageHeader
+        title="ویرایش تگ"
+        subtitle="تغییر نام و slug تگ وبلاگ"
+        icon={Document}
+      />
 
-      <Card className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl">
-        <CardHeader>
-          <CardTitle className="text-white text-xl">ویرایش تگ</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="name" className="text-gray-300">
-                نام تگ *
-              </Label>
-              <Input
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="نام تگ را وارد کنید"
-                className="bg-gray-800 bg-opacity-50 border border-gray-700 text-white rounded-lg"
-                required
-              />
-            </div>
+      <AdminSectionCard title="اطلاعات تگ">
+        <form onSubmit={handleSubmit} className="space-y-5 max-w-xl">
+          <div className="space-y-2">
+            <Label htmlFor="name" className={FORM_STYLES.label}>
+              نام تگ <span className="text-red-400">*</span>
+            </Label>
+            <Input
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="نام تگ را وارد کنید"
+              className={FORM_STYLES.input}
+              required
+            />
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="slug" className="text-gray-300">
-                Slug (اختیاری)
-              </Label>
-              <Input
-                id="slug"
-                name="slug"
-                value={formData.slug}
-                onChange={handleChange}
-                placeholder="اگر خالی باشد، از نام ساخته می‌شود"
-                className="bg-gray-800 bg-opacity-50 border border-gray-700 text-white rounded-lg"
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="slug" className={FORM_STYLES.label}>
+              Slug (اختیاری)
+            </Label>
+            <Input
+              id="slug"
+              name="slug"
+              value={formData.slug}
+              onChange={handleChange}
+              placeholder="خالی = ساخته‌شده از نام"
+              className={FORM_STYLES.input}
+            />
+          </div>
 
-            <div className="flex justify-end pt-4 gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.push("/admin/blog/tags")}
-                className="text-white border-gray-600"
-              >
-                انصراف
-              </Button>
-              <Button
-                type="submit"
-                disabled={loading}
-                className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg"
-              >
-                {loading ? "در حال به‌روزرسانی..." : "به‌روزرسانی تگ"}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+          <div className="flex flex-wrap items-center gap-3 pt-2">
+            <Button
+              type="submit"
+              disabled={loading}
+              className="bg-blue-600 hover:bg-blue-700 text-white min-w-[140px]"
+            >
+              {loading ? "در حال ذخیره..." : "ذخیره تغییرات"}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.push("/admin/blog/tags")}
+              className="border-gray-500 text-gray-300 hover:bg-gray-600 hover:text-white"
+            >
+              انصراف
+            </Button>
+          </div>
+        </form>
+      </AdminSectionCard>
     </div>
   );
 }
-
-
-
-
-

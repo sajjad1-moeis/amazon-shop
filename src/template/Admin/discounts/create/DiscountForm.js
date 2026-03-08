@@ -12,6 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FORM_STYLES } from "../../formStyles";
 import { cn } from "@/lib/utils";
+import { AdminPersianDatePicker } from "@/components/admin";
 
 const formSchema = z
   .object({
@@ -94,17 +95,18 @@ export default function DiscountForm({ onSubmit, loading = false }) {
 
   const submitHandler = async (data) => {
     try {
-      // تبدیل رشته‌ها به عدد
+      // نوع تخفیف مطابق API: 1 = Percentage, 2 = FixedAmount (از discountCodeService.DiscountType)
+      const typeValue = data.type === "percentage" ? 1 : 2;
       const formData = {
         code: data.code.trim().toUpperCase(),
-        type: data.type === "percentage" ? 0 : 1, // 0 = percentage, 1 = fixed
+        type: typeValue,
         value: parseFloat(data.value),
-        minPurchase: data.minPurchase ? parseFloat(data.minPurchase) : null,
-        maxDiscount: data.maxDiscount ? parseFloat(data.maxDiscount) : null,
-        usageLimit: data.usageLimit ? parseInt(data.usageLimit, 10) : null,
-        startDate: new Date(data.startDate).toISOString(),
-        endDate: new Date(data.endDate).toISOString(),
+        startDate: new Date(data.startDate + "T00:00:00").toISOString(),
+        endDate: new Date(data.endDate + "T23:59:59").toISOString(),
       };
+      if (data.minPurchase?.trim()) formData.minPurchase = parseFloat(data.minPurchase);
+      if (data.maxDiscount?.trim()) formData.maxDiscount = parseFloat(data.maxDiscount);
+      if (data.usageLimit?.trim()) formData.usageLimit = parseInt(data.usageLimit, 10);
 
       await onSubmit(formData);
     } catch (error) {
@@ -272,7 +274,12 @@ export default function DiscountForm({ onSubmit, loading = false }) {
                       تاریخ شروع <span className="text-red-400">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} type="date" className={FORM_STYLES.input} dir="ltr" />
+                      <AdminPersianDatePicker
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="تاریخ شروع"
+                        className={FORM_STYLES.input}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -288,7 +295,12 @@ export default function DiscountForm({ onSubmit, loading = false }) {
                       تاریخ پایان <span className="text-red-400">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} type="date" className={FORM_STYLES.input} dir="ltr" />
+                      <AdminPersianDatePicker
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="تاریخ پایان"
+                        className={FORM_STYLES.input}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

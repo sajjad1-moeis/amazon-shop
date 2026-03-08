@@ -83,95 +83,100 @@ function CartItem({ item, userId, onUpdate }) {
   return (
     <Card className="rounded-xl border overflow-hidden border-gray-200 dark:bg-dark-box dark:border-dark-field shadow-sm hover:shadow-md transition p-0">
       <CardContent className="p-0">
-        {/* موبایل: تصویر بالا، بعد جزئیات، بعد قیمت و تعداد */}
+        {/* موبایل: کارت جمع‌وجور و شیک */}
         <div className="flex flex-col md:hidden">
-          <div className="relative aspect-square w-full bg-gray-100 dark:bg-dark-field">
-            <Image src={imageUrl} alt={title} fill className="object-contain p-2" />
+          {/* تصویر با نسبت متعادل و گوشه‌های گرد */}
+          <div className="relative aspect-[4/3] max-h-[220px] w-full bg-gray-50 dark:bg-dark-field/80">
+            <Image src={imageUrl} alt={title} fill className="object-contain p-3" sizes="(max-width: 768px) 100vw, 220px" />
+            {discount > 0 && (
+              <span className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-md shadow">
+                {discount}٪
+              </span>
+            )}
           </div>
-          <div className="p-4 space-y-3">
-            <div className="flex justify-between items-start gap-2">
-              <h2 className="font-bold text-base text-neutral-800 dark:text-dark-titre leading-snug line-clamp-2">
+
+          <div className="p-3.5 space-y-2.5">
+            {/* ردیف اول: عنوان + حذف */}
+            <div className="flex items-start justify-between gap-2">
+              <h2 className="font-semibold text-sm text-neutral-800 dark:text-dark-titre leading-snug line-clamp-2 flex-1 min-w-0">
                 {title}
               </h2>
               <button
                 type="button"
                 onClick={handleRemove}
-                className="flex items-center gap-1 text-red-500 dark:text-red-400 text-sm shrink-0"
+                disabled={loading}
+                className="flex items-center gap-1 text-red-500 dark:text-red-400 text-xs shrink-0 py-1 px-1.5 rounded-lg hover:bg-red-500/10 transition-colors active:scale-95"
                 aria-label="حذف"
               >
-                <Trash size={18} />
+                <Trash size={16} />
                 <span>حذف</span>
               </button>
             </div>
-            <div className="flex items-center gap-2">
-              <Image src="/image/amazonLogo.png" alt="آمازون" width={56} height={22} className="object-contain" />
+
+            {/* ردیف دوم: برند + پرچم + ارسال در یک خط */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <Image src="/image/amazonLogo.png" alt="آمازون" width={48} height={18} className="object-contain opacity-90" />
               <Image
                 src={isUae ? "/image/Products/emarat.png" : "/image/Products/usa.png"}
                 alt=""
-                width={22}
-                height={22}
-                className="rounded-full object-cover"
+                width={18}
+                height={18}
+                className="rounded-full object-cover border border-gray-200 dark:border-dark-stroke"
               />
-            </div>
-            {item?.variant && (
-              <div className="flex items-center gap-2 text-sm text-neutral-700 dark:text-dark-titre">
-                <span className="size-4 rounded-full bg-[#E2BB30] shrink-0" />
-                <span>{item.variant}</span>
-              </div>
-            )}
-            <div className="flex flex-wrap gap-2">
-              <span
-                className={`${badgeBase} bg-gray-100 dark:bg-dark-field border-gray-200 dark:border-dark-stroke text-gray-600 dark:text-dark-titre`}
-              >
-                <TruckFast size={16} className="text-green-600 shrink-0" />
+              <span className="inline-flex items-center gap-1 text-xs text-gray-600 dark:text-dark-titre bg-gray-100 dark:bg-dark-field px-2 py-1 rounded-md">
+                <TruckFast size={14} className="text-green-600 shrink-0" />
                 ۲۰ روز کاری
               </span>
               {item?.hasQualityShield && (
-                <span
-                  className={`${badgeBase} bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800 text-primary-600 dark:text-primary-400`}
-                >
-                  <ShieldTick size={16} variant="Bold" className="shrink-0" />
-                  دارای سپر کیفیت
+                <span className="inline-flex items-center gap-1 text-xs text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 px-2 py-1 rounded-md border border-primary-200/50 dark:border-primary-800/50">
+                  <ShieldTick size={14} variant="Bold" className="shrink-0" />
+                  سپر کیفیت
                 </span>
               )}
             </div>
-            <div className="flex items-center gap-2 pt-1">
-              <Button
-                variant="ghost"
-                className={`${quantityBtnBase} bg-gray-200 dark:bg-dark-field text-gray-700 dark:text-dark-titre hover:bg-gray-300 dark:hover:bg-dark-stroke`}
-                onClick={handleDecrease}
-                disabled={quantity <= 1}
-                aria-label="کم کردن"
-              >
-                <MinusIcon className="size-4" />
-              </Button>
-              <span className="min-w-[2rem] text-center text-sm font-medium text-neutral-800 dark:text-dark-titre">
-                {quantity}
-              </span>
-              <Button
-                variant="ghost"
-                className={`${quantityBtnBase} bg-primary-600 dark:bg-primary-700 text-white hover:bg-primary-700 dark:hover:bg-primary-600`}
-                onClick={handleIncrease}
-                aria-label="افزودن"
-              >
-                <PlusIcon className="size-4" />
-              </Button>
-            </div>
-          </div>
-          <div className="px-4 pb-4 pt-3 border-t border-gray-200 dark:border-dark-stroke space-y-1">
-            <div className="flex items-center gap-2 flex-wrap">
-              {discount > 0 && (
-                <span className="bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-lg">{discount}٪</span>
-              )}
-              <p className="text-lg font-bold text-neutral-800 dark:text-dark-titre">
-                {formatPrice(item?.totalPrice ?? price * quantity)} تومان
-              </p>
-            </div>
-            {discount > 0 && (
-              <p className="text-sm text-gray-500 dark:text-gray-400 line-through">
-                {formatPrice(originalPrice)} تومان
-              </p>
+
+            {item?.variant && (
+              <div className="flex items-center gap-1.5 text-xs text-neutral-600 dark:text-dark-titre">
+                <span className="size-3 rounded-full bg-[#E2BB30] shrink-0" />
+                <span>{item.variant}</span>
+              </div>
             )}
+
+            {/* ردیف آخر: تعداد و قیمت در یک خط */}
+            <div className="flex items-center justify-between gap-3 pt-2 border-t border-gray-100 dark:border-dark-stroke">
+              <div className="flex items-center gap-1 rounded-xl bg-gray-100 dark:bg-dark-field border border-gray-200 dark:border-dark-stroke overflow-hidden">
+                <button
+                  type="button"
+                  onClick={handleDecrease}
+                  disabled={quantity <= 1}
+                  className="size-8 flex items-center justify-center text-gray-600 dark:text-dark-titre hover:bg-gray-200 dark:hover:bg-dark-stroke disabled:opacity-40 disabled:pointer-events-none transition-colors"
+                  aria-label="کم کردن"
+                >
+                  <MinusIcon className="size-4" />
+                </button>
+                <span className="min-w-[28px] text-center text-sm font-semibold text-neutral-800 dark:text-dark-titre">
+                  {quantity}
+                </span>
+                <button
+                  type="button"
+                  onClick={handleIncrease}
+                  className="size-8 flex items-center justify-center bg-primary-600 dark:bg-primary-600 text-white hover:bg-primary-700 transition-colors active:scale-95"
+                  aria-label="افزودن"
+                >
+                  <PlusIcon className="size-4" />
+                </button>
+              </div>
+              <div className="text-left min-w-0">
+                {discount > 0 && (
+                  <p className="text-xs text-gray-500 dark:text-gray-400 line-through">
+                    {formatPrice(originalPrice)} تومان
+                  </p>
+                )}
+                <p className="text-base font-bold text-neutral-800 dark:text-dark-titre truncate">
+                  {formatPrice(item?.totalPrice ?? price * quantity)} تومان
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 

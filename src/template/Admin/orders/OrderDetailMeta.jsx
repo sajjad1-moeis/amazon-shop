@@ -9,6 +9,7 @@ import {
   PaymentMethod,
   ShippingMethod,
 } from "@/services/order/orderService";
+import { formatDateTimeFa } from "@/utils/adminDateUtils";
 
 const ORDER_STATUS_LABELS = {
   [OrderStatus.Pending]: "در انتظار",
@@ -152,18 +153,7 @@ const pickValue = (...values) => values.find((value) => value !== undefined && v
 const isPrimitiveValue = (value) =>
   ["string", "number", "boolean"].includes(typeof value) || value instanceof Date;
 
-const formatDate = (value) => {
-  if (!value) return "-";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return String(value);
-  return date.toLocaleDateString("fa-IR", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
+const formatDate = (value) => formatDateTimeFa(value);
 
 const formatAmount = (value) =>
   value !== undefined && value !== null && value !== ""

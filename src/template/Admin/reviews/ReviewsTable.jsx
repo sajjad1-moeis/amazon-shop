@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
 import { Eye, TickCircle, CloseCircle } from "iconsax-reactjs";
+import { formatDateFa } from "@/utils/adminDateUtils";
 
 const getReviewStatusBadge = (status) => {
   const statusMap = {
@@ -61,9 +62,7 @@ export default function ReviewsTable({ reviews }) {
             </TableCell>
             <TableCell>{getReviewStatusBadge(review.status)}</TableCell>
             <TableCell className="text-gray-300">
-              {review.createdAt
-                ? new Date(review.createdAt).toLocaleDateString("fa-IR")
-                : review.date || "-"}
+              {review.createdAt ? formatDateFa(review.createdAt) : review.date || "-"}
             </TableCell>
             <TableCell>
               <div className="flex items-center gap-2">

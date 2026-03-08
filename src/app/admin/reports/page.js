@@ -1,88 +1,21 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Link from "next/link";
+import { Chart, People, ShoppingBag, Wallet3, Truck, Box, Timer } from "iconsax-reactjs";
+import { AdminPageHeader, AdminCardLink } from "@/components/admin";
 
 export default function ReportsPage() {
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">گزارشات و آمار</h1>
-        <p className="text-gray-400">گزارشات و آمار سیستم</p>
-      </div>
-
+      <AdminPageHeader title="گزارشات و آمار" subtitle="گزارشات و آمار سیستم" icon={Chart} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Link href="/admin/reports/sales">
-          <Card className="bg-gray-800 border-gray-700 hover:bg-gray-700/50 cursor-pointer transition-colors">
-            <CardHeader>
-              <CardTitle className="text-white">گزارش فروش</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-400">گزارشات فروش و درآمد</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href="/admin/reports/users">
-          <Card className="bg-gray-800 border-gray-700 hover:bg-gray-700/50 cursor-pointer transition-colors">
-            <CardHeader>
-              <CardTitle className="text-white">گزارش کاربران</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-400">گزارشات کاربران و فعالیت‌ها</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href="/admin/reports/products">
-          <Card className="bg-gray-800 border-gray-700 hover:bg-gray-700/50 cursor-pointer transition-colors">
-            <CardHeader>
-              <CardTitle className="text-white">گزارش محصولات</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-400">گزارشات محصولات و موجودی</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href="/admin/reports/financial">
-          <Card className="bg-gray-800 border-gray-700 hover:bg-gray-700/50 cursor-pointer transition-colors">
-            <CardHeader>
-              <CardTitle className="text-white">گزارش مالی</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-400">گزارشات مالی و تراکنش‌ها</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href="/admin/reports/shipping">
-          <Card className="bg-gray-800 border-gray-700 hover:bg-gray-700/50 cursor-pointer transition-colors">
-            <CardHeader>
-              <CardTitle className="text-white">گزارش ارسال</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-400">گزارشات ارسال و تحویل</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href="/admin/reports/inventory">
-          <Card className="bg-gray-800 border-gray-700 hover:bg-gray-700/50 cursor-pointer transition-colors">
-            <CardHeader>
-              <CardTitle className="text-white">گزارش موجودی</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-400">وضعیت موجودی انبار</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href="/admin/reports/rate-limits">
-          <Card className="bg-gray-800 border-gray-700 hover:bg-gray-700/50 cursor-pointer transition-colors">
-            <CardHeader>
-              <CardTitle className="text-white">گزارشات Rate Limit</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-400">گزارشات محدودیت درخواست‌ها</p>
-            </CardContent>
-          </Card>
-        </Link>
+        <AdminCardLink href="/admin/reports/sales" title="گزارش فروش" description="گزارشات فروش و درآمد" icon={Chart} />
+        <AdminCardLink href="/admin/reports/users" title="گزارش کاربران" description="گزارشات کاربران و فعالیت‌ها" icon={People} />
+        <AdminCardLink href="/admin/reports/products" title="گزارش محصولات" description="گزارشات محصولات و موجودی" icon={ShoppingBag} />
+        <AdminCardLink href="/admin/reports/financial" title="گزارش مالی" description="گزارشات مالی و تراکنش‌ها" icon={Wallet3} />
+        <AdminCardLink href="/admin/reports/shipping" title="گزارش ارسال" description="گزارشات ارسال و تحویل" icon={Truck} />
+        <AdminCardLink href="/admin/reports/inventory" title="گزارش موجودی" description="وضعیت موجودی انبار" icon={Box} />
+        <AdminCardLink href="/admin/reports/rate-limits" title="گزارشات Rate Limit" description="گزارشات محدودیت درخواست‌ها" icon={Timer} />
       </div>
     </div>
   );
