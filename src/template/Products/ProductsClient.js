@@ -8,6 +8,7 @@ import ProductList from "@/template/Products/ProductList";
 import ProductNotFoundSection from "@/template/Products/ProductNotFoundSection";
 import { ProductCardSkeletonList } from "@/components/ProductCardSkeleton";
 import { productService } from "@/services/product/productService";
+import { pricingService } from "@/services/pricing/pricingService";
 import { isScraperConfigured } from "@/services/api/client";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 
@@ -69,6 +70,8 @@ export default function ProductsClient() {
   const [error, setError] = useState(null);
   const [searchInputValue, setSearchInputValue] = useState("");
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const [searchTermOriginal, setSearchTermOriginal] = useState(null);
+  const [searchTermTranslated, setSearchTermTranslated] = useState(null);
   const searchDebounceRef = useRef(null);
 
   const query = parseQuery(sp);
@@ -100,6 +103,10 @@ export default function ProductsClient() {
     const load = async () => {
       try {
         const hasSearch = Boolean(query.search);
+        if (hasSearch) {
+          setSearchTermOriginal(null);
+          setSearchTermTranslated(null);
+        }
 
         if (hasSearch) {
           let list = [];
@@ -108,15 +115,51 @@ export default function ProductsClient() {
             if (!res?.success && res?.message) setError(res.message);
             const payload = res?.data;
             list = Array.isArray(payload?.data) ? payload.data : [];
+            if (!cancelled && res?.success && payload) {
+              setSearchTermOriginal(payload.search_term_original ?? null);
+              setSearchTermTranslated(
+                payload.search_term_original != null ? (payload.search_term ?? null) : null
+              );
+            }
           } else {
             const res = await productService.search(query.search);
             list = Array.isArray(res?.data) ? res.data : [];
+            if (!cancelled) {
+              setSearchTermOriginal(null);
+              setSearchTermTranslated(null);
+            }
           }
           if (cancelled) return;
           extractCategoriesBrands(list);
+          // لیست از اسکرپر: قیمت‌ها AED هستند — یک درخواست batch-preview برای نمایش تومان با قوانین قیمت
+          if (isScraperConfigured() && list.length > 0) {
+            try {
+              const pricing = await pricingService.batchPreview(list);
+              if (cancelled) return;
+              const byAsin = {};
+              (pricing.results || []).forEach((r) => {
+                if (r.asin != null) byAsin[r.asin] = r.finalPriceIrr;
+              });
+              list = list.map((p) => {
+                const asin = p.asin ?? p.ASIN ?? p.amazonASIN;
+                const toman = asin != null ? byAsin[asin] : undefined;
+                if (toman != null && Number(toman) > 0) {
+                  return { ...p, finalPrice: toman, ourPrice: toman };
+                }
+                return p;
+              });
+            } catch (_) {
+              // در صورت خطا لیست با همان قیمت AED نمایش داده می‌شود
+            }
+          }
+          if (cancelled) return;
           setProducts(list);
           setTotalCount(list.length);
         } else {
+          if (!cancelled) {
+            setSearchTermOriginal(null);
+            setSearchTermTranslated(null);
+          }
           const res = await productService.getList({
             pageNumber: 1,
             pageSize: 100,
@@ -137,11 +180,22 @@ export default function ProductsClient() {
           setProducts(list);
           setTotalCount(total);
         }
-      } catch {
+      } catch (err) {
         if (!cancelled) {
           setProducts([]);
           setTotalCount(0);
-          setError("خطا در دریافت لیست محصولات.");
+          setSearchTermOriginal(null);
+          setSearchTermTranslated(null);
+          const msg =
+            err?.data?.message ||
+            err?.data?.message_en ||
+            err?.message ||
+            "خطا در دریافت لیست محصولات.";
+          const isScraper = hasSearch && isScraperConfigured();
+          const hint = isScraper && (msg.includes("fetch") || msg.includes("Failed") || msg.includes("network"))
+            ? " (آیا اسکرپر سرور در دسترس است؟)"
+            : "";
+          setError(msg + hint);
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -212,6 +266,8 @@ export default function ProductsClient() {
         sortBy={filters.sortBy}
         onSortChange={(v) => handleFilterChange("sortBy", v === "all" ? "" : v)}
         onOpenFilterDrawer={() => setFilterDrawerOpen(true)}
+        searchTermOriginal={searchTermOriginal}
+        searchTermTranslated={searchTermTranslated}
       />
       <Drawer open={filterDrawerOpen} onOpenChange={setFilterDrawerOpen}>
         <DrawerContent className="max-h-[85vh] dark:bg-dark-box" dir="rtl">

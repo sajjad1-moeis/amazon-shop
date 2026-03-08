@@ -71,20 +71,32 @@ export const productService = {
     }
 
     if (isScraperConfigured()) {
-      const scraper = getScraperClient();
-      const res = await scraper.get(`api/search?${params.toString()}`).json();
-      // نرمال‌سازی پاسخ پایتون به فرمت یکسان برای ProductsClient
-      const list = Array.isArray(res?.data) ? res.data : [];
-      return {
-        success: Boolean(res?.success),
-        data: {
-          data: list,
-          fromCache: res?.from_cache ?? false,
-          count: res?.count ?? list.length,
-          search_term: res?.search_term ?? trimmed,
-        },
-        message: res?.message ?? res?.error ?? null,
-      };
+      try {
+        const scraper = getScraperClient();
+        const res = await scraper.get(`api/search?${params.toString()}`).json();
+        // نرمال‌سازی پاسخ پایتون به فرمت یکسان برای ProductsClient
+        const list = Array.isArray(res?.data) ? res.data : [];
+        return {
+          success: Boolean(res?.success),
+          data: {
+            data: list,
+            fromCache: res?.from_cache ?? false,
+            count: res?.count ?? list.length,
+            search_term: res?.search_term ?? trimmed,
+            search_term_original: res?.search_term_original ?? null,
+          },
+          message: res?.message ?? res?.error ?? null,
+        };
+      } catch (e) {
+        let msg = e?.message ?? "خطا در اتصال به اسکرپر.";
+        try {
+          if (e?.response?.json) {
+            const body = await e.response.json();
+            msg = body?.message ?? body?.message_en ?? body?.error ?? msg;
+          }
+        } catch (_) {}
+        return { success: false, data: { data: [], search_term: trimmed }, message: msg };
+      }
     }
 
     const client = getPublicClient();
@@ -380,6 +392,18 @@ export const productService = {
   },
 
   /**
+   * ذخیرهٔ قیمت تومان (OurPrice) در DB برای محصول موجود.
+   * بعد از دریافت قیمت از preview در صفحهٔ جزئیات صدا زده می‌شود تا رفرش و لیست از DB قیمت درست را بخوانند.
+   */
+  updateProductPrice: async (productId, ourPrice) => {
+    if (!productId || ourPrice == null || Number(ourPrice) <= 0) return null;
+    const client = getPublicClient();
+    return client
+      .post("Product/UpdatePrice", { json: { productId: Number(productId), ourPrice: Number(ourPrice) } })
+      .json();
+  },
+
+  /**
    * به‌روزرسانی محصول موجود در DB با جزئیات کامل اسکرپر (عکس‌ها، توضیحات، نظرات، مشخصات).
    * وقتی محصول با ID باز شده ولی در DB ناقص است استفاده می‌شود.
    */
@@ -389,6 +413,7 @@ export const productService = {
     const body = {
       productId: Number(productId),
       description: details.description ?? null,
+      title_fa: details.title_fa ?? null,
       images: Array.isArray(details.images) ? details.images : null,
       attributes: Array.isArray(details.attributes)
         ? details.attributes.map((a) => ({ name: a?.name ?? a?.Name ?? "", value: a?.value ?? a?.Value ?? "" }))

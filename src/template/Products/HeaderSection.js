@@ -20,13 +20,25 @@ function HeaderSection({
   sortBy = "",
   onSortChange,
   onOpenFilterDrawer,
+  searchTermOriginal = null,
+  searchTermTranslated = null,
 }) {
   const handleSearchChange = (e) => {
     if (onSearch) onSearch(e.target.value);
   };
 
+  const showTranslatedHint = Boolean(searchTermOriginal && searchTermTranslated && searchTermOriginal !== searchTermTranslated);
+
   return (
     <div className="max-lg:px-4 lg:container mt-4">
+      {showTranslatedHint && (
+        <div className="mb-2 text-sm text-gray-600 dark:text-[#7B7F86]" aria-live="polite">
+          <span>نتایج برای: </span>
+          <span className="font-medium text-gray-800 dark:text-dark-titre">{searchTermOriginal}</span>
+          <span className="mr-1"> — </span>
+          <span className="text-gray-500 dark:text-gray-400" dir="ltr">{searchTermTranslated}</span>
+        </div>
+      )}
       {/* دسکتاپ: یک ردیف */}
       <div className="hidden md:flex flex-between flex-wrap gap-3">
         <div className="flex-between gap-1">
