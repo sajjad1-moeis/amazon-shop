@@ -2,27 +2,68 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import ByAmazonSlider from "./ByAmazonSlider";
 import QualityShieldModal from "./QualityShieldModal";
-import { HOMEPAGE_IMAGES } from "@/config/homepageImages";
+import { HERO_SLIDES } from "@/config/homepageImages";
+import { SLIDER_AUTOPLAY_DELAY } from "@/config/sliderConfig";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import SliderNavButton from "@/components/SliderNavButton";
 
 export default function AmazonSection() {
   const [isQualityShieldOpen, setIsQualityShieldOpen] = useState(false);
   return (
     <div className="w-full bg-white dark:bg-dark-bg">
-      {/* Hero Section — مسیر از config/homepageImages (طبق فیگما قابل تعویض) */}
-      <button onClick={() => setIsQualityShieldOpen(true)} className="block w-full cursor-pointer">
-        <Image
-          src={HOMEPAGE_IMAGES.heroBanner}
-          alt="سپر کیفیت میکرولس"
-          width={1200}
-          height={600}
-          priority
-          className="w-full h-auto object-cover"
-        />
-      </button>
+      {/* Hero Slider — اتوپلی، هر اسلاید به لینک مشخص در config/homepageImages (HERO_SLIDES) */}
+      <div className="hero-main-slider relative w-full">
+        <Swiper
+          modules={[Autoplay, Navigation]}
+          autoplay={{
+            delay: SLIDER_AUTOPLAY_DELAY,
+            disableOnInteraction: false,
+          }}
+          loop={HERO_SLIDES.length > 1}
+          navigation={{
+            nextEl: ".hero-main-slider .next-slide",
+            prevEl: ".hero-main-slider .prev-slide",
+          }}
+          className="w-full"
+        >
+          {HERO_SLIDES.map((slide, index) => (
+            <SwiperSlide key={index}>
+              <Link href={slide.href} className="block w-full focus:outline-none">
+                <Image
+                  src={slide.src}
+                  alt={slide.alt}
+                  width={1200}
+                  height={500}
+                  priority={index === 0}
+                  className="w-full h-auto min-h-[200px] object-cover"
+                />
+              </Link>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        {HERO_SLIDES.length > 1 && (
+          <>
+            <SliderNavButton
+              direction="next"
+              className="next-slide absolute left-3 top-1/2 -translate-y-1/2 z-10 opacity-90"
+              size={24}
+            />
+            <SliderNavButton
+              direction="prev"
+              className="prev-slide absolute right-3 top-1/2 -translate-y-1/2 z-10 opacity-90"
+              size={24}
+            />
+          </>
+        )}
+      </div>
       {/* Product Slider Box */}
-      <div className="w-full container -mt-[10%] relative">
+      <div className="w-full container -mt-[12%] relative z-50">
         <div className="w-full border-2  dark:border-[#50578152] border-primary-300 rounded-2xl p-4 flex gap-4 overflow-x-auto bg-white dark:bg-dark-bg shadow-[0_0_20px_rgba(0,0,0,0.05)]">
           {/* Explosion Offer Box */}
           <div className="min-w-[150px] lg:min-w-[200px]  rounded-xl p-4  flex justify-center items-center text-center max-md:hidden">

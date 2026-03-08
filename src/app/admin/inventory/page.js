@@ -53,16 +53,13 @@ export default function InventoryPage() {
           pageNumber,
           pageSize,
           searchTerm: searchTerm || undefined,
+          status: statusFilter === "out" ? 0 : statusFilter === "enough" || statusFilter === "low" ? 1 : undefined,
         });
 
         if (cancelled) return;
-        if (response.success && response.data) {
-          setInventory(response.data.inventory || response.data || []);
-          setTotalPages(response.data.totalPages || 1);
-        } else {
-          setInventory([]);
-          setTotalPages(1);
-        }
+        const data = response?.data;
+        setInventory(Array.isArray(data?.inventory) ? data.inventory : Array.isArray(data) ? data : []);
+        setTotalPages(Math.max(1, data?.totalPages ?? 1));
       } catch (error) {
         if (!cancelled) {
           toast.error(error.message || "خطا در دریافت موجودی");
@@ -76,7 +73,7 @@ export default function InventoryPage() {
     return () => {
       cancelled = true;
     };
-  }, [pageNumber, pageSize, searchTerm]);
+  }, [pageNumber, pageSize, searchTerm, statusFilter]);
 
   const filteredInventory =
     statusFilter === "all" ? inventory : inventory.filter((item) => getInventoryStatus(item) === statusFilter);

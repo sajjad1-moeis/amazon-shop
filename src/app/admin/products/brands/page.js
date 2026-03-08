@@ -17,11 +17,11 @@ import { productBrandService } from "@/services/product/productBrandService";
 export default function BrandsPage() {
   const router = useRouter();
   const [brands, setBrands] = useState([]);
-  const [displayedBrands, setDisplayedBrands] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize] = useState(20);
+  const [totalPages, setTotalPages] = useState(1);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedBrandId, setSelectedBrandId] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -29,32 +29,30 @@ export default function BrandsPage() {
   const fetchBrands = async () => {
     try {
       setLoading(true);
-      const response = await productBrandService.getAll();
-
-      if (response.success && response.data) {
-        setBrands(response.data || []);
-      }
+      const response = await productBrandService.getPaginated({
+        pageNumber,
+        pageSize,
+        searchTerm: searchTerm.trim() || undefined,
+      });
+      const data = response?.data;
+      setBrands(Array.isArray(data?.brands) ? data.brands : []);
+      setTotalPages(Math.max(1, data?.totalPages ?? 1));
     } catch (error) {
-      toast.error(error.message || "خطا در دریافت برندها");
-      console.error("Error fetching brands:", error);
+      toast.error(error?.message || "خطا در دریافت برندها");
+      setBrands([]);
+      setTotalPages(1);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchBrands();
-  }, []);
+    setPageNumber(1);
+  }, [searchTerm]);
 
   useEffect(() => {
-    let filtered = brands;
-    if (searchTerm) {
-      filtered = brands.filter((brand) => brand.name.toLowerCase().includes(searchTerm.toLowerCase()));
-    }
-    const startIndex = (pageNumber - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    setDisplayedBrands(filtered.slice(startIndex, endIndex));
-  }, [brands, searchTerm, pageNumber, pageSize]);
+    fetchBrands();
+  }, [pageNumber, pageSize, searchTerm]);
 
   const handleEdit = (brandId) => {
     router.push(`/admin/products/brands/edit/${brandId}`);
@@ -71,11 +69,13 @@ export default function BrandsPage() {
     setDeleteLoading(true);
     try {
       const response = await productBrandService.delete(selectedBrandId);
-      if (response.success) {
+      if (response?.success !== false) {
         toast.success("برند با موفقیت حذف شد");
         setDeleteDialogOpen(false);
         setSelectedBrandId(null);
         fetchBrands();
+      } else {
+        toast.error(response?.message || "خطا در حذف برند");
       }
     } catch (error) {
       toast.error(error.message || "خطا در حذف برند");
@@ -112,17 +112,19 @@ export default function BrandsPage() {
           <div className="p-8 text-center text-gray-400">
             <Spinner size="lg" />
           </div>
+        ) : brands.length === 0 ? (
+          <div className="p-8 text-center text-gray-400">برندی یافت نشد</div>
         ) : (
-          <>
-            <BrandsTable brands={displayedBrands} onEdit={handleEdit} onDelete={handleDelete} />
-            <div className="pt-4 border-t border-gray-600 mt-4">
-              <AdminPagination
-                currentPage={pageNumber}
-                totalPages={Math.ceil(brands.length / pageSize) || 1}
-                onPageChange={setPageNumber}
-              />
-            </div>
-          </>
+          <BrandsTable brands={brands} onEdit={handleEdit} onDelete={handleDelete} />
+        )}
+        {!loading && (
+          <div className="pt-4 border-t border-gray-600 mt-4">
+            <AdminPagination
+              currentPage={pageNumber}
+              totalPages={totalPages}
+              onPageChange={setPageNumber}
+            />
+          </div>
         )}
       </AdminSectionCard>
 

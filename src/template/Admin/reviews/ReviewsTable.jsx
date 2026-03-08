@@ -22,7 +22,7 @@ const getReviewStatusBadge = (status) => {
   );
 };
 
-export default function ReviewsTable({ reviews }) {
+export default function ReviewsTable({ reviews, onApprove, onReject }) {
   if (reviews.length === 0) {
     return <div className="p-8 text-center text-gray-400">نظری یافت نشد</div>;
   }
@@ -71,10 +71,20 @@ export default function ReviewsTable({ reviews }) {
                 </Button>
                 {review.status === 1 && (
                   <>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-green-400 hover:bg-green-400/20">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-green-400 hover:bg-green-400/20"
+                      onClick={() => onApprove?.(review.id)}
+                    >
                       <TickCircle size={18} />
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-red-400 hover:bg-red-400/20">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-red-400 hover:bg-red-400/20"
+                      onClick={() => onReject?.(review.id)}
+                    >
                       <CloseCircle size={18} />
                     </Button>
                   </>

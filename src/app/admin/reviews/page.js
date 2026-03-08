@@ -8,7 +8,7 @@ import ReviewsTable from "@/template/Admin/reviews/ReviewsTable";
 import ReviewsFilters from "@/template/Admin/reviews/ReviewsFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
-import { reviewService } from "@/services/review/reviewService";
+import { productReviewService } from "@/services/review/productReviewService";
 import { unwrapApiData } from "@/services/api/client";
 import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 
@@ -41,7 +41,7 @@ export default function ReviewsPage() {
     (async () => {
       try {
         setLoading(true);
-        const response = await reviewService.getPaginated({
+        const response = await productReviewService.getPaginated({
           pageNumber,
           pageSize,
           status: statusFilter,
@@ -66,6 +66,26 @@ export default function ReviewsPage() {
     };
   }, [pageNumber, pageSize, searchTerm, statusFilter]);
 
+  const handleApprove = async (id) => {
+    try {
+      await productReviewService.approve(id);
+      toast.success("نظر تأیید شد");
+      setReviews((prev) => prev.map((r) => (r.id === id ? { ...r, status: 2 } : r)));
+    } catch (e) {
+      toast.error(e?.message || "خطا در تأیید نظر");
+    }
+  };
+
+  const handleReject = async (id, reason) => {
+    try {
+      await productReviewService.reject(id, reason);
+      toast.success("نظر رد شد");
+      setReviews((prev) => prev.map((r) => (r.id === id ? { ...r, status: 3 } : r)));
+    } catch (e) {
+      toast.error(e?.message || "خطا در رد نظر");
+    }
+  };
+
   return (
     <div className="space-y-6">
       <AdminPageHeader title="نظرات و امتیازات" subtitle="مدیریت نظرات و تأیید/رد" icon={Star}>
@@ -78,7 +98,11 @@ export default function ReviewsPage() {
           </div>
         ) : (
           <>
-            <ReviewsTable reviews={reviews} />
+            <ReviewsTable
+              reviews={reviews}
+              onApprove={handleApprove}
+              onReject={handleReject}
+            />
             <div className="pt-4 mt-4 border-t border-gray-600">
               <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
             </div>

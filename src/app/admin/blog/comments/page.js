@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { MessageText } from "iconsax-reactjs";
@@ -16,84 +16,74 @@ const PAGE_SIZE = 20;
 
 export default function BlogCommentsPage() {
   const searchParams = useSearchParams();
-  const searchParam = (searchParams.get("search") || "").trim().toLowerCase();
+  const searchTerm = (searchParams.get("search") || "").trim();
   const statusParam = searchParams.get("status") || "1";
 
-  const [allComments, setAllComments] = useState([]);
+  const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pageNumber, setPageNumber] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedCommentId, setSelectedCommentId] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  const statusFilter = statusParam === "all" ? null : parseInt(statusParam, 10);
-  const validStatus = [1, 2, 3, 4].includes(statusFilter) ? statusFilter : 1;
+  const statusFilter = statusParam === "all" ? undefined : parseInt(statusParam, 10);
+  const validStatus = [1, 2, 3].includes(statusFilter) ? statusFilter : 1;
 
-  const fetchComments = useCallback(async () => {
+  const fetchComments = async () => {
     try {
       setLoading(true);
-      const response = await blogCommentService.getByStatus(validStatus);
-      if (response.success && response.data) {
-        const list = Array.isArray(response.data) ? response.data : [];
-        setAllComments(list);
-      } else {
-        setAllComments([]);
-      }
+      const response = await blogCommentService.getPaginated({
+        pageNumber,
+        pageSize: PAGE_SIZE,
+        status: validStatus,
+        searchTerm: searchTerm || undefined,
+      });
+      const data = response?.data;
+      setComments(Array.isArray(data?.comments) ? data.comments : []);
+      setTotalPages(Math.max(1, data?.totalPages ?? 1));
     } catch (error) {
-      toast.error(error.message || "خطا در دریافت نظرات");
-      setAllComments([]);
+      toast.error(error?.message || "خطا در دریافت نظرات");
+      setComments([]);
+      setTotalPages(1);
     } finally {
       setLoading(false);
     }
-  }, [validStatus]);
-
-  useEffect(() => {
-    fetchComments();
-  }, [fetchComments]);
+  };
 
   useEffect(() => {
     setPageNumber(1);
-  }, [statusParam, searchParam]);
+  }, [statusParam, searchTerm]);
 
-  const filteredComments = useMemo(() => {
-    if (!searchParam) return allComments;
-    return allComments.filter(
-      (c) =>
-        (c.authorName || "").toLowerCase().includes(searchParam) ||
-        (c.content || "").toLowerCase().includes(searchParam) ||
-        (c.blogTitle || "").toLowerCase().includes(searchParam)
-    );
-  }, [allComments, searchParam]);
-
-  const totalPages = Math.max(1, Math.ceil(filteredComments.length / PAGE_SIZE));
-  const startIndex = (pageNumber - 1) * PAGE_SIZE;
-  const paginatedComments = filteredComments.slice(startIndex, startIndex + PAGE_SIZE);
+  useEffect(() => {
+    fetchComments();
+  }, [pageNumber, statusParam, searchTerm]);
 
   const handleApprove = async (commentId) => {
     try {
       const response = await blogCommentService.approve(commentId);
-      if (response.success) {
+      if (response?.success !== false) {
         toast.success("نظر تأیید شد");
         fetchComments();
       } else {
-        toast.error(response.message || "خطا در تأیید");
+        toast.error(response?.message || "خطا در تأیید");
       }
     } catch (error) {
-      toast.error(error.message || "خطا در تأیید نظر");
+      toast.error(error?.message || "خطا در تأیید نظر");
     }
   };
 
   const handleReject = async (commentId) => {
     try {
       const response = await blogCommentService.reject(commentId);
-      if (response.success) {
+      if (response?.success !== false) {
         toast.success("نظر رد شد");
         fetchComments();
       } else {
-        toast.error(response.message || "خطا در رد");
+        toast.error(response?.message || "خطا در رد");
       }
     } catch (error) {
-      toast.error(error.message || "خطا در رد نظر");
+      toast.error(error?.message || "خطا در رد نظر");
     }
   };
 
@@ -107,23 +97,19 @@ export default function BlogCommentsPage() {
     setDeleteLoading(true);
     try {
       const response = await blogCommentService.softDelete(selectedCommentId);
-      if (response.success) {
+      if (response?.success !== false) {
         toast.success("نظر حذف شد");
         setDeleteDialogOpen(false);
         setSelectedCommentId(null);
         fetchComments();
       } else {
-        toast.error(response.message || "خطا در حذف");
+        toast.error(response?.message || "خطا در حذف");
       }
     } catch (error) {
-      toast.error(error.message || "خطا در حذف نظر");
+      toast.error(error?.message || "خطا در حذف نظر");
     } finally {
       setDeleteLoading(false);
     }
-  };
-
-  const handlePageChange = (newPage) => {
-    setPageNumber(newPage);
   };
 
   return (
@@ -145,17 +131,17 @@ export default function BlogCommentsPage() {
         ) : (
           <>
             <BlogCommentsTable
-              comments={paginatedComments}
+              comments={comments}
               onApprove={handleApprove}
               onReject={handleReject}
               onDelete={handleDelete}
             />
-            {totalPages > 1 && (
+            {!loading && (
               <div className="pt-4 mt-4 border-t border-gray-600">
                 <AdminPagination
                   currentPage={pageNumber}
                   totalPages={totalPages}
-                  onPageChange={handlePageChange}
+                  onPageChange={setPageNumber}
                 />
               </div>
             )}

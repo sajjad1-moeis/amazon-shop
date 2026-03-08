@@ -50,13 +50,9 @@ export default function PaymentsPage() {
         });
 
         if (cancelled) return;
-        if (response.success && response.data) {
-          setPayments(response.data.payments || response.data || []);
-          setTotalPages(response.data.totalPages || 1);
-        } else {
-          setPayments([]);
-          setTotalPages(1);
-        }
+        const data = response?.data;
+        setPayments(Array.isArray(data?.payments) ? data.payments : Array.isArray(data) ? data : []);
+        setTotalPages(Math.max(1, data?.totalPages ?? 1));
       } catch (error) {
         if (!cancelled) {
           toast.error(error.message || "خطا در دریافت پرداخت‌ها");

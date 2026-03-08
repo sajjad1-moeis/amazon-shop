@@ -22,6 +22,7 @@ export default function ProductsListPage() {
   const statusParam = searchParams.get("status");
   const brandParam = searchParams.get("brand");
   const pageParam = searchParams.get("page");
+  const searchTerm = searchParams.get("search") || "";
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -67,15 +68,13 @@ export default function ProductsListPage() {
   const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
-      const searchParam = searchParams.get("search");
-      const searchTerm = searchParam || "";
       const response = await productService.getPaginated({
         pageNumber,
         pageSize,
         categoryId,
         brandId: filterBrand !== "all" ? filterBrand : undefined,
         status: statusNumber,
-        searchTerm: searchTerm || undefined,
+        searchTerm: searchTerm.trim() || undefined,
       });
 
       if (response.success && response.data) {
@@ -91,7 +90,7 @@ export default function ProductsListPage() {
     } finally {
       setLoading(false);
     }
-  }, [pageNumber, pageSize, categoryId, filterBrand, statusNumber, searchParams]);
+  }, [pageNumber, pageSize, categoryId, filterBrand, statusNumber, searchTerm]);
 
   useEffect(() => {
     setPageNumber(1);
