@@ -20,7 +20,6 @@ const links = [
   { title: "داشبورد", href: "/dashboard" },
   { title: "تخفیف‌های آمازون", href: "/outlet" },
   { title: "تخفیف ویژه", href: "/gift-cart" },
-  { title: "کالای ناموجود", href: "/product-unavailable" },
   { title: "قوانین مرجوع کردن کالا", href: "/terms-conditions?tab=a2" },
   { title: "حریم خصوصی", href: "/terms-conditions?tab=a4" },
   { title: "پرسش‌ و پاسخ متداول", href: "/faqs" },

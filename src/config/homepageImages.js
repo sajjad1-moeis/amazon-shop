@@ -27,3 +27,14 @@ export const HOMEPAGE_IMAGES = {
     { src: "/image/Home/banner4.png", href: "/products" },
   ],
 };
+
+/** دسته‌بندی‌های صفحه اصلی — تصاویر در public/image/Home/ (category1.png تا category7.png). هر آیتم: src، label، href (لینک دقیق هر دسته). */
+export const HOMEPAGE_CATEGORIES = [
+  { src: "/image/Home/category1.png", label: "ورزش و سفر", href: "/products?category=1" },
+  { src: "/image/Home/category2.png", label: "کتاب و لوازم تحریر", href: "/products?category=2" },
+  { src: "/image/Home/category3.png", label: "الکترونیک", href: "/products?category=3" },
+  { src: "/image/Home/category4.png", label: "مد و پوشاک", href: "/products?category=4" },
+  { src: "/image/Home/category5.png", label: "خانه و آشپزخانه", href: "/products?category=5" },
+  { src: "/image/Home/category6.png", label: "زیبایی و سلامت", href: "/products?category=6" },
+  { src: "/image/Home/category7.png", label: "اسباب بازی", href: "/products?category=7" },
+];

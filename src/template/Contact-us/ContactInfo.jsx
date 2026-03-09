@@ -54,6 +54,7 @@ export default function ContactInfo() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-medium leading-7 mt-3 text-gray-50 dark:text-dark-titre hover:underline inline-flex items-center gap-1"
+                  dir="ltr"
                 >
                   {info.content}
                 </a>

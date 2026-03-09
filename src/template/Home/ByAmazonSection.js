@@ -17,8 +17,10 @@ export default function AmazonSection() {
   const [isQualityShieldOpen, setIsQualityShieldOpen] = useState(false);
   return (
     <div className="w-full bg-white dark:bg-dark-bg">
-      {/* Hero Slider — اتوپلی، هر اسلاید به لینک مشخص در config/homepageImages (HERO_SLIDES) */}
-      <div className="hero-main-slider relative w-full">
+      {/* Hero Slider — اتوپلی، گریدنت پایین مثل بنر فروشگاه‌ها (لایت/دارک) */}
+      <div className="hero-main-slider relative w-full overflow-hidden">
+        <div className="absolute bottom-0 left-0 w-full h-2/4 z-[5] dark:hidden liner-shop-bg-white pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-full h-2/4 z-[5] hidden dark:block liner-shop-bg-dark pointer-events-none" />
         <Swiper
           modules={[Autoplay, Navigation]}
           autoplay={{

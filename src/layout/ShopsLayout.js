@@ -32,21 +32,20 @@ export default function ShopsLayout({
           {" "}
           <div className="absolute bottom-0 w-full h-2/4 dark:hidden liner-shop-bg-white z-[50]" />
           <div className="absolute bottom-0 w-full h-2/4 hidden dark:block liner-shop-bg-dark z-[50]" />
-          <div className="absolute top-5 right-5 w-full z-50 max-md:hidden">
+          <div className="absolute top-5 right-5 z-50 max-md:hidden">
             <Breadcrumb>
-              <BreadcrumbList className="dark:text-white text-primary-700">
-                {/* آیتم خانه ثابت */}
+              <BreadcrumbList className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-black/55 backdrop-blur-sm text-white shadow-lg">
                 <BreadcrumbItem>
-                  <BreadcrumbLink href="/">
-                    <div className="flex items-center gap-2  ">
+                  <BreadcrumbLink href="/" className="text-white hover:text-white/90 transition-colors">
+                    <div className="flex items-center gap-2">
                       <Home size={20} variant="Bold" />
                       خانه
                     </div>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator className="rotate-180" />
+                <BreadcrumbSeparator className="rotate-180 text-white/70 [&>svg]:text-white/70" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage className="text-gray-600 dark:text-primary-100">خرید از {title}</BreadcrumbPage>
+                  <BreadcrumbPage className="font-medium text-white">خرید از {title}</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
