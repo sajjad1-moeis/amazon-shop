@@ -233,24 +233,24 @@ export default function Footer() {
 
           <div className="h-0.5 bg-gray-200 dark:bg-dark-box mt-5" />
 
-          {/* Bottom Links - فونت‌ها شبیه فیگما (سایز یکدست) */}
-          <div className="py-6 flex flex-col lg:flex-row justify-between items-center text-gray-600 dark:text-[#B8BECC]">
-            <div className="flex gap-y-4 md:gap-0.5 flex-wrap justify-center lg:justify-start w-full text-sm font-normal">
-              {links.map((item, index) => (
-                <Link
-                  key={index}
-                  href={item.href}
-                  className="hover:underline bg-white dark:bg-transparent px-4 border-l dark:border-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors text-[13px] md:text-sm"
-                >
-                  {item.title}
-                </Link>
-              ))}
-            </div>
-            <div className="text-center mt-4 lg:mt-0">
-              <p className="text-[12px] md:text-xs text-neutral-300 dark:text-gray-500">
-                تمامی حقوق این وب‌سایت متعلق به میکرولس می‌باشد.
-              </p>
-            </div>
+          {/* لینک‌های فوتر — یک ردیف جدا */}
+          <div className="py-6 flex flex-wrap gap-y-2 justify-center md:justify-start gap-x-0 text-gray-600 dark:text-[#B8BECC]">
+            {links.map((item, index) => (
+              <Link
+                key={index}
+                href={item.href}
+                className="hover:underline px-3 md:px-4 border-l border-gray-200 dark:border-gray-700 first:border-l-0 first:pl-0 hover:text-gray-900 dark:hover:text-white transition-colors text-[13px] md:text-sm"
+              >
+                {item.title}
+              </Link>
+            ))}
+          </div>
+
+          {/* کپی‌رایت — ردیف پایین جدا */}
+          <div className="pt-4 pb-8 border-t border-gray-100 dark:border-gray-800">
+            <p className="text-center text-[12px] md:text-xs text-neutral-400 dark:text-gray-500">
+              تمامی حقوق این وب‌سایت متعلق به میکرولس می‌باشد.
+            </p>
           </div>
         </section>
       </div>
