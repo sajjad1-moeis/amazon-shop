@@ -25,7 +25,9 @@ export const SideBarContent = ({ onLinkClick }) => {
     if (item.children) {
       return item.children.some((child) => pathname === child.href) || keyLocation.includes(item.key);
     }
-    return pathname === item.href;
+    if (pathname === item.href) return true;
+    if (item.key === "report" && pathname?.startsWith("/admin/reports")) return true;
+    return false;
   };
 
   return (

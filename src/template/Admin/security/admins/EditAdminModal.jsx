@@ -107,15 +107,15 @@ export default function EditAdminModal({ open, onOpenChange, admin, onSuccess })
           </div>
           <div className="flex items-center justify-between">
             <Label className="text-gray-400">فعال</Label>
-            <Switch checked={form.isActive} onCheckedChange={(v) => setForm((p) => ({ ...p, isActive: v }))} />
+            <Switch  dir="ltr"   checked={form.isActive} onCheckedChange={(v) => setForm((p) => ({ ...p, isActive: v }))} />
           </div>
           <div className="flex items-center justify-between">
             <Label className="text-gray-400">ایمیل تأیید شده</Label>
-            <Switch checked={form.isEmailVerified} onCheckedChange={(v) => setForm((p) => ({ ...p, isEmailVerified: v }))} />
+            <Switch  dir="ltr"  checked={form.isEmailVerified} onCheckedChange={(v) => setForm((p) => ({ ...p, isEmailVerified: v }))} />
           </div>
           <div className="flex items-center justify-between">
             <Label className="text-gray-400">موبایل تأیید شده</Label>
-            <Switch checked={form.isPhoneVerified} onCheckedChange={(v) => setForm((p) => ({ ...p, isPhoneVerified: v }))} />
+            <Switch dir="ltr"   checked={form.isPhoneVerified} onCheckedChange={(v) => setForm((p) => ({ ...p, isPhoneVerified: v }))} />
           </div>
           <div className="flex justify-end gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="border-gray-600">

@@ -27,7 +27,7 @@ export default function CurrencyServicesPage() {
   const searchTerm = searchParams.get("search") || "";
   const statusParam = searchParams.get("status");
   const serviceTypeParam = searchParams.get("serviceType");
-  const userIdParam = searchParams.get("userId");
+  const phoneNumberParam = searchParams.get("phoneNumber");
 
   const fetchList = async () => {
     try {
@@ -35,7 +35,7 @@ export default function CurrencyServicesPage() {
       const params = { pageNumber, pageSize, searchTerm: searchTerm || undefined };
       if (statusParam) params.status = parseInt(statusParam, 10);
       if (serviceTypeParam) params.serviceType = parseInt(serviceTypeParam, 10);
-      if (userIdParam) params.userId = parseInt(userIdParam, 10);
+      if (phoneNumberParam) params.phoneNumber = phoneNumberParam.trim();
       const res = await currencyService.getPaginated(params);
       const data = unwrapApiData(res);
       setRequests(Array.isArray(data?.requests) ? data.requests : []);
@@ -51,11 +51,11 @@ export default function CurrencyServicesPage() {
 
   useEffect(() => {
     setPageNumber(1);
-  }, [searchTerm, statusParam, serviceTypeParam, userIdParam]);
+  }, [searchTerm, statusParam, serviceTypeParam, phoneNumberParam]);
 
   useEffect(() => {
     fetchList();
-  }, [pageNumber, pageSize, searchTerm, statusParam, serviceTypeParam, userIdParam]);
+  }, [pageNumber, pageSize, searchTerm, statusParam, serviceTypeParam, phoneNumberParam]);
 
   const handleUpdateStatus = (request) => {
     setSelectedRequest(request);

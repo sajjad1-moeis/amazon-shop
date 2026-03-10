@@ -25,7 +25,7 @@ export default function ShippingInsuranceFilters() {
   const searchParams = useSearchParams();
 
   const orderId = searchParams.get("orderId") || "";
-  const userId = searchParams.get("userId") || "";
+  const phoneNumber = searchParams.get("phoneNumber") || "";
   const status = searchParams.get("status") || "all";
 
   const updateURL = (updates) => {
@@ -45,17 +45,18 @@ export default function ShippingInsuranceFilters() {
         type="number"
         placeholder="شناسه سفارش"
         value={orderId}
-        onChange={(e) => updateURL({ orderId: e.target.value || undefined, userId, status })}
+        onChange={(e) => updateURL({ orderId: e.target.value || undefined, phoneNumber, status })}
         className={`w-[130px] h-10 ${FORM_STYLES.input}`}
       />
       <Input
-        type="number"
-        placeholder="شناسه کاربر"
-        value={userId}
-        onChange={(e) => updateURL({ userId: e.target.value || undefined, orderId, status })}
-        className={`w-[130px] h-10 ${FORM_STYLES.input}`}
+        type="tel"
+        dir="ltr"
+        placeholder="شماره موبایل"
+        value={phoneNumber}
+        onChange={(e) => updateURL({ phoneNumber: e.target.value || undefined, orderId, status })}
+        className={`w-[140px] h-10 ${FORM_STYLES.input}`}
       />
-      <Select value={status} onValueChange={(v) => updateURL({ status: v, orderId, userId })}>
+      <Select value={status} onValueChange={(v) => updateURL({ status: v, orderId, phoneNumber })}>
         <SelectTrigger className={`w-[180px] h-10 ${FORM_STYLES.selectTrigger}`}>
           <SelectValue placeholder="وضعیت" />
         </SelectTrigger>

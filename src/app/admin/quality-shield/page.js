@@ -23,7 +23,7 @@ export default function AdminQualityShieldPage() {
   const [actionLoading, setActionLoading] = useState(false);
 
   const orderIdParam = searchParams.get("orderId");
-  const userIdParam = searchParams.get("userId");
+  const phoneNumberParam = searchParams.get("phoneNumber");
   const statusParam = searchParams.get("status");
 
   const fetchList = async () => {
@@ -31,7 +31,7 @@ export default function AdminQualityShieldPage() {
       setLoading(true);
       const params = {};
       if (orderIdParam) params.orderId = parseInt(orderIdParam, 10);
-      if (userIdParam) params.userId = parseInt(userIdParam, 10);
+      if (phoneNumberParam) params.phoneNumber = phoneNumberParam.trim();
       if (statusParam) params.status = parseInt(statusParam, 10);
       const res = await adminQualityShieldService.getList(params);
       const data = unwrapApiData(res);
@@ -46,7 +46,7 @@ export default function AdminQualityShieldPage() {
 
   useEffect(() => {
     fetchList();
-  }, [orderIdParam, userIdParam, statusParam]);
+  }, [orderIdParam, phoneNumberParam, statusParam]);
 
   const handleStartInspection = (service) => {
     setSelectedService(service);

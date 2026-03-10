@@ -1,5 +1,9 @@
 import ky from "ky";
+import { toast } from "sonner";
 import { getToken, removeToken } from "@/lib/token-manager";
+
+/** رویداد سفارشی وقتی توکن منقضی یا نامعتبر است — AuthContext گوش می‌دهد */
+export const AUTH_SESSION_EXPIRED_EVENT = "auth:sessionExpired";
 
 // روی سرور: در .env.local مقدار NEXT_PUBLIC_API_URL را بگذار.
 // در production با docker پورت 80 باز است، پس: http://107.161.175.45/api (بدون :8080)
@@ -80,6 +84,17 @@ const scraperClient = SCRAPER_BASE_URL
 export const getScraperClient = () => scraperClient;
 export const isScraperConfigured = () => Boolean(SCRAPER_BASE_URL);
 
+let hasHandledTokenExpiry = false;
+
+function handleTokenExpired() {
+  if (typeof window === "undefined" || hasHandledTokenExpiry) return;
+  hasHandledTokenExpiry = true;
+  removeToken();
+  window.dispatchEvent(new CustomEvent(AUTH_SESSION_EXPIRED_EVENT));
+  toast.error("نشست شما منقضی شده؛ لطفاً دوباره وارد شوید");
+  window.location.replace("/");
+}
+
 export const getAuthenticatedClient = () => {
   const token = getToken();
   if (!token) {
@@ -88,6 +103,21 @@ export const getAuthenticatedClient = () => {
   return apiClient.extend({
     headers: {
       Authorization: `Bearer ${token}`,
+    },
+    hooks: {
+      beforeError: [
+        async (error) => {
+          const { response } = error;
+          const status = response?.status;
+          const msg = (error?.data?.message || error?.message || "").toLowerCase();
+          const isTokenError =
+            status === 401 ||
+            status === 403 ||
+            /token|توکن|منقضی|expired|unauthorized|access denied/i.test(msg);
+          if (isTokenError) handleTokenExpired();
+          return error;
+        },
+      ],
     },
   });
 };
@@ -102,6 +132,10 @@ export const getPublicClient = () => {
  */
 export const unwrapApiData = (body) => {
   if (body && body.success === false) {
+    const msg = (body.message || "").toLowerCase();
+    if (/token|توکن|منقضی|expired|unauthorized|access denied/i.test(msg)) {
+      handleTokenExpired();
+    }
     const err = new Error(body.message || "خطا در انجام عملیات");
     err.data = body;
     throw err;

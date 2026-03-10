@@ -8,6 +8,7 @@ import InventoryFilters from "@/template/Admin/inventory/InventoryFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import { inventoryService } from "@/services/inventory/inventoryService";
+import { unwrapApiData } from "@/services/api/client";
 import { Box, Box1, Danger } from "iconsax-reactjs";
 import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 
@@ -21,12 +22,14 @@ const getInventoryStatus = (item) => {
 };
 
 const SummaryCard = ({ icon: Icon, label, value, className }) => (
-  <div className="bg-gray-700/30 rounded-lg p-4 border border-gray-600">
-    <div className="flex items-center gap-2 mb-2 text-gray-400">
-      <Icon size={20} />
-      <span className="text-sm">{label}</span>
+  <div className="rounded-xl border border-gray-600/80 bg-gray-700/30 p-4 hover:border-gray-500/50 transition-colors">
+    <div className="flex items-center gap-2 mb-2">
+      <div className="p-2 rounded-lg bg-gray-600/50">
+        <Icon size={18} className={className} />
+      </div>
+      <span className="text-sm text-gray-400">{label}</span>
     </div>
-    <p className={`text-lg font-semibold ${className}`}>{Number(value || 0).toLocaleString("fa-IR")}</p>
+    <p className={`text-xl font-bold tabular-nums ${className}`}>{Number(value || 0).toLocaleString("fa-IR")}</p>
   </div>
 );
 
@@ -39,6 +42,7 @@ export default function InventoryPage() {
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     setPageNumber(1);
@@ -57,7 +61,7 @@ export default function InventoryPage() {
         });
 
         if (cancelled) return;
-        const data = response?.data;
+        const data = unwrapApiData(response);
         setInventory(Array.isArray(data?.inventory) ? data.inventory : Array.isArray(data) ? data : []);
         setTotalPages(Math.max(1, data?.totalPages ?? 1));
       } catch (error) {
@@ -73,10 +77,47 @@ export default function InventoryPage() {
     return () => {
       cancelled = true;
     };
-  }, [pageNumber, pageSize, searchTerm, statusFilter]);
+  }, [pageNumber, pageSize, searchTerm, statusFilter, refreshKey]);
 
   const filteredInventory =
     statusFilter === "all" ? inventory : inventory.filter((item) => getInventoryStatus(item) === statusFilter);
+
+  const refreshInventory = () => {
+    setRefreshKey((k) => k + 1);
+  };
+
+  const handleStockIn = async (data) => {
+    try {
+      await inventoryService.stockIn(data);
+      toast.success("ورود به انبار ثبت شد");
+      refreshInventory();
+    } catch (error) {
+      toast.error(error.message || "خطا در ثبت ورود");
+      throw error;
+    }
+  };
+
+  const handleStockOut = async (data) => {
+    try {
+      await inventoryService.stockOut(data);
+      toast.success("خروج از انبار ثبت شد");
+      refreshInventory();
+    } catch (error) {
+      toast.error(error.message || "خطا در ثبت خروج");
+      throw error;
+    }
+  };
+
+  const handleUpdateStock = async (productId, quantity) => {
+    try {
+      await inventoryService.updateStock(productId, quantity);
+      toast.success("موجودی به‌روزرسانی شد");
+      refreshInventory();
+    } catch (error) {
+      toast.error(error.message || "خطا در به‌روزرسانی موجودی");
+      throw error;
+    }
+  };
 
   const summary = filteredInventory.reduce(
     (acc, item) => {
@@ -108,7 +149,12 @@ export default function InventoryPage() {
           </div>
         ) : (
           <>
-            <InventoryTable inventory={filteredInventory} />
+            <InventoryTable
+              inventory={filteredInventory}
+              onStockIn={handleStockIn}
+              onStockOut={handleStockOut}
+              onUpdateStock={handleUpdateStock}
+            />
             <div className="pt-4 mt-4 border-t border-gray-600">
               <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
             </div>

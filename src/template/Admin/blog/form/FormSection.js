@@ -11,6 +11,7 @@ export default function FormSection({
   onContentChange,
   optionsData = {},
   styles,
+  isEdit = false,
 }) {
   const getFieldOptions = (field) => {
     if (field.options) return field.options;
@@ -22,9 +23,13 @@ export default function FormSection({
 
   const hasGrid = section.fields.some((field) => field.gridCols);
 
+  const fields = section.fields.filter(
+    (f) => !f.showInEditOnly || (f.showInEditOnly && isEdit)
+  );
+
   return (
     <div className={hasGrid ? "grid md:grid-cols-2 gap-4" : "space-y-4"}>
-      {section.fields.map((field) => (
+      {fields.map((field) => (
         <DynamicField
           key={field.id}
           field={field}

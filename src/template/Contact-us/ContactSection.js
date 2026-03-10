@@ -14,7 +14,7 @@ export default function ContactSection() {
         <ContactForm />
         <div className="relative aspect-square h-2/3 w-full rounded-xl">
           <Image
-            src="/image/Contact-Us/location.png"
+            src="/image/Contact-Us/location.jpg"
             alt="نقشه موقعیت دفتر میکرولس"
             fill
             className="object-cover rounded-xl"

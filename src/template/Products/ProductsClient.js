@@ -8,7 +8,6 @@ import ProductList from "@/template/Products/ProductList";
 import ProductNotFoundSection from "@/template/Products/ProductNotFoundSection";
 import { ProductCardSkeletonList } from "@/components/ProductCardSkeleton";
 import { productService } from "@/services/product/productService";
-import { isScraperConfigured } from "@/services/api/client";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 
 /** map مقادیر UI به API طبق داک: price_asc, price_desc, rating, popularity, newest */
@@ -102,16 +101,9 @@ export default function ProductsClient() {
         const hasSearch = Boolean(query.search);
 
         if (hasSearch) {
-          let list = [];
-          if (isScraperConfigured()) {
-            const res = await productService.searchAmazon(query.search);
-            if (!res?.success && res?.message) setError(res.message);
-            const payload = res?.data;
-            list = Array.isArray(payload?.data) ? payload.data : [];
-          } else {
-            const res = await productService.search(query.search);
-            list = Array.isArray(res?.data) ? res.data : [];
-          }
+          const res = await productService.search(query.search);
+          const raw = res?.data;
+          const list = Array.isArray(raw) ? raw : Array.isArray(raw?.products) ? raw.products : [];
           if (cancelled) return;
           extractCategoriesBrands(list);
           setProducts(list);
@@ -252,12 +244,21 @@ export default function ProductsClient() {
               <ProductCardSkeletonList count={8} />
             </div>
           ) : (
-            <ProductList viewMode={viewMode} products={products} totalCount={totalCount} searchMode={isSearchMode} />
+            <>
+              <ProductList
+                viewMode={viewMode}
+                products={products}
+                totalCount={totalCount}
+                searchMode={isSearchMode}
+                searchQuery={query.search}
+              />
+              {!isSearchMode && (
+                <div className="max-lg:px-4 lg:container pb-12">
+                  <ProductNotFoundSection searchQuery={query.search} />
+                </div>
+              )}
+            </>
           )}
-          {/* بخش «محصول خود را پیدا نکردید؟» — انتهای صفحه محصولات */}
-          <div className="max-lg:px-4 lg:container pb-12">
-            <ProductNotFoundSection searchQuery={query.search} />
-          </div>
         </div>
       </div>
     </>

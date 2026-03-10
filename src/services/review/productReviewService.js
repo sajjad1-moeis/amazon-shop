@@ -36,12 +36,13 @@ export const productReviewService = {
     return client.get(`ProductReview/GetByStatus?status=${status}`).json();
   },
 
-  /** GET api/ProductReview/GetPaginated — Phase 23: pageNumber, pageSize, status?, productId?, searchTerm? */
+  /** GET api/ProductReview/GetPaginated — pageNumber, pageSize (حداکثر ۱۰۰), status (۱–۴), productId?, searchTerm? */
   getPaginated: async (params = {}) => {
     const { pageNumber = 1, pageSize = 20, status, productId, searchTerm } = params;
+    const cappedSize = Math.min(Math.max(1, Number(pageSize) || 20), 100);
     const qs = new URLSearchParams({
       pageNumber: String(pageNumber),
-      pageSize: String(pageSize),
+      pageSize: String(cappedSize),
     });
     if (status !== undefined && status !== null) qs.append("status", String(status));
     if (productId !== undefined && productId !== null) qs.append("productId", String(productId));

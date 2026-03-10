@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { blogService } from "@/services/blog/blogService";
+import { unwrapApiData } from "@/services/api/client";
 import { useBlogForm } from "@/hooks/useBlogForm";
 import BlogForm from "@/template/Admin/blog/form/BlogForm";
 import PageHeader from "@/template/Admin/blog/form/PageHeader";
@@ -37,9 +38,10 @@ export default function EditBlogPage() {
       try {
         setFetching(true);
         const blogRes = await blogService.getById(blogId);
+        const blog = unwrapApiData(blogRes);
 
-        if (blogRes.success && blogRes.data) {
-          setFormDataFromBlog(blogRes.data);
+        if (blog) {
+          setFormDataFromBlog(blog);
         }
       } catch (error) {
         toast.error(error.message || "خطا در دریافت اطلاعات بلاگ");

@@ -9,11 +9,13 @@ import PaymentsFilters from "@/template/Admin/payments/PaymentsFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import { paymentService } from "@/services/payment/paymentService";
+import { unwrapApiData } from "@/services/api/client";
 import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 
 export default function PaymentsPage() {
   const searchParams = useSearchParams();
   const statusParam = searchParams.get("status");
+  /** status: ۱=موفق، ۲=ناموفق، ۳=در انتظار، ۴=استرداد‌شده (مطابق doc) */
   const statusFilter =
     statusParam && statusParam !== "all"
       ? statusParam === "success"
@@ -23,7 +25,7 @@ export default function PaymentsPage() {
           : statusParam === "pending"
             ? 3
             : statusParam === "refund"
-              ? "refund"
+              ? 4
               : undefined
       : undefined;
   const searchTerm = searchParams.get("search") || "";
@@ -36,6 +38,20 @@ export default function PaymentsPage() {
   useEffect(() => {
     setPageNumber(1);
   }, [searchTerm, statusFilter]);
+
+  const handleRefund = async (orderId, body) => {
+    try {
+      await paymentService.refund(orderId, body);
+      toast.success("استرداد با موفقیت انجام شد");
+      setPayments((prev) =>
+        prev.map((p) =>
+          (p.orderId ?? p.id) === orderId ? { ...p, status: 4 } : p
+        )
+      );
+    } catch (error) {
+      toast.error(error.message || "خطا در استرداد پرداخت");
+    }
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -50,7 +66,7 @@ export default function PaymentsPage() {
         });
 
         if (cancelled) return;
-        const data = response?.data;
+        const data = unwrapApiData(response);
         setPayments(Array.isArray(data?.payments) ? data.payments : Array.isArray(data) ? data : []);
         setTotalPages(Math.max(1, data?.totalPages ?? 1));
       } catch (error) {
@@ -80,7 +96,7 @@ export default function PaymentsPage() {
           </div>
         ) : (
           <>
-            <PaymentsTable payments={payments} />
+            <PaymentsTable payments={payments} onRefund={handleRefund} />
             <div className="pt-4 mt-4 border-t border-gray-600">
               <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
             </div>

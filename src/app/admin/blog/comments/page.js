@@ -10,6 +10,7 @@ import AdminPagination from "@/components/ui/AdminPagination";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { Spinner } from "@/components/ui/spinner";
 import { blogCommentService } from "@/services/blog/blogCommentService";
+import { unwrapApiData } from "@/services/api/client";
 import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 
 const PAGE_SIZE = 20;
@@ -39,7 +40,7 @@ export default function BlogCommentsPage() {
         status: validStatus,
         searchTerm: searchTerm || undefined,
       });
-      const data = response?.data;
+      const data = unwrapApiData(response);
       setComments(Array.isArray(data?.comments) ? data.comments : []);
       setTotalPages(Math.max(1, data?.totalPages ?? 1));
     } catch (error) {
@@ -61,13 +62,10 @@ export default function BlogCommentsPage() {
 
   const handleApprove = async (commentId) => {
     try {
-      const response = await blogCommentService.approve(commentId);
-      if (response?.success !== false) {
-        toast.success("نظر تأیید شد");
-        fetchComments();
-      } else {
-        toast.error(response?.message || "خطا در تأیید");
-      }
+      const res = await blogCommentService.approve(commentId);
+      unwrapApiData(res);
+      toast.success("نظر تأیید شد");
+      fetchComments();
     } catch (error) {
       toast.error(error?.message || "خطا در تأیید نظر");
     }
@@ -75,13 +73,10 @@ export default function BlogCommentsPage() {
 
   const handleReject = async (commentId) => {
     try {
-      const response = await blogCommentService.reject(commentId);
-      if (response?.success !== false) {
-        toast.success("نظر رد شد");
-        fetchComments();
-      } else {
-        toast.error(response?.message || "خطا در رد");
-      }
+      const res = await blogCommentService.reject(commentId);
+      unwrapApiData(res);
+      toast.success("نظر رد شد");
+      fetchComments();
     } catch (error) {
       toast.error(error?.message || "خطا در رد نظر");
     }
@@ -96,15 +91,12 @@ export default function BlogCommentsPage() {
     if (!selectedCommentId) return;
     setDeleteLoading(true);
     try {
-      const response = await blogCommentService.softDelete(selectedCommentId);
-      if (response?.success !== false) {
-        toast.success("نظر حذف شد");
-        setDeleteDialogOpen(false);
-        setSelectedCommentId(null);
-        fetchComments();
-      } else {
-        toast.error(response?.message || "خطا در حذف");
-      }
+      const res = await blogCommentService.softDelete(selectedCommentId);
+      unwrapApiData(res);
+      toast.success("نظر حذف شد");
+      setDeleteDialogOpen(false);
+      setSelectedCommentId(null);
+      fetchComments();
     } catch (error) {
       toast.error(error?.message || "خطا در حذف نظر");
     } finally {

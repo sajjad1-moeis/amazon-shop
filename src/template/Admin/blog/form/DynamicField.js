@@ -25,13 +25,14 @@ export default function DynamicField({
   const renderField = () => {
     switch (field.type) {
       case "text":
+      case "number":
       case "datetime-local":
         return (
           <Input
             id={field.id}
             name={field.name}
             type={field.type}
-            value={value || ""}
+            value={field.type === "number" ? (value != null && value !== "" ? value : "") : (value || "")}
             onChange={onChange}
             placeholder={field.placeholder}
             className={styles.input}

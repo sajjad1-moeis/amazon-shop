@@ -67,9 +67,11 @@ export const blogCommentService = {
     return client.post(`BlogComment/Approve?id=${id}`).json();
   },
 
-  reject: async (id) => {
+  /** POST api/BlogComment/Reject — Query: id. Body اختیاری: { reason? } (حداکثر ۵۰۰ کاراکتر) */
+  reject: async (id, reason) => {
     const client = getAuthenticatedClient();
-    return client.post(`BlogComment/Reject?id=${id}`).json();
+    const body = reason != null && String(reason).trim() ? { reason: String(reason).trim().slice(0, 500) } : {};
+    return client.post(`BlogComment/Reject?id=${id}`, { json: body }).json();
   },
 
   /** POST api/BlogComment/delete/{id} */

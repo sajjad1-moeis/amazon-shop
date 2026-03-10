@@ -47,7 +47,7 @@ export default function UsersFilters({ isInDrawer = false }) {
 
   return (
     <FilterSection isAdmin>
-      <FilterSearchInput isAdmin placeholder="جستجو نام" />
+      <FilterSearchInput isAdmin placeholder="جستجو نام، ایمیل یا شماره موبایل" />
 
       <StatusSelect
         value={filterRole}

@@ -10,6 +10,7 @@ import ContactStats from "@/template/Admin/contactUs/ContactStats";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import { contactService } from "@/services/contact/contactService";
+import { unwrapApiData } from "@/services/api/client";
 import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 
 export default function ContactUsPage() {
@@ -48,14 +49,10 @@ export default function ContactUsPage() {
         isRead: isReadFilter,
         searchTerm: searchParam.trim() || undefined,
       });
-
-      if (response.success && response.data) {
-        setContacts(response.data.contacts || []);
-        setTotalPages(response.data.totalPages || 1);
-        setTotalCount(response.data.totalCount || 0);
-      } else {
-        toast.error(response.message || "خطا در دریافت درخواست‌ها");
-      }
+      const data = unwrapApiData(response);
+      setContacts(Array.isArray(data?.contacts) ? data.contacts : []);
+      setTotalPages(Math.max(1, data?.totalPages ?? 1));
+      setTotalCount(data?.totalCount ?? 0);
     } catch (error) {
       toast.error(error.message || "خطا در دریافت درخواست‌ها");
       console.error("Error fetching contacts:", error);
@@ -67,9 +64,8 @@ export default function ContactUsPage() {
   const fetchUnreadCount = async () => {
     try {
       const response = await contactService.getUnreadCount();
-      if (response.success && response.data !== null && response.data !== undefined) {
-        setUnreadCount(response.data);
-      }
+      const count = unwrapApiData(response);
+      if (count != null) setUnreadCount(Number(count) || 0);
     } catch (error) {
       console.error("Error fetching unread count:", error);
     }
@@ -82,14 +78,10 @@ export default function ContactUsPage() {
   const handleMarkAsRead = async (contactId) => {
     setMarkAsReadLoading((prev) => ({ ...prev, [contactId]: true }));
     try {
-      const response = await contactService.markAsRead(contactId);
-      if (response.success) {
-        toast.success("درخواست به عنوان خوانده شده علامت‌گذاری شد");
-        await fetchContacts();
-        await fetchUnreadCount();
-      } else {
-        toast.error(response.message || "خطا در علامت‌گذاری");
-      }
+      await contactService.markAsRead(contactId);
+      toast.success("درخواست به عنوان خوانده شده علامت‌گذاری شد");
+      await fetchContacts();
+      await fetchUnreadCount();
     } catch (error) {
       toast.error(error.message || "خطا در علامت‌گذاری");
       console.error("Error marking as read:", error);

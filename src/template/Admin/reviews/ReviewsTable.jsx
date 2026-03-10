@@ -13,6 +13,7 @@ const getReviewStatusBadge = (status) => {
     1: { label: "در انتظار", className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" },
     2: { label: "تایید شده", className: "bg-green-500/20 text-green-400 border-green-500/30" },
     3: { label: "رد شده", className: "bg-red-500/20 text-red-400 border-red-500/30" },
+    4: { label: "اسپم", className: "bg-red-600/20 text-red-500 border-red-600/30" },
   };
   const statusInfo = statusMap[status] || statusMap[1];
   return (

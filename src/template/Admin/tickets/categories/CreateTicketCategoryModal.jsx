@@ -77,20 +77,15 @@ export default function CreateTicketCategoryModal({ isOpen, onClose, onSuccess, 
         isActive: formData.isActive,
       };
 
-      let response;
       if (editingCategory) {
-        response = await ticketCategoryService.update(editingCategory.id, categoryData);
+        await ticketCategoryService.update(editingCategory.id, categoryData);
       } else {
-        response = await ticketCategoryService.create(categoryData);
+        await ticketCategoryService.create(categoryData);
       }
 
-      if (response && response.success) {
-        toast.success(editingCategory ? "دسته‌بندی با موفقیت به‌روزرسانی شد" : "دسته‌بندی با موفقیت ایجاد شد");
-        onSuccess();
-        onClose();
-      } else {
-        toast.error(response?.message || "خطا در ذخیره دسته‌بندی");
-      }
+      toast.success(editingCategory ? "دسته‌بندی با موفقیت به‌روزرسانی شد" : "دسته‌بندی با موفقیت ایجاد شد");
+      onSuccess();
+      onClose();
     } catch (error) {
       console.error("Error saving category:", error);
       toast.error(error?.message || "خطا در ذخیره دسته‌بندی");

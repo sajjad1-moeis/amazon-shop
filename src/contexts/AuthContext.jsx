@@ -39,6 +39,16 @@ export const AuthProvider = ({ children }) => {
     setAuthModalRedirect(null);
   };
 
+  /* ---------- گوش دادن به انقضای توکن از API client ---------- */
+  useEffect(() => {
+    const onSessionExpired = () => {
+      removeToken();
+      setUser(null);
+    };
+    window.addEventListener(AUTH_SESSION_EXPIRED_EVENT, onSessionExpired);
+    return () => window.removeEventListener(AUTH_SESSION_EXPIRED_EVENT, onSessionExpired);
+  }, []);
+
   /* ---------- Init Auth ---------- */
   useEffect(() => {
     const initAuth = async () => {

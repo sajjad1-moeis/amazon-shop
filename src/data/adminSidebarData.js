@@ -78,6 +78,8 @@ export const ADMIN_SIDEBAR_ITEMS = [
     children: [
       { name: "مدیریت نقش‌ها", href: "/admin/roles" },
       { name: "اضافه کردن نقش", href: "/admin/roles/create" },
+      { name: "کاربران ادمین", href: "/admin/security/admins" },
+      { name: "دسترسی‌ها", href: "/admin/security/permissions" },
       { name: "لاگ‌های سیستم", href: "/admin/security/logs" },
     ],
   },
@@ -92,7 +94,7 @@ export const ADMIN_SIDEBAR_ITEMS = [
       { name: "لیست محصولات", href: "/admin/products/list" },
       { name: "دسته‌بندی‌ها", href: "/admin/products/categories" },
       { name: "برندها", href: "/admin/products/brands" },
-      { name: "گزارش محصولات", href: "/admin/products/reports" },
+      { name: "گزارش محصولات", href: "/admin/reports/products" },
     ],
   },
   {
@@ -148,7 +150,7 @@ export const ADMIN_SIDEBAR_ITEMS = [
     children: [
       { name: "روش‌های ارسال", href: "/admin/shipping/methods" },
       { name: "مناطق ارسال", href: "/admin/shipping/zones" },
-      { name: "گزارش ارسال‌ها", href: "/admin/shipping/reports" },
+      { name: "گزارش ارسال‌ها", href: "/admin/reports/shipping" },
     ],
   },
   {
@@ -157,12 +159,6 @@ export const ADMIN_SIDEBAR_ITEMS = [
     color: "#8B5CF6",
     href: "/admin/reports",
     key: "report",
-    children: [
-      { name: "گزارش فروش", href: "/admin/reports/sales" },
-      { name: "گزارش کاربران", href: "/admin/reports/users" },
-      { name: "گزارش محصولات", href: "/admin/reports/products" },
-      { name: "گزارش مالی", href: "/admin/reports/financial" },
-    ],
   },
   {
     name: "پرداخت‌ها",

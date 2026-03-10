@@ -41,8 +41,9 @@ const getPaymentStatusBadge = (status) => {
   );
 };
 
-export default function OrdersTable({ orders }) {
-  if (orders.length === 0) {
+export default function OrdersTable({ orders = [] }) {
+  const safeOrders = Array.isArray(orders) ? orders : [];
+  if (safeOrders.length === 0) {
     return <div className="p-8 text-center text-gray-400">سفارشی یافت نشد</div>;
   }
 
@@ -61,30 +62,34 @@ export default function OrdersTable({ orders }) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {orders.map((order) => (
-          <TableRow key={order.id} className="border-gray-700 hover:bg-gray-700/50">
-            <TableCell className="text-white font-medium">{order.orderNumber || order.id}</TableCell>
-            <TableCell className="text-gray-300">
-              {order.customerName || order.userFullName || order.userName || "-"}
-            </TableCell>
-            <TableCell className="text-gray-300">{order.itemsCount || order.itemCount || 0}</TableCell>
-            <TableCell className="text-gray-300">
-              {order.totalAmount != null ? `${Number(order.totalAmount).toLocaleString("fa-IR")} تومان` : "-"}
-            </TableCell>
-            <TableCell>{getOrderStatusBadge(order.status)}</TableCell>
-            <TableCell>{getPaymentStatusBadge(order.paymentStatus)}</TableCell>
-            <TableCell className="text-gray-300">
-              {order.createdAt ? formatDateFa(order.createdAt) : order.date || "-"}
-            </TableCell>
-            <TableCell>
-              <Button asChild variant="ghost" size="icon" className="h-8 w-8 text-blue-400 hover:bg-blue-400/20">
-                <Link href={`/admin/orders/${order.id}`}>
-                  <Eye size={18} />
-                </Link>
-              </Button>
-            </TableCell>
-          </TableRow>
-        ))}
+        {safeOrders.map((order) => {
+          const orderKey = order.id ?? order.orderId ?? order.orderNumber ?? Math.random();
+          const orderHref = order.id ?? order.orderId ?? order.orderNumber;
+          return (
+            <TableRow key={orderKey} className="border-gray-700 hover:bg-gray-700/50">
+              <TableCell className="text-white font-medium">{order.orderNumber || order.id}</TableCell>
+              <TableCell className="text-gray-300">
+                {order.customerName || order.userFullName || order.userName || "-"}
+              </TableCell>
+              <TableCell className="text-gray-300">{order.itemsCount || order.itemCount || 0}</TableCell>
+              <TableCell className="text-gray-300">
+                {order.totalAmount != null ? `${Number(order.totalAmount).toLocaleString("fa-IR")} تومان` : "-"}
+              </TableCell>
+              <TableCell>{getOrderStatusBadge(order.status)}</TableCell>
+              <TableCell>{getPaymentStatusBadge(order.paymentStatus)}</TableCell>
+              <TableCell className="text-gray-300">
+                {order.createdAt ? formatDateFa(order.createdAt) : order.date || "-"}
+              </TableCell>
+              <TableCell>
+                <Button asChild variant="ghost" size="icon" className="h-8 w-8 text-blue-400 hover:bg-blue-400/20">
+                  <Link href={orderHref ? `/admin/orders/${orderHref}` : "#"}>
+                    <Eye size={18} />
+                  </Link>
+                </Button>
+              </TableCell>
+            </TableRow>
+          );
+        })}
       </TableBody>
     </Table>
   );

@@ -15,6 +15,7 @@ import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 export default function ReviewsPage() {
   const searchParams = useSearchParams();
   const statusParam = searchParams.get("status");
+  /** status: ۱=Pending، ۲=Approved، ۳=Rejected، ۴=Spam (مطابق doc) */
   const statusFilter =
     statusParam && statusParam !== "all"
       ? statusParam === "pending"
@@ -23,7 +24,9 @@ export default function ReviewsPage() {
           ? 2
           : statusParam === "rejected"
             ? 3
-            : undefined
+            : statusParam === "spam"
+              ? 4
+              : undefined
       : undefined;
   const searchTerm = searchParams.get("search") || "";
   const [reviews, setReviews] = useState([]);

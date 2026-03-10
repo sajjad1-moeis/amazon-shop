@@ -26,13 +26,9 @@ export default function TicketCategoriesPage() {
   const fetchCategories = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await ticketCategoryService.getAll();
-      if (response && response.success && response.data) {
-        setCategories(Array.isArray(response.data) ? response.data : []);
-      } else {
-        toast.error(response?.message || "خطا در دریافت دسته‌بندی‌ها");
-        setCategories([]);
-      }
+      const data = await ticketCategoryService.getAll();
+      const list = Array.isArray(data) ? data : Array.isArray(data?.categories) ? data.categories : [];
+      setCategories(list);
     } catch (error) {
       console.error("Error fetching categories:", error);
       toast.error(error?.message || "خطا در دریافت دسته‌بندی‌ها");
@@ -67,15 +63,11 @@ export default function TicketCategoriesPage() {
 
     setDeleteLoading(true);
     try {
-      const response = await ticketCategoryService.softDelete(selectedCategoryId);
-      if (response && response.success) {
-        toast.success("دسته‌بندی با موفقیت حذف شد");
-        setDeleteDialogOpen(false);
-        setSelectedCategoryId(null);
-        fetchCategories();
-      } else {
-        toast.error(response?.message || "خطا در حذف دسته‌بندی");
-      }
+      await ticketCategoryService.softDelete(selectedCategoryId);
+      toast.success("دسته‌بندی با موفقیت حذف شد");
+      setDeleteDialogOpen(false);
+      setSelectedCategoryId(null);
+      fetchCategories();
     } catch (error) {
       console.error("Error deleting category:", error);
       toast.error(error?.message || "خطا در حذف دسته‌بندی");
@@ -87,17 +79,13 @@ export default function TicketCategoriesPage() {
   const handleToggleActive = async (category) => {
     try {
       const currentActive = category.isActive !== false;
-      const response = await ticketCategoryService.update(category.id, {
+      await ticketCategoryService.update(category.id, {
         name: category.name,
         description: category.description || "",
         isActive: !currentActive,
       });
-      if (response && response.success) {
-        toast.success(`دسته‌بندی ${!currentActive ? "فعال" : "غیرفعال"} شد`);
-        fetchCategories();
-      } else {
-        toast.error(response?.message || "خطا در به‌روزرسانی دسته‌بندی");
-      }
+      toast.success(`دسته‌بندی ${!currentActive ? "فعال" : "غیرفعال"} شد`);
+      fetchCategories();
     } catch (error) {
       console.error("Error toggling category:", error);
       toast.error(error?.message || "خطا در به‌روزرسانی دسته‌بندی");

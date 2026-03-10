@@ -8,14 +8,15 @@ import { getAuthenticatedClient } from "../api/client";
 export const adminQualityShieldService = {
   /**
    * GET api/admin/AdminQualityShield
-   * Query: orderId?, userId?, status?
-   * لیست سرویس‌های سپر کیفیت.
+   * Query: orderId?, userId? | phoneNumber?, status?
+   * لیست سرویس‌های سپر کیفیت. فرانت بر اساس شماره موبایل فیلتر می‌کند.
    */
   getList: async (params = {}) => {
-    const { orderId, userId, status } = params;
+    const { orderId, userId, phoneNumber, status } = params;
     const searchParams = new URLSearchParams();
     if (orderId != null) searchParams.append("orderId", String(orderId));
     if (userId != null) searchParams.append("userId", String(userId));
+    if (phoneNumber != null) searchParams.append("phoneNumber", String(phoneNumber));
     if (status != null) searchParams.append("status", String(status));
     const qs = searchParams.toString();
     const client = getAuthenticatedClient();

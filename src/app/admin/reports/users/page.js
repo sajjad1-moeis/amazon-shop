@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { reportService } from "@/services/report/reportService";
 import { unwrapApiData } from "@/services/api/client";
+import { ReportPageHeader, ReportStatCard } from "@/components/admin";
+import { People, UserTick, UserAdd } from "iconsax-reactjs";
 
 export default function UsersReportsPage() {
   const [loading, setLoading] = useState(true);
@@ -48,45 +49,39 @@ export default function UsersReportsPage() {
   }, []);
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">گزارش کاربران</h1>
-        <p className="text-gray-400">گزارشات کاربران و فعالیت‌ها</p>
-      </div>
+    <div className="space-y-8 pb-8">
+      <ReportPageHeader title="گزارش کاربران" subtitle="آمار کاربران و فعالیت‌ها" icon={People} />
 
       {loading ? (
-        <div className="p-8 text-center text-gray-400">
+        <div className="flex flex-col items-center justify-center py-16 text-gray-400">
           <Spinner size="lg" />
+          <p className="mt-3 text-sm">در حال بارگذاری...</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="bg-gray-800 border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-white text-lg">کل کاربران</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold text-white">{report.totalUsers.toLocaleString()}</p>
-            </CardContent>
-          </Card>
-          <Card className="bg-gray-800 border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-white text-lg">کاربران فعال</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold text-white">{report.activeUsers.toLocaleString()}</p>
-            </CardContent>
-          </Card>
-          <Card className="bg-gray-800 border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-white text-lg">کاربران جدید (بازه انتخابی)</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold text-white">{report.newUsersThisMonth.toLocaleString()}</p>
-            </CardContent>
-          </Card>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <ReportStatCard
+            icon={People}
+            label="کل کاربران"
+            value={report.totalUsers}
+            accent="text-blue-400"
+            iconBg="bg-blue-500/15"
+          />
+          <ReportStatCard
+            icon={UserTick}
+            label="کاربران فعال"
+            value={report.activeUsers}
+            accent="text-emerald-400"
+            iconBg="bg-emerald-500/15"
+          />
+          <ReportStatCard
+            icon={UserAdd}
+            label="کاربران جدید (این ماه)"
+            value={report.newUsersThisMonth}
+            accent="text-violet-400"
+            iconBg="bg-violet-500/15"
+          />
         </div>
       )}
     </div>
   );
 }
-

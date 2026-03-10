@@ -71,10 +71,9 @@ export default function CreateTicketModal({ isOpen, onClose, onSubmit }) {
   const fetchCategories = async () => {
     try {
       setLoadingCategories(true);
-      const response = await ticketCategoryService.getActive();
-      if (response?.success && response.data) {
-        setCategories(Array.isArray(response.data) ? response.data : []);
-      }
+      const data = await ticketCategoryService.getActive();
+      const list = Array.isArray(data) ? data : Array.isArray(data?.categories) ? data.categories : [];
+      setCategories(list);
     } catch (error) {
       toast.error("خطا در دریافت دسته‌بندی‌ها");
       setCategories([]);

@@ -34,7 +34,7 @@ export default function ScrapingDropdown() {
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-[320px] p-4 bg-white dark:bg-dark-box rounded-2xl shadow-xl border border-gray-200 dark:border-dark-stroke relative z-50"
+        className="w-[320px] p-4 bg-white dark:bg-dark-box rounded-2xl shadow-xl border border-gray-200 dark:border-dark-stroke relative z-50 max-h-[min(80vh,400px)] overflow-y-auto"
         align="start"
         dir="rtl"
       >

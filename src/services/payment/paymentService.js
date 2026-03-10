@@ -1,6 +1,7 @@
 import { getAuthenticatedClient } from "../api/client";
 
 export const paymentService = {
+  /** GET api/Payment/GetPaginated — pageSize حداکثر ۱۰۰ */
   getPaginated: async (params = {}) => {
     const {
       pageNumber = 1,
@@ -12,9 +13,10 @@ export const paymentService = {
       endDate,
     } = params;
 
+    const cappedSize = Math.min(Math.max(1, Number(pageSize) || 20), 100);
     const searchParams = new URLSearchParams({
       pageNumber: pageNumber.toString(),
-      pageSize: pageSize.toString(),
+      pageSize: cappedSize.toString(),
     });
 
     if (status) searchParams.append("status", status.toString());
@@ -32,8 +34,12 @@ export const paymentService = {
     return client.get(`Payment/GetById?id=${id}`).json();
   },
 
-  refund: async (id, amount, reason) => {
+  /** POST api/Payment/Refund?id= — id = orderId. body: { amount?, reason? } اختیاری */
+  refund: async (orderId, body = {}) => {
     const client = getAuthenticatedClient();
-    return client.post(`Payment/Refund?id=${id}`, { json: { amount, reason } }).json();
+    const json = {};
+    if (body.amount != null) json.amount = body.amount;
+    if (body.reason != null && body.reason !== "") json.reason = body.reason;
+    return client.post(`Payment/Refund?id=${orderId}`, { json }).json();
   },
 };

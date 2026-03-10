@@ -25,7 +25,7 @@ export default function AdminInsurancePage() {
   const [processLoading, setProcessLoading] = useState(false);
 
   const orderIdParam = searchParams.get("orderId");
-  const userIdParam = searchParams.get("userId");
+  const phoneNumberParam = searchParams.get("phoneNumber");
   const statusParam = searchParams.get("status");
 
   const fetchList = async () => {
@@ -33,7 +33,7 @@ export default function AdminInsurancePage() {
       setLoading(true);
       const params = {};
       if (orderIdParam) params.orderId = parseInt(orderIdParam, 10);
-      if (userIdParam) params.userId = parseInt(userIdParam, 10);
+      if (phoneNumberParam) params.phoneNumber = phoneNumberParam.trim();
       if (statusParam) params.status = parseInt(statusParam, 10);
       const res = await adminShippingInsuranceService.getList(params);
       const data = unwrapApiData(res);
@@ -48,7 +48,7 @@ export default function AdminInsurancePage() {
 
   useEffect(() => {
     fetchList();
-  }, [orderIdParam, userIdParam, statusParam]);
+  }, [orderIdParam, phoneNumberParam, statusParam]);
 
   const handleProcessClaim = async (claimId, body) => {
     if (adminUserId == null) {

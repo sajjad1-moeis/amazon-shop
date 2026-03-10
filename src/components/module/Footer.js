@@ -9,6 +9,7 @@ import { Button } from "../ui/button";
 
 const links = [
   { title: "درباره ما", href: "/about-us" },
+  { title: "تجربه واقعی خریداران", href: "/review" },
   { title: "وبلاگ", href: "/blogs" },
   { title: "ارتباط با ما", href: "/contact-us" },
   { title: "گیفت کارت", href: "/gift-cart" },
@@ -24,6 +25,7 @@ const links = [
   { title: "حریم خصوصی", href: "/terms-conditions?tab=a4" },
   { title: "پرسش‌ و پاسخ متداول", href: "/faqs" },
   { title: "راهنمای سفارش", href: "/guide?section=amazon-guide" },
+  { title: "نقشه سایت", href: "/site-map" },
 ];
 
 export default function Footer() {

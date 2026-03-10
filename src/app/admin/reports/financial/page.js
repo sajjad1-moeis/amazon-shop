@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { reportService } from "@/services/report/reportService";
 import { unwrapApiData } from "@/services/api/client";
+import { ReportPageHeader, ReportStatCard } from "@/components/admin";
+import { Wallet3, MoneySend, TrendUp } from "iconsax-reactjs";
 
 export default function FinancialReportsPage() {
   const [loading, setLoading] = useState(true);
@@ -48,45 +49,42 @@ export default function FinancialReportsPage() {
   }, []);
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">گزارش مالی</h1>
-        <p className="text-gray-400">گزارشات مالی و تراکنش‌ها</p>
-      </div>
+    <div className="space-y-8 pb-8">
+      <ReportPageHeader title="گزارش مالی" subtitle="تراکنش‌ها، درآمد و جریان مالی" icon={Wallet3} />
 
       {loading ? (
-        <div className="p-8 text-center text-gray-400">
+        <div className="flex flex-col items-center justify-center py-16 text-gray-400">
           <Spinner size="lg" />
+          <p className="mt-3 text-sm">در حال بارگذاری...</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="bg-gray-800 border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-white text-lg">درآمد کل</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold text-white">{report.totalRevenue.toLocaleString()} تومان</p>
-            </CardContent>
-          </Card>
-          <Card className="bg-gray-800 border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-white text-lg">هزینه‌ها</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold text-white">{report.totalCosts.toLocaleString()} تومان</p>
-            </CardContent>
-          </Card>
-          <Card className="bg-gray-800 border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-white text-lg">سود خالص</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold text-white">{report.netProfit.toLocaleString()} تومان</p>
-            </CardContent>
-          </Card>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <ReportStatCard
+            icon={TrendUp}
+            label="درآمد کل"
+            value={report.totalRevenue}
+            suffix="تومان"
+            accent="text-emerald-400"
+            iconBg="bg-emerald-500/15"
+          />
+          <ReportStatCard
+            icon={MoneySend}
+            label="هزینه‌ها"
+            value={report.totalCosts}
+            suffix="تومان"
+            accent="text-amber-400"
+            iconBg="bg-amber-500/15"
+          />
+          <ReportStatCard
+            icon={Wallet3}
+            label="سود خالص"
+            value={report.netProfit}
+            suffix="تومان"
+            accent="text-blue-400"
+            iconBg="bg-blue-500/15"
+          />
         </div>
       )}
     </div>
   );
 }
-

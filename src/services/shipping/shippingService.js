@@ -1,9 +1,14 @@
 import { getAuthenticatedClient } from "../api/client";
 
+/** Phase 23 — GetMethods و GetZones با صفحه‌بندی */
 export const shippingService = {
-  getMethods: async () => {
+  /** GET api/Shipping/GetMethods — pageNumber, pageSize?, isActive? */
+  getMethods: async (params = {}) => {
+    const { pageNumber = 1, pageSize = 20, isActive } = params;
+    const qs = new URLSearchParams({ pageNumber: String(pageNumber), pageSize: String(pageSize) });
+    if (isActive !== undefined && isActive !== null) qs.append("isActive", String(isActive));
     const client = getAuthenticatedClient();
-    return client.get("Shipping/GetMethods").json();
+    return client.get(`Shipping/GetMethods?${qs.toString()}`).json();
   },
 
   getMethodById: async (id) => {
@@ -26,9 +31,13 @@ export const shippingService = {
     return client.delete(`Shipping/DeleteMethod?id=${id}`).json();
   },
 
-  getZones: async () => {
+  /** GET api/Shipping/GetZones — pageNumber, pageSize?, isActive? */
+  getZones: async (params = {}) => {
+    const { pageNumber = 1, pageSize = 20, isActive } = params;
+    const qs = new URLSearchParams({ pageNumber: String(pageNumber), pageSize: String(pageSize) });
+    if (isActive !== undefined && isActive !== null) qs.append("isActive", String(isActive));
     const client = getAuthenticatedClient();
-    return client.get("Shipping/GetZones").json();
+    return client.get(`Shipping/GetZones?${qs.toString()}`).json();
   },
 
   getZoneById: async (id) => {

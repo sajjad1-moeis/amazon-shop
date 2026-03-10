@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import TableActions from "../../TableActions";
 
-export default function ShippingMethodsTable({ methods }) {
+export default function ShippingMethodsTable({ methods, onRefresh }) {
   if (methods.length === 0) {
     return <div className="p-8 text-center text-gray-400">روشی یافت نشد</div>;
   }
@@ -25,8 +25,8 @@ export default function ShippingMethodsTable({ methods }) {
         {methods.map((method) => (
           <TableRow key={method.id} className="border-gray-700 hover:bg-gray-700/50">
             <TableCell className="text-white font-medium">{method.name}</TableCell>
-            <TableCell className="text-gray-300">{method.price.toLocaleString()}</TableCell>
-            <TableCell className="text-gray-300">{method.estimatedDays}</TableCell>
+            <TableCell className="text-gray-300">{(method.price ?? 0).toLocaleString("fa-IR")}</TableCell>
+            <TableCell className="text-gray-300">{method.estimatedDays ?? "-"}</TableCell>
             <TableCell>
               <Badge variant={method.isActive ? "default" : "secondary"}>
                 {method.isActive ? "فعال" : "غیرفعال"}

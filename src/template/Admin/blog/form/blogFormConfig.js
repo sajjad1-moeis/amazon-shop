@@ -44,6 +44,16 @@ export const FORM_SECTIONS = {
         gridCols: "md:col-span-1",
       },
       {
+        id: "authorId",
+        name: "authorId",
+        type: "number",
+        label: "شناسه نویسنده (AuthorId)",
+        placeholder: "اختیاری در ویرایش",
+        required: false,
+        gridCols: "md:col-span-1",
+        showInEditOnly: true,
+      },
+      {
         id: "status",
         name: "status",
         type: "select",

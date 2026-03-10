@@ -19,7 +19,7 @@ export const adminTicketService = {
   },
 
   // نسخه قبلی صفحه‌بندی (در صورت نیاز برای سازگاری)
-  /** GET api/AdminTicket/GetPaginated — فاز ۲۲ با query params */
+  /** GET api/AdminTicket/GetPaginated — فاز ۲۲ با query params. phoneNumber برای فیلتر بر اساس شماره موبایل. */
   getPaginated: async (params = {}) => {
     const {
       pageNumber = 1,
@@ -28,6 +28,7 @@ export const adminTicketService = {
       priority,
       categoryId,
       userId,
+      phoneNumber,
       assignedToUserId,
       searchTerm,
       startDate,
@@ -45,6 +46,7 @@ export const adminTicketService = {
     if (priority !== undefined && priority !== null) searchParams.append("priority", priority.toString());
     if (categoryId) searchParams.append("categoryId", categoryId.toString());
     if (userId) searchParams.append("userId", userId.toString());
+    if (phoneNumber) searchParams.append("phoneNumber", String(phoneNumber));
     if (assignedToUserId) searchParams.append("assignedToUserId", assignedToUserId.toString());
     if (searchTerm) searchParams.append("searchTerm", searchTerm);
     if (startDate) searchParams.append("startDate", startDate);

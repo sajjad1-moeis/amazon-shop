@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { contactService } from "@/services/contact/contactService";
+import { unwrapApiData } from "@/services/api/client";
 import { formatDateFa } from "@/utils/adminDateUtils";
 import ContactDetailHeader from "@/template/Admin/contactUs/ContactDetailHeader";
 import ContactInfoCard from "@/template/Admin/contactUs/ContactInfoCard";
@@ -32,12 +33,9 @@ export default function ContactUsDetailPage() {
     try {
       setLoading(true);
       const response = await contactService.getById(contactId);
-      if (response.success && response.data) {
-        setContact(response.data);
-      } else {
-        toast.error(response.message || "خطا در دریافت درخواست");
-        router.push("/admin/contact-us");
-      }
+      const data = unwrapApiData(response);
+      setContact(data ?? null);
+      if (!data) router.push("/admin/contact-us");
     } catch (error) {
       toast.error(error.message || "خطا در دریافت درخواست");
       console.error("Error fetching contact:", error);
@@ -55,13 +53,9 @@ export default function ContactUsDetailPage() {
 
     setMarkAsReadLoading(true);
     try {
-      const response = await contactService.markAsRead(contactId);
-      if (response.success) {
-        toast.success("درخواست به عنوان خوانده شده علامت‌گذاری شد");
-        fetchContact();
-      } else {
-        toast.error(response.message || "خطا در علامت‌گذاری");
-      }
+      await contactService.markAsRead(contactId);
+      toast.success("درخواست به عنوان خوانده شده علامت‌گذاری شد");
+      fetchContact();
     } catch (error) {
       toast.error(error.message || "خطا در علامت‌گذاری");
       console.error("Error marking as read:", error);

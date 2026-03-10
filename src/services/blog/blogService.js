@@ -79,6 +79,7 @@ export const blogService = {
     return client.post(`Blog/IncrementViewCount?id=${id}`).json();
   },
 
+  /** POST api/Blog/UploadFeaturedImage — multipart/form-data: blogId (query یا form)، file (form) */
   uploadFeaturedImage: async (blogId, file) => {
     const client = getAuthenticatedClient();
     const formData = new FormData();

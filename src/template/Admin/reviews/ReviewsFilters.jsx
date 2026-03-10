@@ -6,10 +6,12 @@ import FilterSection from "@/components/FilterSection";
 import FilterSearchInput from "@/components/FilterSelects/FilterSearchInput";
 import StatusSelect from "@/components/FilterSelects/StatusSelect";
 
+/** status مطابق doc: ۱=Pending، ۲=Approved، ۳=Rejected، ۴=Spam */
 const REVIEW_STATUS_OPTIONS = [
   { value: "pending", label: "در انتظار" },
   { value: "approved", label: "تایید شده" },
   { value: "rejected", label: "رد شده" },
+  { value: "spam", label: "اسپم" },
 ];
 
 export default function ReviewsFilters() {

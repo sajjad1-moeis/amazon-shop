@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { ShoppingCart } from "iconsax-reactjs";
 import OrdersTable from "@/template/Admin/orders/OrdersTable";
@@ -12,19 +12,26 @@ import { orderService } from "@/services/order/orderService";
 import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 
 export default function OrdersPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const statusParam = searchParams.get("status");
+  const pageParam = searchParams.get("page");
   const statusFilter = statusParam && statusParam !== "all" ? statusParam : undefined;
   const searchTerm = searchParams.get("search") || "";
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [pageNumber, setPageNumber] = useState(1);
+  const [pageNumber, setPageNumber] = useState(pageParam ? parseInt(pageParam, 10) || 1 : 1);
   const [pageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    setPageNumber(1);
-  }, [statusFilter, searchTerm]);
+    const page = searchParams.get("page");
+    if (page) {
+      setPageNumber(parseInt(page, 10) || 1);
+    } else {
+      setPageNumber(1);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     let cancelled = false;
@@ -54,6 +61,13 @@ export default function OrdersPage() {
     return () => { cancelled = true; };
   }, [pageNumber, statusFilter, searchTerm, pageSize]);
 
+  const handlePageChange = (newPage) => {
+    setPageNumber(newPage);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", newPage.toString());
+    router.push(`/admin/orders?${params.toString()}`);
+  };
+
   return (
     <div className="space-y-6">
       <AdminPageHeader title="فاکتورها و سفارشات" subtitle="مشاهده و مدیریت سفارشات" icon={ShoppingCart}>
@@ -68,7 +82,7 @@ export default function OrdersPage() {
           <>
             <OrdersTable orders={orders} />
             <div className="pt-4 mt-4 border-t border-gray-600">
-              <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
+              <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={handlePageChange} />
             </div>
           </>
         )}

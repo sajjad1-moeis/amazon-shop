@@ -42,6 +42,7 @@ export default function BlogForm({
             onContentChange={onContentChange}
             optionsData={optionsData}
             styles={FORM_STYLES}
+            isEdit={isEdit}
           />
 
           <FormSection

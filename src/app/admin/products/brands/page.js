@@ -13,6 +13,7 @@ import { Spinner } from "@/components/ui/spinner";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 import { productBrandService } from "@/services/product/productBrandService";
+import { unwrapApiData } from "@/services/api/client";
 
 export default function BrandsPage() {
   const router = useRouter();
@@ -20,7 +21,7 @@ export default function BrandsPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
-  const [pageSize] = useState(20);
+  const [pageSize] = useState(9999);
   const [totalPages, setTotalPages] = useState(1);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedBrandId, setSelectedBrandId] = useState(null);
@@ -34,7 +35,7 @@ export default function BrandsPage() {
         pageSize,
         searchTerm: searchTerm.trim() || undefined,
       });
-      const data = response?.data;
+      const data = unwrapApiData(response);
       setBrands(Array.isArray(data?.brands) ? data.brands : []);
       setTotalPages(Math.max(1, data?.totalPages ?? 1));
     } catch (error) {

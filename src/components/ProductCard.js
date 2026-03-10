@@ -80,6 +80,13 @@ function ProductCard({ className, product, badges }) {
       : fromScraper;
   const seller = product?.seller || "amazon";
   const sellerCountry = product?.sellerCountry || "🇦🇪";
+  /** پرچم و لوگو — وقتی UAE یا US است، لوگوی آمازون + عکس پرچم کنار هم */
+  const currency = (product?.currency ?? product?.currency_symbol ?? "").toUpperCase();
+  const region = product?.region ?? product?.amazonRegion ?? product?.sellerCountry;
+  const isUaeProduct = product?.amazonShopName === "AED" || region === "uae" || region === "ae" || region === "🇦🇪";
+  const isUsProduct = currency === "USD" || region === "us" || region === "america" || region === "🇺🇸";
+  // const flagSrc = isUaeProduct ? "/image/Products/emarat.png" : isUsProduct ? "/image/Products/usa.png" : null;
+  const flagSrc = "/image/emarat.png";
 
   const calculateDiscount = () => {
     if (!Number.isFinite(listPrice) || !Number.isFinite(salePrice) || listPrice <= 0) return 0;
@@ -287,19 +294,34 @@ function ProductCard({ className, product, badges }) {
             </p>
 
             {/* Rating and Seller */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-1">
                 <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                 <span className="text-sm font-medium text-gray-900 dark:text-dark-titre">
                   {Number.isFinite(rating) ? rating.toFixed(1) : "0.0"}
                 </span>
-                <span className="text-xs text-gray-500 dark:text-dark-text">({reviewCount})</span>
+                <span className="text-xs text-gray-500 dark:text-dark-text max-md:hidden">({reviewCount})</span>
               </div>
 
-              {/* Seller Info */}
+              {/* لوگوی آمازون کوچک + پرچم امارات/آمریکا کنار هم (عین عکس دوم) */}
               <div className="flex items-center gap-1">
-                <span className="text-orange-500 font-bold text-base leading-none">a</span>
-                <span className="text-base leading-none">{sellerCountry}</span>
+                {flagSrc ? (
+                  <>
+                    <Image src={flagSrc} width={30} height={20} className="w-full h-auto max-w-[20px] object-cover" />
+                    <Image
+                      src="/image/amazonLogo.png"
+                      alt="آمازون"
+                      width={38}
+                      height={14}
+                      className="object-contain shrink-0"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <span className="text-orange-500 font-bold text-base leading-none">a</span>
+                    <span className="text-base leading-none">{sellerCountry}</span>
+                  </>
+                )}
               </div>
             </div>
 

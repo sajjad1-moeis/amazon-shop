@@ -73,6 +73,12 @@
     /* overscroll-behavior-y: contain; */
   }
 
+  /* اجازه اسکرول صفحه وقتی منوی Select (مثلاً انتخاب فروشگاه) باز است */
+  body[data-scroll-locked] {
+    overflow: visible !important;
+    margin-right: 0 !important;
+  }
+
   /* رفع مشکل touch در iOS */
   * {
     -webkit-tap-highlight-color: transparent;

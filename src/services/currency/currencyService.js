@@ -6,11 +6,12 @@ import { getAuthenticatedClient } from "../api/client";
  */
 export const currencyService = {
   getPaginated: async (params = {}) => {
-    const { pageNumber = 1, pageSize = 20, status, serviceType, userId, searchTerm } = params;
+    const { pageNumber = 1, pageSize = 20, status, serviceType, userId, phoneNumber, searchTerm } = params;
     const q = new URLSearchParams({ pageNumber: String(pageNumber), pageSize: String(pageSize) });
     if (status != null) q.set("status", String(status));
     if (serviceType != null) q.set("serviceType", String(serviceType));
     if (userId != null) q.set("userId", String(userId));
+    if (phoneNumber != null) q.set("phoneNumber", String(phoneNumber));
     if (searchTerm) q.set("searchTerm", searchTerm);
     const client = getAuthenticatedClient();
     return client.get(`CurrencyService/GetPaginated?${q.toString()}`).json();

@@ -45,7 +45,7 @@ export default function TicketsPage() {
       const searchTermValue = searchParams.get("search") || "";
       const priorityParam = searchParams.get("priority");
       const categoryIdParam = searchParams.get("categoryId");
-      const userIdParam = searchParams.get("userId");
+      const phoneNumberParam = searchParams.get("phoneNumber");
       const assignedParam = searchParams.get("assignedToUserId");
       const response = await adminTicketService.getPaginated({
         pageNumber,
@@ -54,7 +54,7 @@ export default function TicketsPage() {
         searchTerm: searchTermValue || undefined,
         priority: priorityParam ? parseInt(priorityParam, 10) : undefined,
         categoryId: categoryIdParam ? parseInt(categoryIdParam, 10) : undefined,
-        userId: userIdParam ? parseInt(userIdParam, 10) : undefined,
+        phoneNumber: phoneNumberParam ? phoneNumberParam.trim() : undefined,
         assignedToUserId: assignedParam ? parseInt(assignedParam, 10) : undefined,
       });
 
