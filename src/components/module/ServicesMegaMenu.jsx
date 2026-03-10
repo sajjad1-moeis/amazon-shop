@@ -24,8 +24,8 @@ export default function ServicesMegaMenu() {
             className={cn(
               "py-2.5 text-[13px] font-medium transition-colors border-b-2 -mb-px text-center",
               activeTab === tab.id
-                ? "border-primary-500 text-primary-600 dark:text-primary-400 bg-white dark:bg-dark-box"
-                : "border-transparent text-gray-500 dark:text-dark-text hover:text-gray-700 dark:hover:text-dark-titre"
+                ? "border-primary-500 text-primary-500 dark:border-primary-300 dark:text-primary-300 bg-white dark:bg-dark-box"
+                : "border-transparent text-gray-500 dark:text-dark-text hover:text-gray-700 dark:hover:text-primary-300"
             )}
           >
             {tab.label}
@@ -34,15 +34,16 @@ export default function ServicesMegaMenu() {
       </div>
 
       {/* محتوا — خط عمودی نازک خاکستری بین ستون‌ها (فیگما) */}
+      
       <div className="px-4 py-4 max-h-[70vh] overflow-y-auto">
         <div className="grid grid-cols-2 sm:grid-cols-3  gap-y-5">
           {sections.map((section, idx) => (
             <div
               key={idx}
-              className="min-w-0 border-s border-gray-100 dark:border-dark-stroke ps-4 first:border-s-0 first:ps-0"
+              className="min-w-0  border-gray-100 dark:border-dark-stroke ps-4 first:border-s-0 first:ps-0"
             >
-              <h3 className=" font-semibold text-primary-600 dark:text-dark-titre mb-1.5 relative pr-3">
-                <div className="absolute -right-0 h-full w-1 bg-primary-600 dark:bg-dark-titre rounded-full"></div>
+              <h3 className=" text-primary-600 dark:text-primary-300 mb-1.5 relative pr-3">
+                <div className="absolute -right-0 h-full w-1 bg-primary-600 dark:bg-primary-300 rounded-full"></div>
                 {section.title}
               </h3>
               <Link

@@ -21,6 +21,7 @@ import Image from "next/image";
 
 export default function ServicesHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
+  const [categoryOpen, setCategoryOpen] = useState(false);
 
   const servicesCategoryTrigger = (
     <Button
@@ -53,11 +54,11 @@ export default function ServicesHeader() {
               width={200}
               height={64}
               sizes="(max-width: 640px) 120px, (max-width: 768px) 140px, (max-width: 1024px) 160px, 180px"
-              className="h-7 w-auto max-w-[100px] sm:h-8 sm:max-w-[120px] md:h-9 md:max-w-[150px] lg:h-10 lg:max-w-[180px] xl:h-11 xl:max-w-[200px] object-contain object-center"
+              className="h-7 w-auto max-w-[100px] sm:h-8 sm:max-w-[120px] md:h-9 md:max-w-[150px] lg:h-10 lg:max-w-[180px] xl:h-11 xl:max-w-[300px] object-contain object-center"
             />
           </Link>
           {/* دسکتاپ: باکس جستجو وسط */}
-          <div className="flex-1 max-w-xl w-full hidden md:block min-w-0">
+          <div className="flex-1  w-full hidden md:block min-w-0">
             <SearchDropdown variant="services" />
           </div>
           {/* موبایل: دو دکمه مربعی (کاربر، جستجو) سمت چپ | دسکتاپ: فقط دکمه کاربر */}
@@ -87,29 +88,58 @@ export default function ServicesHeader() {
       </div>
 
       {/* Bottom bar: سوییچ تم + دسته بندی خدمات */}
-      
 
       <div className="bg-primary-500 dark:bg-dark-header">
         <div className="bg-primary-800/20 dark:bg-white/5">
           <div className="w-full xl:container max-md:px-2 py-3 px-4 flex items-center justify-between text-white">
-            <div className="flex items-center gap-1 lg:gap-3">
-              <NavigationMenu dir="rtl" className="relative z-[100]">
-                <NavigationMenuList className="gap-0">
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger className="bg-transparent hover:bg-transparent data-[state=open]:bg-transparent h-auto p-0 border-0">
-                      {servicesCategoryTrigger}
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent
-                      className="!w-[88vw] max-w-4xl !right-0 !top-full !mt-2 !p-0 !h-auto !z-50 rounded-xl shadow-xl border border-gray-200 dark:border-dark-stroke bg-white dark:bg-dark-box overflow-hidden"
-                      dir="rtl"
+            <div className="flex items-center gap-1 lg:gap-3 flex-1 min-w-0">
+              {/* موبایل: دکمه دسته‌بندی با Sheet تا منو درست نمایش داده بشه */}
+              <div className="md:hidden w-full">
+                <Sheet open={categoryOpen} onOpenChange={setCategoryOpen}>
+                  <SheetTrigger asChild>
+                    <button
+                      type="button"
+                      className="flex items-center gap-2 rounded-xl border border-white/40 px-3 py-2 h-9 text-white hover:bg-white/10  justify-between"
                     >
+                      <MenuIcon size={18} />
+                      <span className="text-sm">دسته بندی خدمات</span>
+                      <ArrowDown2 size={18} />
+                    </button>
+                  </SheetTrigger>
+                  <SheetContent
+                    side="bottom"
+                    className="h-[85vh] rounded-t-2xl p-0 overflow-hidden flex flex-col"
+                    dir="rtl"
+                  >
+                    <SheetHeader className="px-4 pt-4 pb-2 border-b border-gray-100 dark:border-dark-stroke shrink-0">
+                      <SheetTitle className="text-right">دسته بندی خدمات</SheetTitle>
+                    </SheetHeader>
+                    <div className="flex-1 overflow-y-auto">
                       <ServicesMegaMenu />
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              </div>
+              {/* دسکتاپ: دراپ‌داون معمولی */}
+              <div className="hidden md:block">
+                <NavigationMenu dir="rtl" className="relative z-[100]">
+                  <NavigationMenuList className="gap-0">
+                    <NavigationMenuItem>
+                      <NavigationMenuTrigger className="bg-transparent hover:bg-transparent data-[state=open]:bg-transparent h-auto p-0 border-0">
+                        {servicesCategoryTrigger}
+                      </NavigationMenuTrigger>
+                      <NavigationMenuContent
+                        className="!w-[88vw] max-w-4xl !right-0 !top-full !mt-2 !p-0 !h-auto !z-50 rounded-xl shadow-xl border border-gray-200 dark:border-dark-stroke bg-white dark:bg-dark-box overflow-hidden"
+                        dir="rtl"
+                      >
+                        <ServicesMegaMenu />
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+                  </NavigationMenuList>
+                </NavigationMenu>
+              </div>
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center shrink-0">
               <SwitchButton />
             </div>
           </div>
