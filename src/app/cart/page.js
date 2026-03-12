@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCartCount } from "@/contexts/CartCountContext";
 import { shoppingCartService } from "@/services/shoppingCart/shoppingCartService";
@@ -82,10 +83,10 @@ export default function CartPage() {
                   برای مشاهده جمع نهایی و پرداخت، وارد حساب کاربری شوید.
                 </p>
                 <Button
-                  onClick={() => openAuthModal("/steps-cart")}
+                  asChild
                   className="w-full bg-primary-600 hover:bg-primary-700 text-white"
                 >
-                  ورود و ادامه پرداخت
+                  <Link href={"/login?redirect=" + encodeURIComponent("/steps-cart")}>ورود و ادامه پرداخت</Link>
                 </Button>
               </div>
             </div>

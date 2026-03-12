@@ -1,27 +1,25 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/AuthContext";
+import React from "react";
+import { useSearchParams } from "next/navigation";
+import IndexLayout from "@/layout/IndexLayout";
+import LoginView from "@/template/Auth/LoginView";
 
-/**
- * روت /login — مودال ورود را باز می‌کند و به صفحه اصلی هدایت می‌کند.
- * اگر redirect در query باشد، بعد از ورود به آن آدرس هدایت می‌شود.
- */
 export default function LoginPage() {
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const { openAuthModal } = useAuth();
-
-  useEffect(() => {
-    const redirectTo = searchParams.get("redirect") || "/cart";
-    openAuthModal(redirectTo);
-    router.replace("/");
-  }, [searchParams, router, openAuthModal]);
+  const redirectTo = searchParams.get("redirect") || "/cart";
 
   return (
-    <div className="min-h-[60vh] flex items-center justify-center p-4" dir="rtl">
-      <div className="text-gray-500 dark:text-dark-text">در حال انتقال...</div>
-    </div>
+    <IndexLayout>
+      <div className="min-h-[60vh] flex items-center justify-center p-4">
+        <div className="w-full max-w-md rounded-2xl bg-white dark:bg-dark-box border border-gray-200 dark:border-dark-stroke shadow-lg overflow-hidden">
+          <LoginView
+            onGoSignup={() => {}}
+            onGoReset={() => {}}
+            redirectTo={redirectTo}
+          />
+        </div>
+      </div>
+    </IndexLayout>
   );
 }

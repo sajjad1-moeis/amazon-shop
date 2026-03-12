@@ -70,30 +70,77 @@ export function buildSpecsFromProduct(product) {
 
 export default function ProductDetailsAccordion({ product }) {
   const technicalSpecs = buildSpecsFromProduct(product);
-  const hasSpecs = technicalSpecs.length > 0;
+
+  // فقط چند مشخصهٔ کلیدی (مثل رنگ و استایل) در باکس‌ها نمایش داده شوند
+  const HIGHLIGHT_KEYS = [
+    "color",
+    "style name",
+    "rise style",
+    "leg style",
+    "fit type",
+  ];
+
+  const highlightSpecs = technicalSpecs.filter((spec) => {
+    const label = (spec.label || "").toString().toLowerCase();
+    return HIGHLIGHT_KEYS.some((key) => label.includes(key));
+  });
+
+  // حداکثر ۵ مورد کلیدی را نشان بده؛ اگر برای محصولی چنین مواردی نبود،
+  // همان مشخصات عادی (اولین چند مورد) را به‌عنوان fallback استفاده کن.
+  const specsToShow =
+    highlightSpecs.length > 0 ? highlightSpecs.slice(0, 5) : technicalSpecs.slice(0, 5);
+
+  const hasSpecs = specsToShow.length > 0;
 
   return (
     <div>
       {hasSpecs && (
-        <div className="rounded-xl border border-gray-200 dark:border-dark-stroke bg-gray-50/80 dark:bg-dark-field/60 overflow-hidden">
-          <div className="border-b border-gray-200 dark:border-dark-stroke px-4 py-2">
-            <span className="text-xs font-medium text-gray-500 dark:text-caption">جدول مشخصات</span>
-          </div>
-          <div className="divide-y divide-gray-200 dark:divide-dark-stroke">
-            {technicalSpecs.map((spec, index) => (
+        <div>
+          {/* ۵ مشخصهٔ برجسته به‌صورت کارت */}
+          <h3 className="mb-3 text-right text-gray-800 dark:text-white">
+            مشخصات فنی
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {specsToShow.map((spec, index) => (
               <div
                 key={index}
-                className="flex flex-row items-center justify-between gap-4 px-4 py-3"
+                className="bg-gray-100 border dark:bg-dark-field dark:border-0 border-gray-200 p-2 rounded-lg"
               >
-                <span className="text-sm font-medium dark:text-caption text-gray-600 text-right flex-1 min-w-0">
+                <p className="text-gray-700 dark:text-dark-titre max-md:text-sm line-clamp-1">
                   {spec.label}
-                </span>
-                <span className="text-sm text-gray-900 dark:text-dark-titre flex-1 text-left min-w-0 break-words">
+                </p>
+                <p className="text-gray-500 text-sm dark:text-dark-text max-md:text-xs mt-2 break-words">
                   {spec.value}
-                </span>
+                </p>
               </div>
             ))}
           </div>
+
+          {/* جدول کامل مشخصات (همهٔ technicalSpecs) */}
+          {technicalSpecs.length > 0 && (
+            <div className="mt-6 rounded-xl border border-gray-200 dark:border-dark-stroke bg-gray-50/80 dark:bg-dark-field/60 overflow-hidden">
+              <div className="border-b border-gray-200 dark:border-dark-stroke px-4 py-2">
+                <span className="text-xs font-medium text-gray-500 dark:text-caption">
+                  جدول مشخصات
+                </span>
+              </div>
+              <div className="divide-y divide-gray-200 dark:divide-dark-stroke">
+                {technicalSpecs.map((spec, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-row items-center justify-between gap-4 px-4 py-3"
+                  >
+                    <span className="text-sm font-medium dark:text-caption text-gray-600 text-right flex-1 min-w-0">
+                      {spec.label}
+                    </span>
+                    <span className="text-sm text-gray-900 dark:text-dark-titre flex-1 text-left min-w-0 break-words">
+                      {spec.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
       <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 bg-gray-100 border dark:bg-dark-box dark:border-dark-stroke border-gray-200 p-2 rounded-xl">

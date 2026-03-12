@@ -6,11 +6,10 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
 function LoginLink({ children, className }) {
-  const { openAuthModal } = useAuth();
   return (
-    <button type="button" onClick={() => openAuthModal()} className={className}>
+    <Link href="/login" className={className}>
       {children}
-    </button>
+    </Link>
   );
 }
 import { userRecentViewService } from "@/services/userRecentView/userRecentViewService";

@@ -756,37 +756,39 @@ export default function ProductDetailPage({ params }) {
                 </div>
                 {((product?.product_badges ?? product?.productBadges ?? product?.badges)?.length > 0 || product?.best_seller_text || product?.bestSellerText || product?.is_best_seller || product?.isBestSeller || product?.is_amazons_choice || product?.isAmazonsChoice || product?.is_limited_time_deal || product?.isLimitedTimeDeal) && (
                   <div className="flex flex-wrap items-center gap-2 mb-4">
-                    {(product?.product_badges ?? product?.productBadges ?? product?.badges ?? []).map((badge, index) => (
-                      <span
-                        key={index}
-                        className={cn(
-                          "text-xs px-2.5 py-1 rounded-md text-white whitespace-nowrap",
-                          badge === "Limited time deal" || badge === "تخفیف محدود زمان" || (typeof badge === "string" && badge.toLowerCase().includes("limited time deal"))
-                            ? "bg-red-600 dark:bg-red-700"
-                            : badge === "FREE Returns"
-                              ? "bg-green-600 dark:bg-green-700"
-                              : badge === "Savings" || badge === "صرفه‌جویی"
-                                ? "bg-emerald-600 dark:bg-emerald-700"
-                                : badge === "Best Seller" || (typeof badge === "string" && badge.toLowerCase().includes("best seller"))
-                                  ? "bg-orange-500 dark:bg-orange-600"
-                                  : badge === "Amazon's Choice" || (typeof badge === "string" && badge.toLowerCase().includes("amazon") && badge.toLowerCase().includes("choice"))
-                                    ? "bg-green-600 dark:bg-green-700"
-                                    : "bg-primary-600 dark:bg-primary-700"
-                        )}
-                      >
-                        {badge === "Limited time deal" || badge === "تخفیف محدود زمان"
-                          ? "تخفیف محدود زمان"
-                          : badge === "FREE Returns"
-                            ? "مرجوعی رایگان"
-                            : badge === "Savings"
-                              ? "صرفه‌جویی"
+                    {(product?.product_badges ?? product?.productBadges ?? product?.badges ?? [])
+                      // حذف تگ‌های مرجوعی رایگان و صرفه‌جویی
+                      .filter(
+                        (badge) =>
+                          !(
+                            badge === "FREE Returns" ||
+                            badge === "Savings" ||
+                            badge === "صرفه‌جویی"
+                          )
+                      )
+                      .map((badge, index) => (
+                        <span
+                          key={index}
+                          className={cn(
+                            "text-xs px-2.5 py-1 rounded-md text-white whitespace-nowrap",
+                            badge === "Limited time deal" || badge === "تخفیف محدود زمان" || (typeof badge === "string" && badge.toLowerCase().includes("limited time deal"))
+                              ? "bg-red-600 dark:bg-red-700"
                               : badge === "Best Seller" || (typeof badge === "string" && badge.toLowerCase().includes("best seller"))
-                                ? "بیشترین فروش"
+                                ? "bg-orange-500 dark:bg-orange-600"
                                 : badge === "Amazon's Choice" || (typeof badge === "string" && badge.toLowerCase().includes("amazon") && badge.toLowerCase().includes("choice"))
-                                  ? "انتخاب آمازون"
-                                  : badge}
-                      </span>
-                    ))}
+                                  ? "bg-green-600 dark:bg-green-700"
+                                  : "bg-primary-600 dark:bg-primary-700"
+                          )}
+                        >
+                          {badge === "Limited time deal" || badge === "تخفیف محدود زمان"
+                            ? "تخفیف محدود زمان"
+                            : badge === "Best Seller" || (typeof badge === "string" && badge.toLowerCase().includes("best seller"))
+                              ? "بیشترین فروش"
+                              : badge === "Amazon's Choice" || (typeof badge === "string" && badge.toLowerCase().includes("amazon") && badge.toLowerCase().includes("choice"))
+                                ? "انتخاب آمازون"
+                                : badge}
+                        </span>
+                      ))}
                     {(product?.is_limited_time_deal || product?.isLimitedTimeDeal) && !(product?.product_badges ?? product?.productBadges ?? product?.badges ?? []).some((b) => typeof b === "string" && (b.toLowerCase().includes("limited time deal") || b === "تخفیف محدود زمان")) && (
                       <span className="text-xs px-2.5 py-1 rounded-md bg-red-600 dark:bg-red-700 text-white whitespace-nowrap">
                         تخفیف محدود زمان
@@ -809,16 +811,7 @@ export default function ProductDetailPage({ params }) {
                     )}
                   </div>
                 )}
-                {Array.isArray(product?.promo_messages ?? product?.promoMessages) && (product.promo_messages ?? product.promoMessages).length > 0 && (
-                  <div className="mb-4 p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800">
-                    <p className="text-xs font-medium text-emerald-800 dark:text-emerald-200 mb-2">پرومو و تخفیف</p>
-                    <ul className="text-sm text-emerald-700 dark:text-emerald-300 space-y-1 list-disc list-inside">
-                      {(product.promo_messages ?? product.promoMessages ?? []).map((msg, i) => (
-                        <li key={i}>{msg}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                {/* باکس پرومو و تخفیف را نمایش نده */}
                 {hasVariations && (
                   <ProductVariationDimensions
                     variationDimensions={variationDimensions}
@@ -829,39 +822,6 @@ export default function ProductDetailPage({ params }) {
                     }
                   />
                 )}
-                {(() => {
-                  const allSpecs = buildSpecsFromProduct(product);
-                  const boxKeys = new Set([
-                    "brand", "colour", "color", "ear placement", "form factor", "impedance",
-                    "برند", "رنگ", "قرارگیری گوش", "فاکتور فرم", "امپدانس",
-                  ]);
-                  const specs = allSpecs.filter(
-                    (s) => boxKeys.has(s.label.trim().toLowerCase()) || boxKeys.has(s.label.trim())
-                  );
-                  if (specs.length === 0) return null;
-                  return (
-                    <div>
-                      <h3 className="mb-3 text-right text-gray-800 dark:text-white">
-                        مشخصات فنی
-                      </h3>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        {specs.map((spec, index) => (
-                          <div
-                            key={`${spec.label}-${index}`}
-                            className="bg-gray-100 border dark:bg-dark-field dark:border-0 border-gray-200 p-2 rounded-lg"
-                          >
-                            <p className="text-gray-700 dark:text-dark-titre max-md:text-sm">
-                              {spec.label}
-                            </p>
-                            <p className="text-gray-500 text-sm dark:text-dark-text max-md:text-xs mt-2">
-                              {spec.value}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })()}
               </div>
               <div className="max-md:hidden">
                 <ProductDetailsAccordion product={product} dataSource={dataSource} />
