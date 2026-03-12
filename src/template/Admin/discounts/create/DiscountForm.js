@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FORM_STYLES } from "../../formStyles";
 import { cn } from "@/lib/utils";
 import { AdminPersianDatePicker } from "@/components/admin";
@@ -76,20 +75,28 @@ const DISCOUNT_TYPE_OPTIONS = [
   { value: "fixed", label: "مقدار ثابت (تومان)" },
 ];
 
-export default function DiscountForm({ onSubmit, loading = false }) {
+const defaultValues = {
+  code: "",
+  type: "percentage",
+  value: "",
+  minPurchase: "",
+  maxDiscount: "",
+  usageLimit: "",
+  startDate: "",
+  endDate: "",
+};
+
+export default function DiscountForm({ onSubmit, loading = false, initialData = null, isEdit = false, submitLabel }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      code: "",
-      type: "percentage",
-      value: "",
-      minPurchase: "",
-      maxDiscount: "",
-      usageLimit: "",
-      startDate: "",
-      endDate: "",
-    },
+    defaultValues: initialData || defaultValues,
   });
+
+  useEffect(() => {
+    if (initialData && Object.keys(initialData).length) {
+      form.reset(initialData);
+    }
+  }, [initialData, form]);
 
   const discountType = form.watch("type");
 
@@ -115,13 +122,12 @@ export default function DiscountForm({ onSubmit, loading = false }) {
   };
 
   return (
-    <Card className={FORM_STYLES.card}>
-      <CardHeader>
-        <CardTitle className={FORM_STYLES.cardTitle}>اطلاعات کوپن تخفیف</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(submitHandler)} className="space-y-6" dir="rtl">
+    <div className={FORM_STYLES.card}>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(submitHandler)} className="p-6 space-y-6" dir="rtl">
+          <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider pb-2 border-b border-gray-700/60">
+            اطلاعات کوپن تخفیف
+          </h3>
             {/* کد کوپن */}
             <FormField
               control={form.control}
@@ -309,15 +315,14 @@ export default function DiscountForm({ onSubmit, loading = false }) {
             </div>
 
             {/* دکمه‌های عملیات */}
-            <div className="flex justify-end gap-3 pt-4">
-              <Button type="submit" disabled={loading} className="bg-blue-600 hover:bg-blue-700 min-w-32">
-                {loading ? "در حال ذخیره..." : "ایجاد کوپن"}
+            <div className="flex justify-end gap-3 pt-4 border-t border-gray-700/60">
+              <Button type="submit" disabled={loading} className={FORM_STYLES.button}>
+                {loading ? "در حال ذخیره..." : submitLabel ?? (isEdit ? "ذخیره تغییرات" : "ایجاد کوپن")}
               </Button>
             </div>
           </form>
         </Form>
-      </CardContent>
-    </Card>
+    </div>
   );
 }
 

@@ -22,6 +22,7 @@ export default function TicketCategoriesPage() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [toggleLoadingId, setToggleLoadingId] = useState(null);
 
   const fetchCategories = useCallback(async () => {
     try {
@@ -78,6 +79,7 @@ export default function TicketCategoriesPage() {
 
   const handleToggleActive = async (category) => {
     try {
+      setToggleLoadingId(category.id);
       const currentActive = category.isActive !== false;
       await ticketCategoryService.update(category.id, {
         name: category.name,
@@ -89,6 +91,8 @@ export default function TicketCategoriesPage() {
     } catch (error) {
       console.error("Error toggling category:", error);
       toast.error(error?.message || "خطا در به‌روزرسانی دسته‌بندی");
+    } finally {
+      setToggleLoadingId(null);
     }
   };
 
@@ -103,18 +107,23 @@ export default function TicketCategoriesPage() {
 
   return (
     <div className="space-y-6">
-      <AdminPageHeader title="دسته‌بندی‌های تیکت" subtitle="مدیریت دسته‌بندی‌های تیکت پشتیبانی" icon={MessageQuestion}>
-        <Button
-          className="bg-blue-600 hover:bg-blue-700 text-white"
-          onClick={() => {
-            setEditingCategory(null);
-            setIsModalOpen(true);
-          }}
-        >
-          <Add size={20} className="ml-2" />
-          دسته‌بندی جدید
-        </Button>
-      </AdminPageHeader>
+      <AdminPageHeader
+        title="دسته‌بندی‌های تیکت"
+        subtitle="مدیریت دسته‌بندی‌های تیکت پشتیبانی"
+        icon={MessageQuestion}
+        actions={
+          <Button
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+            onClick={() => {
+              setEditingCategory(null);
+              setIsModalOpen(true);
+            }}
+          >
+            <Add size={20} className="ml-2" />
+            <span className="max-md:hidden">دسته‌بندی جدید</span>
+          </Button>
+        }
+      />
 
       <AdminSectionCard title="لیست دسته‌بندی‌ها">
         {loading ? (
@@ -126,6 +135,7 @@ export default function TicketCategoriesPage() {
               onEdit={handleEdit}
               onDelete={handleDelete}
               onToggleActive={handleToggleActive}
+              toggleLoadingId={toggleLoadingId}
             />
             <div className="pt-4 border-t border-gray-600 mt-4">
               <AdminPagination

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Add, TicketDiscount, SearchNormal1 } from "iconsax-reactjs";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -13,6 +14,7 @@ import { discountService } from "@/services/discount/discountService";
 import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 
 export default function DiscountsListPage() {
+  const router = useRouter();
   const [discounts, setDiscounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -29,10 +31,11 @@ export default function DiscountsListPage() {
         searchTerm: searchTerm || undefined,
       });
 
-      if (response.success && response.data) {
-        setDiscounts(response.data.discounts || []);
-        setTotalPages(response.data.totalPages || 1);
-      }
+      const data = response?.data ?? response;
+      const list = data?.codes ?? data?.discounts ?? [];
+      const pages = data?.totalPages ?? 1;
+      setDiscounts(Array.isArray(list) ? list : []);
+      setTotalPages(pages);
     } catch (error) {
       toast.error(error.message || "خطا در دریافت کوپن‌ها");
       console.error("Error fetching discounts:", error);
@@ -51,26 +54,34 @@ export default function DiscountsListPage() {
     fetchDiscounts();
   }, [pageNumber, searchTerm]);
 
+  const handleEdit = (id) => {
+    router.push(`/admin/discounts/edit/${id}`);
+  };
+
   return (
     <div className="space-y-6">
-      <AdminPageHeader title="لیست کوپن‌ها" subtitle="مدیریت کدهای تخفیف" icon={TicketDiscount}>
-        <div className="flex flex-wrap items-center gap-3">
+      <AdminPageHeader
+        title="لیست کوپن‌ها"
+        subtitle="مدیریت کدهای تخفیف"
+        icon={TicketDiscount}
+        actions={
           <Link href="/admin/discounts/create">
             <Button className="bg-blue-600 hover:bg-blue-700 text-white">
               <Add size={20} className="ml-2" />
-              کوپن جدید
+              <span className="max-md:hidden">کوپن جدید</span>
             </Button>
           </Link>
-          <div className="relative flex-1 min-w-[180px] max-w-[260px]">
-            <SearchNormal1 size={18} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
-            <Input
-              type="text"
-              placeholder="جستجو ..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="bg-gray-700 border-gray-600 text-white h-10 pl-3 pr-10"
-            />
-          </div>
+        }
+      >
+        <div className="relative flex-1 min-w-[180px] max-w-[260px]">
+          <SearchNormal1 size={18} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
+          <Input
+            type="text"
+            placeholder="جستجو ..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="bg-gray-700 border-gray-600 text-white h-10 pl-3 pr-10"
+          />
         </div>
       </AdminPageHeader>
       <AdminSectionCard title="جدول کوپن‌ها">
@@ -80,7 +91,7 @@ export default function DiscountsListPage() {
           </div>
         ) : (
           <>
-            <DiscountsTable discounts={discounts} />
+            <DiscountsTable discounts={discounts} onEdit={handleEdit} />
             <div className="pt-4 mt-4 border-t border-gray-600">
               <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
             </div>

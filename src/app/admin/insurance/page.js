@@ -70,16 +70,20 @@ export default function AdminInsurancePage() {
 
   return (
     <div className="space-y-6">
-      <AdminPageHeader title="بیمه ارسال" subtitle="مدیریت درخواست‌های جبران خسارت ارسال" icon={ShieldTick}>
-        <div className="flex flex-wrap items-center gap-3">
-          <ShippingInsuranceFilters />
+      <AdminPageHeader
+        title="بیمه ارسال"
+        subtitle="مدیریت درخواست‌های جبران خسارت ارسال"
+        icon={ShieldTick}
+        actions={
           <Button
             onClick={() => setProcessModalOpen(true)}
             className="bg-amber-500 hover:bg-amber-600 text-gray-900 font-medium shadow-md"
           >
-            پردازش درخواست جبران
+            <span>پردازش درخواست جبران</span>
           </Button>
-        </div>
+        }
+      >
+        <ShippingInsuranceFilters />
       </AdminPageHeader>
 
       <AdminSectionCard title="لیست بیمه‌ها">

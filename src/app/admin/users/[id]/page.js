@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { userService } from "@/services/user/userService";
 import { unwrapApiData } from "@/services/api/client";
+import { User, Chart2 } from "iconsax-reactjs";
+import { AdminSectionCard } from "@/components/admin";
 import UserDetailHeader from "@/template/Admin/users/[id]/UserDetailHeader";
 import UserInfoSection from "@/template/Admin/users/[id]/UserInfoSection";
 import UserStatsSection from "@/template/Admin/users/[id]/UserStatsSection";
@@ -90,28 +92,30 @@ export default function UserDetailPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <UserDetailHeader
-          user={user}
-          editMode={editMode}
-          onEdit={() => setEditMode(true)}
-          onCancel={() => {
-            setEditMode(false);
-            router.replace(`/admin/users/${userId}`);
-          }}
-          onChangePassword={() => setShowChangePassword(true)}
-        />
+    <div className="space-y-8" dir="rtl">
+      <UserDetailHeader
+        user={user}
+        editMode={editMode}
+        onEdit={() => setEditMode(true)}
+        onCancel={() => {
+          setEditMode(false);
+          router.replace(`/admin/users/${userId}`);
+        }}
+        onChangePassword={() => setShowChangePassword(true)}
+      />
 
-        {editMode ? (
-          <EditUserForm user={user} onSubmit={handleUpdateUser} onCancel={() => setEditMode(false)} />
-        ) : (
-          <>
+      {editMode ? (
+        <EditUserForm user={user} onSubmit={handleUpdateUser} onCancel={() => setEditMode(false)} />
+      ) : (
+        <>
+          <AdminSectionCard title="اطلاعات کاربر" icon={User}>
             <UserInfoSection user={user} />
+          </AdminSectionCard>
+          <AdminSectionCard title="آمار و فعالیت" icon={Chart2}>
             <UserStatsSection user={user} />
-          </>
-        )}
-      </div>
+          </AdminSectionCard>
+        </>
+      )}
 
       <ChangePasswordDialog
         open={showChangePassword}

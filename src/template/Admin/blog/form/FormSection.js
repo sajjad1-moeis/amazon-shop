@@ -23,12 +23,20 @@ export default function FormSection({
 
   const hasGrid = section.fields.some((field) => field.gridCols);
 
-  const fields = section.fields.filter(
-    (f) => !f.showInEditOnly || (f.showInEditOnly && isEdit)
-  );
+  const fields = section.fields.filter((f) => {
+    if (f.showInCreateOnly && isEdit) return false;
+    if (f.showInEditOnly && !isEdit) return false;
+    return true;
+  });
 
   return (
-    <div className={hasGrid ? "grid md:grid-cols-2 gap-4" : "space-y-4"}>
+    <div className="space-y-4">
+      {section.title && (
+        <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider pb-2 border-b border-gray-700/60">
+          {section.title}
+        </h3>
+      )}
+      <div className={hasGrid ? "grid md:grid-cols-2 gap-4" : "space-y-4"}>
       {fields.map((field) => (
         <DynamicField
           key={field.id}
@@ -42,6 +50,7 @@ export default function FormSection({
           styles={styles}
         />
       ))}
+      </div>
     </div>
   );
 }

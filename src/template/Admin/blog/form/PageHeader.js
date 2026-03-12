@@ -1,15 +1,24 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
+import { ArrowRight } from "iconsax-reactjs";
 
-export default function PageHeader({ title, description, children }) {
+export default function PageHeader({ title, description, backHref, backLabel, children }) {
   return (
-    <div className="flex items-center justify-between">
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">{title}</h1>
-        <p className="text-gray-400">{description}</p>
-      </div>
+    <header className="mb-8">
+      {backHref && (
+        <Link
+          href={backHref}
+          className="text-sm text-gray-500 hover:text-gray-300 transition-colors inline-flex items-center gap-1.5 mb-3"
+        >
+          <ArrowRight size={16} />
+          {backLabel || "بازگشت"}
+        </Link>
+      )}
+      <h1 className="text-2xl font-semibold text-white tracking-tight">{title}</h1>
+      {description && <p className="text-sm text-gray-500 mt-1">{description}</p>}
       {children}
-    </div>
+    </header>
   );
 }

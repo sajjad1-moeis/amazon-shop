@@ -126,19 +126,15 @@ export default function EditTagPage() {
             />
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <Button
-              type="submit"
-              disabled={loading}
-              className="bg-blue-600 hover:bg-blue-700 text-white min-w-[140px]"
-            >
+          <div className="flex flex-wrap items-center gap-3 pt-6 border-t border-gray-700/60">
+            <Button type="submit" disabled={loading} className={FORM_STYLES.button}>
               {loading ? "در حال ذخیره..." : "ذخیره تغییرات"}
             </Button>
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
               onClick={() => router.push("/admin/blog/tags")}
-              className="border-gray-500 text-gray-300 hover:bg-gray-600 hover:text-white"
+              className="rounded-xl text-gray-400 hover:text-white hover:bg-gray-700/50"
             >
               انصراف
             </Button>

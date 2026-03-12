@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -13,16 +13,18 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { securityService } from "@/services/security/securityService";
+import { userService } from "@/services/user/userService";
 import { unwrapApiData } from "@/services/api/client";
 
 export default function EditAdminModal({ open, onOpenChange, admin, onSuccess }) {
   const [loading, setLoading] = useState(false);
+  const [profileImageFile, setProfileImageFile] = useState(null);
+  const fileInputRef = useRef(null);
   const [form, setForm] = useState({
     email: "",
     phoneNumber: "",
     firstName: "",
     lastName: "",
-    profileImage: "",
     isActive: true,
     isEmailVerified: false,
     isPhoneVerified: false,
@@ -35,17 +37,22 @@ export default function EditAdminModal({ open, onOpenChange, admin, onSuccess })
         phoneNumber: admin.phoneNumber ?? "",
         firstName: admin.firstName ?? "",
         lastName: admin.lastName ?? "",
-        profileImage: admin.profileImage ?? "",
         isActive: admin.isActive !== false,
         isEmailVerified: admin.isEmailVerified === true,
         isPhoneVerified: admin.isPhoneVerified === true,
       });
+      setProfileImageFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   }, [admin]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (e) => {
+    setProfileImageFile(e.target.files?.[0] || null);
   };
 
   const handleSubmit = async (e) => {
@@ -62,10 +69,19 @@ export default function EditAdminModal({ open, onOpenChange, admin, onSuccess })
         isEmailVerified: form.isEmailVerified,
         isPhoneVerified: form.isPhoneVerified,
       };
-      if (form.profileImage.trim()) payload.profileImage = form.profileImage.trim();
       const res = await securityService.updateAdmin(admin.id, payload);
       unwrapApiData(res);
+      if (profileImageFile) {
+        try {
+          await userService.uploadProfileImage(admin.id, profileImageFile);
+        } catch (uploadErr) {
+          console.error("Upload profile image:", uploadErr);
+          toast.warning("اطلاعات ذخیره شد ولی آپلود تصویر پروفایل با خطا مواجه شد.");
+        }
+      }
       toast.success("ادمین با موفقیت به‌روزرسانی شد");
+      setProfileImageFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
       onSuccess?.();
     } catch (err) {
       toast.error(err.message || "خطا در به‌روزرسانی ادمین");
@@ -102,8 +118,21 @@ export default function EditAdminModal({ open, onOpenChange, admin, onSuccess })
             <Input name="phoneNumber" value={form.phoneNumber} onChange={handleChange} className="bg-gray-700 border-gray-600 mt-1" />
           </div>
           <div>
-            <Label className="text-gray-400">آدرس تصویر پروفایل</Label>
-            <Input name="profileImage" value={form.profileImage} onChange={handleChange} className="bg-gray-700 border-gray-600 mt-1" />
+            <Label className="text-gray-400">تصویر پروفایل (اختیاری)</Label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="hidden"
+              id="edit-admin-profile-image"
+            />
+            <label
+              htmlFor="edit-admin-profile-image"
+              className="mt-1 flex items-center gap-2 cursor-pointer bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-sm text-gray-300 hover:bg-gray-600"
+            >
+              {profileImageFile ? profileImageFile.name : "انتخاب فایل تصویر"}
+            </label>
           </div>
           <div className="flex items-center justify-between">
             <Label className="text-gray-400">فعال</Label>

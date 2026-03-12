@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { blogCategoryService } from "@/services/blog/blogCategoryService";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
+import { FORM_STYLES } from "@/template/Admin/formStyles";
 
 export default function CreateCategoryPage() {
   const router = useRouter();
@@ -61,82 +62,71 @@ export default function CreateCategoryPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">دسته‌بندی جدید</h1>
-          <p className="text-gray-400">ایجاد دسته‌بندی جدید برای بلاگ</p>
-        </div>
-      </div>
+      <AdminPageHeader
+        title="دسته‌بندی جدید"
+        subtitle="ایجاد دسته‌بندی جدید برای بلاگ"
+      />
 
-      <Card className="bg-gray-800 border-gray-700 shadow-lg rounded-xl">
-        <CardHeader>
-          <CardTitle className="text-white text-xl">اضافه کردن دسته‌بندی</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="name" className="text-gray-300">
-                نام دسته‌بندی *
-              </Label>
-              <Input
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="نام دسته‌بندی را وارد کنید"
-                className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 rounded-lg"
-                required
-              />
-            </div>
+      <AdminSectionCard title="اطلاعات دسته‌بندی">
+        <form onSubmit={handleSubmit} className="space-y-6 max-w-xl">
+          <div className="space-y-2">
+            <Label htmlFor="name" className={FORM_STYLES.label}>
+              نام دسته‌بندی <span className="text-red-400/90">*</span>
+            </Label>
+            <Input
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="نام دسته‌بندی را وارد کنید"
+              className={FORM_STYLES.input}
+              required
+            />
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="slug" className="text-gray-300">
-                Slug (اختیاری)
-              </Label>
-              <Input
-                id="slug"
-                name="slug"
-                value={formData.slug}
-                onChange={handleChange}
-                placeholder="اگر خالی باشد، از نام ساخته می‌شود"
-                className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 rounded-lg"
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="slug" className={FORM_STYLES.label}>
+              Slug (اختیاری)
+            </Label>
+            <Input
+              id="slug"
+              name="slug"
+              value={formData.slug}
+              onChange={handleChange}
+              placeholder="اگر خالی باشد، از نام ساخته می‌شود"
+              className={FORM_STYLES.input}
+            />
+          </div>
 
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="isActive"
-                name="isActive"
-                checked={formData.isActive}
-                onChange={handleChange}
-                className="w-4 h-4"
-              />
-              <Label htmlFor="isActive" className="text-gray-300 cursor-pointer">
-                فعال
-              </Label>
-            </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="isActive"
+              name="isActive"
+              checked={formData.isActive}
+              onChange={handleChange}
+              className="w-4 h-4 rounded border-gray-600 bg-gray-800 text-emerald-500 focus:ring-emerald-500/30"
+            />
+            <Label htmlFor="isActive" className={`${FORM_STYLES.label} cursor-pointer`}>
+              فعال
+            </Label>
+          </div>
 
-            <div className="flex justify-end pt-4 gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.push("/admin/blog/categories")}
-                className="text-white border-gray-600"
-              >
-                انصراف
-              </Button>
-              <Button
-                type="submit"
-                disabled={loading}
-                className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg"
-              >
-                {loading ? "در حال ثبت..." : "ثبت دسته‌بندی"}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+          <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-gray-700/60">
+            <Button type="submit" disabled={loading} className={FORM_STYLES.button}>
+              {loading ? "در حال ثبت..." : "ثبت دسته‌بندی"}
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => router.push("/admin/blog/categories")}
+              className="h-11 px-5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-700/50"
+            >
+              انصراف
+            </Button>
+          </div>
+        </form>
+      </AdminSectionCard>
     </div>
   );
 }

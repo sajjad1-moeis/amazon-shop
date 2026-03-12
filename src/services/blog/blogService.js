@@ -1,4 +1,5 @@
-import { getPublicClient, getAuthenticatedClient } from "../api/client";
+import { getPublicClient, getAuthenticatedClient, API_BASE_URL } from "../api/client";
+import { getToken } from "@/lib/token-manager";
 
 export const blogService = {
   getPaginated: async (params = {}) => {
@@ -79,18 +80,41 @@ export const blogService = {
     return client.post(`Blog/IncrementViewCount?id=${id}`).json();
   },
 
-  /** POST api/Blog/UploadFeaturedImage — multipart/form-data: blogId (query یا form)، file (form) */
+  /**
+   * POST api/Blog/UploadFeaturedImage — با fetch ساده و multipart/form-data.
+   * هدر Content-Type ست نمی‌شود تا مرورگر خودش boundary را بگذارد.
+   */
   uploadFeaturedImage: async (blogId, file) => {
-    const client = getAuthenticatedClient();
+    const token = getToken();
+    if (!token) throw new Error("Access token not found");
+
     const formData = new FormData();
     formData.append("file", file);
     formData.append("blogId", blogId.toString());
+    if (file?.name) {
+      formData.append("fileName", file.name);
+      formData.append("filename", file.name);
+    }
 
-    return client
-      .post(`Blog/UploadFeaturedImage?blogId=${blogId}`, {
-        body: formData,
-      })
-      .json();
+    const base = (API_BASE_URL || "").replace(/\/$/, "");
+    const url = `${base}/Blog/UploadFeaturedImage?blogId=${blogId}`;
+
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const err = new Error(data?.message || res.statusText || "خطا در آپلود تصویر");
+      err.response = res;
+      err.data = data;
+      throw err;
+    }
+    return data;
   },
 
   incrementLikeCount: async (id) => {

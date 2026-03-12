@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { pricingSettingsApi } from "@/services/admin/pricingService";
+import { FORM_STYLES } from "@/template/Admin/formStyles";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
 
 const defaultSettings = {
   defaultProfitPercent: 0,
@@ -94,194 +95,186 @@ export default function PricingSettingsPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">تنظیمات قیمت‌گذاری</h1>
-        <p className="text-gray-400">درصد سود، هزینه حمل، طرح اقساط و حداقل سفارش</p>
-      </div>
+    <div className="space-y-6 max-w-4xl">
+      <AdminPageHeader
+        title="تنظیمات قیمت‌گذاری"
+        subtitle="درصد سود، هزینه حمل، طرح اقساط و حداقل سفارش"
+      />
 
-      <Card className="bg-gray-800 border-gray-700">
-        <CardHeader>
-          <CardTitle className="text-white">فرم تنظیمات</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <div className="p-8 text-center text-gray-400">
-              <Spinner size="lg" />
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="defaultProfitPercent" className="text-gray-300">
-                    درصد سود پیش‌فرض
-                  </Label>
-                  <Input
-                    id="defaultProfitPercent"
-                    name="defaultProfitPercent"
-                    type="number"
-                    min="0"
-                    max="1000"
-                    value={settings.defaultProfitPercent ?? ""}
-                    onChange={handleChange}
-                    className="bg-gray-700 border-gray-600 text-white"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="microlessServicePercent" className="text-gray-300">
-                    درصد سرویس میکرولس
-                  </Label>
-                  <Input
-                    id="microlessServicePercent"
-                    name="microlessServicePercent"
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={settings.microlessServicePercent ?? ""}
-                    onChange={handleChange}
-                    className="bg-gray-700 border-gray-600 text-white"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="customsPercent" className="text-gray-300">
-                    درصد گمرک
-                  </Label>
-                  <Input
-                    id="customsPercent"
-                    name="customsPercent"
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={settings.customsPercent ?? ""}
-                    onChange={handleChange}
-                    className="bg-gray-700 border-gray-600 text-white"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="baseTransportCostToman" className="text-gray-300">
-                    هزینه پایه حمل (تومان)
-                  </Label>
-                  <Input
-                    id="baseTransportCostToman"
-                    name="baseTransportCostToman"
-                    type="number"
-                    min="0"
-                    value={settings.baseTransportCostToman ?? ""}
-                    onChange={handleChange}
-                    className="bg-gray-700 border-gray-600 text-white"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="minOrderAmountToman" className="text-gray-300">
-                    حداقل مبلغ سفارش (تومان)
-                  </Label>
-                  <Input
-                    id="minOrderAmountToman"
-                    name="minOrderAmountToman"
-                    type="number"
-                    min="0"
-                    value={settings.minOrderAmountToman ?? ""}
-                    onChange={handleChange}
-                    placeholder="خالی = غیرفعال"
-                    className="bg-gray-700 border-gray-600 text-white"
-                  />
-                  <label className="flex items-center gap-2 mt-2 text-sm text-gray-400">
-                    <input
-                      type="checkbox"
-                      checked={clearMinOrder}
-                      onChange={(e) => setClearMinOrder(e.target.checked)}
-                    />
-                    حذف حداقل سفارش (غیرفعال کردن)
-                  </label>
-                </div>
-                <div className="flex items-center gap-2 pt-6">
+      <div className={FORM_STYLES.card + " p-6"}>
+        {loading ? (
+          <div className="p-8 text-center text-gray-400">
+            <Spinner size="lg" />
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="defaultProfitPercent" className={FORM_STYLES.label}>
+                  درصد سود پیش‌فرض
+                </Label>
+                <Input
+                  id="defaultProfitPercent"
+                  name="defaultProfitPercent"
+                  type="number"
+                  min="0"
+                  max="1000"
+                  value={settings.defaultProfitPercent ?? ""}
+                  onChange={handleChange}
+                  className={FORM_STYLES.input}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="microlessServicePercent" className={FORM_STYLES.label}>
+                  درصد سرویس میکرولس
+                </Label>
+                <Input
+                  id="microlessServicePercent"
+                  name="microlessServicePercent"
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={settings.microlessServicePercent ?? ""}
+                  onChange={handleChange}
+                  className={FORM_STYLES.input}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="customsPercent" className={FORM_STYLES.label}>
+                  درصد گمرک
+                </Label>
+                <Input
+                  id="customsPercent"
+                  name="customsPercent"
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={settings.customsPercent ?? ""}
+                  onChange={handleChange}
+                  className={FORM_STYLES.input}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="baseTransportCostToman" className={FORM_STYLES.label}>
+                  هزینه پایه حمل (تومان)
+                </Label>
+                <Input
+                  id="baseTransportCostToman"
+                  name="baseTransportCostToman"
+                  type="number"
+                  min="0"
+                  value={settings.baseTransportCostToman ?? ""}
+                  onChange={handleChange}
+                  className={FORM_STYLES.input}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="minOrderAmountToman" className={FORM_STYLES.label}>
+                  حداقل مبلغ سفارش (تومان)
+                </Label>
+                <Input
+                  id="minOrderAmountToman"
+                  name="minOrderAmountToman"
+                  type="number"
+                  min="0"
+                  value={settings.minOrderAmountToman ?? ""}
+                  onChange={handleChange}
+                  placeholder="خالی = غیرفعال"
+                  className={FORM_STYLES.input}
+                />
+                <label className="flex items-center gap-2 mt-2 text-sm text-gray-400 cursor-pointer">
                   <input
                     type="checkbox"
-                    id="showBreakdownOnSite"
-                    name="showBreakdownOnSite"
-                    checked={!!settings.showBreakdownOnSite}
-                    onChange={handleChange}
-                    className="rounded border-gray-600"
+                    checked={clearMinOrder}
+                    onChange={(e) => setClearMinOrder(e.target.checked)}
+                    className="rounded border-gray-600 focus:ring-emerald-500/30"
                   />
-                  <Label htmlFor="showBreakdownOnSite" className="text-gray-300 cursor-pointer">
-                    نمایش شکست قیمت در سایت
-                  </Label>
+                  حذف حداقل سفارش (غیرفعال کردن)
+                </label>
+              </div>
+              <div className="flex items-center gap-2 pt-6">
+                <input
+                  type="checkbox"
+                  id="showBreakdownOnSite"
+                  name="showBreakdownOnSite"
+                  checked={!!settings.showBreakdownOnSite}
+                  onChange={handleChange}
+                  className="rounded border-gray-600 focus:ring-emerald-500/30"
+                />
+                <Label htmlFor="showBreakdownOnSite" className={FORM_STYLES.label + " cursor-pointer"}>
+                  نمایش شکست قیمت در سایت
+                </Label>
+              </div>
+            </div>
+
+            <div className="border-t border-gray-700/60 pt-6">
+              <h3 className={FORM_STYLES.cardTitle + " mb-4"}>طرح اقساط ۲۰٪</h3>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label className={FORM_STYLES.label}>درصد پیش‌پرداخت</Label>
+                  <Input
+                    name="installmentPlan20DownPercent"
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={settings.installmentPlan20DownPercent ?? ""}
+                    onChange={handleChange}
+                    className={FORM_STYLES.input}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className={FORM_STYLES.label}>درصد سود</Label>
+                  <Input
+                    name="installmentPlan20InterestPercent"
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={settings.installmentPlan20InterestPercent ?? ""}
+                    onChange={handleChange}
+                    className={FORM_STYLES.input}
+                  />
                 </div>
               </div>
+            </div>
 
-              <div className="border-t border-gray-700 pt-4 mt-4">
-                <h3 className="text-white font-medium mb-3">طرح اقساط ۲۰٪</h3>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-gray-300">درصد پیش‌پرداخت</Label>
-                    <Input
-                      name="installmentPlan20DownPercent"
-                      type="number"
-                      min="0"
-                      max="100"
-                      value={settings.installmentPlan20DownPercent ?? ""}
-                      onChange={handleChange}
-                      className="bg-gray-700 border-gray-600 text-white"
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-gray-300">درصد سود</Label>
-                    <Input
-                      name="installmentPlan20InterestPercent"
-                      type="number"
-                      min="0"
-                      max="100"
-                      value={settings.installmentPlan20InterestPercent ?? ""}
-                      onChange={handleChange}
-                      className="bg-gray-700 border-gray-600 text-white"
-                    />
-                  </div>
+            <div className="border-t border-gray-700/60 pt-6">
+              <h3 className={FORM_STYLES.cardTitle + " mb-4"}>طرح اقساط ۳۰٪</h3>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label className={FORM_STYLES.label}>درصد پیش‌پرداخت</Label>
+                  <Input
+                    name="installmentPlan30DownPercent"
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={settings.installmentPlan30DownPercent ?? ""}
+                    onChange={handleChange}
+                    className={FORM_STYLES.input}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className={FORM_STYLES.label}>درصد سود</Label>
+                  <Input
+                    name="installmentPlan30InterestPercent"
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={settings.installmentPlan30InterestPercent ?? ""}
+                    onChange={handleChange}
+                    className={FORM_STYLES.input}
+                  />
                 </div>
               </div>
+            </div>
 
-              <div className="border-t border-gray-700 pt-4">
-                <h3 className="text-white font-medium mb-3">طرح اقساط ۳۰٪</h3>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-gray-300">درصد پیش‌پرداخت</Label>
-                    <Input
-                      name="installmentPlan30DownPercent"
-                      type="number"
-                      min="0"
-                      max="100"
-                      value={settings.installmentPlan30DownPercent ?? ""}
-                      onChange={handleChange}
-                      className="bg-gray-700 border-gray-600 text-white"
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-gray-300">درصد سود</Label>
-                    <Input
-                      name="installmentPlan30InterestPercent"
-                      type="number"
-                      min="0"
-                      max="100"
-                      value={settings.installmentPlan30InterestPercent ?? ""}
-                      onChange={handleChange}
-                      className="bg-gray-700 border-gray-600 text-white"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-end pt-4">
-                <Button
-                  type="submit"
-                  disabled={saving}
-                  className="bg-green-500 hover:bg-green-600 text-white"
-                >
-                  {saving ? "در حال ذخیره..." : "ذخیره تنظیمات"}
-                </Button>
-              </div>
-            </form>
-          )}
-        </CardContent>
-      </Card>
+            <div className="flex justify-end pt-6 border-t border-gray-700/60">
+              <Button type="submit" disabled={saving} className={FORM_STYLES.button}>
+                {saving ? "در حال ذخیره..." : "ذخیره تنظیمات"}
+              </Button>
+            </div>
+          </form>
+        )}
+      </div>
     </div>
   );
 }

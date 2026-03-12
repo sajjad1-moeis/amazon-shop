@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Add, Truck } from "iconsax-reactjs";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import { shippingService } from "@/services/shipping/shippingService";
 import { unwrapApiData } from "@/services/api/client";
 
 export default function ShippingZonesPage() {
+  const router = useRouter();
   const [zones, setZones] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pageNumber, setPageNumber] = useState(1);
@@ -38,16 +40,25 @@ export default function ShippingZonesPage() {
     fetchZones();
   }, [pageNumber, pageSize]);
 
+  const handleEdit = (id) => {
+    router.push(`/admin/shipping/zones/edit/${id}`);
+  };
+
   return (
     <div className="space-y-6">
-      <AdminPageHeader title="مناطق ارسال" subtitle="مدیریت مناطق و هزینه ارسال" icon={Truck}>
-        <Link href="/admin/shipping/zones/create">
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-            <Add size={20} className="ml-2" />
-            منطقه جدید
-          </Button>
-        </Link>
-      </AdminPageHeader>
+      <AdminPageHeader
+        title="مناطق ارسال"
+        subtitle="مدیریت مناطق و هزینه ارسال"
+        icon={Truck}
+        actions={
+          <Link href="/admin/shipping/zones/create">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Add size={20} className="ml-2" />
+              <span className="max-md:hidden">منطقه جدید</span>
+            </Button>
+          </Link>
+        }
+      />
 
       <AdminSectionCard title="لیست مناطق">
         {loading ? (
@@ -58,7 +69,7 @@ export default function ShippingZonesPage() {
           <div className="p-8 text-center text-gray-400">منطقه‌ای یافت نشد</div>
         ) : (
           <>
-            <ShippingZonesTable zones={zones} onRefresh={fetchZones} />
+            <ShippingZonesTable zones={zones} onRefresh={fetchZones} onEdit={handleEdit} />
             {!loading && totalPages > 1 && (
               <div className="pt-4 mt-4 border-t border-gray-600">
                 <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />

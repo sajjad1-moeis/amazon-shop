@@ -1,13 +1,14 @@
 "use client";
 
 import React from "react";
-import { Label } from "@/components/ui/label";
 
 export default function TagsSection({ tags, selectedTagIds, onTagToggle }) {
   return (
-    <div className="space-y-2">
-      <Label className="text-gray-300">تگ‌ها</Label>
-      <div className="flex flex-wrap gap-2 p-3 bg-gray-800 border border-gray-700 rounded-lg">
+    <div className="space-y-3">
+      <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider pb-2 border-b border-gray-700/60">
+        تگ‌ها
+      </h3>
+      <div className="flex flex-wrap gap-2 p-4 bg-gray-800/50 border border-gray-700/60 rounded-xl">
         {tags.length === 0 ? (
           <span className="text-gray-400 text-sm">تگی یافت نشد</span>
         ) : (

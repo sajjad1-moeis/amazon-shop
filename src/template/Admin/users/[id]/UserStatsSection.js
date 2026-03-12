@@ -22,7 +22,7 @@ export default function UserStatsSection({ user }) {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4" dir="rtl">
       <UserStatsCard icon={ShoppingBag} label="کل سفارشات" value={user.totalOrders || 0} />
       <UserStatsCard icon={ShoppingBag} label="سفارشات در انتظار" value={user.pendingOrders || 0} variant="warning" />
       <UserStatsCard icon={ShoppingBag} label="سفارشات تکمیل شده" value={user.completedOrders || 0} variant="success" />

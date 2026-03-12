@@ -2,12 +2,15 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { FolderOpen } from "iconsax-reactjs";
 import { blogCategoryService } from "@/services/blog/blogCategoryService";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
+import { Spinner } from "@/components/ui/spinner";
+import { FORM_STYLES } from "@/template/Admin/formStyles";
 
 export default function EditCategoryPage() {
   const params = useParams();
@@ -92,94 +95,83 @@ export default function EditCategoryPage() {
   if (fetching) {
     return (
       <div className="space-y-6">
-        <div className="p-8 text-center text-gray-400">در حال بارگذاری...</div>
+        <AdminPageHeader title="ویرایش دسته‌بندی" subtitle="در حال بارگذاری..." icon={FolderOpen} />
+        <div className="p-12 flex flex-col items-center justify-center text-gray-400 gap-3 rounded-xl border border-gray-600 bg-gray-700/30">
+          <Spinner size="lg" />
+          <span>در حال بارگذاری...</span>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">ویرایش دسته‌بندی</h1>
-          <p className="text-gray-400">ویرایش دسته‌بندی بلاگ</p>
-        </div>
-      </div>
+      <AdminPageHeader
+        title="ویرایش دسته‌بندی"
+        subtitle="ویرایش دسته‌بندی بلاگ"
+        icon={FolderOpen}
+      />
 
-      <Card className="bg-gray-800 border-gray-700 shadow-lg rounded-xl">
-        <CardHeader>
-          <CardTitle className="text-white text-xl">ویرایش دسته‌بندی</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="name" className="text-gray-300">
-                نام دسته‌بندی *
-              </Label>
-              <Input
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="نام دسته‌بندی را وارد کنید"
-                className="bg-gray-700 border-gray-600 text-white rounded-lg placeholder:text-gray-400"
-                required
-              />
-            </div>
+      <AdminSectionCard title="اطلاعات دسته‌بندی">
+        <form onSubmit={handleSubmit} className="space-y-5 max-w-xl">
+          <div className="space-y-2">
+            <Label htmlFor="name" className={FORM_STYLES.label}>
+              نام دسته‌بندی <span className="text-red-400">*</span>
+            </Label>
+            <Input
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="نام دسته‌بندی را وارد کنید"
+              className={FORM_STYLES.input}
+              required
+            />
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="slug" className="text-gray-300">
-                Slug (اختیاری)
-              </Label>
-              <Input
-                id="slug"
-                name="slug"
-                value={formData.slug}
-                onChange={handleChange}
-                placeholder="اگر خالی باشد، از نام ساخته می‌شود"
-                className="bg-gray-700 border-gray-600 text-white rounded-lg placeholder:text-gray-400"
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="slug" className={FORM_STYLES.label}>
+              Slug (اختیاری)
+            </Label>
+            <Input
+              id="slug"
+              name="slug"
+              value={formData.slug}
+              onChange={handleChange}
+              placeholder="اگر خالی باشد، از نام ساخته می‌شود"
+              className={FORM_STYLES.input}
+            />
+          </div>
 
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="isActive"
-                name="isActive"
-                checked={formData.isActive}
-                onChange={handleChange}
-                className="w-4 h-4"
-              />
-              <Label htmlFor="isActive" className="text-gray-300 cursor-pointer">
-                فعال
-              </Label>
-            </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="isActive"
+              name="isActive"
+              checked={formData.isActive}
+              onChange={handleChange}
+              className="w-4 h-4 rounded border-gray-600 bg-gray-800 text-emerald-500 focus:ring-emerald-500/30"
+            />
+            <Label htmlFor="isActive" className={`${FORM_STYLES.label} cursor-pointer`}>
+              فعال
+            </Label>
+          </div>
 
-            <div className="flex justify-end pt-4 gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.push("/admin/blog/categories")}
-                className="text-white border-gray-600"
-              >
-                انصراف
-              </Button>
-              <Button
-                type="submit"
-                disabled={loading}
-                className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg"
-              >
-                {loading ? "در حال به‌روزرسانی..." : "به‌روزرسانی دسته‌بندی"}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+          <div className="flex flex-wrap items-center gap-3 pt-6 border-t border-gray-700/60">
+            <Button type="submit" disabled={loading} className={FORM_STYLES.button}>
+              {loading ? "در حال به‌روزرسانی..." : "به‌روزرسانی دسته‌بندی"}
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => router.push("/admin/blog/categories")}
+              className="rounded-xl text-gray-400 hover:text-white hover:bg-gray-700/50"
+            >
+              انصراف
+            </Button>
+          </div>
+        </form>
+      </AdminSectionCard>
     </div>
   );
 }
-
-
-
-
-

@@ -37,7 +37,7 @@ export default function CreateBlogPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-4xl mx-auto" dir="rtl">
       <PageHeader title="پست جدید" description="ایجاد پست جدید برای وبلاگ" />
 
       <BlogForm
@@ -52,6 +52,8 @@ export default function CreateBlogPage() {
         onTagToggle={handleTagToggle}
         onFileChange={handleFileChange}
         isEdit={false}
+        backHref="/admin/blog/list"
+        backLabel="بازگشت به لیست"
       />
     </div>
   );

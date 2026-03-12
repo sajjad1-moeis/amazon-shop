@@ -5,11 +5,14 @@ import CurrencyRates from "@/template/Dashboard/Index/CurrencyRates";
 import SupportTickets from "@/template/Dashboard/Index/SupportTickets";
 import ProductSuggestions from "@/template/Dashboard/RecentViews/ProductSuggestions";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
+import MakeMeAdminButton from "@/template/Dashboard/Common/MakeMeAdminButton";
 
 export default function DashboardPage() {
   return (
     <DashboardLayout>
-      <PageHeader title={"داشبورد"} description={"وضعیت کلی حساب شما در یک نگاه"} />
+      <PageHeader title={"داشبورد"} description={"وضعیت کلی حساب شما در یک نگاه"}>
+        <MakeMeAdminButton />
+      </PageHeader>
       <OverviewCards />
 
       {/* Main Content Grid */}

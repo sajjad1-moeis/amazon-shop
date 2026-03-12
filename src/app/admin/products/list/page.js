@@ -144,50 +144,56 @@ export default function ProductsListPage() {
 
   return (
     <div className="space-y-6">
-      <AdminPageHeader title="لیست محصولات" subtitle="مدیریت کاتالوگ و موجودی محصولات" icon={ShoppingBag}>
-        <div className="flex flex-wrap gap-2 mb-4">
-          <Button
-            size="sm"
-            className="bg-yellow-500 hover:bg-yellow-600 text-gray-900"
-            onClick={() => setAddByLinkOpen(true)}
-          >
-            افزودن با لینک/دادهٔ اسکرپر
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            className="border-yellow-500 text-yellow-400 hover:bg-yellow-500/10"
-            onClick={() => setBulkImportOpen(true)}
-          >
-            ورود گروهی محصولات
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            className="border-gray-500 text-gray-300 hover:bg-gray-600/40"
-            onClick={async () => {
-              const input = window.prompt("تعداد محصولات تستی (۱ تا ۵۰):", "20");
-              if (!input) return;
-              const count = Number(input);
-              if (Number.isNaN(count) || count < 1 || count > 50) {
-                alert("عدد نامعتبر است. مقدار باید بین ۱ تا ۵۰ باشد.");
-                return;
-              }
-              try {
-                const { adminProductService } = await import("@/services/admin/adminProductService");
-                const { unwrapApiData } = await import("@/services/api/client");
-                const res = await adminProductService.seedTestData(count);
-                const data = unwrapApiData(res);
-                alert(`محصولات تستی ایجاد شد. تعداد ایجاد شده: ${data?.createdCount ?? "?"}`);
-                fetchProducts();
-              } catch (e) {
-                alert(e?.message || "خطا در ساخت داده تستی");
-              }
-            }}
-          >
-            داده تستی
-          </Button>
-        </div>
+      <AdminPageHeader
+        title="لیست محصولات"
+        subtitle="مدیریت کاتالوگ و موجودی محصولات"
+        icon={ShoppingBag}
+        actions={
+          <div className="flex flex-wrap gap-1.5 sm:gap-2">
+            <Button
+              size="sm"
+              className="h-8 px-3 text-xs font-medium bg-amber-500/90 hover:bg-amber-500 text-gray-900 border-0"
+              onClick={() => setAddByLinkOpen(true)}
+            >
+              <span>افزودن با لینک</span>
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-8 px-3 text-xs border-gray-500/80 text-gray-300 hover:bg-gray-600/50"
+              onClick={() => setBulkImportOpen(true)}
+            >
+              <span>ورود گروهی</span>
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-8 px-3 text-xs border-gray-600 text-gray-400 hover:bg-gray-600/40"
+              onClick={async () => {
+                const input = window.prompt("تعداد محصولات تستی (۱ تا ۵۰):", "20");
+                if (!input) return;
+                const count = Number(input);
+                if (Number.isNaN(count) || count < 1 || count > 50) {
+                  alert("عدد نامعتبر است. مقدار باید بین ۱ تا ۵۰ باشد.");
+                  return;
+                }
+                try {
+                  const { adminProductService } = await import("@/services/admin/adminProductService");
+                  const { unwrapApiData } = await import("@/services/api/client");
+                  const res = await adminProductService.seedTestData(count);
+                  const data = unwrapApiData(res);
+                  alert(`محصولات تستی ایجاد شد. تعداد ایجاد شده: ${data?.createdCount ?? "?"}`);
+                  fetchProducts();
+                } catch (e) {
+                  alert(e?.message || "خطا در ساخت داده تستی");
+                }
+              }}
+            >
+              <span>داده تستی</span>
+            </Button>
+          </div>
+        }
+      >
         <ProductsFilters />
       </AdminPageHeader>
       <AdminSectionCard title="جدول محصولات">

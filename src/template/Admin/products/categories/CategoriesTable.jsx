@@ -91,32 +91,27 @@ const getCategoryStatusBadge = (isActive) => (
 export default function CategoriesTable({ categories = [], onEdit, onDelete }) {
   const rows = useMemo(() => buildCategoryRows(categories), [categories]);
 
-  if (categories.length === 0) {
-    return (
-      <div className="rounded-xl border border-gray-600 bg-gray-800/40 p-8 text-center text-gray-400">
-        دسته‌بندی‌ای یافت نشد
-      </div>
-    );
+  if (rows.length === 0) {
+    return <div className="p-8 text-center text-gray-400">دسته‌بندی‌ای یافت نشد</div>;
   }
 
   return (
-    <div className="rounded-xl border border-gray-600 bg-gray-800/40 overflow-hidden">
-      <Table>
-        <TableHeader>
-          <TableRow className="border-gray-600 hover:bg-transparent bg-gray-700/50">
-            <TableHead className="text-gray-300 font-semibold w-[80px]">عکس / آیکون</TableHead>
-            <TableHead className="text-gray-300 font-semibold">نام</TableHead>
-            <TableHead className="text-gray-300 font-semibold">Key (جستجو)</TableHead>
-            <TableHead className="text-gray-300 font-semibold">Slug</TableHead>
-            <TableHead className="text-gray-300 font-semibold">والد</TableHead>
-            <TableHead className="text-gray-300 font-semibold">تعداد محصولات</TableHead>
-            <TableHead className="text-gray-300 font-semibold">وضعیت</TableHead>
-            <TableHead className="text-gray-300 font-semibold text-left w-[120px]">عملیات</TableHead>
+    <Table>
+      <TableHeader>
+        <TableRow className="border-gray-700 hover:bg-gray-700/50">
+            <TableHead className="text-gray-300 w-[80px]">عکس / آیکون</TableHead>
+            <TableHead className="text-gray-300">نام</TableHead>
+            <TableHead className="text-gray-300">Key (جستجو)</TableHead>
+            <TableHead className="text-gray-300">Slug</TableHead>
+            <TableHead className="text-gray-300">والد</TableHead>
+            <TableHead className="text-gray-300">تعداد محصولات</TableHead>
+            <TableHead className="text-gray-300">وضعیت</TableHead>
+            <TableHead className="text-gray-300 text-left w-[120px]">عملیات</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={row.id} className="border-gray-600 hover:bg-gray-700/30">
+            <TableRow key={row.id} className="border-gray-700 hover:bg-gray-700/50">
               <TableCell className="text-gray-400">
                 {row.iconUrl || row.imageUrl ? (
                   <span className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-gray-700 overflow-hidden shrink-0">
@@ -172,7 +167,6 @@ export default function CategoriesTable({ categories = [], onEdit, onDelete }) {
             </TableRow>
           ))}
         </TableBody>
-      </Table>
-    </div>
+    </Table>
   );
 }

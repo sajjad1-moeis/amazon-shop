@@ -10,6 +10,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { settingsService } from "@/services/settings/settingsService";
 import { unwrapApiData } from "@/services/api/client";
 import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
+import { FORM_STYLES } from "@/template/Admin/formStyles";
 
 const DEFAULT_PAYMENT = { gateway: "", merchantId: "", apiKey: "", callbackUrl: "", isSandbox: false };
 
@@ -61,27 +62,27 @@ export default function PaymentSettingsPage() {
         {loading ? (
           <div className="p-8 text-center text-gray-400"><Spinner size="lg" /></div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <Label className="text-gray-300">درگاه پرداخت</Label>
-                <Input name="gateway" value={settings.gateway || ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label className={FORM_STYLES.label}>درگاه پرداخت</Label>
+                <Input name="gateway" value={settings.gateway || ""} onChange={handleChange} className={FORM_STYLES.input} />
               </div>
-              <div>
-                <Label className="text-gray-300">Merchant ID</Label>
-                <Input name="merchantId" value={settings.merchantId || ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+              <div className="space-y-2">
+                <Label className={FORM_STYLES.label}>Merchant ID</Label>
+                <Input name="merchantId" value={settings.merchantId || ""} onChange={handleChange} className={FORM_STYLES.input} />
               </div>
-              <div>
-                <Label className="text-gray-300">API Key</Label>
-                <Input name="apiKey" type="password" value={settings.apiKey || ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+              <div className="space-y-2">
+                <Label className={FORM_STYLES.label}>API Key</Label>
+                <Input name="apiKey" type="password" value={settings.apiKey || ""} onChange={handleChange} className={FORM_STYLES.input} />
               </div>
-              <div>
-                <Label className="text-gray-300">Callback URL</Label>
-                <Input name="callbackUrl" value={settings.callbackUrl || ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+              <div className="space-y-2">
+                <Label className={FORM_STYLES.label}>Callback URL</Label>
+                <Input name="callbackUrl" value={settings.callbackUrl || ""} onChange={handleChange} className={FORM_STYLES.input} />
               </div>
             </div>
-            <div className="flex justify-end pt-4">
-              <Button type="submit" disabled={saving} className="bg-amber-500 hover:bg-amber-600 text-gray-900">
+            <div className="flex justify-end pt-4 border-t border-gray-700/60">
+              <Button type="submit" disabled={saving} className={FORM_STYLES.button}>
                 {saving ? "در حال ذخیره..." : "ذخیره تنظیمات"}
               </Button>
             </div>

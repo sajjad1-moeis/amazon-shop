@@ -48,10 +48,10 @@ export const FORM_SECTIONS = {
         name: "authorId",
         type: "number",
         label: "شناسه نویسنده (AuthorId)",
-        placeholder: "اختیاری در ویرایش",
+        placeholder: "فقط هنگام ایجاد",
         required: false,
         gridCols: "md:col-span-1",
-        showInEditOnly: true,
+        showInCreateOnly: true,
       },
       {
         id: "status",
@@ -78,6 +78,7 @@ export const FORM_SECTIONS = {
         label: "بلاگ ویژه",
         checkboxLabel: "بلاگ ویژه باشد",
         gridCols: "md:col-span-1",
+        showInCreateOnly: true,
       },
       {
         id: "allowComments",

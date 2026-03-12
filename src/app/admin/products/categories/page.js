@@ -11,7 +11,7 @@ import CategoriesTable from "@/template/Admin/products/categories/CategoriesTabl
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import ConfirmDialog from "@/components/ConfirmDialog";
-import { AdminPageHeader } from "@/components/admin";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 import { productCategoryService } from "@/services/product/productCategoryService";
 
 export default function CategoriesPage() {
@@ -98,7 +98,7 @@ export default function CategoriesPage() {
           <Link href="/admin/products/categories/create">
             <Button className="bg-blue-600 hover:bg-blue-700 text-white">
               <Add size={20} className="ml-2" />
-              دسته‌بندی جدید
+              <span className="max-md:hidden">دسته‌بندی جدید</span>
             </Button>
           </Link>
           <div className="relative flex-1 min-w-[180px] max-w-[260px]">
@@ -114,22 +114,26 @@ export default function CategoriesPage() {
         </div>
       </AdminPageHeader>
 
-      {loading ? (
-        <div className="p-8 text-center text-gray-400">
-          <Spinner size="lg" />
-        </div>
-      ) : (
-        <>
-          <CategoriesTable categories={displayedCategories} onEdit={handleEdit} onDelete={handleDelete} />
-          <div className="pt-4 border-t border-gray-600 mt-4">
-            <AdminPagination
-              currentPage={pageNumber}
-              totalPages={Math.ceil(categories.length / pageSize) || 1}
-              onPageChange={setPageNumber}
-            />
+      <AdminSectionCard title="لیست دسته‌بندی‌ها">
+        {loading ? (
+          <div className="p-8 text-center text-gray-400">
+            <Spinner size="lg" />
           </div>
-        </>
-      )}
+        ) : categories.length === 0 ? (
+          <div className="p-8 text-center text-gray-400">دسته‌بندی‌ای یافت نشد</div>
+        ) : (
+          <>
+            <CategoriesTable categories={displayedCategories} onEdit={handleEdit} onDelete={handleDelete} />
+            <div className="pt-4 border-t border-gray-700/60 mt-4">
+              <AdminPagination
+                currentPage={pageNumber}
+                totalPages={Math.ceil(categories.length / pageSize) || 1}
+                onPageChange={setPageNumber}
+              />
+            </div>
+          </>
+        )}
+      </AdminSectionCard>
 
       <ConfirmDialog
         open={deleteDialogOpen}

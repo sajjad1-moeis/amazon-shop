@@ -58,7 +58,7 @@ export default function DynamicField({
             value={value || ""}
             onChange={onChange}
             placeholder={field.placeholder}
-            className={`${styles.input} ${field.minHeight || ""}`}
+            className={`${styles.textarea || styles.input} ${field.minHeight || ""}`}
             rows={field.rows}
             required={field.required}
           />

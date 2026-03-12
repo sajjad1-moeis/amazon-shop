@@ -80,7 +80,7 @@ export default function EditBlogPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6" dir="rtl">
       <PageHeader title="ویرایش پست" description="ویرایش پست بلاگ" />
 
       <BlogForm
@@ -95,6 +95,8 @@ export default function EditBlogPage() {
         onTagToggle={handleTagToggle}
         onFileChange={handleFileChange}
         isEdit={true}
+        backHref="/admin/blog/list"
+        backLabel="بازگشت به لیست"
       />
     </div>
   );

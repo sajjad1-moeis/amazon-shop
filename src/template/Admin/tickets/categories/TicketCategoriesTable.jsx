@@ -7,7 +7,13 @@ import { Button } from "@/components/ui/button";
 import { EyeSlash, Eye } from "iconsax-reactjs";
 import TableActions from "../../TableActions";
 
-export default function TicketCategoriesTable({ categories, onEdit, onDelete, onToggleActive }) {
+export default function TicketCategoriesTable({
+  categories,
+  onEdit,
+  onDelete,
+  onToggleActive,
+  toggleLoadingId,
+}) {
   if (categories.length === 0) {
     return <div className="p-8 text-center text-gray-400">دسته‌بندی‌ای یافت نشد</div>;
   }
@@ -47,11 +53,13 @@ export default function TicketCategoriesTable({ categories, onEdit, onDelete, on
                   onEdit={() => onEdit(category)}
                   onDelete={() => onDelete(category.id)}
                   showView={false}
+                  showEdit={false}
                 />
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => onToggleActive(category)}
+                  disabled={toggleLoadingId === category.id}
                   className={`h-8 w-8 ${
                     category.isActive !== false
                       ? "text-orange-400 hover:bg-orange-400/20"

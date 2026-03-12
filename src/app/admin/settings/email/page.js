@@ -10,6 +10,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { settingsService } from "@/services/settings/settingsService";
 import { unwrapApiData } from "@/services/api/client";
 import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
+import { FORM_STYLES } from "@/template/Admin/formStyles";
 
 const DEFAULT_EMAIL = { smtpHost: "", smtpPort: "", smtpUser: "", smtpPassword: "", fromAddress: "", fromEmail: "", fromName: "", useSsl: false };
 
@@ -61,35 +62,35 @@ export default function EmailSettingsPage() {
         {loading ? (
           <div className="p-8 text-center text-gray-400"><Spinner size="lg" /></div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <Label className="text-gray-300">SMTP Host</Label>
-                <Input name="smtpHost" value={settings.smtpHost || ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label className={FORM_STYLES.label}>SMTP Host</Label>
+                <Input name="smtpHost" value={settings.smtpHost || ""} onChange={handleChange} className={FORM_STYLES.input} />
               </div>
-              <div>
-                <Label className="text-gray-300">SMTP Port</Label>
-                <Input name="smtpPort" type="number" value={settings.smtpPort ?? ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+              <div className="space-y-2">
+                <Label className={FORM_STYLES.label}>SMTP Port</Label>
+                <Input name="smtpPort" type="number" value={settings.smtpPort ?? ""} onChange={handleChange} className={FORM_STYLES.input} />
               </div>
-              <div>
-                <Label className="text-gray-300">SMTP User</Label>
-                <Input name="smtpUser" value={settings.smtpUser || ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+              <div className="space-y-2">
+                <Label className={FORM_STYLES.label}>SMTP User</Label>
+                <Input name="smtpUser" value={settings.smtpUser || ""} onChange={handleChange} className={FORM_STYLES.input} />
               </div>
-              <div>
-                <Label className="text-gray-300">SMTP Password</Label>
-                <Input name="smtpPassword" type="password" value={settings.smtpPassword || ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+              <div className="space-y-2">
+                <Label className={FORM_STYLES.label}>SMTP Password</Label>
+                <Input name="smtpPassword" type="password" value={settings.smtpPassword || ""} onChange={handleChange} className={FORM_STYLES.input} />
               </div>
-              <div>
-                <Label className="text-gray-300">From Email / From Address</Label>
-                <Input name="fromAddress" type="email" value={settings.fromAddress || settings.fromEmail || ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+              <div className="space-y-2">
+                <Label className={FORM_STYLES.label}>From Email / From Address</Label>
+                <Input name="fromAddress" type="email" value={settings.fromAddress || settings.fromEmail || ""} onChange={handleChange} className={FORM_STYLES.input} />
               </div>
-              <div>
-                <Label className="text-gray-300">From Name</Label>
-                <Input name="fromName" value={settings.fromName || ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+              <div className="space-y-2">
+                <Label className={FORM_STYLES.label}>From Name</Label>
+                <Input name="fromName" value={settings.fromName || ""} onChange={handleChange} className={FORM_STYLES.input} />
               </div>
             </div>
-            <div className="flex justify-end pt-4">
-              <Button type="submit" disabled={saving} className="bg-amber-500 hover:bg-amber-600 text-gray-900">
+            <div className="flex justify-end pt-4 border-t border-gray-700/60">
+              <Button type="submit" disabled={saving} className={FORM_STYLES.button}>
                 {saving ? "در حال ذخیره..." : "ذخیره تنظیمات"}
               </Button>
             </div>

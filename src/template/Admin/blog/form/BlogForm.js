@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
+import { ArrowRight } from "iconsax-reactjs";
 import { Button } from "@/components/ui/button";
 import FormSection from "./FormSection";
 import TagsSection from "./TagsSection";
@@ -20,20 +21,16 @@ export default function BlogForm({
   onTagToggle,
   onFileChange,
   isEdit = false,
+  backHref,
+  backLabel = "بازگشت به لیست",
 }) {
   const optionsData = {
     categories,
   };
 
   return (
-    <Card className={FORM_STYLES.card}>
-      <CardHeader>
-        <CardTitle className={FORM_STYLES.cardTitle}>
-          {isEdit ? "ویرایش وبلاگ" : "اضافه کردن وبلاگ"}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={onSubmit} className="space-y-6">
+    <div className={FORM_STYLES.card}>
+      <form onSubmit={onSubmit} className="p-6 space-y-8">
           <FormSection
             section={FORM_SECTIONS.basic}
             formData={formData}
@@ -76,21 +73,21 @@ export default function BlogForm({
             isEdit={isEdit}
           />
 
-          <div className="flex justify-end pt-4">
-            <Button
-              type="submit"
-              disabled={loading}
-              className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg"
-            >
-              {loading
-                ? "در حال ثبت..."
-                : isEdit
-                ? "به‌روزرسانی وبلاگ"
-                : "ثبت وبلاگ"}
+          <div className="flex justify-between items-center pt-6 border-t border-gray-700/60">
+            <Button type="submit" disabled={loading} className={FORM_STYLES.button}>
+              {loading ? "در حال ثبت..." : isEdit ? "به‌روزرسانی وبلاگ" : "ثبت وبلاگ"}
             </Button>
+            {backHref && (
+              <Link
+                href={backHref}
+                className="text-sm text-gray-500 hover:text-gray-300 transition-colors inline-flex items-center gap-1.5"
+              >
+                <ArrowRight size={16} />
+                {backLabel}
+              </Link>
+            )}
           </div>
         </form>
-      </CardContent>
-    </Card>
+    </div>
   );
 }

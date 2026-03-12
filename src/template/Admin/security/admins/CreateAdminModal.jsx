@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,22 +12,29 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { securityService } from "@/services/security/securityService";
+import { userService } from "@/services/user/userService";
 import { unwrapApiData } from "@/services/api/client";
 
 export default function CreateAdminModal({ open, onOpenChange, onSuccess }) {
   const [loading, setLoading] = useState(false);
+  const [profileImageFile, setProfileImageFile] = useState(null);
+  const fileInputRef = useRef(null);
   const [form, setForm] = useState({
     email: "",
     phoneNumber: "",
     password: "",
     firstName: "",
     lastName: "",
-    profileImage: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    setProfileImageFile(file || null);
   };
 
   const handleSubmit = async (e) => {
@@ -49,11 +56,21 @@ export default function CreateAdminModal({ open, onOpenChange, onSuccess }) {
         firstName: form.firstName.trim(),
         lastName: form.lastName.trim(),
       };
-      if (form.profileImage.trim()) payload.profileImage = form.profileImage.trim();
       const res = await securityService.createAdmin(payload);
-      unwrapApiData(res);
+      const data = unwrapApiData(res);
+      const adminId = data?.id ?? data;
+      if (profileImageFile && adminId) {
+        try {
+          await userService.uploadProfileImage(adminId, profileImageFile);
+        } catch (uploadErr) {
+          console.error("Upload profile image:", uploadErr);
+          toast.warning("ادمین ایجاد شد ولی آپلود تصویر پروفایل با خطا مواجه شد.");
+        }
+      }
       toast.success("ادمین با موفقیت ایجاد شد");
-      setForm({ email: "", phoneNumber: "", password: "", firstName: "", lastName: "", profileImage: "" });
+      setForm({ email: "", phoneNumber: "", password: "", firstName: "", lastName: "" });
+      setProfileImageFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
       onSuccess?.();
     } catch (err) {
       toast.error(err.message || "خطا در ایجاد ادمین");
@@ -92,8 +109,21 @@ export default function CreateAdminModal({ open, onOpenChange, onSuccess }) {
             <Input name="password" type="password" value={form.password} onChange={handleChange} className="bg-gray-700 border-gray-600 mt-1" required minLength={6} />
           </div>
           <div>
-            <Label className="text-gray-400">آدرس تصویر پروفایل (اختیاری)</Label>
-            <Input name="profileImage" value={form.profileImage} onChange={handleChange} className="bg-gray-700 border-gray-600 mt-1" />
+            <Label className="text-gray-400">تصویر پروفایل (اختیاری)</Label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="hidden"
+              id="create-admin-profile-image"
+            />
+            <label
+              htmlFor="create-admin-profile-image"
+              className="mt-1 flex items-center gap-2 cursor-pointer bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-sm text-gray-300 hover:bg-gray-600"
+            >
+              {profileImageFile ? profileImageFile.name : "انتخاب فایل تصویر"}
+            </label>
           </div>
           <div className="flex justify-end gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="border-gray-600">

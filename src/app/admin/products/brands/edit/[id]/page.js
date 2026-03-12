@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Shop } from "iconsax-reactjs";
+import { Shop, ArrowRight } from "iconsax-reactjs";
 import { productBrandService } from "@/services/product/productBrandService";
 import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 import { Spinner } from "@/components/ui/spinner";
@@ -86,9 +87,9 @@ export default function EditBrandPage() {
 
   if (fetching) {
     return (
-      <div className="space-y-6">
+      <div className="max-w-4xl mx-auto space-y-6">
         <AdminPageHeader title="ویرایش برند" subtitle="در حال بارگذاری..." icon={Shop} />
-        <div className="p-12 flex flex-col items-center justify-center text-gray-400 gap-3 rounded-xl border border-gray-600 bg-gray-700/30">
+        <div className="p-12 flex flex-col items-center justify-center text-gray-400 gap-3 rounded-2xl border border-gray-700/60 bg-gray-800/40">
           <Spinner size="lg" />
           <span>در حال بارگذاری اطلاعات برند...</span>
         </div>
@@ -97,11 +98,20 @@ export default function EditBrandPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6">
       <AdminPageHeader
         title="ویرایش برند"
         subtitle="تغییر اطلاعات برند محصولات"
         icon={Shop}
+        actions={
+          <Link
+            href="/admin/products/brands"
+            className="text-sm text-gray-500 hover:text-gray-300 transition-colors inline-flex items-center gap-1.5"
+          >
+            <ArrowRight size={16} />
+            <span className="max-md:hidden">بازگشت به لیست</span>
+          </Link>
+        }
       />
 
       <AdminSectionCard title="اطلاعات برند">
@@ -142,26 +152,22 @@ export default function EditBrandPage() {
               name="isActive"
               checked={formData.isActive}
               onChange={handleChange}
-              className="w-4 h-4 rounded border-gray-600 bg-gray-800 text-amber-500 focus:ring-amber-500/50"
+              className="w-4 h-4 rounded border-gray-600 bg-gray-800 text-emerald-500 focus:ring-emerald-500/30"
             />
             <Label htmlFor="isActive" className={`${FORM_STYLES.label} cursor-pointer`}>
               فعال
             </Label>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <Button
-              type="submit"
-              disabled={loading}
-              className="bg-blue-600 hover:bg-blue-700 text-white min-w-[160px]"
-            >
+          <div className="flex flex-wrap items-center gap-3 pt-6 border-t border-gray-700/60">
+            <Button type="submit" disabled={loading} className={FORM_STYLES.button}>
               {loading ? "در حال ذخیره..." : "ذخیره تغییرات"}
             </Button>
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
               onClick={() => router.push("/admin/products/brands")}
-              className={FORM_STYLES.button}
+              className="rounded-xl text-gray-400 hover:text-white hover:bg-gray-700/50"
             >
               انصراف
             </Button>

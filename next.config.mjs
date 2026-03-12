@@ -22,6 +22,10 @@ const nextConfig = {
       { protocol: "https", hostname: "m.media-amazon.com", pathname: "/**" },
       { protocol: "http", hostname: "m.media-amazon.com", pathname: "/**" },
       { protocol: "https", hostname: "flagcdn.com", pathname: "/**" },
+      { protocol: "https", hostname: "micrls.com", pathname: "/**" },
+      { protocol: "http", hostname: "micrls.com", pathname: "/**" },
+      { protocol: "http", hostname: "107.161.175.45", pathname: "/**" },
+      { protocol: "https", hostname: "107.161.175.45", pathname: "/**" },
     ],
   },
 

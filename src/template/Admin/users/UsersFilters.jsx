@@ -14,6 +14,7 @@ const ROLE_OPTIONS = [
 
 const STATUS_OPTIONS = [
   { value: "active", label: "فعال" },
+  { value: "inactive", label: "غیرفعال" },
   { value: "banned", label: "بن شده" },
 ];
 
@@ -23,6 +24,7 @@ export default function UsersFilters({ isInDrawer = false }) {
 
   const filterRole = searchParams.get("role") || "all";
   const filterStatus = searchParams.get("status") || "all";
+  const searchValue = searchParams.get("search") || "";
 
   const updateURL = (params) => {
     const newParams = new URLSearchParams(searchParams.toString());
@@ -37,21 +39,31 @@ export default function UsersFilters({ isInDrawer = false }) {
     router.push(`/admin/users?${newParams.toString()}`);
   };
 
-  const handleRoleChange = (value) => {
-    updateURL({ role: value, status: filterStatus });
-  };
 
   const handleStatusChange = (value) => {
-    updateURL({ role: filterRole, status: value });
+    updateURL({ role: filterRole, status: value, search: searchValue });
+  };
+
+  const handleSearchChange = (value) => {
+    updateURL({ role: filterRole, status: filterStatus, search: value || undefined });
+  };
+
+  const handleRoleChangeWithSearch = (value) => {
+    updateURL({ role: value, status: filterStatus, search: searchValue });
   };
 
   return (
     <FilterSection isAdmin>
-      <FilterSearchInput isAdmin placeholder="جستجو نام، ایمیل یا شماره موبایل" />
+      <FilterSearchInput
+        value={searchValue}
+        onChange={handleSearchChange}
+        isAdmin
+        placeholder="جستجو نام، ایمیل یا شماره موبایل"
+      />
 
       <StatusSelect
         value={filterRole}
-        onValueChange={handleRoleChange}
+        onValueChange={handleRoleChangeWithSearch}
         placeholder="وضعیت"
         options={ROLE_OPTIONS}
         includeAll={true}

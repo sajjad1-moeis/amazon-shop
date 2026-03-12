@@ -10,6 +10,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { settingsService } from "@/services/settings/settingsService";
 import { unwrapApiData } from "@/services/api/client";
 import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
+import { FORM_STYLES } from "@/template/Admin/formStyles";
 
 const DEFAULT_SHIPPING = { defaultCarrier: "", defaultMethod: "", freeShippingThreshold: "", estimatedDaysMin: "", estimatedDaysMax: "", defaultWeight: "" };
 
@@ -61,35 +62,35 @@ export default function ShippingSettingsPage() {
         {loading ? (
           <div className="p-8 text-center text-gray-400"><Spinner size="lg" /></div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <Label className="text-gray-300">حمل‌کننده پیش‌فرض</Label>
-                <Input name="defaultCarrier" value={settings.defaultCarrier || ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label className={FORM_STYLES.label}>حمل‌کننده پیش‌فرض</Label>
+                <Input name="defaultCarrier" value={settings.defaultCarrier || ""} onChange={handleChange} className={FORM_STYLES.input} />
               </div>
-              <div>
-                <Label className="text-gray-300">روش ارسال پیش‌فرض</Label>
-                <Input name="defaultMethod" value={settings.defaultMethod || ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+              <div className="space-y-2">
+                <Label className={FORM_STYLES.label}>روش ارسال پیش‌فرض</Label>
+                <Input name="defaultMethod" value={settings.defaultMethod || ""} onChange={handleChange} className={FORM_STYLES.input} />
               </div>
-              <div>
-                <Label className="text-gray-300">حداقل مبلغ ارسال رایگان (تومان)</Label>
-                <Input name="freeShippingThreshold" type="number" value={settings.freeShippingThreshold || ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+              <div className="space-y-2">
+                <Label className={FORM_STYLES.label}>حداقل مبلغ ارسال رایگان (تومان)</Label>
+                <Input name="freeShippingThreshold" type="number" value={settings.freeShippingThreshold || ""} onChange={handleChange} className={FORM_STYLES.input} />
               </div>
-              <div>
-                <Label className="text-gray-300">حداقل روز تحویل</Label>
-                <Input name="estimatedDaysMin" type="number" value={settings.estimatedDaysMin ?? ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+              <div className="space-y-2">
+                <Label className={FORM_STYLES.label}>حداقل روز تحویل</Label>
+                <Input name="estimatedDaysMin" type="number" value={settings.estimatedDaysMin ?? ""} onChange={handleChange} className={FORM_STYLES.input} />
               </div>
-              <div>
-                <Label className="text-gray-300">حداکثر روز تحویل</Label>
-                <Input name="estimatedDaysMax" type="number" value={settings.estimatedDaysMax ?? ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+              <div className="space-y-2">
+                <Label className={FORM_STYLES.label}>حداکثر روز تحویل</Label>
+                <Input name="estimatedDaysMax" type="number" value={settings.estimatedDaysMax ?? ""} onChange={handleChange} className={FORM_STYLES.input} />
               </div>
-              <div>
-                <Label className="text-gray-300">وزن پیش‌فرض (گرم)</Label>
-                <Input name="defaultWeight" type="number" value={settings.defaultWeight || ""} onChange={handleChange} className="bg-gray-700 border-gray-600 text-white mt-1" />
+              <div className="space-y-2">
+                <Label className={FORM_STYLES.label}>وزن پیش‌فرض (گرم)</Label>
+                <Input name="defaultWeight" type="number" value={settings.defaultWeight || ""} onChange={handleChange} className={FORM_STYLES.input} />
               </div>
             </div>
-            <div className="flex justify-end pt-4">
-              <Button type="submit" disabled={saving} className="bg-amber-500 hover:bg-amber-600 text-gray-900">
+            <div className="flex justify-end pt-4 border-t border-gray-700/60">
+              <Button type="submit" disabled={saving} className={FORM_STYLES.button}>
                 {saving ? "در حال ذخیره..." : "ذخیره تنظیمات"}
               </Button>
             </div>

@@ -21,10 +21,12 @@ export default function CreateProductCategoryPage() {
     key: "",
     slug: "",
     parentId: "",
-    imageUrl: "",
-    iconUrl: "",
     isActive: true,
   });
+  const [imageFile, setImageFile] = useState(null);
+  const [iconFile, setIconFile] = useState(null);
+  const imageInputRef = React.useRef(null);
+  const iconInputRef = React.useRef(null);
 
   useEffect(() => {
     productCategoryService.getAll().then((res) => {
@@ -54,24 +56,38 @@ export default function CreateProductCategoryPage() {
     }
     setLoading(true);
     try {
-      const payload = {
-        name: formData.name.trim(),
-        slug: formData.slug?.trim() || undefined,
-        isActive: formData.isActive,
-      };
-      if (formData.key?.trim()) payload.key = formData.key.trim();
-      if (formData.parentId && formData.parentId !== "none") {
-        const id = parseInt(formData.parentId, 10);
-        if (!Number.isNaN(id)) payload.parentCategoryId = id;
+      const parentId =
+        formData.parentId && formData.parentId !== "none"
+          ? parseInt(formData.parentId, 10)
+          : null;
+      const hasFiles = imageFile instanceof File || iconFile instanceof File;
+      let response;
+      if (hasFiles) {
+        response = await productCategoryService.createWithFormData({
+          name: formData.name.trim(),
+          slug: formData.slug?.trim() || undefined,
+          key: formData.key?.trim() || undefined,
+          parentCategoryId: !Number.isNaN(parentId) ? parentId : undefined,
+          isActive: formData.isActive,
+          imageFile: imageFile instanceof File ? imageFile : undefined,
+          iconFile: iconFile instanceof File ? iconFile : undefined,
+        });
+      } else {
+        const payload = {
+          name: formData.name.trim(),
+          slug: formData.slug?.trim() || undefined,
+          isActive: formData.isActive,
+        };
+        if (formData.key?.trim()) payload.key = formData.key.trim();
+        if (!Number.isNaN(parentId) && parentId != null) payload.parentCategoryId = parentId;
+        response = await productCategoryService.create(payload);
       }
-      if (formData.imageUrl?.trim()) payload.imageUrl = formData.imageUrl.trim();
-      if (formData.iconUrl?.trim()) payload.iconUrl = formData.iconUrl.trim();
-      const response = await productCategoryService.create(payload);
-      if (response.success) {
+      const success = response?.success !== false && (response?.data != null || response?.id != null);
+      if (success) {
         toast.success("دسته‌بندی با موفقیت ایجاد شد");
         router.push("/admin/products/categories");
       } else {
-        toast.error(response.message || "خطا در ایجاد دسته‌بندی");
+        toast.error(response?.message || "خطا در ایجاد دسته‌بندی");
       }
     } catch (error) {
       toast.error(error.message || "خطا در ایجاد دسته‌بندی");
@@ -135,33 +151,47 @@ export default function CreateProductCategoryPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="imageUrl" className={FORM_STYLES.label}>
-              آدرس تصویر (عکس دسته‌بندی)
+            <Label htmlFor="category-image" className={FORM_STYLES.label}>
+              تصویر دسته‌بندی (اختیاری)
             </Label>
-            <Input
-              id="imageUrl"
-              name="imageUrl"
-              type="url"
-              value={formData.imageUrl}
-              onChange={handleChange}
-              placeholder="https://..."
-              className={FORM_STYLES.input}
+            <input
+              ref={imageInputRef}
+              type="file"
+              accept="image/*"
+              id="category-image"
+              onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+              className="hidden"
             />
+            <label
+              htmlFor="category-image"
+              className={`block w-full ${FORM_STYLES.input} cursor-pointer flex items-center justify-between px-4`}
+            >
+              <span className="text-gray-400">
+                {imageFile ? imageFile.name : "انتخاب فایل تصویر"}
+              </span>
+            </label>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="iconUrl" className={FORM_STYLES.label}>
-              آدرس آیکون
+            <Label htmlFor="category-icon" className={FORM_STYLES.label}>
+              آیکون دسته‌بندی (اختیاری)
             </Label>
-            <Input
-              id="iconUrl"
-              name="iconUrl"
-              type="url"
-              value={formData.iconUrl}
-              onChange={handleChange}
-              placeholder="https://..."
-              className={FORM_STYLES.input}
+            <input
+              ref={iconInputRef}
+              type="file"
+              accept="image/*"
+              id="category-icon"
+              onChange={(e) => setIconFile(e.target.files?.[0] || null)}
+              className="hidden"
             />
+            <label
+              htmlFor="category-icon"
+              className={`block w-full ${FORM_STYLES.input} cursor-pointer flex items-center justify-between px-4`}
+            >
+              <span className="text-gray-400">
+                {iconFile ? iconFile.name : "انتخاب فایل آیکون"}
+              </span>
+            </label>
           </div>
 
           <div className="space-y-2">
@@ -200,19 +230,15 @@ export default function CreateProductCategoryPage() {
             </Label>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <Button
-              type="submit"
-              disabled={loading}
-              className="bg-blue-600 hover:bg-blue-700 text-white min-w-[160px]"
-            >
+          <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-gray-700/60">
+            <Button type="submit" disabled={loading} className={FORM_STYLES.button}>
               {loading ? "در حال ثبت..." : "ثبت دسته‌بندی"}
             </Button>
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
               onClick={() => router.push("/admin/products/categories")}
-              className={FORM_STYLES.button}
+              className="h-11 px-5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-700/50"
             >
               انصراف
             </Button>

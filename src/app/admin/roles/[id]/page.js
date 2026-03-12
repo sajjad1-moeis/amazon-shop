@@ -108,7 +108,7 @@ export default function RoleDetailPage() {
           onClick={() => router.push("/admin/roles")}
         >
           <ArrowRight size={20} className="ml-2" />
-          بازگشت به لیست
+          <span className="max-md:hidden">بازگشت به لیست</span>
         </Button>
       </AdminPageHeader>
 

@@ -8,15 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { SideBarContent } from "./AdminSidebar";
-
-// تابع ساده برای نمایش تاریخ شمسی (بدون moment-jalali)
-const getPersianDate = () => {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth() + 1;
-  const day = today.getDate();
-  return `${year}/${month}/${day}`;
-};
+import { formatDateFa } from "@/utils/adminDateUtils";
 
 export default function AdminTopBar() {
   const [open, setOpen] = useState(false);
@@ -60,9 +52,9 @@ export default function AdminTopBar() {
           </SheetContent>
         </Sheet>
 
-        <div className="flex items-center justify-between w-full text-white">
-          <div className="rounded-lg flex items-center overflow-hidden bg-gray-800">
-            <div className="p-2 px-3 text-sm">{getPersianDate()}</div>
+        <div className="flex items-center w-full text-white max-sm:justify-end justify-between">
+          <div className="rounded-lg flex items-center overflow-hidden bg-gray-800 max-sm:hidden" dir="rtl">
+            <div className="p-2 px-3 text-sm">{formatDateFa(new Date())}</div>
             <div className="bg-blue-600 p-2 px-4 text-sm font-medium">امروز</div>
           </div>
 

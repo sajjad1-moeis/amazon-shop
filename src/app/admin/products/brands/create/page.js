@@ -108,19 +108,15 @@ export default function CreateBrandPage() {
             </Label>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <Button
-              type="submit"
-              disabled={loading}
-              className="bg-blue-600 hover:bg-blue-700 text-white min-w-[160px]"
-            >
+          <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-gray-700/60">
+            <Button type="submit" disabled={loading} className={FORM_STYLES.button}>
               {loading ? "در حال ثبت..." : "ثبت برند"}
             </Button>
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
               onClick={() => router.push("/admin/products/brands")}
-              className={FORM_STYLES.button}
+              className="h-11 px-5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-700/50"
             >
               انصراف
             </Button>

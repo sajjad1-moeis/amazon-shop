@@ -20,7 +20,7 @@ const getBrandStatusBadge = (isActive) => {
   );
 };
 
-export default function BrandsTable({ brands }) {
+export default function BrandsTable({ brands, onEdit, onDelete }) {
   if (brands.length === 0) {
     return <div className="p-8 text-center text-gray-400">برندی یافت نشد</div>;
   }
@@ -44,7 +44,11 @@ export default function BrandsTable({ brands }) {
             </TableCell>
             <TableCell>{getBrandStatusBadge(brand.isActive !== false)}</TableCell>
             <TableCell>
-              <TableActions showView={false} />
+              <TableActions
+                showView={false}
+                onEdit={() => onEdit?.(brand.id)}
+                onDelete={() => onDelete?.(brand.id)}
+              />
             </TableCell>
           </TableRow>
         ))}

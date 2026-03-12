@@ -85,12 +85,17 @@ export default function BlogCategoriesPage() {
 
   return (
     <div className="space-y-6">
-      <AdminPageHeader title="دسته‌بندی‌های وبلاگ" subtitle="مدیریت دسته‌بندی‌های پست‌های وبلاگ" icon={Category2}>
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => router.push("/admin/blog/categories/create")}>
-          <Add size={20} className="ml-2" />
-          دسته‌بندی جدید
-        </Button>
-      </AdminPageHeader>
+      <AdminPageHeader
+        title="دسته‌بندی‌های وبلاگ"
+        subtitle="مدیریت دسته‌بندی‌های پست‌های وبلاگ"
+        icon={Category2}
+        actions={
+          <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => router.push("/admin/blog/categories/create")}>
+            <Add size={20} className="ml-2" />
+            <span className="max-md:hidden">دسته‌بندی جدید</span>
+          </Button>
+        }
+      />
 
       <AdminSectionCard title="لیست دسته‌بندی‌ها">
         {loading ? (

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import FilterDrawerContent from "@/components/FilterDrawer/FilterDrawerContent";
 import { Candle } from "iconsax-reactjs";
-import { adminFilterBtn, adminFilterDrawer } from "@/utils/filterStyles";
+import { adminFilterDrawer } from "@/utils/filterStyles";
 
 export default function FilterSection({ children, isAdmin, className }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -18,23 +18,36 @@ export default function FilterSection({ children, isAdmin, className }) {
   return (
     <div className={cn("w-full", className)}>
       <div className="flex items-center justify-between gap-3 sm:gap-4">
-        <div className="md:flex-1 md:max-w-md lg:max-w-lg">{searchInput}</div>
+        {/* لپ‌تاپ (lg+): جستجو نمایان — موبایل/تبلت ادمین: جستجو فقط توی دراور */}
+        <div className={cn("flex-1 max-w-md lg:max-w-lg", isAdmin && "hidden lg:block")}>
+          {searchInput}
+        </div>
 
-        {/* Desktop: نمایش فیلترها */}
-        <div className="hidden md:flex items-center gap-2 md:gap-3">{filterSelects}</div>
+        {/* لپ‌تاپ (lg+): فیلترها در ردیف — موبایل: فقط دکمه فیلترها */}
+        {!isAdmin && (
+          <div className="hidden md:flex items-center gap-2 md:gap-3">{filterSelects}</div>
+        )}
+        {isAdmin && (
+          <div className="hidden lg:flex items-center gap-2 lg:gap-3">{filterSelects}</div>
+        )}
 
-        {filterSelects.length > 0 && (
+        {/* موبایل/تبلت: دکمه فیلترها — لپ‌تاپ ادمین این دکمه مخفی */}
+        {(filterSelects.length > 0 || isAdmin) && (
           <Drawer open={drawerOpen} onOpenChange={setDrawerOpen} direction="rtl">
             <DrawerTrigger asChild>
               <Button
                 variant="outline"
+                size="sm"
                 className={cn(
-                  "md:hidden p-2.5  rounded-lg flex items-center justify-center",
-                  isAdmin ? adminFilterBtn : " dark:bg-dark-field dark:border-dark-stroke border "
+                  "h-9 px-3 rounded-lg flex items-center justify-center gap-1.5 text-sm font-normal",
+                  isAdmin ? "lg:hidden inline-flex" : "md:hidden",
+                  isAdmin
+                    ? "border-gray-600 bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 hover:text-white"
+                    : " dark:bg-dark-field dark:border-dark-stroke border "
                 )}
               >
-                <Candle size={20} />
-                <span className="mr-2">فیلتر ها</span>
+                <Candle size={18} />
+                <span>فیلترها</span>
               </Button>
             </DrawerTrigger>
             <DrawerContent className={isAdmin ? adminFilterDrawer : "max-h-[85vh] dark:bg-dark-box"} dir="rtl">
@@ -54,7 +67,10 @@ export default function FilterSection({ children, isAdmin, className }) {
                 </DrawerTitle>
               </DrawerHeader>
               <div className="overflow-y-auto">
-                <FilterDrawerContent filterSelects={filterSelects} />
+                <FilterDrawerContent
+                  filterSelects={filterSelects}
+                  searchInput={isAdmin ? searchInput : undefined}
+                />
               </div>
             </DrawerContent>
           </Drawer>
