@@ -37,12 +37,17 @@ export default function NotificationSettingsCard({ data: dataProp, onUpdated }) 
   const [notificationInfo, setNotificationInfo] = useState(defaultNotificationData);
 
   const displayNotification = useMemo(() => {
-    if (dataProp) return { ...defaultNotificationData, ...dataProp };
-    return { ...defaultNotificationData, ...notificationInfo };
+    return { ...defaultNotificationData, ...dataProp, ...notificationInfo };
   }, [dataProp, notificationInfo]);
 
   const handleSave = (data) => {
-    setNotificationInfo(data);
+    if (data && (Array.isArray(data.notificationTypes) || Array.isArray(data.notificationMethods))) {
+      setNotificationInfo({
+        notificationTypes: data.notificationTypes ?? defaultNotificationData.notificationTypes,
+        notificationMethods: data.notificationMethods ?? defaultNotificationData.notificationMethods,
+        telegramConnected: !!data.telegramConnected,
+      });
+    }
     if (onUpdated) onUpdated();
   };
 

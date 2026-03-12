@@ -7,7 +7,8 @@ import ViewAllTable from "@/components/ViewAllTable";
 
 export default function ComparisonTable({ products, features }) {
   const getFeatureValue = (product, featureKey) => {
-    return product.features?.[featureKey];
+    const features = product?.features ?? product?.attributes ?? product?.specs ?? {};
+    return features[featureKey];
   };
 
   const renderFeatureValue = (value) => {
@@ -47,13 +48,13 @@ export default function ComparisonTable({ products, features }) {
                 <th className="text-right py-4 px-6 bg-gray-50 dark:bg-dark-bg/50 text-sm font-semibold text-gray-900 dark:text-dark-titre"></th>
                 {products.map((product, index) => (
                   <th
-                    key={product.id}
+                    key={product.id ?? product.productId ?? index}
                     className={cn(
                       "text-center py-4 px-6 whitespace-nowrap bg-gray-50 dark:bg-dark-bg/50 text-sm font-semibold text-gray-900 dark:text-dark-titre",
                       index > 0 && "border-r border-gray-200 dark:border-dark-stroke"
                     )}
                   >
-                    {product.title}
+                    {product.title ?? product.name ?? "—"}
                   </th>
                 ))}
               </tr>
@@ -71,7 +72,7 @@ export default function ComparisonTable({ products, features }) {
                     {feature.label}
                   </td>
                   {products.map((product, productIndex) => (
-                    <React.Fragment key={product.id}>
+                    <React.Fragment key={product.id ?? product.productId ?? productIndex}>
                       {renderFeatureValue(getFeatureValue(product, feature.key))}
                     </React.Fragment>
                   ))}

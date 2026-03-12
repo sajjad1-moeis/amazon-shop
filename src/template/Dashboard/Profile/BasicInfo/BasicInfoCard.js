@@ -70,8 +70,15 @@ export default function BasicInfoCard({ data: dataProp, onProfileUpdated }) {
         <Row className={"md:mx-auto sm:mx-0 max-xl:hidden"} label="ایمیل" value={displayData.email || "—"} />
         <Row className={"xl:mx-auto sm:mx-0"} label="کد ملی" value={displayData.nationalId || "—"} />
         <div className="text-xs sm:text-sm flex flex-col lg:items-center">
-          <p className="mb-1 sm:mb-2 px-2 sm:px-3 py-1 w-max rounded-md bg-green-100 dark:bg-green-900/30 dark:text-green-300 text-green-700 text-xs font-medium">
-            {displayData.verificationStatusText}
+          <p
+            className={cn(
+              "mb-1 sm:mb-2 px-2 sm:px-3 py-1 w-max rounded-md text-xs font-medium",
+              (displayData.verificationStatusText ?? "در انتظار") === "تکمیل شده"
+                ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+                : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
+            )}
+          >
+            {displayData.verificationStatusText ?? "در انتظار"}
           </p>
           <p className="text-gray-400 dark:text-caption lg:text-center text-xs">وضعیت احراز هویت</p>
         </div>

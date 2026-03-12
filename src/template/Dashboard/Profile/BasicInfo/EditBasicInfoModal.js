@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -16,6 +15,8 @@ import ProfileImageUpload from "./ProfileImageUpload";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { filterInputStyles } from "@/utils/filterStyles";
+import { useAuth } from "@/contexts/AuthContext";
+import { userService } from "@/services/user/userService";
 
 // Dynamic form fields configuration - Order: fullName, phone, email, nationalId
 const formFields = [
@@ -69,6 +70,9 @@ const formFields = [
 ];
 
 export default function EditBasicInfoModal({ isOpen, onClose, initialData, onSave }) {
+  const { user } = useAuth();
+  const userId = user?.id ?? user?.userId;
+
   const [formData, setFormData] = useState({
     fullName: initialData?.fullName || "",
     phone: initialData?.phone || "",
@@ -76,6 +80,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, initialData, onSav
     nationalId: initialData?.nationalId || "",
     profileImage: initialData?.avatar || "",
   });
+  const [profileImageFile, setProfileImageFile] = useState(null);
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -88,6 +93,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, initialData, onSav
         nationalId: empty(initialData.nationalId),
         profileImage: empty(initialData.avatar),
       });
+      setProfileImageFile(null);
     }
   }, [isOpen, initialData]);
 
@@ -117,6 +123,9 @@ export default function EditBasicInfoModal({ isOpen, onClose, initialData, onSav
     if (onSave) {
       setSaving(true);
       try {
+        if (profileImageFile && userId) {
+          await userService.uploadProfileImage(userId, profileImageFile);
+        }
         const result = onSave(formData);
         if (result && typeof result.then === "function") await result;
         toast.success("اطلاعات با موفقیت به‌روزرسانی شد");
@@ -154,8 +163,15 @@ export default function EditBasicInfoModal({ isOpen, onClose, initialData, onSav
             </DialogTitle>
             <div className="flex items-center justify-center sm:justify-start gap-2">
               <span className="text-xs sm:text-sm text-gray-600 dark:text-dark-text">وضعیت احراز هویت</span>
-              <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-md text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-                تکمیل شده
+              <span
+                className={cn(
+                  "inline-flex items-center px-2 sm:px-3 py-1 rounded-md text-xs font-medium",
+                  (initialData?.verificationStatusText ?? "در انتظار") === "تکمیل شده"
+                    ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+                    : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
+                )}
+              >
+                {initialData?.verificationStatusText ?? "در انتظار"}
               </span>
             </div>
           </div>
@@ -168,7 +184,10 @@ export default function EditBasicInfoModal({ isOpen, onClose, initialData, onSav
             <div className="flex flex-col items-center sm:items-start w-full sm:w-auto sm:max-w-[176px] flex-shrink-0">
               <ProfileImageUpload
                 image={formData.profileImage}
-                onImageChange={(image) => handleChange("profileImage", image)}
+                onImageChange={(previewUrl, file) => {
+                  handleChange("profileImage", previewUrl);
+                  setProfileImageFile(file ?? null);
+                }}
               />
             </div>
 
