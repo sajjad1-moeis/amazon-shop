@@ -50,7 +50,7 @@ export default function FilterSection({ children, isAdmin, className }) {
                 <span>فیلترها</span>
               </Button>
             </DrawerTrigger>
-            <DrawerContent className={isAdmin ? adminFilterDrawer : "max-h-[85vh] dark:bg-dark-box"} dir="rtl">
+            <DrawerContent className={isAdmin ? "bg-gray-900 border-gray-800" : "max-h-[85vh] dark:bg-dark-box"} dir="rtl">
               <DrawerHeader
                 className={
                   isAdmin ? "border-b border-gray-700 pb-4" : "border-b border-gray-200 dark:border-dark-stroke pb-4"

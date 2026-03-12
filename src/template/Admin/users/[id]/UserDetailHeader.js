@@ -45,7 +45,7 @@ export default function UserDetailHeader({
     "rounded-xl px-4 py-2.5 text-sm font-medium transition-all border shadow-sm hover:shadow";
 
   return (
-    <div className="rounded-2xl border border-gray-600/80 bg-gray-800/40 p-5 sm:p-6">
+    <div className="rounded-2xl border border-gray-600/80 bg-gray-800/40 p-3 sm:p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-3 mb-1.5">
@@ -72,15 +72,17 @@ export default function UserDetailHeader({
           ) : (
             <>
               <Button
+                variant="outline"
                 onClick={onEdit}
-                className={`${btnBase} border-primary-500/50 text-primary-400 hover:bg-primary-500/20 hover:border-primary-500/70`}
+                className={`${btnBase} bg-transparent border-primary-500/50 text-primary-400 hover:bg-primary-500/10 hover:border-primary-500/40 hover:text-primary-300 hover:shadow-none`}
               >
                 ویرایش
                 <Edit size={18} className="mr-2" />
               </Button>
               <Button
+                variant="outline"
                 onClick={onChangePassword}
-                className={`${btnBase} border-amber-500/40 text-amber-400 hover:bg-amber-500/15 hover:border-amber-500/60`}
+                className={`${btnBase} bg-transparent border-amber-500/40 text-amber-400 hover:bg-amber-500/10 hover:border-amber-500/30 hover:text-amber-300 hover:shadow-none`}
               >
                 تغییر رمز
                 <Key size={18} className="mr-2" />

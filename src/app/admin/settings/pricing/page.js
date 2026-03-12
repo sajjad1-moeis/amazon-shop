@@ -95,13 +95,13 @@ export default function PricingSettingsPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6">
       <AdminPageHeader
         title="تنظیمات قیمت‌گذاری"
         subtitle="درصد سود، هزینه حمل، طرح اقساط و حداقل سفارش"
       />
 
-      <div className={FORM_STYLES.card + " p-6"}>
+      <div className={FORM_STYLES.card + "p-3 md:p-6 "}>
         {loading ? (
           <div className="p-8 text-center text-gray-400">
             <Spinner size="lg" />

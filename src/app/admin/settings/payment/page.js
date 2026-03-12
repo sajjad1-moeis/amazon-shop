@@ -74,7 +74,7 @@ export default function PaymentSettingsPage() {
               </div>
               <div className="space-y-2">
                 <Label className={FORM_STYLES.label}>API Key</Label>
-                <Input name="apiKey" type="password" value={settings.apiKey || ""} onChange={handleChange} className={FORM_STYLES.input} />
+                <Input name="apiKey" value={settings.apiKey || ""} onChange={handleChange} className={FORM_STYLES.input} />
               </div>
               <div className="space-y-2">
                 <Label className={FORM_STYLES.label}>Callback URL</Label>

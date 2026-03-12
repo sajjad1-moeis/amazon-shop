@@ -12,9 +12,11 @@ import { formatDateFa } from "@/utils/adminDateUtils";
 
 export default function AdminTopBar() {
   const [open, setOpen] = useState(false);
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const router = useRouter();
   const location = usePathname();
+  const profileId = user?.id ?? user?.userId;
+  const profileHref = profileId ? `/admin/users/${profileId}` : "/admin/users";
 
   const handleLogout = async () => {
     await logout();
@@ -80,14 +82,15 @@ export default function AdminTopBar() {
               <Logout size={20} />
             </Button>
 
-            <Button
-              variant="ghost"
-              size="icon"
-              className="border border-gray-700 rounded-full hover:bg-gray-800 text-white"
-              title="پروفایل"
-            >
-              <User size={20} />
-            </Button>
+            <Link href={profileHref} title="پروفایل">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="border border-gray-700 rounded-full hover:bg-gray-800 text-white"
+              >
+                <User size={20} />
+              </Button>
+            </Link>
           </div>
         </div>
       </header>

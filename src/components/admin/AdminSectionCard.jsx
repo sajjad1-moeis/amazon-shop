@@ -22,7 +22,7 @@ export default function AdminSectionCard({ title, icon: Icon, children, classNam
           )}
         </div>
       )}
-      <div className="p-6">{children}</div>
+      <div className="p-3 md:p-6">{children}</div>
     </div>
   );
 }
