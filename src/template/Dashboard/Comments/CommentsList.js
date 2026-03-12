@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import CommentCard from "./CommentCard";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
@@ -37,8 +38,8 @@ function CommentsList({ comments, setComments }) {
           <p className="max-md:text-xs text-primary-300 font-thin dark:text-caption">
             با ثبت نظر، به سایر خریداران کمک میکنید.
           </p>
-          <Button className="bg-yellow-400 mt-8 hover:bg-yellow-500 text-primary-800  font-medium rounded-lg">
-            مشاهده محصولات خریداری شده
+          <Button asChild className="bg-yellow-400 mt-8 hover:bg-yellow-500 text-primary-800 font-medium rounded-lg">
+            <Link href="/dashboard/purchases">مشاهده محصولات خریداری شده</Link>
           </Button>
         </div>
       ) : (

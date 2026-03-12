@@ -49,9 +49,19 @@ export default function EditFinancialInfoModal({ isOpen, onClose, initialData, b
     e.preventDefault();
     setSaving(true);
     try {
-      const body = {};
       const preferredId = formData.preferredBankAccountId ? Number(formData.preferredBankAccountId) : undefined;
-      if (preferredId) body.preferredBankAccountId = preferredId;
+
+      const body = {
+        ...(preferredId != null && preferredId > 0 ? { preferredBankAccountId: preferredId } : {}),
+        shaba: formData.shaba?.trim() || undefined,
+        bankAccount: formData.bankAccount?.trim() || undefined,
+        bank: formData.bank?.trim() || undefined,
+        accountHolderName: formData.accountHolderName?.trim() || undefined,
+        cardNumber: formData.cardNumber?.replace(/\s|-/g, "") || undefined,
+        cardHolderName: formData.cardHolderName?.trim() || undefined,
+        expiryDate: formData.expiryDate?.trim() || undefined,
+      };
+      // CVV2 معمولاً برای امنیت ذخیره نمی‌شود؛ در صورت نیاز بک‌اند می‌توان اضافه کرد
 
       const res = await userService.updateFinancialInfo(body);
       unwrapApiData(res);

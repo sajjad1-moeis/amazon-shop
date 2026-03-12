@@ -1,12 +1,23 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import Image from "next/image";
-import { Camera, Trash } from "iconsax-reactjs";
+import { Camera } from "iconsax-reactjs";
 import { Button } from "@/components/ui/button";
 
+/**
+ * @param {string} image - URL پیش‌نمایش (object URL یا آدرس سرور)
+ * @param {((previewUrl: string, file: File | null) => void)} onImageChange - (پیش‌نمایش، فایل برای آپلود)
+ */
 export default function ProfileImageUpload({ image, onImageChange }) {
   const fileInputRef = useRef(null);
+  const objectUrlRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
+    };
+  }, []);
 
   const handleImageClick = () => {
     fileInputRef.current?.click();
@@ -14,21 +25,23 @@ export default function ProfileImageUpload({ image, onImageChange }) {
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (onImageChange) {
-          onImageChange(reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
+    e.target.value = "";
+    if (!file || !file.type.startsWith("image/")) return;
+    if (objectUrlRef.current) {
+      URL.revokeObjectURL(objectUrlRef.current);
+      objectUrlRef.current = null;
     }
+    const previewUrl = URL.createObjectURL(file);
+    objectUrlRef.current = previewUrl;
+    if (onImageChange) onImageChange(previewUrl, file);
   };
 
   const handleRemove = () => {
-    if (onImageChange) {
-      onImageChange("");
+    if (objectUrlRef.current) {
+      URL.revokeObjectURL(objectUrlRef.current);
+      objectUrlRef.current = null;
     }
+    if (onImageChange) onImageChange("", null);
   };
 
   return (
@@ -40,7 +53,14 @@ export default function ProfileImageUpload({ image, onImageChange }) {
           onClick={handleImageClick}
         >
           {image ? (
-            <Image src={image} alt="Profile" fill className="object-cover" sizes="160px" />
+            <Image
+              src={image}
+              alt="Profile"
+              fill
+              className="object-cover"
+              sizes="160px"
+              unoptimized={image.startsWith("blob:")}
+            />
           ) : (
             <div className="w-full h-full bg-gray-200 dark:bg-dark-field flex items-center justify-center">
               <span className="text-gray-400 dark:text-dark-text text-4xl">👤</span>

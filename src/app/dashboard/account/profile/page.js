@@ -17,15 +17,18 @@ function normalizeProfile(apiProfile) {
   if (!apiProfile) return null;
   const p = apiProfile;
   const namePart = p.fullName ?? p.full_name ?? [p.firstName, p.lastName].filter(Boolean).join(" ").trim();
-  const fullName = namePart || p.userName || p.phoneNumber || "";
+  const fullName = namePart || p.userName || p.phoneNumber || p.phone || p.mobile || "";
   const createdAt = p.createdAt ?? p.created_at ?? p.registerDate;
   const membershipDate =
     createdAt != null
       ? new Date(createdAt).toLocaleDateString("fa-IR", { year: "numeric", month: "2-digit", day: "2-digit" })
       : "";
+  // شماره تماس: ورود با موبایل است؛ از همه فیلدهای احتمالی API و PascalCase بک‌اند استفاده می‌کنیم
+  const phone =
+    p.phoneNumber ?? p.phone ?? p.mobile ?? p.userName ?? p.PhoneNumber ?? p.Phone ?? p.Mobile ?? p.UserName ?? "";
   return {
     fullName,
-    phone: p.phoneNumber ?? p.phone ?? "",
+    phone,
     email: p.email ?? "",
     nationalId: p.nationalId ?? p.national_id ?? "",
     avatar: p.avatarUrl ?? p.avatar ?? p.imageUrl ?? p.profileImage ?? "",
@@ -125,10 +128,13 @@ export default function ProfilePage() {
     );
   }
 
+  // اگر API پروفایل شماره برنگرداند، از کاربر لاگین‌شده (ورود با موبایل) استفاده می‌کنیم
+  const authPhone =
+    authUser?.phoneNumber ?? authUser?.phone ?? authUser?.mobile ?? authUser?.userName ?? "";
   const basicData = profile
     ? {
         fullName: profile.fullName,
-        phone: profile.phone,
+        phone: profile.phone || authPhone,
         email: profile.email,
         nationalId: profile.nationalId,
         verificationStatusText: verification?.verificationStatusText ?? "در انتظار",

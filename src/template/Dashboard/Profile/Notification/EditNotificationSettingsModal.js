@@ -40,6 +40,26 @@ export default function EditNotificationSettingsModal({ isOpen, onClose, initial
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  /** تبدیل پاسخ API به شکل نمایش کارت */
+  const getDisplayPayloadFromApi = (data) => {
+    if (!data) return null;
+    const b = (v) => !!v;
+    const push = b(data.pushNotifications ?? data.PushNotifications);
+    const telegram = b(data.telegramOrderUpdates ?? data.TelegramOrderUpdates) || !!(data.telegramChatId ?? data.TelegramChatId ?? "").toString().trim();
+    const sms = b(data.smsOrderUpdates ?? data.SmsOrderUpdates);
+    const email = b(data.emailOrderUpdates ?? data.EmailOrderUpdates) || b(data.emailPromotions ?? data.EmailPromotions);
+    const methods = [];
+    if (push) methods.push("site");
+    if (telegram) methods.push("telegram");
+    if (sms) methods.push("sms");
+    if (email) methods.push("email");
+    return {
+      notificationTypes: initialData?.notificationTypes ?? ["orders"],
+      notificationMethods: methods.length > 0 ? methods : ["site"],
+      telegramConnected: telegram,
+    };
+  };
+
   useEffect(() => {
     if (!isOpen) return;
     setLoading(true);
@@ -57,6 +77,8 @@ export default function EditNotificationSettingsModal({ isOpen, onClose, initial
             pushNotifications: b(data.pushNotifications ?? data.PushNotifications) ?? defaultSettings.pushNotifications,
             telegramChatId: data.telegramChatId ?? data.TelegramChatId ?? "",
           });
+          const displayPayload = getDisplayPayloadFromApi(data);
+          if (displayPayload && onSave) onSave(displayPayload);
         }
       })
       .catch(() => toast.error("خطا در دریافت تنظیمات نوتیفیکیشن"))
@@ -68,23 +90,42 @@ export default function EditNotificationSettingsModal({ isOpen, onClose, initial
     setFormData((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
+  /** تبدیل وضعیت فرم API به شکل نمایش کارت (notificationTypes, notificationMethods, telegramConnected) */
+  const getDisplayPayloadFromForm = () => {
+    const methods = [];
+    if (formData.pushNotifications) methods.push("site");
+    if (formData.telegramOrderUpdates || formData.telegramChatId?.trim()) methods.push("telegram");
+    if (formData.smsOrderUpdates) methods.push("sms");
+    if (formData.emailOrderUpdates || formData.emailPromotions) methods.push("email");
+    if (methods.length === 0) methods.push("site"); // حداقل یکی
+
+    return {
+      notificationTypes: initialData?.notificationTypes ?? ["orders"],
+      notificationMethods: methods.length > 0 ? methods : ["site"],
+      telegramConnected: !!(formData.telegramOrderUpdates || formData.telegramChatId?.trim()),
+    };
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
     try {
       const body = {
-        emailOrderUpdates: formData.emailOrderUpdates,
-        emailPromotions: formData.emailPromotions,
-        smsOrderUpdates: formData.smsOrderUpdates,
-        telegramOrderUpdates: formData.telegramOrderUpdates,
-        pushNotifications: formData.pushNotifications,
+        emailOrderUpdates: !!formData.emailOrderUpdates,
+        emailPromotions: !!formData.emailPromotions,
+        smsOrderUpdates: !!formData.smsOrderUpdates,
+        telegramOrderUpdates: !!formData.telegramOrderUpdates,
+        pushNotifications: !!formData.pushNotifications,
       };
       if (formData.telegramChatId?.trim()) body.telegramChatId = formData.telegramChatId.trim();
 
       const res = await userService.updateNotificationSettings(body);
       unwrapApiData(res);
-      if (onSave) onSave(formData);
+
+      const displayPayload = getDisplayPayloadFromForm();
+      if (onSave) onSave(displayPayload);
       if (onUpdated) onUpdated();
+
       toast.success("تنظیمات نوتیفیکیشن با موفقیت به‌روزرسانی شد");
       onClose();
     } catch (err) {

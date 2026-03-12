@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/AuthContext";
 
 import {
   Wallet,
@@ -71,7 +72,15 @@ export const DASHBOARD_NAV_ITEMS = [
 // Sidebar Content Component
 function SidebarContent({ onLinkClick }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { logout } = useAuth();
   const [expanded, setExpanded] = useState([]);
+
+  const handleLogout = async () => {
+    await logout();
+    if (onLinkClick) onLinkClick();
+    router.push("/");
+  };
 
   const pathMatches = (path, href) => {
     if (!path || !href) return false;
@@ -231,7 +240,11 @@ function SidebarContent({ onLinkClick }) {
       </nav>
 
       {/* Logout */}
-      <button className="mt-8 w-full flex items-center gap-3 px-3 py-3 text-gray-700 dark:text-dark-titre hover:bg-gray-50 dark:hover:bg-dark-field rounded-lg">
+      <button
+        type="button"
+        onClick={handleLogout}
+        className="mt-8 w-full flex items-center gap-3 px-3 py-3 text-gray-700 dark:text-dark-titre hover:bg-gray-50 dark:hover:bg-dark-field rounded-lg transition-colors"
+      >
         <LogoutCurve size={22} />
         خروج از حساب کاربری
       </button>

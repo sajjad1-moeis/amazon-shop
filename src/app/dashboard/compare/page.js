@@ -12,17 +12,8 @@ import DashboardLayout from "@/layout/DashboardLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { compareService } from "@/services/compare/compareService";
 import { unwrapApiData } from "@/services/api/client";
+import { buildComparisonFeatures } from "@/utils/compareUtils";
 import { Spinner } from "@/components/ui/spinner";
-import Link from "next/link";
-
-const comparisonFeatures = [
-  { key: "brand", label: "برند" },
-  { key: "model", label: "مدل" },
-  { key: "diskDrive", label: "درایو دیسک" },
-  { key: "outputResolution", label: "وضوح خروجی" },
-  { key: "frameRate", label: "نرخ فریم" },
-  { key: "weight", label: "وزن" },
-];
 
 export default function ProductComparison() {
   const { user } = useAuth();
@@ -49,6 +40,8 @@ export default function ProductComparison() {
     fetchCompare();
   }, [userId]);
 
+  const comparisonFeatures = buildComparisonFeatures(products);
+
   const handleRemoveProduct = async (productId) => {
     try {
       await compareService.remove({ productId, userId: userId ?? undefined });
@@ -70,9 +63,6 @@ export default function ProductComparison() {
     }
   };
 
-  const handleAddProduct = () => {
-    toast.info("محصول را از صفحه محصول با دکمه «افزودن به مقایسه» اضافه کنید.");
-  };
 
   const ActionBtns = () => (
     <div className="flex-center gap-2 sm:gap-2 w-full sm:w-auto">
@@ -91,7 +81,7 @@ export default function ProductComparison() {
     <DashboardLayout>
       <div className="flex flex-col gap-4 sm:gap-6">
         <PageHeader
-          title="مقایسه محصولات - کنترلر پلی استیشن"
+          title={category ? `مقایسه محصولات - ${category}` : "مقایسه محصولات"}
         description={
           <p className="text-xs sm:text-sm text-gray-600 dark:text-dark-text">
             دسته بندی :{" "}
@@ -114,7 +104,7 @@ export default function ProductComparison() {
         {/* Products Grid */}
         <div className="flex flex-col-reverse md:flex-row gap-4 sm:gap-6">
           <div className="w-full md:max-w-48">
-            <AddProductColumn onAdd={handleAddProduct} />
+            <AddProductColumn href="/products" />
           </div>
           {loading ? (
             <div className="flex-1 flex justify-center py-12">

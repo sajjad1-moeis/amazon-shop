@@ -66,21 +66,37 @@ export default function AddressesList({
         className="bg-white dark:bg-dark-box rounded-2xl shadow-md p-4 md:p-6"
         style={{ boxShadow: "0px 1px 6px 0px #0000000F" }}
       >
-        <h2 className="text-lg md:text-xl  text-gray-900 dark:text-dark-titre mb-4 max-md:mb-7">
-          لیست آدرسهای ثبت شده
+        <h2 className="text-lg md:text-xl text-gray-900 dark:text-dark-titre mb-4 max-md:mb-7">
+          لیست آدرس‌های ثبت شده
         </h2>
-        <div className="space-y-4">
-          {addresses.map((address) => (
-            <AddressCard
-              hasPhone
-              key={address.id}
-              address={address}
-              onEdit={() => handleEditClick(address.id)}
-              onDelete={() => handleDeleteClick(address.id)}
-              onSetDefault={() => handleSetDefault(address.id)}
-            />
-          ))}
-        </div>
+        {!addresses?.length ? (
+          <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+            <p className="text-gray-500 dark:text-dark-text text-base mb-4">آدرسی وجود ندارد.</p>
+            <p className="text-gray-400 dark:text-caption text-sm mb-6">
+              برای ارسال سفارش‌ها می‌توانید آدرس جدید اضافه کنید.
+            </p>
+            <Button
+              onClick={handleAddClick}
+              className="bg-primary-600 hover:bg-primary-700 text-white gap-2"
+            >
+              <Add size={20} />
+              افزودن آدرس
+            </Button>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {addresses.map((address) => (
+              <AddressCard
+                hasPhone
+                key={address.id}
+                address={address}
+                onEdit={() => handleEditClick(address.id)}
+                onDelete={() => handleDeleteClick(address.id)}
+                onSetDefault={() => handleSetDefault(address.id)}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Address Modal */}
