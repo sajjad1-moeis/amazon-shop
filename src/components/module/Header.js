@@ -48,13 +48,17 @@ function Header() {
           <div className="flex-between max-lg:mb-2 min-w-0 max-md:w-full">
             <div className="flex-between min-w-0">
               <DrawerMobile />
-              <Link href={"/"} className="flex-shrink-0">
+              <Link
+                href="/"
+                className="flex-shrink-0 flex items-center min-w-[120px] md:min-w-[140px] lg:min-w-[170px]"
+                style={{ minHeight: 36 }}
+              >
                 <Image
                   alt="لوگو میکرولس"
                   src="/image/logo.png"
                   width={170}
                   height={48}
-                  className="w-full lg:h-12 h-9 md:min-w-36 lg:min-w-[170px]"
+                  className="h-9 w-auto max-w-[170px] object-contain object-center md:h-10 lg:h-12"
                   priority
                 />
               </Link>

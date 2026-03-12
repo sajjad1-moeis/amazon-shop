@@ -96,93 +96,188 @@ function CartItem({ item, userId, onUpdate }) {
     item?.discount ??
     (discountPrice > 0 && denominator > 0 ? Math.round((discountPrice / denominator) * 100) : 0);
   const originalPrice = discount > 0 && denominator > 0 ? price + discountPrice : price;
+  const isUae = product?.currency === "AED" || product?.amazonShopName === "امارات" || item?.shop === "uae";
+
+  const badgeBase = "inline-flex items-center gap-1.5 px-2 py-1.5 rounded-lg border text-xs font-medium";
+  const quantityBtnBase = "size-9 flex items-center justify-center rounded-lg shrink-0";
 
   return (
-    <Card className="rounded-xl border overflow-hidden border-gray-200 dark:bg-dark-box  dark:border-dark-field shadow-sm hover:shadow-md transition p-0">
-      <CardContent className="p-0 grid grid-cols-3 sm:grid-cols-4 md:gap-4 ">
-        <div className="">
-          <div className="relative aspect-square max-h-32 h-full md:max-h-56 w-full">
-            <Image
-              src={imageUrl}
-              alt={title}
-              fill
-              className="object-cover rounded-md"
-            />
+    <Card className="rounded-xl border overflow-hidden border-gray-200 dark:bg-dark-box dark:border-dark-field shadow-sm hover:shadow-md transition p-0">
+      <CardContent className="p-0">
+        {/* موبایل: کارت جمع‌وجور و شیک */}
+        <div className="flex flex-col md:hidden">
+          {/* تصویر با نسبت متعادل و گوشه‌های گرد */}
+          <div className="relative aspect-[4/3] max-h-[220px] w-full bg-gray-50 dark:bg-dark-field/80">
+            <Image src={imageUrl} alt={title} fill className="object-contain p-3" sizes="(max-width: 768px) 100vw, 220px" />
+            {discount > 0 && (
+              <span className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-md shadow">
+                {discount}٪
+              </span>
+            )}
+          </div>
+
+          <div className="p-3.5 space-y-2.5">
+            {/* ردیف اول: عنوان + حذف */}
+            <div className="flex items-start justify-between gap-2">
+              <h2 className="font-semibold text-sm text-neutral-800 dark:text-dark-titre leading-snug line-clamp-2 flex-1 min-w-0">
+                {title}
+              </h2>
+              <button
+                type="button"
+                onClick={handleRemove}
+                disabled={loading}
+                className="flex items-center gap-1 text-red-500 dark:text-red-400 text-xs shrink-0 py-1 px-1.5 rounded-lg hover:bg-red-500/10 transition-colors active:scale-95"
+                aria-label="حذف"
+              >
+                <Trash size={16} />
+                <span>حذف</span>
+              </button>
+            </div>
+
+            {/* ردیف دوم: برند + پرچم + ارسال در یک خط */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <Image src="/image/amazonLogo.png" alt="آمازون" width={48} height={18} className="object-contain opacity-90" />
+              <Image
+                src={isUae ? "/image/Products/emarat.png" : "/image/Products/usa.png"}
+                alt=""
+                width={18}
+                height={18}
+                className="rounded-full object-cover border border-gray-200 dark:border-dark-stroke"
+              />
+              <span className="inline-flex items-center gap-1 text-xs text-gray-600 dark:text-dark-titre bg-gray-100 dark:bg-dark-field px-2 py-1 rounded-md">
+                <TruckFast size={14} className="text-green-600 shrink-0" />
+                ۲۰ روز کاری
+              </span>
+              {item?.hasQualityShield && (
+                <span className="inline-flex items-center gap-1 text-xs text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 px-2 py-1 rounded-md border border-primary-200/50 dark:border-primary-800/50">
+                  <ShieldTick size={14} variant="Bold" className="shrink-0" />
+                  سپر کیفیت
+                </span>
+              )}
+            </div>
+
+            {item?.variant && (
+              <div className="flex items-center gap-1.5 text-xs text-neutral-600 dark:text-dark-titre">
+                <span className="size-3 rounded-full bg-[#E2BB30] shrink-0" />
+                <span>{item.variant}</span>
+              </div>
+            )}
+
+            {/* ردیف آخر: تعداد و قیمت در یک خط */}
+            <div className="flex items-center justify-between gap-3 pt-2 border-t border-gray-100 dark:border-dark-stroke">
+              <div className="flex items-center gap-1 rounded-xl bg-gray-100 dark:bg-dark-field border border-gray-200 dark:border-dark-stroke overflow-hidden">
+                <button
+                  type="button"
+                  onClick={handleDecrease}
+                  disabled={quantity <= 1}
+                  className="size-8 flex items-center justify-center text-gray-600 dark:text-dark-titre hover:bg-gray-200 dark:hover:bg-dark-stroke disabled:opacity-40 disabled:pointer-events-none transition-colors"
+                  aria-label="کم کردن"
+                >
+                  <MinusIcon className="size-4" />
+                </button>
+                <span className="min-w-[28px] text-center text-sm font-semibold text-neutral-800 dark:text-dark-titre">
+                  {quantity}
+                </span>
+                <button
+                  type="button"
+                  onClick={handleIncrease}
+                  className="size-8 flex items-center justify-center bg-primary-600 dark:bg-primary-600 text-white hover:bg-primary-700 transition-colors active:scale-95"
+                  aria-label="افزودن"
+                >
+                  <PlusIcon className="size-4" />
+                </button>
+              </div>
+              <div className="text-left min-w-0">
+                {discount > 0 && (
+                  <p className="text-xs text-gray-500 dark:text-gray-400 line-through">
+                    {formatPrice(originalPrice)} تومان
+                  </p>
+                )}
+                <p className="text-base font-bold text-neutral-800 dark:text-dark-titre truncate">
+                  {formatPrice(item?.totalPrice ?? price * quantity)} تومان
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="col-span-2 sm:col-span-3 p-3">
-          <div className="flex flex-col gap-3 border-b pb-4 mb-4 border-gray-200 dark:border-dark-stroke">
-            <div className="flex justify-between items-start">
-              <div className="">
-                <h2 className="font-bold text-sm md:text-lg  text-neutral-800 dark:text-dark-titre">
-                  {title}
-                </h2>
-                <div className="flex items-center gap-2 mt-2">
-                  🟩
-                  <Image src="/image/amazonLogo.png" alt={`عکس آمازون`} width={60} height={30} />
-                </div>
-              </div>
-              <div
-                className="flex items-center gap-1 text-red-600 text-sm cursor-pointer max-md:hidden"
-                onClick={handleRemove}
-              >
-                <Trash size={24} />
-                <p>حذف </p>
-              </div>
-            </div>
+        {/* دسکتاپ: همان ساختار قبلی */}
+        <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 md:gap-4">
+          <div className="relative aspect-square max-h-56 w-full">
+            <Image src={imageUrl} alt={title} fill className="object-cover rounded-md" />
           </div>
-          <div>
-            <div className="md:flex-between mt-3 w-full text-xs">
-              <div className="flex-between max-md:justify-start text-gray-400 text-sm gap-2">
-                {item?.variant && (
-                  <>
-                    <div className="size-4.5 bg-[#E2BB30] rounded-full" />
-                    <p>{item.variant}</p>
-                  </>
-                )}
-              </div>
-              <div className="flex gap-1 md:gap-2 max-md:mt-3">
-                {item?.hasQualityShield && (
-                  <div className="flex-between bg-gray-100 dark:bg-dark-field dark:border-0 border p-1 rounded-lg border-gray-200 max-md:text-xs text-sm gap-0.5 md:gap-2 text-[#0554DB]">
-                    <ShieldTick size={22} variant="Bold" />
-                    <p>دارای سپر کیفیت</p>
+          <div className="col-span-2 lg:col-span-3 p-3">
+            <div className="flex flex-col gap-3 border-b pb-4 mb-4 border-gray-200 dark:border-dark-stroke">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h2 className="font-bold text-lg text-neutral-800 dark:text-dark-titre">{title}</h2>
+                  <div className="flex items-center gap-2 mt-2">
+                    <Image src="/image/amazonLogo.png" alt="آمازون" width={60} height={30} />
+                    <Image
+                      src={isUae ? "/image/Products/emarat.png" : "/image/Products/usa.png"}
+                      alt=""
+                      width={24}
+                      height={24}
+                      className="rounded-full object-cover"
+                    />
                   </div>
-                )}
-                <div className="flex-between bg-gray-100 dark:bg-dark-field dark:border-0 border p-1 rounded-lg border-gray-200 max-md:text-xs text-sm gap-0.5 md:gap-2 ">
-                  <div className="bg-green-600 p-0.5 rounded-lg">
-                    <TruckFast size={18} className="text-white" />
-                  </div>
-                  <p className="text-gray-400">20 روز کاری</p>
                 </div>
+                <button
+                  type="button"
+                  className="flex items-center gap-1 text-red-600 text-sm cursor-pointer"
+                  onClick={handleRemove}
+                  aria-label="حذف"
+                >
+                  <Trash size={24} />
+                  <span>حذف</span>
+                </button>
               </div>
             </div>
-
-            <div className="flex justify-between items-end mt-4 gap-6  max-md:hidden">
-              <div className="w-full">
-                <div className="flex items-center gap-2">
-                  <p className="text-gray-500 text-sm">قیمت واحد:</p>
-                  <p>{formatPrice(price)} تومان</p>
-                  {discount > 0 && (
-                    <div className="bg-primary-400 p-1.5 px-2 rounded-lg text-xs text-white">
-                      {discount}%
-                    </div>
+            <div>
+              <div className="flex flex-wrap items-center justify-between gap-2 mt-3">
+                {item?.variant && (
+                  <div className="flex items-center gap-2 text-gray-600 dark:text-dark-titre text-sm">
+                    <span className="size-4 rounded-full bg-[#E2BB30]" />
+                    {item.variant}
+                  </div>
+                )}
+                <div className="flex gap-2">
+                  {item?.hasQualityShield && (
+                    <span
+                      className={`${badgeBase} bg-primary-50 dark:bg-dark-field border-primary-200 dark:border-dark-stroke text-primary-600 dark:text-primary-400`}
+                    >
+                      <ShieldTick size={20} variant="Bold" />
+                      دارای سپر کیفیت
+                    </span>
                   )}
+                  <span
+                    className={`${badgeBase} bg-gray-100 dark:bg-dark-field border-gray-200 dark:border-dark-stroke text-gray-600 dark:text-dark-titre`}
+                  >
+                    <TruckFast size={18} className="text-green-600" />
+                    ۲۰ روز کاری
+                  </span>
                 </div>
-                <div className="flex items-center gap-2 mt-1">
-                  <p className="text-gray-500 text-sm">جمع این ردیف:</p>
-                  <p className="font-medium">{formatPrice(item?.totalPrice ?? price * quantity)} تومان</p>
-                </div>
-                {discount > 0 && (
-                  <div className="flex-between gap-2 mt-1">
-                    <p className="text-gray-400 text-sm line-through">
+              </div>
+              <div className="flex justify-between items-end mt-4 gap-6">
+                <div className="w-full">
+                  <div className="flex items-center gap-2">
+                    <p className="text-gray-500 text-sm">قیمت واحد:</p>
+                    <p>{formatPrice(price)} تومان</p>
+                    {discount > 0 && (
+                      <span className="bg-primary-400 px-2 py-1 rounded-lg text-xs text-white">{discount}%</span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 mt-1">
+                    <p className="text-gray-500 text-sm">جمع این ردیف:</p>
+                    <p className="font-medium">{formatPrice(item?.totalPrice ?? price * quantity)} تومان</p>
+                  </div>
+                  {discount > 0 && (
+                    <p className="text-gray-400 text-sm line-through mt-1">
                       {formatPrice(originalPrice)} تومان (قیمت واحد قبل تخفیف)
                     </p>
-                  </div>
-                )}
-              </div>
-              <div className="grid  gap-6">
-                <ButtonGroup aria-label="Media controls" className="h-fit">
+                  )}
+                </div>
+                <ButtonGroup aria-label="تعداد" className="h-fit">
                   <Button
                     variant="ghost"
                     className="bg-primary-700 dark:bg-dark-primary size-8 text-white !rounded-lg"
@@ -207,57 +302,6 @@ function CartItem({ item, userId, onUpdate }) {
           </div>
         </div>
       </CardContent>
-      <div className="flex justify-between items-end  gap-6 md:hidden p-4">
-        <div className="w-full">
-          <div className="flex items-center gap-2">
-            <p className="text-gray-500 text-sm">قیمت واحد:</p>
-            <p>{formatPrice(price)} تومان</p>
-            {discount > 0 && (
-              <div className="bg-primary-400 p-1.5 px-2 rounded-lg text-xs text-white">{discount}%</div>
-            )}
-          </div>
-          <div className="flex items-center gap-2 mt-1">
-            <p className="text-gray-500 text-sm">جمع این ردیف:</p>
-            <p className="font-medium">{formatPrice(item?.totalPrice ?? price * quantity)} تومان</p>
-          </div>
-          {discount > 0 && (
-            <div className="flex-between gap-2 mt-1">
-              <p className="text-gray-400 text-sm line-through">
-                {formatPrice(originalPrice)} تومان (قیمت واحد قبل تخفیف)
-              </p>
-            </div>
-          )}
-        </div>
-        <div className="grid  gap-6">
-          <ButtonGroup aria-label="Media controls" className="h-fit">
-            <Button
-              variant="ghost"
-              className="bg-primary-700 size-8 text-white !rounded-lg"
-              onClick={handleDecrease}
-              disabled={quantity <= 1}
-            >
-              <MinusIcon />
-            </Button>
-            <Button size="icon" variant="link" className="size-8" disabled>
-              {quantity}
-            </Button>
-            <Button
-              variant="ghost"
-              className="bg-primary-700 size-8 text-white !rounded-lg"
-              onClick={handleIncrease}
-            >
-              <PlusIcon />
-            </Button>
-          </ButtonGroup>
-        </div>
-        <div
-          className="flex items-center gap-1 text-red-600 text-sm cursor-pointer md:hidden"
-          onClick={handleRemove}
-        >
-          <Trash size={20} />
-          <p>حذف</p>
-        </div>
-      </div>
     </Card>
   );
 }

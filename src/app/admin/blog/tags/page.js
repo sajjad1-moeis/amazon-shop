@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Add } from "iconsax-reactjs";
+import { Add, Document } from "iconsax-reactjs";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import PageHeader from "@/template/Admin/PageHeader";
+import { Button } from "@/components/ui/button";
 import BlogTagsTable from "@/template/Admin/blog/tags/BlogTagsTable";
 import AdminPagination from "@/components/ui/AdminPagination";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 import { blogTagService } from "@/services/blog/blogTagService";
 
 export default function BlogTagsPage() {
@@ -77,20 +78,20 @@ export default function BlogTagsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="">
-        <PageHeader
-          title="مدیریت تگ‌های بلاگ"
-          buttonText="تگ جدید"
-          buttonIcon={<Add size={20} className="ml-2" />}
-          onButtonClick={() => router.push("/admin/blog/tags/create")}
-        />
+      <AdminPageHeader title="تگ‌های وبلاگ" subtitle="مدیریت تگ‌های پست‌های وبلاگ" icon={Document}>
+        <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => router.push("/admin/blog/tags/create")}>
+          <Add size={20} className="ml-2" />
+          تگ جدید
+        </Button>
+      </AdminPageHeader>
 
+      <AdminSectionCard title="لیست تگ‌ها">
         {loading ? (
           <div className="p-8 text-center text-gray-400">در حال بارگذاری...</div>
         ) : (
           <>
             <BlogTagsTable tags={displayedTags} onEdit={handleEdit} onDelete={handleDelete} />
-            <div className="pt-4 border-t border-gray-700">
+            <div className="pt-4 border-t border-gray-600 mt-4">
               <AdminPagination
                 currentPage={pageNumber}
                 totalPages={Math.ceil(tags.length / pageSize) || 1}
@@ -99,7 +100,7 @@ export default function BlogTagsPage() {
             </div>
           </>
         )}
-      </div>
+      </AdminSectionCard>
 
       <ConfirmDialog
         open={deleteDialogOpen}

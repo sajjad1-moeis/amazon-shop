@@ -1,8 +1,16 @@
 /**
  * لیست داینامیک آمازون کشورها برای بخش «محصول خود را پیدا نکردید؟»
- * ترتیب: آلمان، انگلستان، آمریکا، امارات (طبق فیگما)
+ * ترتیب: امارات اول، سپس آلمان، انگلستان، آمریکا
  */
 export const AMAZON_REGIONS = [
+  {
+    id: "ae",
+    name: "آمازون امارات",
+    flag: "🇦🇪",
+    baseUrl: "https://www.amazon.ae",
+    searchParam: "k",
+    src: "/emarat.png",
+  },
   {
     id: "de",
     name: "آمازون آلمان",
@@ -26,14 +34,6 @@ export const AMAZON_REGIONS = [
     baseUrl: "https://www.amazon.com",
     searchParam: "k",
     src: "/usa.png",
-  },
-  {
-    id: "ae",
-    name: "آمازون امارات",
-    flag: "🇦🇪",
-    baseUrl: "https://www.amazon.ae",
-    searchParam: "k",
-    src: "/emarat.png",
   },
 ];
 

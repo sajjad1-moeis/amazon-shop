@@ -170,7 +170,7 @@ export default function ProfilePage() {
         />
 
         <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-4 sm:gap-6">
-          <SecurityCard data={securityData} />
+          <SecurityCard data={securityData} onDevicesUpdated={loadProfile} />
           <FinancialInfoCard data={financialData} bankAccounts={bankAccounts} onUpdated={loadBankAccounts} />
         </div>
 

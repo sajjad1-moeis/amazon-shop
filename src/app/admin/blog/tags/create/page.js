@@ -1,13 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { Document } from "iconsax-reactjs";
 import { blogTagService } from "@/services/blog/blogTagService";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
+import { FORM_STYLES } from "@/template/Admin/formStyles";
 
 export default function CreateTagPage() {
   const router = useRouter();
@@ -24,22 +26,16 @@ export default function CreateTagPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-
-    if (!formData.name) {
+    if (!formData.name?.trim()) {
       toast.error("لطفاً نام تگ را وارد کنید");
-      setLoading(false);
       return;
     }
-
+    setLoading(true);
     try {
-      const tagData = {
-        name: formData.name,
-        slug: formData.slug || undefined,
-      };
-
-      const response = await blogTagService.create(tagData);
-
+      const response = await blogTagService.create({
+        name: formData.name.trim(),
+        slug: formData.slug?.trim() || undefined,
+      });
       if (response.success) {
         toast.success("تگ با موفقیت ایجاد شد");
         router.push("/admin/blog/tags");
@@ -48,7 +44,6 @@ export default function CreateTagPage() {
       }
     } catch (error) {
       toast.error(error.message || "خطا در ایجاد تگ");
-      console.error("Error creating tag:", error);
     } finally {
       setLoading(false);
     }
@@ -56,73 +51,58 @@ export default function CreateTagPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">تگ جدید</h1>
-          <p className="text-gray-400">ایجاد تگ جدید برای بلاگ</p>
-        </div>
-      </div>
+      <AdminPageHeader
+        title="تگ جدید"
+        subtitle="ایجاد تگ جدید برای پست‌های وبلاگ"
+        icon={Document}
+      />
 
-      <Card className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl">
-        <CardHeader>
-          <CardTitle className="text-white text-xl">اضافه کردن تگ</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="name" className="text-gray-300">
-                نام تگ *
-              </Label>
-              <Input
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="نام تگ را وارد کنید"
-                className="bg-gray-800 bg-opacity-50 border border-gray-700 text-white rounded-lg"
-                required
-              />
-            </div>
+      <AdminSectionCard title="اطلاعات تگ">
+        <form onSubmit={handleSubmit} className="space-y-5 max-w-xl">
+          <div className="space-y-2">
+            <Label htmlFor="name" className={FORM_STYLES.label}>
+              نام تگ <span className="text-red-400">*</span>
+            </Label>
+            <Input
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="نام تگ را وارد کنید"
+              className={FORM_STYLES.input}
+              required
+            />
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="slug" className="text-gray-300">
-                Slug (اختیاری)
-              </Label>
-              <Input
-                id="slug"
-                name="slug"
-                value={formData.slug}
-                onChange={handleChange}
-                placeholder="اگر خالی باشد، از نام ساخته می‌شود"
-                className="bg-gray-800 bg-opacity-50 border border-gray-700 text-white rounded-lg"
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="slug" className={FORM_STYLES.label}>
+              Slug (اختیاری)
+            </Label>
+            <Input
+              id="slug"
+              name="slug"
+              value={formData.slug}
+              onChange={handleChange}
+              placeholder="خالی = ساخته‌شده از نام"
+              className={FORM_STYLES.input}
+            />
+          </div>
 
-            <div className="flex justify-end pt-4 gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.push("/admin/blog/tags")}
-                className="text-white border-gray-600"
-              >
-                انصراف
-              </Button>
-              <Button
-                type="submit"
-                disabled={loading}
-                className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg"
-              >
-                {loading ? "در حال ثبت..." : "ثبت تگ"}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+          <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-gray-700/60">
+            <Button type="submit" disabled={loading} className={FORM_STYLES.button}>
+              {loading ? "در حال ثبت..." : "ثبت تگ"}
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => router.push("/admin/blog/tags")}
+              className="h-11 px-5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-700/50"
+            >
+              انصراف
+            </Button>
+          </div>
+        </form>
+      </AdminSectionCard>
     </div>
   );
 }
-
-
-
-
-

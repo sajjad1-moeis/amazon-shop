@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect, useMemo, useRef 
 import { useRouter } from "next/navigation";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { authAPI } from "@/lib/api-client";
+import { AuthModal } from "@/template/Auth/AuthModal";
 import { saveToken, getToken, removeToken, isAuthenticated } from "@/lib/token-manager";
 import { isAdminUser } from "@/utils/authHelpers";
 import { AUTH_SESSION_EXPIRED_EVENT } from "@/services/api/client";
@@ -26,11 +27,30 @@ const extractToken = (data) =>
 
 export const AuthProvider = ({ children }) => {
   const router = useRouter();
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [googleSyncInProgress, setGoogleSyncInProgress] = useState(false);
   const googleSyncDoneRef = useRef(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authModalRedirect, setAuthModalRedirect] = useState(null);
   const { data: session, status: sessionStatus } = useSession();
+
+  const openAuthModal = (redirectTo = null) => {
+    setAuthModalRedirect(redirectTo || null);
+    setAuthModalOpen(true);
+  };
+
+  const closeAuthModal = () => {
+    setAuthModalOpen(false);
+    setAuthModalRedirect(null);
+  };
+
+  useEffect(() => {
+    const onSessionExpired = () => {
+      removeToken();
+      setUser(null);
+    };
+    window.addEventListener(AUTH_SESSION_EXPIRED_EVENT, onSessionExpired);
+    return () => window.removeEventListener(AUTH_SESSION_EXPIRED_EVENT, onSessionExpired);
+  }, []);
 
   /* ---------- Init Auth ---------- */
   useEffect(() => {
@@ -358,6 +378,8 @@ export const AuthProvider = ({ children }) => {
       loading,
       isAuthenticated: isAuthenticated() && user !== null,
       isAdmin: isAdminUser(user),
+      openAuthModal,
+      closeAuthModal,
       login,
       loginWithGoogle,
       sendRegistrationOtp,
@@ -379,5 +401,14 @@ export const AuthProvider = ({ children }) => {
       </div>
     );
   }
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+      <AuthModal
+        open={authModalOpen}
+        onClose={closeAuthModal}
+        redirectTo={authModalRedirect}
+      />
+    </AuthContext.Provider>
+  );
 };

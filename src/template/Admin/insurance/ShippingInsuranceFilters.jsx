@@ -2,9 +2,7 @@
 
 import React from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import FilterSection from "@/components/FilterSection";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -12,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { FORM_STYLES } from "@/template/Admin/formStyles";
 
 const STATUS_OPTIONS = [
   { value: "1", label: "در انتظار" },
@@ -26,62 +25,50 @@ export default function ShippingInsuranceFilters() {
   const searchParams = useSearchParams();
 
   const orderId = searchParams.get("orderId") || "";
-  const userId = searchParams.get("userId") || "";
-  const status = searchParams.get("status") || "";
+  const phoneNumber = searchParams.get("phoneNumber") || "";
+  const status = searchParams.get("status") || "all";
 
-  const updateURL = (params) => {
-    const newParams = new URLSearchParams(searchParams.toString());
-    Object.entries(params).forEach(([key, value]) => {
-      if (value == null || value === "") {
-        newParams.delete(key);
-      } else {
-        newParams.set(key, String(value));
-      }
+  const updateURL = (updates) => {
+    const next = new URLSearchParams(searchParams.toString());
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value == null || value === "" || value === "all") next.delete(key);
+      else next.set(key, String(value));
     });
-    newParams.delete("page");
-    router.push(`/admin/insurance?${newParams.toString()}`);
+    next.delete("page");
+    const qs = next.toString();
+    router.push(qs ? `/admin/insurance?${qs}` : "/admin/insurance");
   };
 
   return (
-    <FilterSection isAdmin>
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-2">
-          <Label className="text-gray-400 text-sm whitespace-nowrap">شناسه سفارش</Label>
-          <Input
-            type="number"
-            placeholder="orderId"
-            value={orderId}
-            onChange={(e) => updateURL({ orderId: e.target.value || null })}
-            className="max-w-[120px] bg-gray-700 border-gray-600 text-white"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <Label className="text-gray-400 text-sm whitespace-nowrap">شناسه کاربر</Label>
-          <Input
-            type="number"
-            placeholder="userId"
-            value={userId}
-            onChange={(e) => updateURL({ userId: e.target.value || null })}
-            className="max-w-[120px] bg-gray-700 border-gray-600 text-white"
-          />
-        </div>
-      </div>
-      <Select
-        value={status || "all"}
-        onValueChange={(v) => updateURL({ status: v === "all" ? null : v })}
-      >
-        <SelectTrigger className="w-[160px] bg-gray-700 border-gray-600 text-white">
+    <div className="flex flex-wrap items-center gap-3">
+      <Input
+        type="number"
+        placeholder="شناسه سفارش"
+        value={orderId}
+        onChange={(e) => updateURL({ orderId: e.target.value || undefined, phoneNumber, status })}
+        className={`w-[130px] h-10 ${FORM_STYLES.input}`}
+      />
+      <Input
+        type="tel"
+        dir="ltr"
+        placeholder="شماره موبایل"
+        value={phoneNumber}
+        onChange={(e) => updateURL({ phoneNumber: e.target.value || undefined, orderId, status })}
+        className={`w-[140px] h-10 ${FORM_STYLES.input}`}
+      />
+      <Select value={status} onValueChange={(v) => updateURL({ status: v, orderId, phoneNumber })}>
+        <SelectTrigger className={`w-[180px] h-10 ${FORM_STYLES.selectTrigger}`}>
           <SelectValue placeholder="وضعیت" />
         </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">همه وضعیت‌ها</SelectItem>
+        <SelectContent className={FORM_STYLES.selectContent}>
+          <SelectItem value="all" className={FORM_STYLES.selectItem}>همه وضعیت‌ها</SelectItem>
           {STATUS_OPTIONS.map((o) => (
-            <SelectItem key={o.value} value={o.value}>
+            <SelectItem key={o.value} value={o.value} className={FORM_STYLES.selectItem}>
               {o.label}
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
-    </FilterSection>
+    </div>
   );
 }

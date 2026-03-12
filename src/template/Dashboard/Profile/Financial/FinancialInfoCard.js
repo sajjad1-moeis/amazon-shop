@@ -59,9 +59,9 @@ export default function FinancialInfoCard({ data: dataProp, bankAccounts, onUpda
       <EditFinancialInfoModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        initialData={displayFinancial}
-        onSave={handleSave}
+        initialData={{ ...displayFinancial, preferredBankAccountId: dataProp?.preferredBankAccountId }}
         bankAccounts={bankAccounts}
+        onUpdated={onUpdated}
       />
     </div>
   );

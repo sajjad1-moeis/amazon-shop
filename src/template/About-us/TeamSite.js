@@ -7,7 +7,7 @@ function TeamSite() {
     <div className="mt-10 md:mt-32 mb-20">
       <div className="container grid lg:grid-cols-3 gap-10 items-center">
         <div className="relative aspect-square  w-full rounded-xl overflow-hidden max-h-[412px]">
-          <Image src="/image/About-Us/TeamLogo.png" alt={`محصول بازدید شده شماره `} fill className=" rounded-md " />
+          <Image src="/image/About-Us/TeamLogo.jpg" alt={`محصول بازدید شده شماره `} fill className=" rounded-md " />
         </div>
         <div className="lg:col-span-2">
           <TitleCard title={<span className="dark:text-dark-title">تیم میکرولس</span>} titleClassName={"text-3xl"} />

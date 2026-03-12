@@ -17,7 +17,7 @@ function Page() {
         { label: "سوالات متداول", href: "/brands-faq" },
         { label: "نقشه سایت", href: "/footer" },
         { label: "سبد خرید", href: "/cart" },
-        { label: "تجربه خریداران", href: "/experiences" },
+        { label: "تجربه واقعی خریداران", href: "/review" },
       ],
     },
     {

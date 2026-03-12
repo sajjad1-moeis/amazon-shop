@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import RichTextEditor from "@/components/RichTextEditor";
 import { FORM_STYLES } from "./blogFormConfig";
 
 export default function DynamicField({
@@ -13,6 +14,7 @@ export default function DynamicField({
   formData,
   onChange,
   onSelectChange,
+  onContentChange,
   options = [],
   styles = FORM_STYLES,
 }) {
@@ -23,17 +25,28 @@ export default function DynamicField({
   const renderField = () => {
     switch (field.type) {
       case "text":
+      case "number":
       case "datetime-local":
         return (
           <Input
             id={field.id}
             name={field.name}
             type={field.type}
-            value={value || ""}
+            value={field.type === "number" ? (value != null && value !== "" ? value : "") : (value || "")}
             onChange={onChange}
             placeholder={field.placeholder}
             className={styles.input}
             required={field.required}
+          />
+        );
+
+      case "richtext":
+        return (
+          <RichTextEditor
+            value={value || ""}
+            onChange={(html) => onContentChange?.(field.name, html)}
+            placeholder={field.placeholder}
+            minHeight={field.minHeight}
           />
         );
 
@@ -45,7 +58,7 @@ export default function DynamicField({
             value={value || ""}
             onChange={onChange}
             placeholder={field.placeholder}
-            className={`${styles.input} ${field.minHeight || ""}`}
+            className={`${styles.textarea || styles.input} ${field.minHeight || ""}`}
             rows={field.rows}
             required={field.required}
           />

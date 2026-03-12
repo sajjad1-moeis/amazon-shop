@@ -45,7 +45,7 @@ export default function CommentsPage() {
 
   const filteredComments = useMemo(() => {
     let list = [...comments];
-    if (filters.status) {
+    if (filters.status && filters.status !== "all") {
       list = list.filter((c) => String(c.status ?? "").toLowerCase() === String(filters.status).toLowerCase());
     }
     if (filters.sortBy === "newest") {
@@ -65,7 +65,7 @@ export default function CommentsPage() {
   }, [comments, filters]);
 
   const handleFiltersChange = (key, value) => {
-    setFilters((prev) => ({ ...prev, [key]: value === "all" ? "" : value }));
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   if (userId == null) {

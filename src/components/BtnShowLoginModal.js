@@ -1,12 +1,11 @@
 "use client";
 
-import { AuthModal } from "@/template/Auth/AuthModal";
 import { User, LogoutCurve, ArrowDown2, Wallet3 } from "iconsax-reactjs";
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { userWalletService } from "@/services/userWallet/userWalletService";
-import { USER_MENU_ITEMS } from "@/data/userMenuItems";
+import { ADMIN_MENU_ITEM, USER_MENU_ITEMS } from "@/data/userMenuItems";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -40,13 +39,13 @@ function useWalletBalance(userId, enabled) {
 }
 
 export default function BtnShowLoginModal() {
-  const [open, setOpen] = useState(false);
   const [popoverOpen, setPopoverOpen] = useState(false);
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, isAdmin, logout, openAuthModal } = useAuth();
 
   const displayName = user?.userName || user?.fullName || user?.firstName || user?.name || user?.phoneNumber || "کاربر";
   const userId = user?.id ?? user?.userId;
   const balance = useWalletBalance(userId, popoverOpen && isAuthenticated);
+  const menuItems = isAdmin ? [ADMIN_MENU_ITEM, ...USER_MENU_ITEMS] : USER_MENU_ITEMS;
 
   const handleLogout = async () => {
     setPopoverOpen(false);
@@ -59,19 +58,16 @@ export default function BtnShowLoginModal() {
 
   if (!isAuthenticated) {
     return (
-      <>
-        <button
-          onClick={() => setOpen(true)}
-          className={cn(
-            "p-3 rounded-lg border-2 border-white dark:border-[#898989]",
-            "text-white dark:text-[#898989] hover:opacity-90 transition-opacity",
-          )}
-          aria-label="ورود"
-        >
-          <User />
-        </button>
-        <AuthModal open={open} onClose={() => setOpen(false)} />
-      </>
+      <button
+        onClick={() => openAuthModal()}
+        className={cn(
+          "p-3 rounded-lg border-2 border-white dark:border-[#898989]",
+          "text-white dark:text-[#898989] hover:opacity-90 transition-opacity",
+        )}
+        aria-label="ورود"
+      >
+        <User />
+      </button>
     );
   }
 
@@ -107,7 +103,7 @@ export default function BtnShowLoginModal() {
         </div>
         <Separator />
         <div className="py-1">
-          {USER_MENU_ITEMS.map(({ label, href, icon: Icon }) => (
+          {menuItems.map(({ label, href, icon: Icon }) => (
             <Link
               key={href}
               href={href}

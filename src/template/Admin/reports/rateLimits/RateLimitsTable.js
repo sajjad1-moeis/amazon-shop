@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { RotateRight } from "iconsax-reactjs";
+import { formatDateFa } from "@/utils/adminDateUtils";
 
 export default function RateLimitsTable({ rateLimits, onReset }) {
   const getStatusBadge = (isExceeded) => {
@@ -50,7 +51,7 @@ export default function RateLimitsTable({ rateLimits, onReset }) {
             <TableCell className="text-gray-300">{rateLimit.limit || rateLimit.maxRequests || "-"}</TableCell>
             <TableCell>{getStatusBadge(rateLimit.isExceeded || rateLimit.exceeded)}</TableCell>
             <TableCell className="text-gray-300">
-              {rateLimit.createdAt ? new Date(rateLimit.createdAt).toLocaleDateString("fa-IR") : "-"}
+              {rateLimit.createdAt ? formatDateFa(rateLimit.createdAt) : "-"}
             </TableCell>
             <TableCell>
               <Button

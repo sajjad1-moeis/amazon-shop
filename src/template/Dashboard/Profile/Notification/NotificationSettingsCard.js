@@ -87,6 +87,7 @@ export default function NotificationSettingsCard({ data: dataProp, onUpdated }) 
         onClose={() => setIsModalOpen(false)}
         initialData={displayNotification}
         onSave={handleSave}
+        onUpdated={onUpdated}
       />
     </div>
   );

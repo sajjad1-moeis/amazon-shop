@@ -40,7 +40,7 @@ export default function CurrencyServicesFilters() {
   const search = searchParams.get("search") || "";
   const status = searchParams.get("status") || "";
   const serviceType = searchParams.get("serviceType") || "";
-  const userId = searchParams.get("userId") || "";
+  const phoneNumber = searchParams.get("phoneNumber") || "";
 
   const update = (key, value) => {
     const q = new URLSearchParams(searchParams.toString());
@@ -59,13 +59,14 @@ export default function CurrencyServicesFilters() {
         placeholder="جستجو"
       />
       <div className="flex items-center gap-2">
-        <Label className="text-gray-400 text-sm whitespace-nowrap">شناسه کاربر</Label>
+        <Label className="text-gray-400 text-sm whitespace-nowrap">شماره موبایل</Label>
         <Input
-          type="number"
-          placeholder="userId"
-          value={userId}
-          onChange={(e) => update("userId", e.target.value || null)}
-          className="max-w-[100px] bg-gray-700 border-gray-600 text-white"
+          type="tel"
+          dir="ltr"
+          placeholder="09123456789"
+          value={phoneNumber}
+          onChange={(e) => update("phoneNumber", e.target.value || null)}
+          className="max-w-[130px] bg-gray-700 border-gray-600 text-white"
         />
       </div>
       <Select value={status || "all"} onValueChange={(v) => update("status", v === "all" ? null : v)}>

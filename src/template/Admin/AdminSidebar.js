@@ -8,24 +8,48 @@ import { ADMIN_SIDEBAR_ITEMS } from "@/data/adminSidebarData";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
+const pathMatches = (pathname, href) => {
+  if (!pathname || !href) return false;
+  if (pathname === href) return true;
+  if (href === "/admin") return pathname === "/admin";
+  return pathname.startsWith(href + "/");
+};
+
 export const SideBarContent = ({ onLinkClick }) => {
   const pathname = usePathname();
-  const [defaultValue, setDefaultValue] = useState("");
-  const keyLocation = pathname?.split("/admin/")[1] || "index";
+  const [openKey, setOpenKey] = useState("");
 
   useEffect(() => {
+    let keyToOpen = "";
     ADMIN_SIDEBAR_ITEMS.forEach((item) => {
-      if (item.children && keyLocation.includes(item.key)) {
-        setDefaultValue(item.key);
+      if (item.children) {
+        const childMatch = item.children.some(
+          (child) => pathname === child.href || pathMatches(pathname, child.href)
+        );
+        if (childMatch) keyToOpen = item.key;
       }
     });
-  }, [pathname, keyLocation]);
+    setOpenKey(keyToOpen);
+  }, [pathname]);
 
   const isActive = (item) => {
     if (item.children) {
-      return item.children.some((child) => pathname === child.href) || keyLocation.includes(item.key);
+      return item.children.some(
+        (child) => pathname === child.href || pathMatches(pathname, child.href)
+      );
     }
-    return pathname === item.href;
+    if (pathname === item.href) return true;
+    if (item.href !== "/admin" && pathMatches(pathname, item.href)) return true;
+    if (item.key === "report" && pathname?.startsWith("/admin/reports")) return true;
+    return false;
+  };
+
+  const isChildActive = (child, siblings = []) => {
+    if (!(pathname === child.href || pathMatches(pathname, child.href))) return false;
+    const noStricterSibling = !siblings.some(
+      (s) => s !== child && (pathname === s.href || pathMatches(pathname, s.href)) && s.href.length > child.href.length
+    );
+    return noStricterSibling;
   };
 
   return (
@@ -41,7 +65,13 @@ export const SideBarContent = ({ onLinkClick }) => {
       </Link>
 
       <nav className="mt-5 flex-grow max-lg:flex-grow-0 max-lg:mt-0 w-full">
-        <Accordion type="single" collapsible defaultValue={defaultValue} className="w-full">
+        <Accordion
+          type="single"
+          collapsible
+          value={openKey}
+          onValueChange={setOpenKey}
+          className="w-full"
+        >
           {ADMIN_SIDEBAR_ITEMS.map((item) => {
             const Icon = item.icon;
             const active = isActive(item);
@@ -52,7 +82,7 @@ export const SideBarContent = ({ onLinkClick }) => {
                   <AccordionTrigger
                     className={cn(
                       "flex items-center gap-2 p-2 px-3 text-sm font-medium rounded-lg cursor-pointer hover:bg-gray-700 transition-colors [&[data-state=open]>svg]:rotate-180",
-                      active && "bg-gray-700"
+                      active && "bg-gray-700/80 text-white ring-1 ring-gray-600/50"
                     )}
                   >
                     <Icon
@@ -74,7 +104,7 @@ export const SideBarContent = ({ onLinkClick }) => {
                             onClick={onLinkClick}
                             className={cn(
                               "block p-2 text-sm font-medium rounded-lg cursor-pointer hover:bg-gray-700 transition-colors text-white",
-                              pathname === child.href && "bg-gray-700"
+                              isChildActive(child, item.children) && "bg-gray-700/80 ring-1 ring-gray-600/50"
                             )}
                           >
                             {child.name}
@@ -92,7 +122,7 @@ export const SideBarContent = ({ onLinkClick }) => {
                 <div
                   className={cn(
                     "flex items-center gap-2 p-2 px-3 font-medium rounded-lg hover:bg-gray-700 transition-colors text-white",
-                    active && "bg-gray-700"
+                    active && "bg-gray-700/80 ring-1 ring-gray-600/50"
                   )}
                 >
                   <Icon variant="Bold" size={20} style={{ color: item.color, minWidth: "20px" }} />

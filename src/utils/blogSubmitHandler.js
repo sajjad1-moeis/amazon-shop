@@ -11,7 +11,10 @@ export const handleBlogSubmit = async ({
   skipValidation = false,
 }) => {
   if (!skipValidation) {
-    const validation = validateBlogForm(formData);
+    const requiredFields = isEdit
+      ? ["title", "shortDescription", "content", "categoryId"]
+      : ["title", "shortDescription", "content", "categoryId", "authorId"];
+    const validation = validateBlogForm(formData, requiredFields);
     if (!validation.isValid) {
       toast.error("لطفاً تمام فیلدهای الزامی را پر کنید");
       return { success: false, error: "Validation failed" };
@@ -35,10 +38,18 @@ export const handleBlogSubmit = async ({
       try {
         await blogService.uploadFeaturedImage(createdOrUpdatedBlogId, featuredImage);
       } catch (uploadError) {
-        console.error("Error uploading image:", uploadError);
-        toast.warning(
-          `بلاگ ${isEdit ? "به‌روزرسانی" : "ایجاد"} شد اما آپلود تصویر با خطا مواجه شد`
-        );
+        const status = uploadError?.response?.status;
+        const is404 = status === 404;
+        console.error("Error uploading blog featured image:", uploadError);
+        if (is404) {
+          toast.warning(
+            "بلاگ ذخیره شد. آپلود تصویر شاخص در سرور پشتیبانی نمی‌شود (endpoint یافت نشد)."
+          );
+        } else {
+          toast.warning(
+            `بلاگ ${isEdit ? "به‌روزرسانی" : "ایجاد"} شد اما آپلود تصویر با خطا مواجه شد.`
+          );
+        }
       }
     }
 

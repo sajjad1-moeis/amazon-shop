@@ -1,4 +1,5 @@
-import { getAuthenticatedClient } from "../api/client";
+import { getAuthenticatedClient, API_BASE_URL } from "../api/client";
+import { getToken } from "@/lib/token-manager";
 
 const buildQueryString = (params) => {
   const searchParams = new URLSearchParams();
@@ -63,7 +64,12 @@ export const userService = {
 
   changeUserStatus: async (id, isActive) => {
     const client = getAuthenticatedClient();
-    return client.post(`Users/ChangeUserStatus?id=${id}&isActive=${isActive}`).json();
+    const active = Boolean(isActive);
+    return client
+      .post(`Users/ChangeUserStatus?id=${id}`, {
+        json: { isActive: active, statusDto: { isActive: active } },
+      })
+      .json();
   },
 
   getUsersCount: async () => {
@@ -87,11 +93,27 @@ export const userService = {
     return client.post(`Users/UnbanUser?id=${id}`).json();
   },
 
+  /** آپلود تصویر پروفایل با fetch ساده و FormData (بدون ست کردن Content-Type) */
   uploadProfileImage: async (id, file) => {
-    const client = getAuthenticatedClient();
+    const token = getToken();
+    if (!token) throw new Error("Access token not found");
     const formData = new FormData();
     formData.append("file", file);
-    return client.post(`Users/UploadProfileImage?id=${id}`, { body: formData }).json();
+    if (file?.name) formData.append("fileName", file.name);
+    const base = (API_BASE_URL || "").replace(/\/$/, "");
+    const res = await fetch(`${base}/Users/UploadProfileImage?id=${id}`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const err = new Error(data?.message || res.statusText || "خطا در آپلود تصویر");
+      err.response = res;
+      err.data = data;
+      throw err;
+    }
+    return data;
   },
 
   deleteProfileImage: async (id) => {
@@ -102,6 +124,7 @@ export const userService = {
   getUsersWithFilters: async (filters = {}) => {
     const client = getAuthenticatedClient();
     const params = {
+      principal: filters.principal,
       pageNumber: filters.pageNumber,
       pageSize: filters.pageSize,
       searchTerm: filters.searchTerm,
@@ -150,6 +173,42 @@ export const userService = {
   changePassword: async (body) => {
     const client = getAuthenticatedClient();
     return client.post("Users/ChangePassword", { json: body }).json();
+  },
+
+  /** PUT api/Users/UpdateProfile — ویرایش اطلاعات اصلی پروفایل (Phase 20) */
+  updateProfile: async (body) => {
+    const client = getAuthenticatedClient();
+    return client.put("Users/UpdateProfile", { json: body }).json();
+  },
+
+  /** PUT api/Users/UpdateFinancialInfo — ذخیره حساب بانکی ترجیحی (Phase 20) */
+  updateFinancialInfo: async (body) => {
+    const client = getAuthenticatedClient();
+    return client.put("Users/UpdateFinancialInfo", { json: body }).json();
+  },
+
+  /** GET api/Users/NotificationSettings — دریافت تنظیمات نوتیفیکیشن (Phase 20) */
+  getNotificationSettings: async () => {
+    const client = getAuthenticatedClient();
+    return client.get("Users/NotificationSettings").json();
+  },
+
+  /** PUT api/Users/NotificationSettings — به‌روزرسانی تنظیمات نوتیفیکیشن (Phase 20) */
+  updateNotificationSettings: async (body) => {
+    const client = getAuthenticatedClient();
+    return client.put("Users/NotificationSettings", { json: body }).json();
+  },
+
+  /** GET api/Users/ConnectedDevices — لیست دستگاه‌های متصل (Phase 20) */
+  getConnectedDevices: async () => {
+    const client = getAuthenticatedClient();
+    return client.get("Users/ConnectedDevices").json();
+  },
+
+  /** POST api/Users/LogoutDevice?deviceId= — خروج از یک دستگاه (Phase 20) */
+  logoutDevice: async (deviceId) => {
+    const client = getAuthenticatedClient();
+    return client.post(`Users/LogoutDevice?deviceId=${encodeURIComponent(deviceId)}`).json();
   },
 
   chargeUserWallet: async (id, walletData) => {

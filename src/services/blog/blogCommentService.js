@@ -26,6 +26,20 @@ export const blogCommentService = {
     return client.get(`BlogComment/GetByStatus?status=${status}`).json();
   },
 
+  /** GET api/BlogComment/GetPaginated — Phase 23: pageNumber, pageSize, status?, blogId?, searchTerm? */
+  getPaginated: async (params = {}) => {
+    const { pageNumber = 1, pageSize = 20, status, blogId, searchTerm } = params;
+    const qs = new URLSearchParams({
+      pageNumber: String(pageNumber),
+      pageSize: String(pageSize),
+    });
+    if (status !== undefined && status !== null) qs.append("status", String(status));
+    if (blogId !== undefined && blogId !== null) qs.append("blogId", String(blogId));
+    if (searchTerm != null && searchTerm !== "") qs.append("searchTerm", searchTerm);
+    const client = getAuthenticatedClient();
+    return client.get(`BlogComment/GetPaginated?${qs.toString()}`).json();
+  },
+
   /** GetCount — Query: blogId */
   getCount: async (blogId) => {
     const client = getPublicClient();
@@ -53,9 +67,11 @@ export const blogCommentService = {
     return client.post(`BlogComment/Approve?id=${id}`).json();
   },
 
-  reject: async (id) => {
+  /** POST api/BlogComment/Reject — Query: id. Body اختیاری: { reason? } (حداکثر ۵۰۰ کاراکتر) */
+  reject: async (id, reason) => {
     const client = getAuthenticatedClient();
-    return client.post(`BlogComment/Reject?id=${id}`).json();
+    const body = reason != null && String(reason).trim() ? { reason: String(reason).trim().slice(0, 500) } : {};
+    return client.post(`BlogComment/Reject?id=${id}`, { json: body }).json();
   },
 
   /** POST api/BlogComment/delete/{id} */

@@ -3,28 +3,32 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { People } from "iconsax-reactjs";
 import UsersTable from "@/template/Admin/users/UsersTable";
 import UsersFilters from "@/template/Admin/users/UsersFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
+import { useAuth } from "@/contexts/AuthContext";
 import { userService } from "@/services/user/userService";
-import FilterSection from "@/components/FilterSection";
-import FilterSearchInput from "@/components/FilterSelects/FilterSearchInput";
+import { unwrapApiData } from "@/services/api/client";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 
 export default function UsersPage() {
   const router = useRouter();
+  const { user: currentUser } = useAuth();
   const searchParams = useSearchParams();
   const roleParam = searchParams.get("role");
   const statusParam = searchParams.get("status");
   const pageParam = searchParams.get("page");
+  const searchParam = searchParams.get("search") || "";
 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
   const [pageNumber, setPageNumber] = useState(pageParam ? parseInt(pageParam) : 1);
   const [pageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+  const [statusLoadingId, setStatusLoadingId] = useState(null);
 
   const filterRole = roleParam || "all";
   const filterStatus = statusParam || "all";
@@ -38,14 +42,22 @@ export default function UsersPage() {
     }
   }, [searchParams]);
 
+  const principal = currentUser?.id ?? currentUser?.userId;
+
   const fetchUsers = useCallback(async () => {
+    if (principal == null) {
+      setLoading(false);
+      return;
+    }
     try {
       setLoading(true);
       const response = await userService.getUsersWithFilters({
+        principal,
         pageNumber,
         pageSize,
-        searchTerm: searchTerm || undefined,
-        isActive: filterStatus === "active" ? true : undefined,
+        searchTerm: searchParam.trim() || undefined,
+        isActive:
+          filterStatus === "active" ? true : filterStatus === "inactive" ? false : undefined,
         isBanned: filterStatus === "banned" ? true : undefined,
         roleName: filterRole === "all" ? undefined : filterRole,
         sortBy: "createdAt",
@@ -63,7 +75,20 @@ export default function UsersPage() {
     } finally {
       setLoading(false);
     }
-  }, [pageNumber, pageSize, searchTerm, filterStatus, filterRole]);
+  }, [principal, pageNumber, pageSize, searchParam, filterStatus, filterRole]);
+
+  const handleChangeStatus = async (userId, isActive) => {
+    try {
+      setStatusLoadingId(userId);
+      unwrapApiData(await userService.changeUserStatus(userId, isActive));
+      toast.success(isActive ? "کاربر فعال شد" : "کاربر غیرفعال شد");
+      fetchUsers();
+    } catch (error) {
+      toast.error(error?.message || error?.data?.message || "خطا در تغییر وضعیت کاربر");
+    } finally {
+      setStatusLoadingId(null);
+    }
+  };
 
   const handlePageChange = (newPage) => {
     setPageNumber(newPage);
@@ -73,37 +98,32 @@ export default function UsersPage() {
   };
 
   useEffect(() => {
-    if (searchTerm) {
-      setPageNumber(1);
-    }
-  }, [searchTerm]);
-
-  useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
 
   return (
     <div className="space-y-6">
-      <div className="">
-        <div className="mb-5">
-          <h1 className="text-lg md:text-xl text-gray-100 mb-4">لیست کاربران</h1>
-
-          <UsersFilters />
-        </div>
-
+      <AdminPageHeader title="لیست کاربران" subtitle="مدیریت و جستجوی کاربران سیستم" icon={People}>
+        <UsersFilters />
+      </AdminPageHeader>
+      <AdminSectionCard title="جدول کاربران">
         {loading ? (
           <div className="p-8 text-center text-gray-400">
             <Spinner size="lg" />
           </div>
         ) : (
           <>
-            <UsersTable users={users} />
-            <div className="pt-4 border-t border-gray-700">
+            <UsersTable
+                users={users}
+                onStatusChange={handleChangeStatus}
+                statusLoadingId={statusLoadingId}
+              />
+            <div className="pt-4 mt-4 border-t border-gray-600">
               <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={handlePageChange} />
             </div>
           </>
         )}
-      </div>
+      </AdminSectionCard>
     </div>
   );
 }

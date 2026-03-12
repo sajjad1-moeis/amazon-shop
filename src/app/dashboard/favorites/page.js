@@ -78,7 +78,7 @@ export default function FavoritesPage() {
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({
       ...prev,
-      [key]: value === "all" ? "" : value,
+      [key]: value,
     }));
   };
 
@@ -124,7 +124,7 @@ export default function FavoritesPage() {
       }
     }
 
-    if (filters.brand) {
+    if (filters.brand && filters.brand !== "all") {
       const b = String(filters.brand).toLowerCase();
       list = list.filter(
         (p) =>
@@ -133,7 +133,7 @@ export default function FavoritesPage() {
       );
     }
 
-    if (filters.trackingStatus) {
+    if (filters.trackingStatus && filters.trackingStatus !== "all") {
       list = list.filter(
         (p) => p.trackingStatus === filters.trackingStatus,
       );

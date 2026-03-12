@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { VIEWS } from "./Views";
 import LoginView from "./LoginView";
@@ -26,22 +26,30 @@ export function AuthModal({ open, onClose, redirectTo }) {
     setCode("");
   };
 
+  const resetToLogin = () => {
+    setView(VIEWS.LOGIN);
+    resetFields();
+    setPhone("");
+  };
+
+  // ریست فقط موقع باز شدن مودال تا موقع بسته شدن ویو عوض نشه و بد بسته نشه
+  useEffect(() => {
+    if (open) {
+      resetToLogin();
+    }
+  }, [open]);
+
   const goTo = (v) => {
     resetFields();
     setView(v);
   };
 
-  const handleClose = (state) => {
-    if (!state) {
-      setView(VIEWS.LOGIN);
-      resetFields();
-      setPhone("");
-    }
+  const handleClose = () => {
     onClose();
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
+    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleClose()}>
       <DialogContent className="max-w-md p-0 overflow-hidden !rounded-2xl bg-white dark:bg-dark-box">
         {view === VIEWS.LOGIN && (
           <LoginView
@@ -70,7 +78,13 @@ export function AuthModal({ open, onClose, redirectTo }) {
         )}
 
         {view === VIEWS.SIGNUP_VERIFY && (
-          <SignupVerifyView phone={phone} code={code} onChangeCode={setCode} onBack={() => goTo(VIEWS.SIGNUP)} />
+          <SignupVerifyView
+            phone={phone}
+            code={code}
+            onChangeCode={setCode}
+            onBack={() => goTo(VIEWS.SIGNUP)}
+            onSuccess={() => onClose()}
+          />
         )}
 
         {view === VIEWS.RESET_REQUEST && (

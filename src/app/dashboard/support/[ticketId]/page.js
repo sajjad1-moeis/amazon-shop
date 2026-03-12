@@ -22,6 +22,7 @@ export default function TicketDetail() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [sendingMessage, setSendingMessage] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
     if (ticketId) {
@@ -34,37 +35,63 @@ export default function TicketDetail() {
       setLoading(true);
       const response = await ticketService.getTicketWithMessages(ticketId);
 
-      if (response.success && response.data) {
-        const ticketData = response.data;
-        setTicket({
-          id: ticketData.id,
-          ticketNumber: ticketData.ticketNumber || `TKT-${ticketData.id}`,
-          title: ticketData.subject || ticketData.title || "-",
-          createdAt: formatDate(ticketData.createdAt),
-          lastUpdate: formatDate(ticketData.updatedAt || ticketData.createdAt),
-          status: ticketData.status === 1 ? "reviewing" : ticketData.status === 2 ? "closed" : "pending",
-          priority: ticketData.priority === 3 ? "high" : ticketData.priority === 2 ? "medium" : "low",
-          category: ticketData.categoryName || ticketData.category || "-",
-          files: ticketData.files || [],
-        });
+      // پشتیبانی از هر دو ساختار: { ticket, messages } یا { success, data }
+      const rawTicket = response?.ticket ?? response?.data?.ticket ?? response?.data;
+      const rawMessages = response?.messages ?? response?.data?.messages ?? rawTicket?.messages ?? [];
 
-        const formattedMessages = (ticketData.messages || []).map((msg) => ({
-          id: msg.id,
-          sender: msg.isFromAdmin || msg.sender === "admin" ? "support" : "user",
-          senderName: msg.isFromAdmin || msg.sender === "admin" ? "پشتیبانی" : "شما",
-          supportName: msg.isFromAdmin || msg.sender === "admin" ? msg.adminName || "پشتیبانی" : undefined,
-          time: formatDate(msg.createdAt || msg.time),
-          date: formatDate(msg.createdAt || msg.time),
-          text: msg.message || msg.text || "-",
-        }));
-
-        setMessages(formattedMessages);
-      } else {
-        toast.error(response.message || "خطا در دریافت تیکت");
+      if (!rawTicket || (rawTicket && !rawTicket.id && !rawTicket.ticketNumber)) {
+        toast.error(response?.message || "تیکت یافت نشد");
         router.push("/dashboard/support");
+        return;
       }
+
+      const t = rawTicket;
+      setTicket({
+        id: t.id,
+        ticketNumber: t.ticketNumber || `TKT-${t.id}`,
+        title: t.subject || t.title || "-",
+        subject: t.subject || t.title || "-",
+        description: t.description ?? "",
+        createdAt: formatDate(t.createdAt),
+        lastUpdate: formatDate(t.updatedAt || t.createdAt),
+        status: typeof t.status === "number" ? t.status : t.status,
+        priority: t.priority === 3 ? "high" : t.priority === 2 ? "medium" : "low",
+        category: t.categoryName || t.category || "-",
+        categoryName: t.categoryName || t.category || "-",
+        userFullName: t.userFullName?.trim() || "-",
+        userEmail: t.userEmail || "",
+        statusName: t.statusName || "",
+        files: t.files || [],
+      });
+
+      // اولین پیام = توضیحات تیکت (همان description هنگام ساخت)
+      const firstMessage = {
+        id: "ticket-initial",
+        sender: "user",
+        senderName: "شما",
+        supportName: undefined,
+        time: formatDate(t.createdAt),
+        date: formatDate(t.createdAt),
+        text: (t.description ?? "").trim() || "—",
+        attachmentUrl: t.attachmentUrl ?? t.attachment ?? null,
+        attachmentFileName: t.attachmentFileName ?? t.attachmentName ?? null,
+      };
+
+      const formattedFromApi = (Array.isArray(rawMessages) ? rawMessages : []).map((msg) => ({
+        id: msg.id,
+        sender: msg.messageTypeName === "Admin" || msg.isFromAdmin === true || msg.sender === "admin" || msg.isStaff ? "support" : "user",
+        senderName: msg.messageTypeName === "Admin" || msg.isFromAdmin || msg.sender === "admin" ? "پشتیبانی" : "شما",
+        supportName: msg.adminName ?? msg.senderName ?? (msg.messageTypeName === "Admin" ? "پشتیبانی" : undefined),
+        time: formatDate(msg.createdAt || msg.sentAt || msg.time),
+        date: formatDate(msg.createdAt || msg.sentAt || msg.time),
+        text: msg.message || msg.text || msg.content || "-",
+        attachmentUrl: msg.attachmentUrl ?? msg.attachment ?? null,
+        attachmentFileName: msg.attachmentFileName ?? msg.attachmentName ?? null,
+      }));
+
+      setMessages([firstMessage, ...formattedFromApi]);
     } catch (error) {
-      toast.error(error.message || "خطا در دریافت تیکت");
+      toast.error(error?.message || "خطا در دریافت تیکت");
       console.error("Error fetching ticket:", error);
       router.push("/dashboard/support");
     } finally {
@@ -74,26 +101,48 @@ export default function TicketDetail() {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!message.trim()) {
-      toast.error("لطفاً پیام را وارد کنید");
+    if (!message.trim() && !selectedFile) {
+      toast.error("لطفاً پیام یا تصویر وارد کنید");
       return;
     }
 
     setSendingMessage(true);
     try {
-      const response = await ticketService.addMessage({
+      let attachmentUrl = null;
+      let attachmentFileName = null;
+
+      if (selectedFile) {
+        try {
+          const uploadRes = await ticketService.uploadTicketFile(ticketId, selectedFile);
+          const d = uploadRes?.data ?? uploadRes;
+          attachmentUrl = d?.url ?? d?.fileUrl ?? d?.attachmentUrl ?? null;
+          attachmentFileName = d?.fileName ?? d?.attachmentFileName ?? d?.name ?? selectedFile.name ?? null;
+        } catch (uploadErr) {
+          toast.warning("تصویر آپلود نشد");
+        }
+        setSelectedFile(null);
+      }
+
+      const body = {
         ticketId: Number(ticketId),
-        message: message.trim(),
-      });
-      if (response.success) {
+        message: (message || " ").trim(),
+      };
+      if (attachmentUrl) {
+        body.attachmentUrl = attachmentUrl;
+        if (attachmentFileName) body.attachmentFileName = attachmentFileName;
+      }
+
+      const response = await ticketService.addMessage(body);
+      const ok = response?.success === true || (response?.data && !response?.message);
+      if (ok) {
         toast.success("پیام با موفقیت ارسال شد");
         setMessage("");
         fetchTicket();
       } else {
-        toast.error(response.message || "خطا در ارسال پیام");
+        toast.error(response?.message || "خطا در ارسال پیام");
       }
     } catch (error) {
-      toast.error(error.message || "خطا در ارسال پیام");
+      toast.error(error?.message || "خطا در ارسال پیام");
       console.error("Error sending message:", error);
     } finally {
       setSendingMessage(false);
@@ -113,6 +162,26 @@ export default function TicketDetail() {
         return <span className="text-green-600 dark:text-green-400 font-medium">پایین</span>;
       default:
         return null;
+    }
+  };
+
+  const [closingTicket, setClosingTicket] = useState(false);
+  const handleCloseTicket = async () => {
+    if (!ticketId || ticket?.status === 5) return;
+    if (!confirm("آیا از بستن این تیکت اطمینان دارید؟")) return;
+    setClosingTicket(true);
+    try {
+      const res = await ticketService.closeTicket(ticketId);
+      if (res?.success !== false) {
+        toast.success("تیکت بسته شد");
+        fetchTicket();
+      } else {
+        toast.error(res?.message || "خطا در بستن تیکت");
+      }
+    } catch (err) {
+      toast.error(err?.message || "خطا در بستن تیکت");
+    } finally {
+      setClosingTicket(false);
     }
   };
 
@@ -141,14 +210,20 @@ export default function TicketDetail() {
 
   return (
     <DashboardLayout>
-      {/* Top Section: Header and Create Ticket Button */}
       <PageHeader
-        actionButton={<Button className="bg-yellow-500 hover:bg-yellow-600 text-primary-800">بستن تیکت</Button>}
         title="تیکت و پشتیبانی"
-      >
-        {" "}
-        <Button className="bg-yellow-500 hover:bg-yellow-600 text-primary-800 max-md:hidden">بستن تیکت</Button>
-      </PageHeader>
+        actionButton={
+          ticket.status !== 5 ? (
+            <Button
+              className="bg-yellow-500 hover:bg-yellow-600 text-primary-800 w-full md:w-auto"
+              onClick={handleCloseTicket}
+              disabled={closingTicket}
+            >
+              {closingTicket ? "در حال بستن..." : "بستن تیکت"}
+            </Button>
+          ) : null
+        }
+      />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
         <div className="lg:col-span-2">
           <TicketChat
@@ -158,6 +233,9 @@ export default function TicketDetail() {
             setMessage={setMessage}
             handleSendMessage={handleSendMessage}
             sendingMessage={sendingMessage}
+            selectedFile={selectedFile}
+            onFileSelect={setSelectedFile}
+            onClearFile={() => setSelectedFile(null)}
           />
         </div>
         <div>

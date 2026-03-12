@@ -1,14 +1,17 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Add } from "iconsax-reactjs";
+import { Add, Category2, SearchNormal1 } from "iconsax-reactjs";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import PageHeader from "@/template/Admin/PageHeader";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import CategoriesTable from "@/template/Admin/products/categories/CategoriesTable";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 import { productCategoryService } from "@/services/product/productCategoryService";
 
 export default function CategoriesPage() {
@@ -45,8 +48,15 @@ export default function CategoriesPage() {
 
   useEffect(() => {
     let filtered = categories;
-    if (searchTerm) {
-      filtered = categories.filter((cat) => cat.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    if (searchTerm.trim()) {
+      const term = searchTerm.trim().toLowerCase();
+      filtered = categories.filter(
+        (cat) =>
+          (cat.name && cat.name.toLowerCase().includes(term)) ||
+          (cat.key && cat.key.toLowerCase().includes(term)) ||
+          (cat.keyName && cat.keyName.toLowerCase().includes(term)) ||
+          (cat.slug && cat.slug.toLowerCase().includes(term))
+      );
     }
     const startIndex = (pageNumber - 1) * pageSize;
     const endIndex = startIndex + pageSize;
@@ -83,25 +93,38 @@ export default function CategoriesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="">
-        <PageHeader
-          title="دسته‌بندی‌ها"
-          buttonText="دسته‌بندی جدید"
-          buttonIcon={<Add size={20} className="ml-2" />}
-          buttonHref="/admin/products/categories/create"
-          searchPlaceholder="جستجو ..."
-          searchValue={searchTerm}
-          onSearchChange={setSearchTerm}
-        />
+      <AdminPageHeader title="دسته‌بندی‌ها" subtitle="مدیریت دسته‌بندی‌های محصولات" icon={Category2}>
+        <div className="flex flex-wrap items-center gap-3">
+          <Link href="/admin/products/categories/create">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Add size={20} className="ml-2" />
+              <span className="max-md:hidden">دسته‌بندی جدید</span>
+            </Button>
+          </Link>
+          <div className="relative flex-1 min-w-[180px] max-w-[260px]">
+            <SearchNormal1 size={18} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
+            <Input
+              type="text"
+              placeholder="جستجو نام، Key یا Slug..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="bg-gray-700 border-gray-600 text-white h-10 pl-3 pr-10"
+            />
+          </div>
+        </div>
+      </AdminPageHeader>
 
+      <AdminSectionCard title="لیست دسته‌بندی‌ها">
         {loading ? (
           <div className="p-8 text-center text-gray-400">
             <Spinner size="lg" />
           </div>
+        ) : categories.length === 0 ? (
+          <div className="p-8 text-center text-gray-400">دسته‌بندی‌ای یافت نشد</div>
         ) : (
           <>
             <CategoriesTable categories={displayedCategories} onEdit={handleEdit} onDelete={handleDelete} />
-            <div className="pt-4 border-t border-gray-700">
+            <div className="pt-4 border-t border-gray-700/60 mt-4">
               <AdminPagination
                 currentPage={pageNumber}
                 totalPages={Math.ceil(categories.length / pageSize) || 1}
@@ -110,7 +133,7 @@ export default function CategoriesPage() {
             </div>
           </>
         )}
-      </div>
+      </AdminSectionCard>
 
       <ConfirmDialog
         open={deleteDialogOpen}

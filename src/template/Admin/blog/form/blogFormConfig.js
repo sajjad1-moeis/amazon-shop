@@ -44,6 +44,16 @@ export const FORM_SECTIONS = {
         gridCols: "md:col-span-1",
       },
       {
+        id: "authorId",
+        name: "authorId",
+        type: "number",
+        label: "شناسه نویسنده (AuthorId)",
+        placeholder: "فقط هنگام ایجاد",
+        required: false,
+        gridCols: "md:col-span-1",
+        showInCreateOnly: true,
+      },
+      {
         id: "status",
         name: "status",
         type: "select",
@@ -68,6 +78,7 @@ export const FORM_SECTIONS = {
         label: "بلاگ ویژه",
         checkboxLabel: "بلاگ ویژه باشد",
         gridCols: "md:col-span-1",
+        showInCreateOnly: true,
       },
       {
         id: "allowComments",
@@ -95,11 +106,10 @@ export const FORM_SECTIONS = {
       {
         id: "content",
         name: "content",
-        type: "textarea",
+        type: "richtext",
         label: "محتوای وبلاگ",
         placeholder: "محتوای کامل وبلاگ را وارد کنید",
         required: true,
-        rows: 20,
         minHeight: "min-h-[400px]",
       },
     ],

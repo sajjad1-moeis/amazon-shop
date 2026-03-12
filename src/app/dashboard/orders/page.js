@@ -29,6 +29,59 @@ const PAYMENT_STATUS_MAP = {
   pending: "در انتظار پرداخت",
 };
 
+/** نگاشت مقدار وضعیت از API (عدد یا رشته) به slug فیلتر/تب */
+const ORDER_STATUS_TO_SLUG = {
+  1: "processing",
+  2: "processing",
+  3: "processing",
+  4: "to-iran",
+  5: "delivered",
+  6: "returned",
+  7: "returned",
+  8: "returned",
+  pending: "processing",
+  paid: "processing",
+  processing: "processing",
+  shipped: "to-iran",
+  delivered: "delivered",
+  cancelled: "returned",
+  refunded: "returned",
+  failed: "returned",
+  "to-dubai": "to-dubai",
+  "to-iran": "to-iran",
+  clearance: "clearance",
+  returned: "returned",
+};
+
+/** نگاشت مقدار وضعیت پرداخت از API به متن فارسی */
+const PAYMENT_STATUS_FROM_API = {
+  full: "پرداخت کامل",
+  Full: "پرداخت کامل",
+  paid: "پرداخت کامل",
+  Paid: "پرداخت کامل",
+  partial: "پرداخت جزئی",
+  Partial: "پرداخت جزئی",
+  pending: "در انتظار پرداخت",
+  Pending: "در انتظار پرداخت",
+  1: "پرداخت کامل",
+  2: "پرداخت جزئی",
+  3: "در انتظار پرداخت",
+};
+
+function normalizeOrderStatus(apiOrder) {
+  const raw = apiOrder.statusText ?? apiOrder.status ?? apiOrder.orderStatus;
+  if (raw == null) return "processing";
+  const key = typeof raw === "number" ? raw : String(raw).toLowerCase().replace(/\s/g, "");
+  return ORDER_STATUS_TO_SLUG[key] ?? ORDER_STATUS_TO_SLUG[raw] ?? (typeof raw === "string" ? raw : "processing");
+}
+
+function normalizePaymentStatus(apiOrder) {
+  const raw = apiOrder.paymentStatusText ?? apiOrder.paymentStatus;
+  if (raw == null) return apiOrder.isPaid ? "پرداخت کامل" : "در انتظار پرداخت";
+  const key = typeof raw === "number" ? raw : raw;
+  return PAYMENT_STATUS_FROM_API[key] ?? (typeof raw === "string" ? raw : "در انتظار پرداخت");
+}
+
 function mapApiOrderToCard(apiOrder) {
   if (!apiOrder) return null;
 
@@ -98,15 +151,9 @@ function mapApiOrderToCard(apiOrder) {
       ? totalAmountRaw.toLocaleString("fa-IR")
       : String(totalAmountRaw);
 
-  const status =
-    apiOrder.statusText ??
-    apiOrder.status ??
-    "processing";
+  const status = normalizeOrderStatus(apiOrder);
 
-  const paymentStatusText =
-    apiOrder.paymentStatusText ??
-    apiOrder.paymentStatus ??
-    (apiOrder.isPaid ? PAYMENT_STATUS_MAP.full : PAYMENT_STATUS_MAP.pending);
+  const paymentStatusText = normalizePaymentStatus(apiOrder);
 
   const timeline =
     apiOrder.timeline ??
@@ -162,7 +209,7 @@ export default function OrdersPage() {
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({
       ...prev,
-      [key]: value === "all" ? "" : value,
+      [key]: value,
     }));
   };
 
@@ -207,14 +254,16 @@ export default function OrdersPage() {
           (order.products ?? []).some((p) => String(p?.name ?? "").toLowerCase().includes(query))
         );
       })
-      .filter((order) => (filters.status ? order.status === filters.status : true))
       .filter((order) =>
-        filters.paymentStatus
-          ? order.paymentStatus === PAYMENT_STATUS_MAP[filters.paymentStatus]
-          : true
+        !filters.status || filters.status === "all" ? true : order.status === filters.status
+      )
+      .filter((order) =>
+        !filters.paymentStatus || filters.paymentStatus === "all"
+          ? true
+          : order.paymentStatus === PAYMENT_STATUS_MAP[filters.paymentStatus]
       )
       .filter((order) => {
-        if (!filters.timeRange) return true;
+        if (!filters.timeRange || filters.timeRange === "all") return true;
         const d = order.createdAt ?? order.orderDate ?? order.createdOn;
         if (!d) return false;
         const orderDate = new Date(d);

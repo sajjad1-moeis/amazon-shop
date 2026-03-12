@@ -15,7 +15,7 @@ const defaultSecurityData = {
   lastPasswordChange: "—",
 };
 
-export default function SecurityCard({ data: dataProp }) {
+export default function SecurityCard({ data: dataProp, onDevicesUpdated }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDevicesModalOpen, setIsDevicesModalOpen] = useState(false);
   const [securityInfo, setSecurityInfo] = useState(defaultSecurityData);
@@ -68,7 +68,11 @@ export default function SecurityCard({ data: dataProp }) {
       <EditSecurityModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={handleSave} />
 
       {/* Connected Devices Modal */}
-      <ConnectedDevicesModal isOpen={isDevicesModalOpen} onClose={() => setIsDevicesModalOpen(false)} />
+      <ConnectedDevicesModal
+        isOpen={isDevicesModalOpen}
+        onClose={() => setIsDevicesModalOpen(false)}
+        onDevicesUpdated={onDevicesUpdated}
+      />
     </div>
   );
 }

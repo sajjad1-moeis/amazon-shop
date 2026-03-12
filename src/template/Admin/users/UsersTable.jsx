@@ -4,9 +4,11 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import TableActions from "../TableActions";
 
-export default function UsersTable({ users }) {
+export default function UsersTable({ users, onStatusChange, statusLoadingId }) {
   const router = useRouter();
 
   if (users.length === 0) {
@@ -45,33 +47,80 @@ export default function UsersTable({ users }) {
               <TableCell className="text-gray-300 whitespace-nowrap">{user.email || "-"}</TableCell>
               <TableCell className="text-gray-300 whitespace-nowrap">{user.phoneNumber || "-"}</TableCell>
               <TableCell className="whitespace-nowrap">
-              {user.roles && user.roles.length > 0 ? (
-                <Badge variant="outline" className="bg-blue-500/20 text-blue-400 border-blue-500/30">
-                  {user.roles[0]}
-                </Badge>
-              ) : (
-                <span className="text-gray-400">-</span>
-              )}
-            </TableCell>
+                {user.roles && user.roles.length > 0 ? (
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="bg-blue-500/20 text-blue-400 border-blue-500/30">
+                      {user.roles[0]}
+                    </Badge>
+                    {user.roles.length > 1 && (
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <button
+                            type="button"
+                            className="px-2 py-1 text-[11px] rounded-md border border-gray-600 text-gray-200 hover:bg-gray-700/60 transition-colors"
+                          >
+                            +{user.roles.length - 1}
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          align="end"
+                          className="w-56 p-3 bg-[#111827] text-gray-100 border border-gray-700 rounded-xl shadow-xl"
+                          dir="rtl"
+                        >
+                          <p className="text-xs text-gray-400 mb-2">نقش‌های کاربر</p>
+                          <div className="flex flex-col gap-1">
+                            {user.roles.map((role) => (
+                              <Badge
+                                key={role}
+                                variant="outline"
+                                className="w-full justify-start bg-gray-800 text-gray-100 border-gray-600 text-xs"
+                              >
+                                {role}
+                              </Badge>
+                            ))}
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                    )}
+                  </div>
+                ) : (
+                  <span className="text-gray-400">-</span>
+                )}
+              </TableCell>
               <TableCell className="text-gray-300 whitespace-nowrap">{user.totalOrders || 0}</TableCell>
               <TableCell className="text-gray-300 whitespace-nowrap">
               {user.totalSpent ? `${Number(user.totalSpent).toLocaleString("fa-IR")} ریال` : "0 ریال"}
             </TableCell>
               <TableCell className="whitespace-nowrap">
               <div className="flex flex-col gap-1">
-                <Badge
-                  variant="outline"
-                  className={
-                    user.isActive
-                        ? "bg-green-500/20 text-green-400 border-green-500/30  w-max"
-                      : "bg-gray-500/20 text-gray-400 border-gray-500/30"
-                  }
-                >
-                  {user.isActive ? "فعال" : "غیرفعال"}
-                </Badge>
+                {!user.isBanned && onStatusChange && (
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      size="sm"
+                      dir="ltr"
+                      checked={!!user.isActive}
+                      onCheckedChange={(checked) => onStatusChange(user.id, checked)}
+                      disabled={statusLoadingId === user.id}
+                      className="data-[state=checked]:bg-emerald-600"
+                    />
+                    <span className="text-xs text-gray-400">{user.isActive ? "فعال" : "غیرفعال"}</span>
+                  </div>
+                )}
                 {user.isBanned && (
-                  <Badge variant="outline" className="bg-red-500/20 text-red-400 border-red-500/30 text-xs">
+                  <Badge variant="outline" className="bg-red-500/20 text-red-400 border-red-500/30 text-xs w-max">
                     بن شده
+                  </Badge>
+                )}
+                {!user.isBanned && !onStatusChange && (
+                  <Badge
+                    variant="outline"
+                    className={
+                      user.isActive
+                        ? "bg-green-500/20 text-green-400 border-green-500/30 w-max"
+                        : "bg-gray-500/20 text-gray-400 border-gray-500/30"
+                    }
+                  >
+                    {user.isActive ? "فعال" : "غیرفعال"}
                   </Badge>
                 )}
               </div>

@@ -28,7 +28,7 @@ const PAYMENT_METHOD_MAP = {
 
 export default function Page() {
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { user, loading, openAuthModal } = useAuth();
   const [currentStep, setCurrentStep] = useState(2);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const [cart, setCart] = useState(null);
@@ -37,7 +37,8 @@ export default function Page() {
     if (loading) return;
     if (!user) {
       toast.error("برای ادامه و پرداخت وارد حساب کاربری شوید");
-      router.replace("/login?redirect=" + encodeURIComponent("/steps-cart"));
+      openAuthModal("/steps-cart");
+      router.replace("/cart");
       return;
     }
   }, [loading, user, router]);

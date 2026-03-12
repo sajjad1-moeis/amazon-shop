@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { parseProductNum, getProductName, formatPriceToman } from "@/utils/productHelpers";
+import { parseProductNum, getProductName } from "@/utils/productHelpers";
 import { ShieldTick, Star1, TickSquare, Timer1 } from "iconsax-reactjs";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,6 +14,19 @@ import { userWishlistService } from "@/services/userWishlist/userWishlistService
 import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Heart, ShoppingCart, Layer } from "iconsax-reactjs";
+
+/** پرچم (عکس) و پسوند ارز بر اساس منطقه/ارز محصول — بدون متن US/AE */
+function getCurrencyFlagAndSuffix(product) {
+  const currency = (product?.currency ?? product?.currency_symbol ?? "").toUpperCase();
+  const region = product?.region ?? product?.amazonRegion ?? product?.sellerCountry;
+  if (currency === "AED" || region === "uae" || region === "ae") {
+    return { flagSrc: "/image/Products/emarat.png", suffix: " درهم" };
+  }
+  if (currency === "USD" || region === "us" || region === "america") {
+    return { flagSrc: "/image/Products/usa.png", suffix: " دلار" };
+  }
+  return { flagSrc: null, suffix: " تومان" };
+}
 
 function ProductRowCard({ product }) {
   const image =
@@ -30,27 +43,34 @@ function ProductRowCard({ product }) {
 
   const shortDesc =
     product?.shortDescription ||
-    (product?.description ? String(product.description).slice(0, 100) + "…" : null) ||
-    "ساعت مچی مردانه Invicta مدل 3641 از سری Reserve. ترکیبی از قدرت، دقت، و طراحی خاص.";
+    (product?.description ? String(product.description).slice(0, 120).trim() + (String(product.description).length > 120 ? "…" : "") : null);
 
-  const listPrice = parseProductNum(product?.price ?? product?.original_price) || 12450000;
-
-  const salePrice =
-    parseProductNum(product?.finalPrice ?? product?.discountPrice ?? product?.current_price) || listPrice;
+  const listPriceRaw = product?.original_price ?? product?.price ?? product?.originalPrice;
+  const salePriceRaw = product?.current_price ?? product?.discountPrice ?? product?.finalPrice ?? product?.price;
+  const listPrice = Math.max(0, parseProductNum(listPriceRaw) ?? 0);
+  const salePrice = Math.max(0, parseProductNum(salePriceRaw) ?? listPrice ?? 0);
+  const effectiveList = listPrice > 0 ? listPrice : salePrice;
+  const effectiveSale = salePrice > 0 ? salePrice : effectiveList;
 
   const discountPercent =
-    product?.discountPercentage ??
-    (listPrice > 0 && salePrice < listPrice
-      ? Math.min(99, Math.round(((listPrice - salePrice) / listPrice) * 100))
-      : 19);
+    product?.discount_percentage != null || product?.discountPercentage != null
+      ? parseProductNum(product?.discount_percentage ?? product?.discountPercentage)
+      : effectiveList > 0 && effectiveSale < effectiveList
+        ? Math.min(99, Math.round(((effectiveList - effectiveSale) / effectiveList) * 100))
+        : null;
 
-  const rating = parseProductNum(product?.rating);
-  const ratingShow = Number.isFinite(rating) && rating >= 0 ? Math.min(5, rating) : 4.7;
+  const ratingNum = parseProductNum(product?.rating);
+  const ratingShow = Number.isFinite(ratingNum) && ratingNum >= 0 ? Math.min(5, ratingNum) : null;
+  const reviewCountRaw = parseProductNum(product?.reviewCount ?? product?.reviews_count);
+  const reviewCount = Number.isFinite(reviewCountRaw) ? Math.max(0, Math.floor(reviewCountRaw)) : null;
 
-  const reviewCount = Math.max(0, Math.floor(parseProductNum(product?.reviewCount ?? product?.reviews_count) || 0));
-
-  const formatPrice = (n) => (Number.isFinite(n) && n >= 0 ? formatPriceToman(n) : "—");
-  const productSlug = product?.id ?? product?.asin ?? product?.amazonASIN ?? "";
+  const { flagSrc: currencyFlagSrc, suffix: currencySuffix } = getCurrencyFlagAndSuffix(product);
+  const formatPrice = (n) => {
+    const num = parseProductNum(n);
+    if (!Number.isFinite(num) || num < 0) return "—";
+    return `${num.toLocaleString("fa-IR")}${currencySuffix}`;
+  };
+  const productSlug = product?.id ?? product?.productId ?? product?.asin ?? product?.amazonASIN ?? "";
 
   const router = useRouter();
   const { user } = useAuth();
@@ -139,59 +159,74 @@ function ProductRowCard({ product }) {
             />
           </div>
 
-          {/* LEFT SECTION (INFO) */}
-          <div className="md:col-span-3">
-            <div className="flex flex-col gap-3 border-b pb-4 mb-4 border-gray-200 ">
-              {/* TITLE */}
-              <h2 className="font-bold text-lg  text-neutral-800 dark:text-dark-titre">
+          {/* LEFT SECTION (INFO) — عنوان و توضیح بالا، قابلیت‌ها وسط، قیمت و امتیاز پایین */}
+          <div className="md:col-span-3 flex flex-col">
+            {/* بالا: عنوان و توضیح */}
+            <div className="flex flex-col gap-2">
+              <h2 className="font-bold text-lg text-neutral-800 dark:text-dark-titre">
                 {title}
               </h2>
+              {shortDesc && (
+                <p className="text-gray-600 text-sm dark:text-[#7B7F86]">
+                  {shortDesc}
+                </p>
+              )}
+            </div>
 
-              {/* DESCRIPTION */}
-              <p className="text-gray-600 text-sm dark:text-[#7B7F86]">
-                {shortDesc}
-              </p>
-
-              <div className="flex-between mt-3 flex-wrap gap-x-4 gap-y-2 max-md:hidden">
-                <div className="flex-between text-gray-400 text-sm gap-2">
-                  <Timer1 size={16} variant="Bold" />
-                  <p>دارای قابلیت زمان‌سنج دقیق</p>
-                </div>
-                <div className="flex-between text-gray-400 text-sm gap-2">
-                  <ShieldTick size={16} variant="Bold" />
-                  <p>دوام و مقاومت بالا</p>
-                </div>
-                <div className="flex-between text-gray-400 text-sm gap-2">
-                  <TickSquare size={16} variant="Bold" />
-                  <p>شیشه ضد خش</p>
-                </div>
+            {/* وسط: سه قابلیت — پر کردن فضای خالی */}
+            <div className="flex-between mt-3 flex-wrap gap-x-4 gap-y-2 max-md:mt-4 flex-1 min-h-[60px]">
+              <div className="flex-between text-gray-400 text-sm gap-2">
+                <Timer1 size={16} variant="Bold" />
+                <p>دارای قابلیت زمان‌سنج دقیق</p>
+              </div>
+              <div className="flex-between text-gray-400 text-sm gap-2">
+                <ShieldTick size={16} variant="Bold" />
+                <p>دوام و مقاومت بالا</p>
+              </div>
+              <div className="flex-between text-gray-400 text-sm gap-2">
+                <TickSquare size={16} variant="Bold" />
+                <p>شیشه ضد خش</p>
               </div>
             </div>
-            <div>
-              {/* PRICE + DISCOUNT */}
+
+            {/* پایین: لوگو، امتیاز، قیمت، دکمه */}
+            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-stroke">
               <div className="flex-between">
                 <div className="flex-between gap-2">
-                  🟩
-                  <Image src="/image/amazonLogo.png" alt={`عکس آمازون`} width={60} height={30} />
+                  <Image src="/image/amazonLogo.png" alt="آمازون" width={60} height={30} className="object-contain" />
+                  {currencyFlagSrc && (
+                    <span className="shrink-0 w-6 h-6 relative rounded overflow-hidden border border-gray-200 dark:border-gray-600">
+                      <Image src={currencyFlagSrc} alt="" fill className="object-cover" sizes="24px" />
+                    </span>
+                  )}
                 </div>
-                <div className="flex-between gap-2">
-                  <Star1 size={18} variant="Bold" className="text-warning-500" />
-                  <p className="text-gray-500">{ratingShow} </p>
-                  <p className="text-sm text-gray-400">({reviewCount.toLocaleString("fa-IR")})</p>
-                </div>
+                {(ratingShow != null || reviewCount != null) && (
+                  <div className="flex-between gap-2">
+                    <Star1 size={18} variant="Bold" className="text-warning-500" />
+                    {ratingShow != null && <p className="text-gray-500">{ratingShow.toFixed(1)}</p>}
+                    {reviewCount != null && <p className="text-sm text-gray-400">({reviewCount.toLocaleString("fa-IR")})</p>}
+                  </div>
+                )}
               </div>
               <div className="flex-between mt-4 gap-4 md:gap-6 flex-col sm:flex-row">
                 <div className="w-full min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <p className="text-sm md:text-base">{formatPrice(salePrice)}</p>
-                    {discountPercent > 0 && (
-                      <div className="bg-primary-400 p-1.5 px-2 rounded-lg text-xs text-white">{discountPercent}%</div>
+                    <p className="text-sm md:text-base flex items-center gap-1">
+                      {formatPrice(effectiveSale)}
+                      {currencyFlagSrc && (
+                        <span className="shrink-0 w-5 h-5 relative rounded overflow-hidden inline-block">
+                          <Image src={currencyFlagSrc} alt="" fill className="object-cover" sizes="20px" />
+                        </span>
+                      )}
+                    </p>
+                    {discountPercent != null && Number(discountPercent) > 0 && (
+                      <div className="bg-primary-400 p-1.5 px-2 rounded-lg text-xs text-white">{Math.round(Number(discountPercent))}%</div>
                     )}
                   </div>
-                  <div className="flex-between gap-2 mt-2">
-                    <p className="text-gray-400 text-sm">{formatPrice(listPrice)}</p>
-                    <p className="text-gray-400 text-xs">شامل هزینه حمل و گمرک</p>
-                  </div>
+                  {(effectiveList > 0 && effectiveList !== effectiveSale) && (
+                    <p className="text-gray-400 text-sm line-through mt-2">{formatPrice(effectiveList)}</p>
+                  )}
+                  <p className="text-gray-400 text-xs mt-1">شامل هزینه حمل و گمرک</p>
                 </div>
                 <Button
                   variant="outline"

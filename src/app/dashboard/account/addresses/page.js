@@ -6,7 +6,13 @@ import DashboardLayout from "@/layout/DashboardLayout";
 import AddressesList from "@/template/Dashboard/Addresses/AddressesList";
 import PageHeader from "@/template/Dashboard/Common/PageHeader";
 import AddressForm from "@/template/StepsCart/Step1/AddAddressModal";
-import { formatAddress, formatFullName, parseAddressData } from "@/utils/address-utlis";
+import {
+  formatAddress,
+  formatFullName,
+  parseAddressData,
+  validateAddressForm,
+  normalizeIranMobile,
+} from "@/utils/address-utlis";
 import { Add } from "iconsax-reactjs";
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
@@ -20,7 +26,8 @@ function mapApiAddressToLocal(addr) {
   const address = addr.address ?? formatAddress(addr);
   return {
     id: addr.id,
-    name: name || "آدرس",
+    title: addr.title ?? "",
+    name: name || addr.title || "آدرس",
     address,
     province: addr.province,
     city: addr.city,
@@ -37,16 +44,21 @@ function mapApiAddressToLocal(addr) {
 }
 
 function formDataToApiBody(formData) {
+  const fullAddress = formatAddress(formData);
+  const recipientPhone = normalizeIranMobile(formData.mobile);
   return {
-    province: formData.province,
-    city: formData.city,
-    address: formData.address,
+    title: (formData.title || "آدرس من").trim(),
+    address: fullAddress || formData.address?.trim() || "",
+    recipientName: formatFullName(formData).trim(),
+    recipientPhone: recipientPhone || undefined,
+    province: formData.province || undefined,
+    city: formData.city || undefined,
     plaque: formData.plaque || undefined,
     unit: formData.unit || undefined,
     postalCode: formData.postalCode || undefined,
-    firstName: formData.firstName,
-    lastName: formData.lastName,
-    mobile: formData.mobile,
+    firstName: formData.firstName || undefined,
+    lastName: formData.lastName || undefined,
+    mobile: recipientPhone || formData.mobile || undefined,
     landline: formData.landline || undefined,
     notes: formData.notes || undefined,
   };
@@ -84,6 +96,11 @@ export default function AddressesPage() {
 
   const handleSaveAddress = async (formData) => {
     if (userId == null) return;
+    const validation = validateAddressForm(formData);
+    if (!validation.isValid) {
+      toast.error(validation.errors.join(" | "));
+      return;
+    }
     setSaving(true);
     try {
       const body = formDataToApiBody(formData);

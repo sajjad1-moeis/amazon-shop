@@ -107,6 +107,30 @@ const SelectItem = React.forwardRef(({ className, children, ...props }, ref) => 
 ));
 SelectItem.displayName = SelectPrimitive.Item.displayName;
 
+/** آیتم با حالت radio — اول رادیو، بعد عکس. دایره پر برای انتخاب‌شده، دایره خالی برای غیرفعال */
+const SelectItemRadio = React.forwardRef(({ className, children, ...props }, ref) => (
+  <SelectPrimitive.Item
+    ref={ref}
+    className={cn(
+      "group flex w-full cursor-default select-none items-center rounded-sm py-3 px-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[state=checked]:bg-gray-100 dark:data-[state=checked]:bg-gray-700/50",
+      className
+    )}
+    {...props}
+  >
+    <div className="flex items-center gap-3 w-full" dir="rtl">
+      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 border-gray-300 dark:border-gray-500 group-data-[state=checked]:border-primary-500 dark:group-data-[state=checked]:border-primary-400">
+        <SelectPrimitive.ItemIndicator>
+          <span className="block h-2 w-2 rounded-full bg-primary-500 dark:bg-primary-400" />
+        </SelectPrimitive.ItemIndicator>
+      </span>
+      <SelectPrimitive.ItemText className="flex-1 min-w-0 flex justify-center">
+        {children}
+      </SelectPrimitive.ItemText>
+    </div>
+  </SelectPrimitive.Item>
+));
+SelectItemRadio.displayName = "SelectItemRadio";
+
 const SelectSeparator = React.forwardRef(({ className, ...props }, ref) => (
   <SelectPrimitive.Separator ref={ref} className={cn("-mx-1 my-1 h-px bg-muted", className)} {...props} />
 ));
@@ -120,6 +144,7 @@ export {
   SelectContent,
   SelectLabel,
   SelectItem,
+  SelectItemRadio,
   SelectSeparator,
   SelectScrollUpButton,
   SelectScrollDownButton,

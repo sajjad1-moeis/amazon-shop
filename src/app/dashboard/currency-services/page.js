@@ -42,8 +42,9 @@ export default function CurrencyServicesPage() {
       pageSize: 50,
       userId,
       searchTerm: filters.searchQuery?.trim() || undefined,
-      status: filters.status ? parseInt(filters.status, 10) : undefined,
-      serviceType: filters.serviceType ? parseInt(filters.serviceType, 10) : undefined,
+      status: filters.status && filters.status !== "all" ? parseInt(filters.status, 10) : undefined,
+      serviceType:
+        filters.serviceType && filters.serviceType !== "all" ? parseInt(filters.serviceType, 10) : undefined,
     };
     currencyService
       .getPaginated(params)
@@ -68,7 +69,7 @@ export default function CurrencyServicesPage() {
 
   const filteredRequests = useMemo(() => {
     let list = [...requests];
-    if (!filters.dateRange) return list;
+    if (!filters.dateRange || filters.dateRange === "all") return list;
     const now = new Date();
     let from = null;
     if (filters.dateRange === "today") {
@@ -97,7 +98,7 @@ export default function CurrencyServicesPage() {
   const handleFiltersChange = (key, value) => {
     setFilters((prev) => ({
       ...prev,
-      [key]: value === "all" ? "" : value,
+      [key]: value,
     }));
   };
 

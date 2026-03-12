@@ -1,28 +1,36 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Add } from "iconsax-reactjs";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Add, Truck } from "iconsax-reactjs";
 import { toast } from "sonner";
-import PageHeader from "@/template/Admin/PageHeader";
+import { Button } from "@/components/ui/button";
 import ShippingZonesTable from "@/template/Admin/shipping/zones/ShippingZonesTable";
+import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 import { shippingService } from "@/services/shipping/shippingService";
+import { unwrapApiData } from "@/services/api/client";
 
 export default function ShippingZonesPage() {
+  const router = useRouter();
   const [zones, setZones] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize] = useState(20);
+  const [totalPages, setTotalPages] = useState(1);
 
   const fetchZones = async () => {
     try {
       setLoading(true);
-      const response = await shippingService.getZones();
-
-      if (response.success && response.data) {
-        setZones(response.data || []);
-      }
+      const response = await shippingService.getZones({ pageNumber, pageSize });
+      const data = unwrapApiData(response);
+      setZones(Array.isArray(data?.zones) ? data.zones : Array.isArray(data) ? data : []);
+      setTotalPages(Math.max(1, data?.totalPages ?? 1));
     } catch (error) {
       toast.error(error.message || "خطا در دریافت مناطق ارسال");
-      console.error("Error fetching zones:", error);
+      setZones([]);
     } finally {
       setLoading(false);
     }
@@ -30,21 +38,46 @@ export default function ShippingZonesPage() {
 
   useEffect(() => {
     fetchZones();
-  }, []);
+  }, [pageNumber, pageSize]);
+
+  const handleEdit = (id) => {
+    router.push(`/admin/shipping/zones/edit/${id}`);
+  };
 
   return (
     <div className="space-y-6">
-      <div className="">
-        <PageHeader title="مناطق ارسال" buttonText="منطقه جدید" buttonIcon={<Add size={20} className="ml-2" />} />
+      <AdminPageHeader
+        title="مناطق ارسال"
+        subtitle="مدیریت مناطق و هزینه ارسال"
+        icon={Truck}
+        actions={
+          <Link href="/admin/shipping/zones/create">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Add size={20} className="ml-2" />
+              <span className="max-md:hidden">منطقه جدید</span>
+            </Button>
+          </Link>
+        }
+      />
 
+      <AdminSectionCard title="لیست مناطق">
         {loading ? (
           <div className="p-8 text-center text-gray-400">
             <Spinner size="lg" />
           </div>
+        ) : zones.length === 0 ? (
+          <div className="p-8 text-center text-gray-400">منطقه‌ای یافت نشد</div>
         ) : (
-          <ShippingZonesTable zones={zones} />
+          <>
+            <ShippingZonesTable zones={zones} onRefresh={fetchZones} onEdit={handleEdit} />
+            {!loading && totalPages > 1 && (
+              <div className="pt-4 mt-4 border-t border-gray-600">
+                <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
+              </div>
+            )}
+          </>
         )}
-      </div>
+      </AdminSectionCard>
     </div>
   );
 }

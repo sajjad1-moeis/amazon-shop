@@ -3,12 +3,15 @@
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { DocumentText } from "iconsax-reactjs";
 import BlogTable from "@/template/Admin/blog/list/BlogTable";
 import BlogFilters from "@/template/Admin/blog/list/BlogFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { blogService } from "@/services/blog/blogService";
 import { unwrapApiData } from "@/services/api/client";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
+import { formatDateFa } from "@/utils/adminDateUtils";
 
 export default function BlogListPage() {
   const router = useRouter();
@@ -44,9 +47,9 @@ export default function BlogListPage() {
           slug: blog.slug,
           featuredImageUrl: blog.featuredImageUrl,
           date: blog.publishedAt
-            ? new Date(blog.publishedAt).toLocaleDateString("fa-IR")
+            ? formatDateFa(blog.publishedAt)
             : blog.createdAt
-            ? new Date(blog.createdAt).toLocaleDateString("fa-IR")
+            ? formatDateFa(blog.createdAt)
             : "-",
         }));
         setPosts(formattedPosts);
@@ -99,23 +102,21 @@ export default function BlogListPage() {
   };
   return (
     <div className="space-y-6">
-      <div className="">
-        <div className="mb-5">
-          <h1 className="text-lg md:text-xl text-gray-100 mb-4">وبلاگ ها</h1>
-          <BlogFilters />
-        </div>
-
+      <AdminPageHeader title="وبلاگ" subtitle="مدیریت پست‌ها و انتشار" icon={DocumentText}>
+        <BlogFilters />
+      </AdminPageHeader>
+      <AdminSectionCard title="لیست پست‌ها">
         {loading ? (
           <div className="p-8 text-center text-gray-400">در حال بارگذاری...</div>
         ) : (
           <>
             <BlogTable posts={posts} onEdit={handleEdit} onDelete={handleDelete} />
-            <div className="pt-4 border-t border-gray-700">
+            <div className="pt-4 mt-4 border-t border-gray-600">
               <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
             </div>
           </>
         )}
-      </div>
+      </AdminSectionCard>
 
       <ConfirmDialog
         open={deleteDialogOpen}

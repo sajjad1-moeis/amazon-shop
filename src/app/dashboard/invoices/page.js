@@ -44,7 +44,7 @@ export default function InvoicesPage() {
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({
       ...prev,
-      [key]: value === "all" ? "" : value,
+      [key]: value,
     }));
   };
 
@@ -62,7 +62,7 @@ export default function InvoicesPage() {
           String(inv.orderNumber ?? "").toLowerCase().includes(q)
       );
     }
-    if (filters.dateRange) {
+    if (filters.dateRange && filters.dateRange !== "all") {
       const now = new Date();
       let from = null;
       if (filters.dateRange === "today") {

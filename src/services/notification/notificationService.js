@@ -55,7 +55,7 @@ export const notificationService = {
     return client.post(`Notification/MarkAllAsRead?${qs.toString()}`, { json: body || {} }).json();
   },
 
-  /** POST api/Notification/CreateNotification — بدنه: CreateNotificationDto */
+  /** POST api/Notification/CreateNotification — Phase 23: body می‌تواند userId (تک کاربر) یا userIds (آرایه) داشته باشد؛ حداقل title و message الزامی. */
   create: async (data) => {
     const client = getAuthenticatedClient();
     return client.post("Notification/CreateNotification", { json: data }).json();

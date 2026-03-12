@@ -25,7 +25,7 @@ import {
 } from "iconsax-reactjs";
 import SwitchButton from "@/components/SwitchButton";
 
-const items = [
+export const DASHBOARD_NAV_ITEMS = [
   { id: "dashboard", label: "داشبورد", href: "/dashboard", icon: Element4 },
 
   {
@@ -73,11 +73,19 @@ function SidebarContent({ onLinkClick }) {
   const pathname = usePathname();
   const [expanded, setExpanded] = useState([]);
 
+  const pathMatches = (path, href) => {
+    if (!path || !href) return false;
+    if (path === href) return true;
+    return path.startsWith(href + "/");
+  };
+
   // Auto-expand if a child is active
   useEffect(() => {
-    items.forEach((item) => {
+    DASHBOARD_NAV_ITEMS.forEach((item) => {
       if (item.children) {
-        const activeChild = item.children.find((c) => c.href === pathname);
+        const activeChild = item.children.find(
+          (c) => pathname === c.href || pathMatches(pathname, c.href)
+        );
         if (activeChild && !expanded.includes(item.id)) {
           setExpanded((prev) => [...prev, item.id]);
         }
@@ -90,8 +98,18 @@ function SidebarContent({ onLinkClick }) {
   };
 
   const isActive = (item) => {
-    if (item.children) return item.children.some((c) => pathname === c.href);
+    if (item.children) {
+      return item.children.some((c) => pathname === c.href || pathMatches(pathname, c.href));
+    }
     return pathname === item.href;
+  };
+
+  const isChildActive = (child, siblings = []) => {
+    if (!(pathname === child.href || pathMatches(pathname, child.href))) return false;
+    const noStricterSibling = !siblings.some(
+      (s) => s !== child && (pathname === s.href || pathMatches(pathname, s.href)) && s.href.length > child.href.length
+    );
+    return noStricterSibling;
   };
 
   const handleLinkClick = () => {
@@ -140,7 +158,7 @@ function SidebarContent({ onLinkClick }) {
 
       {/* Navigation */}
       <nav className="space-y-2">
-        {items.map((item) => {
+        {DASHBOARD_NAV_ITEMS.map((item) => {
           const Active = isActive(item);
           const Icon = item.icon;
 
@@ -188,7 +206,7 @@ function SidebarContent({ onLinkClick }) {
               {expanded.includes(item.id) && (
                 <div className="pl-8 mt-1 space-y-1">
                   {item.children.map((child) => {
-                    const CActive = pathname === child.href;
+                    const CActive = isChildActive(child, item.children);
                     return (
                       <Link
                         key={child.href}

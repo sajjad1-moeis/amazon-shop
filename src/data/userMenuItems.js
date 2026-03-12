@@ -12,6 +12,7 @@ import {
   Location,
   Lock,
   Diamonds,
+  ShieldSecurity,
 } from "iconsax-reactjs";
 
 export const USER_MENU_ITEMS = [
@@ -26,3 +27,9 @@ export const USER_MENU_ITEMS = [
   { label: "قفل قیمت", href: "/dashboard/price-lock", icon: Lock },
   { label: "خرید اختصاصی از آمازون", href: "/dashboard/exclusive-amazon", icon: Diamonds },
 ];
+
+export const ADMIN_MENU_ITEM = {
+  label: "پنل ادمین",
+  href: "/admin",
+  icon: ShieldSecurity,
+};

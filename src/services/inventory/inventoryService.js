@@ -36,6 +36,7 @@ export const inventoryService = {
     return client.post("Inventory/StockOut", { json: data }).json();
   },
 
+  /** POST api/Inventory/UpdateStock?productId=&quantity= — quantity نامنفی */
   updateStock: async (productId, quantity) => {
     const client = getAuthenticatedClient();
     return client.post(`Inventory/UpdateStock?productId=${productId}&quantity=${quantity}`).json();

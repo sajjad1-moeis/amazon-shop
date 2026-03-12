@@ -43,7 +43,7 @@ export default function AdminLayout({ children }) {
 
         {/* Main content area */}
         <main className="flex-1 p-4 lg:p-6">
-          <div className="bg-gray-800 bg-opacity-50 border border-gray-700 shadow-lg rounded-xl p-3 lg:p-6">
+          <div className="min-h-[60vh] rounded-2xl border border-gray-700/80 bg-gray-900/40 shadow-xl p-4 lg:p-6">
             {children}
           </div>
         </main>

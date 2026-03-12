@@ -16,14 +16,14 @@ export default function PurchasesFilter({ filters, onFiltersChange }) {
       <FilterSection>
         {/* Search */}
         <FilterSearchInput
-          value={filters.searchQuery || ""}
+          value={filters?.searchQuery ?? ""}
           onChange={(value) => handleFilterChange("searchQuery", value)}
           placeholder="جستجو بر اساس نام محصول ..."
         />
 
         {/* Date Filter */}
         <DateFilterSelect
-          value={filters.dateFilter || ""}
+          value={filters?.dateFilter ?? ""}
           onValueChange={(value) => handleFilterChange("dateFilter", value)}
           placeholder="تاریخ"
           includeAll={true}
@@ -31,7 +31,7 @@ export default function PurchasesFilter({ filters, onFiltersChange }) {
 
         {/* Sort By */}
         <SortBySelect
-          value={filters.sortBy || ""}
+          value={filters?.sortBy ?? ""}
           onValueChange={(value) => handleFilterChange("sortBy", value)}
           placeholder="مرتب سازی"
           includePrice={true}

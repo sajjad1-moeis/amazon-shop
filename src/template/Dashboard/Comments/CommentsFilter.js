@@ -13,7 +13,7 @@ const statusOptions = [
 
 export default function CommentsFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
-    onFiltersChange(key, value);
+    onFiltersChange(key, value === "all" ? "" : value);
   };
 
   return (
@@ -21,7 +21,7 @@ export default function CommentsFilter({ filters, onFiltersChange }) {
       <FilterSection>
         {/* Status Filter */}
         <StatusSelect
-          value={filters.status || ""}
+          value={filters?.status ?? ""}
           onValueChange={(value) => handleFilterChange("status", value)}
           placeholder="وضعیت"
           options={statusOptions}
@@ -30,7 +30,7 @@ export default function CommentsFilter({ filters, onFiltersChange }) {
 
         {/* Sort By Filter */}
         <SortBySelect
-          value={filters.sortBy || ""}
+          value={filters?.sortBy ?? ""}
           onValueChange={(value) => handleFilterChange("sortBy", value)}
           placeholder="مرتب سازی"
           includeAll={true}

@@ -34,10 +34,10 @@ export default function PurchasesPage() {
       userId,
       pageNumber: 1,
       pageSize: 50,
-      sortBy: filters.sortBy || undefined,
+      sortBy: filters.sortBy && filters.sortBy !== "all" ? filters.sortBy : undefined,
       searchQuery: filters.searchQuery?.trim() || undefined,
     };
-    if (filters.dateFilter) {
+    if (filters.dateFilter && filters.dateFilter !== "all") {
       const now = new Date();
       let from = null;
       if (filters.dateFilter === "week") {
@@ -68,7 +68,7 @@ export default function PurchasesPage() {
   }, [userId, filters.sortBy, filters.dateFilter, filters.searchQuery]);
 
   const handleFilterChange = (key, value) => {
-    setFilters((prev) => ({ ...prev, [key]: value === "all" ? "" : value }));
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   if (userId == null) {

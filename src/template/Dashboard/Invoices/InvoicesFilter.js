@@ -14,7 +14,7 @@ const paymentStatusOptions = [
 
 export default function InvoicesFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
-    onFiltersChange(key, value);
+    onFiltersChange(key, value === "all" ? "" : value);
   };
 
   return (
@@ -22,14 +22,14 @@ export default function InvoicesFilter({ filters, onFiltersChange }) {
       <FilterSection>
         {/* Search Input */}
         <FilterSearchInput
-          value={filters.searchQuery || ""}
+          value={filters?.searchQuery ?? ""}
           onChange={(value) => handleFilterChange("searchQuery", value)}
           placeholder="شماره فاکتور یا سفارش..."
         />
 
         {/* Payment Status Filter */}
         <StatusSelect
-          value={filters.status || ""}
+          value={filters?.status ?? ""}
           onValueChange={(value) => handleFilterChange("status", value)}
           placeholder="وضعیت پرداخت"
           options={paymentStatusOptions}
@@ -38,7 +38,7 @@ export default function InvoicesFilter({ filters, onFiltersChange }) {
 
         {/* Date Range Filter */}
         <DateFilterSelect
-          value={filters.dateRange || ""}
+          value={filters?.dateRange ?? ""}
           onValueChange={(value) => handleFilterChange("dateRange", value)}
           placeholder="بازه تاریخ"
           includeAll={true}
@@ -46,7 +46,7 @@ export default function InvoicesFilter({ filters, onFiltersChange }) {
 
         {/* Sort By Filter */}
         <SortBySelect
-          value={filters.sortBy || ""}
+          value={filters?.sortBy ?? ""}
           onValueChange={(value) => handleFilterChange("sortBy", value)}
           placeholder="مرتب‌سازی"
           includeAll={true}

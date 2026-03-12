@@ -2,7 +2,7 @@
 
 import React from "react";
 import { User, Calendar, MessageText } from "iconsax-reactjs";
-import { formatDate } from "@/utils/dateFormatter";
+import { formatDateTimeFa } from "@/utils/adminDateUtils";
 
 export default function TicketInfoCards({ ticket }) {
   return (
@@ -38,7 +38,7 @@ export default function TicketInfoCards({ ticket }) {
           <Calendar size={20} />
           <span className="text-sm">تاریخ ایجاد</span>
         </div>
-        <p className="text-white text-lg">{formatDate(ticket.createdAt)}</p>
+        <p className="text-white text-lg">{formatDateTimeFa(ticket.createdAt)}</p>
       </div>
     </div>
   );

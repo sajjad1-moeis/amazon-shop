@@ -28,9 +28,9 @@ export default function EditRolePage() {
       <PageHeader title="ویرایش نقش" description="ویرایش اطلاعات نقش">
         <Button
           type="button"
-          variant="outline"
+          variant="ghost"
           onClick={() => router.push("/admin/roles")}
-          className="text-white border-gray-600 hover:bg-gray-700"
+          className="rounded-xl text-gray-400 hover:text-white hover:bg-gray-700/50"
         >
           <ArrowRight size={20} className="ml-2" />
           بازگشت به لیست

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,6 +14,7 @@ import { productService } from "@/services/product/productService";
 import { productCategoryService } from "@/services/product/productCategoryService";
 import { productBrandService } from "@/services/product/productBrandService";
 import { Spinner } from "@/components/ui/spinner";
+import { FORM_STYLES } from "@/template/Admin/formStyles";
 
 export default function EditProductPage() {
   const router = useRouter();
@@ -176,31 +176,32 @@ export default function EditProductPage() {
     );
   }
 
+  const inputClass = FORM_STYLES.input;
+  const labelClass = FORM_STYLES.label;
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="max-w-4xl mx-auto space-y-6" dir="rtl">
+      <header className="flex items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">ویرایش محصول</h1>
-          <p className="text-gray-400">ویرایش اطلاعات محصول</p>
-        </div>
-        <Link href="/admin/products/list">
-          <Button variant="ghost" className="text-gray-400 hover:text-white">
-            <ArrowRight size={20} className="ml-2" />
+          <Link href="/admin/products/list" className="text-sm text-gray-500 hover:text-gray-300 transition-colors inline-flex items-center gap-1.5 mb-3">
+            <ArrowRight size={16} />
             بازگشت به لیست
-          </Button>
-        </Link>
-      </div>
+          </Link>
+          <h1 className="text-2xl font-semibold text-white tracking-tight">ویرایش محصول</h1>
+          <p className="text-sm text-gray-500 mt-1">ویرایش اطلاعات محصول</p>
+        </div>
+      </header>
 
       <form onSubmit={handleSubmit}>
-        <Card className="bg-gray-800 border-gray-700">
-          <CardHeader>
-            <CardTitle className="text-white">اطلاعات محصول</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="rounded-2xl border border-gray-700/60 bg-gray-800/40 overflow-hidden">
+          <div className="px-6 py-5 border-b border-gray-700/60">
+            <h2 className="text-sm font-medium text-gray-400 uppercase tracking-wider">اطلاعات محصول</h2>
+          </div>
+          <div className="p-6 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-gray-300">
-                  نام محصول <span className="text-red-500">*</span>
+                <Label htmlFor="name" className={labelClass}>
+                  نام محصول <span className="text-red-400/90">*</span>
                 </Label>
                 <Input
                   id="name"
@@ -208,13 +209,13 @@ export default function EditProductPage() {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="مثال: لپ تاپ Dell XPS 15"
-                  className="bg-gray-700 border-gray-600 text-white"
+                  className={inputClass}
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="englishName" className="text-gray-300">
+                <Label htmlFor="englishName" className={labelClass}>
                   نام انگلیسی
                 </Label>
                 <Input
@@ -223,16 +224,16 @@ export default function EditProductPage() {
                   value={formData.englishName}
                   onChange={handleChange}
                   placeholder="Example: Dell XPS 15 Laptop"
-                  className="bg-gray-700 border-gray-600 text-white"
+                  className={inputClass}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="categoryId" className="text-gray-300">
-                  دسته‌بندی <span className="text-red-500">*</span>
+                <Label htmlFor="categoryId" className={labelClass}>
+                  دسته‌بندی <span className="text-red-400/90">*</span>
                 </Label>
                 <Select value={formData.categoryId} onValueChange={(value) => handleSelectChange("categoryId", value)}>
-                  <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                  <SelectTrigger className={inputClass + " border"}>
                     <SelectValue placeholder="انتخاب دسته‌بندی" />
                   </SelectTrigger>
                   <SelectContent className="bg-gray-800 border-gray-700">
@@ -246,11 +247,11 @@ export default function EditProductPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="brandId" className="text-gray-300">
-                  برند <span className="text-red-500">*</span>
+                <Label htmlFor="brandId" className={labelClass}>
+                  برند <span className="text-red-400/90">*</span>
                 </Label>
                 <Select value={formData.brandId} onValueChange={(value) => handleSelectChange("brandId", value)}>
-                  <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                  <SelectTrigger className={inputClass}>
                     <SelectValue placeholder="انتخاب برند" />
                   </SelectTrigger>
                   <SelectContent className="bg-gray-800 border-gray-700">
@@ -264,8 +265,8 @@ export default function EditProductPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="price" className="text-gray-300">
-                  قیمت (تومان) <span className="text-red-500">*</span>
+                <Label htmlFor="price" className={labelClass}>
+                  قیمت (تومان) <span className="text-red-400/90">*</span>
                 </Label>
                 <Input
                   id="price"
@@ -274,7 +275,7 @@ export default function EditProductPage() {
                   value={formData.price}
                   onChange={handleChange}
                   placeholder="45000000"
-                  className="bg-gray-700 border-gray-600 text-white"
+                  className={inputClass}
                   required
                   min="0"
                   step="1000"
@@ -282,7 +283,7 @@ export default function EditProductPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="discountPrice" className="text-gray-300">
+                <Label htmlFor="discountPrice" className={labelClass}>
                   قیمت تخفیف (تومان)
                 </Label>
                 <Input
@@ -292,15 +293,15 @@ export default function EditProductPage() {
                   value={formData.discountPrice}
                   onChange={handleChange}
                   placeholder="40000000"
-                  className="bg-gray-700 border-gray-600 text-white"
+                  className={inputClass}
                   min="0"
                   step="1000"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="stock" className="text-gray-300">
-                  موجودی <span className="text-red-500">*</span>
+                <Label htmlFor="stock" className={labelClass}>
+                  موجودی <span className="text-red-400/90">*</span>
                 </Label>
                 <Input
                   id="stock"
@@ -309,21 +310,21 @@ export default function EditProductPage() {
                   value={formData.stock}
                   onChange={handleChange}
                   placeholder="15"
-                  className="bg-gray-700 border-gray-600 text-white"
+                  className={inputClass}
                   required
                   min="0"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="status" className="text-gray-300">
+                <Label htmlFor="status" className={labelClass}>
                   وضعیت
                 </Label>
                 <Select
                   value={formData.status.toString()}
                   onValueChange={(value) => handleSelectChange("status", value)}
                 >
-                  <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                  <SelectTrigger className={inputClass}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-gray-800 border-gray-700">
@@ -338,7 +339,7 @@ export default function EditProductPage() {
                 <h3 className="text-white font-medium mb-3">فیلدهای ادمین (قیمت‌گذاری)</h3>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="manualPriceOverrideToman" className="text-gray-300">
+                    <Label htmlFor="manualPriceOverrideToman" className={labelClass}>
                       قیمت دستی نهایی (تومان)
                     </Label>
                     <Input
@@ -349,7 +350,7 @@ export default function EditProductPage() {
                       value={formData.manualPriceOverrideToman}
                       onChange={handleChange}
                       placeholder="خالی = محاسبه خودکار"
-                      className="bg-gray-700 border-gray-600 text-white"
+                      className={inputClass}
                     />
                   </div>
                   <div className="flex items-center gap-2 pt-8">
@@ -361,7 +362,7 @@ export default function EditProductPage() {
                       onChange={handleChange}
                       className="rounded border-gray-600"
                     />
-                    <Label htmlFor="isPriceBlocked" className="text-gray-300 cursor-pointer">
+                    <Label htmlFor="isPriceBlocked" className={`${labelClass} cursor-pointer`}>
                       مسدود فروش (وزن/قیمت)
                     </Label>
                   </div>
@@ -370,7 +371,7 @@ export default function EditProductPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="shortDescription" className="text-gray-300">
+              <Label htmlFor="shortDescription" className={labelClass}>
                 معرفی کوتاه
               </Label>
               <Textarea
@@ -379,13 +380,13 @@ export default function EditProductPage() {
                 value={formData.shortDescription}
                 onChange={handleChange}
                 placeholder="معرفی کوتاه محصول..."
-                className="bg-gray-700 border-gray-600 text-white min-h-[80px]"
+                className={inputClass + " min-h-[88px] resize-none py-3"}
                 rows={3}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description" className="text-gray-300">
+              <Label htmlFor="description" className={labelClass}>
                 توضیحات کامل
               </Label>
               <Textarea
@@ -394,23 +395,23 @@ export default function EditProductPage() {
                 value={formData.description}
                 onChange={handleChange}
                 placeholder="توضیحات کامل محصول..."
-                className="bg-gray-700 border-gray-600 text-white min-h-[120px]"
+                className={inputClass + " min-h-[140px] resize-none py-3"}
                 rows={5}
               />
             </div>
 
-            <div className="flex items-center gap-4 pt-4">
-              <Button type="submit" disabled={loading} className="bg-blue-600 hover:bg-blue-700">
+            <div className="flex items-center gap-4 pt-6 border-t border-gray-700/60 mt-6">
+              <Button type="submit" disabled={loading} className={FORM_STYLES.button}>
                 {loading ? "در حال ذخیره..." : "ذخیره تغییرات"}
               </Button>
               <Link href="/admin/products/list">
-                <Button type="button" variant="ghost" className="text-gray-400 hover:text-white">
+                <Button type="button" variant="ghost" className="rounded-xl text-gray-400 hover:text-white hover:bg-gray-700/50">
                   انصراف
                 </Button>
               </Link>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </form>
     </div>
   );

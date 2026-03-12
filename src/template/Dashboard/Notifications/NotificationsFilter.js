@@ -28,14 +28,14 @@ export default function NotificationsFilter({ filters, onFiltersChange }) {
       <FilterSection>
         {/* Search Input */}
         <FilterSearchInput
-          value={filters.searchQuery || ""}
+          value={filters?.searchQuery ?? ""}
           onChange={(value) => handleFilterChange("searchQuery", value)}
           placeholder="جستجو در عنوان اعلان..."
         />
 
         {/* Category */}
         <StatusSelect
-          value={filters.category || filters.allCategories || undefined}
+          value={filters?.category ?? filters?.allCategories ?? ""}
           onValueChange={(value) => {
             handleFilterChange("category", value);
             handleFilterChange("allCategories", value);
@@ -47,7 +47,7 @@ export default function NotificationsFilter({ filters, onFiltersChange }) {
 
         {/* Status */}
         <StatusSelect
-          value={filters.status || undefined}
+          value={filters?.status ?? ""}
           onValueChange={(value) => handleFilterChange("status", value)}
           placeholder="وضعیت"
           options={statusOptions}
@@ -56,7 +56,7 @@ export default function NotificationsFilter({ filters, onFiltersChange }) {
 
         {/* Date Range */}
         <DateFilterSelect
-          value={filters.timeRange || filters.dateRange || undefined}
+          value={filters?.timeRange ?? filters?.dateRange ?? ""}
           onValueChange={(value) => {
             handleFilterChange("timeRange", value);
             handleFilterChange("dateRange", value);

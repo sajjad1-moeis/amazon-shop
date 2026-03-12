@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { ShieldSearch } from "iconsax-reactjs";
 import QualityShieldFilters from "@/template/Admin/qualityShield/QualityShieldFilters";
 import QualityShieldTable from "@/template/Admin/qualityShield/QualityShieldTable";
 import StartInspectionModal from "@/template/Admin/qualityShield/StartInspectionModal";
@@ -10,6 +11,7 @@ import CompleteInspectionModal from "@/template/Admin/qualityShield/CompleteInsp
 import { Spinner } from "@/components/ui/spinner";
 import { adminQualityShieldService } from "@/services/admin/adminQualityShieldService";
 import { unwrapApiData } from "@/services/api/client";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 
 export default function AdminQualityShieldPage() {
   const searchParams = useSearchParams();
@@ -21,7 +23,7 @@ export default function AdminQualityShieldPage() {
   const [actionLoading, setActionLoading] = useState(false);
 
   const orderIdParam = searchParams.get("orderId");
-  const userIdParam = searchParams.get("userId");
+  const phoneNumberParam = searchParams.get("phoneNumber");
   const statusParam = searchParams.get("status");
 
   const fetchList = async () => {
@@ -29,7 +31,7 @@ export default function AdminQualityShieldPage() {
       setLoading(true);
       const params = {};
       if (orderIdParam) params.orderId = parseInt(orderIdParam, 10);
-      if (userIdParam) params.userId = parseInt(userIdParam, 10);
+      if (phoneNumberParam) params.phoneNumber = phoneNumberParam.trim();
       if (statusParam) params.status = parseInt(statusParam, 10);
       const res = await adminQualityShieldService.getList(params);
       const data = unwrapApiData(res);
@@ -44,7 +46,7 @@ export default function AdminQualityShieldPage() {
 
   useEffect(() => {
     fetchList();
-  }, [orderIdParam, userIdParam, statusParam]);
+  }, [orderIdParam, phoneNumberParam, statusParam]);
 
   const handleStartInspection = (service) => {
     setSelectedService(service);
@@ -88,21 +90,22 @@ export default function AdminQualityShieldPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-lg md:text-xl text-gray-100">سپر کیفیت</h1>
-
-      <QualityShieldFilters />
-
-      {loading ? (
-        <div className="p-8 text-center text-gray-400">
-          <Spinner size="lg" />
-        </div>
-      ) : (
-        <QualityShieldTable
-          list={list}
-          onStartInspection={handleStartInspection}
-          onCompleteInspection={handleCompleteInspection}
-        />
-      )}
+      <AdminPageHeader title="سپر کیفیت" subtitle="شروع و تکمیل بررسی کیفیت" icon={ShieldSearch}>
+        <QualityShieldFilters />
+      </AdminPageHeader>
+      <AdminSectionCard title="لیست سرویس‌ها">
+        {loading ? (
+          <div className="p-8 text-center text-gray-400">
+            <Spinner size="lg" />
+          </div>
+        ) : (
+          <QualityShieldTable
+            list={list}
+            onStartInspection={handleStartInspection}
+            onCompleteInspection={handleCompleteInspection}
+          />
+        )}
+      </AdminSectionCard>
 
       <StartInspectionModal
         open={startModalOpen}

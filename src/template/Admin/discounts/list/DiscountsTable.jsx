@@ -19,7 +19,7 @@ const getStatusBadge = (status) => {
   );
 };
 
-export default function DiscountsTable({ discounts }) {
+export default function DiscountsTable({ discounts, onEdit }) {
   if (discounts.length === 0) {
     return <div className="p-8 text-center text-gray-400">کوپنی یافت نشد</div>;
   }
@@ -42,24 +42,29 @@ export default function DiscountsTable({ discounts }) {
           <TableRow key={discount.id} className="border-gray-700 hover:bg-gray-700/50">
             <TableCell className="text-white font-medium">{discount.code}</TableCell>
             <TableCell className="text-gray-300">
-              {discount.type === 1 ? "درصدی" : discount.type === 2 ? "مقدار ثابت" : "-"}
+              {(discount.discountType ?? discount.type) === 1 ? "درصدی" : (discount.discountType ?? discount.type) === 2 ? "مقدار ثابت" : "-"}
             </TableCell>
             <TableCell className="text-gray-300">
-              {discount.type === 1
-                ? `${discount.value}%`
-                : discount.type === 2
-                  ? `${discount.value?.toLocaleString() || 0} تومان`
+              {(discount.discountType ?? discount.type) === 1
+                ? `${(discount.discountValue ?? discount.value) ?? 0}%`
+                : (discount.discountType ?? discount.type) === 2
+                  ? `${((discount.discountValue ?? discount.value) ?? 0).toLocaleString("fa-IR")} تومان`
                   : "-"}
             </TableCell>
             <TableCell className="text-gray-300">
-              {discount.minPurchase ? `${discount.minPurchase.toLocaleString()} تومان` : "-"}
+              {(discount.minPurchaseAmount ?? discount.minPurchase) != null
+                ? `${(discount.minPurchaseAmount ?? discount.minPurchase).toLocaleString("fa-IR")} تومان`
+                : "-"}
             </TableCell>
             <TableCell className="text-gray-300">
               {discount.usedCount || 0} / {discount.usageLimit || 0}
             </TableCell>
             <TableCell>{getStatusBadge(discount.status)}</TableCell>
             <TableCell>
-              <TableActions showView={false} />
+              <TableActions
+                showView={false}
+                onEdit={onEdit ? () => onEdit(discount.id) : undefined}
+              />
             </TableCell>
           </TableRow>
         ))}

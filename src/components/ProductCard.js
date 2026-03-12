@@ -69,7 +69,6 @@ function ProductCard({ className, product, badges }) {
     product?.is_prime ?? product?.isPrimeEligible ?? product?.is_prime_delivery ?? product?.is_amazons_choice ?? product?.isAmazonsChoice ?? false;
   const isFreeDelivery =
     product?.is_free_delivery ?? product?.isFreeDelivery ?? false;
-  // فقط وقتی زمان تحویل ۵ روز یا بیشتر باشد تگ «ارسال بین‌المللی» نمایش داده شود (هماهنگ با اسکرپر)
   const deliveryDaysRaw = product?.estimatedDeliveryDays ?? product?.estimated_delivery_days;
   const deliveryDaysNum = deliveryDaysRaw != null ? Number(deliveryDaysRaw) : NaN;
   const deliveryDays = Number.isFinite(deliveryDaysNum) && deliveryDaysNum >= 1 && deliveryDaysNum <= 365 ? deliveryDaysNum : null;
@@ -93,18 +92,22 @@ function ProductCard({ className, product, badges }) {
     isPrime && "انتخاب آمازون",
     isBestSeller && "بیشترین فروش",
     isFreeDelivery && "ارسال رایگان",
-    discountPct != null && Number(discountPct) > 0 &&
-      `${Math.round(Number(discountPct))}٪ تخفیف`,
+    discountPct != null && Number(discountPct) > 0 && `${Math.round(Number(discountPct))}٪ تخفیف`,
     hasInternational && "ارسال بین المللی",
     shipsFromUAE && "ارسال از امارات",
     hasQualityShield && "ضمانت کیفیت",
     isNewArrival && "تازه وارد",
   ].filter(Boolean);
   const fromScraper = fromProduct.slice(0, 5);
-  const productBadges = Array.isArray(rawBadges) && rawBadges.length > 0
-    ? rawBadges.filter((b) => typeof b === "string").slice(0, 5)
-    : fromScraper;
+  const productBadges =
+    Array.isArray(rawBadges) && rawBadges.length > 0
+      ? rawBadges.filter((b) => typeof b === "string").slice(0, 5)
+      : fromScraper;
   const seller = product?.seller || "amazon";
+  const sellerCountry = product?.sellerCountry || "🇦🇪";
+  const currency = (product?.currency ?? product?.currency_symbol ?? "").toUpperCase();
+  const region = product?.region ?? product?.amazonRegion ?? product?.sellerCountry;
+  const flagSrc = "/image/emarat.png";
 
   const calculateDiscount = () => {
     if (!Number.isFinite(listPrice) || !Number.isFinite(salePrice) || listPrice <= 0) return 0;
@@ -265,7 +268,7 @@ function ProductCard({ className, product, badges }) {
       >
         <div
           className={cn(
-            "shadow-box rounded-xl flex flex-col cursor-pointer transition-all duration-200 bg-white dark:bg-dark-box h-full",
+            "shadow-box rounded-xl overflow-hidden flex flex-col cursor-pointer transition-all duration-200 bg-white dark:bg-dark-box h-full",
             "hover:shadow-lg hover:ring-2 hover:ring-primary-500/30 hover:border-primary-500/50",
             className || "border border-gray-200 dark:border-dark-stroke",
           )}
@@ -331,20 +334,32 @@ function ProductCard({ className, product, badges }) {
             </p>
 
             {/* Rating and Seller */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-1">
                 <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                 <span className="text-sm font-medium text-gray-900 dark:text-dark-titre">
                   {Number.isFinite(rating) ? rating.toFixed(1) : "0.0"}
                 </span>
-                <span className="text-xs text-gray-500 dark:text-dark-text">({reviewCount})</span>
+                <span className="text-xs text-gray-500 dark:text-dark-text max-md:hidden">({reviewCount})</span>
               </div>
 
-              {/* منبع فروش — بدون نمایش واحد درهم یا نماد AED */}
               <div className="flex items-center gap-1">
-                <span className="text-xs text-gray-500 dark:text-dark-text">
-                  {seller === "amazon" ? "آمازون" : seller}
-                </span>
+                {flagSrc ? (
+                  <>
+                    <Image src={flagSrc} width={30} height={20} className="w-full h-auto max-w-[20px] object-cover" alt="" />
+                    <Image
+                      src="/image/amazonLogo.png"
+                      alt="آمازون"
+                      width={38}
+                      height={14}
+                      className="object-contain shrink-0"
+                    />
+                  </>
+                ) : (
+                  <span className="text-xs text-gray-500 dark:text-dark-text">
+                    {seller === "amazon" ? "آمازون" : seller}
+                  </span>
+                )}
               </div>
             </div>
 

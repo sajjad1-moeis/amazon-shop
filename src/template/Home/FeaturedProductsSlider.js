@@ -5,11 +5,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation, Autoplay } from "swiper/modules";
-import { ArrowLeft2, ArrowRight2 } from "iconsax-reactjs";
+import SliderNavButton from "@/components/SliderNavButton";
 import TitleCard from "@/components/TitleCard";
 import ProductCard from "@/components/ProductCard";
 import { ProductCardSkeletonList } from "@/components/ProductCardSkeleton";
 import ViewAllProductsCard from "@/components/ViewAllProductsCard";
+import { SLIDER_AUTOPLAY_DELAY } from "@/config/sliderConfig";
 import { productService } from "@/services/product/productService";
 import { unwrapApiData } from "@/services/api/client";
 import { mapProductListDto } from "@/utils/productHelpers";
@@ -21,7 +22,7 @@ function FeaturedProductsSlider() {
   useEffect(() => {
     let cancelled = false;
     productService
-      .getFeatured(15)
+      .getBestSellers(24)
       .then((res) => {
         if (cancelled) return;
         const data = unwrapApiData(res);
@@ -40,7 +41,7 @@ function FeaturedProductsSlider() {
   }, []);
 
   return (
-    <div className="mt-22 container categories relative max-md:border-y dark:border-dark-field max-md:py-5">
+    <div className="mt-22 container featured-products-slider relative max-md:border-y dark:border-dark-field max-md:py-5">
       <TitleCard title="برای یک خانه هوشمندتر" content="مشاهده همه محصولات" className="mb-8" contentHref="/products" />
 
       {loading && products.length === 0 && (
@@ -54,13 +55,13 @@ function FeaturedProductsSlider() {
           slidesPerView={1.5}
           spaceBetween={10}
           autoplay={{
-            delay: 3000,
+            delay: SLIDER_AUTOPLAY_DELAY,
             disableOnInteraction: false,
           }}
           loop={products.length > 1}
           navigation={{
-            nextEl: ".categories .next-slide",
-            prevEl: ".categories .prev-slide",
+            nextEl: ".featured-products-slider .next-slide",
+            prevEl: ".featured-products-slider .prev-slide",
           }}
           breakpoints={{
             640: { slidesPerView: 2, spaceBetween: 20 },
@@ -84,18 +85,18 @@ function FeaturedProductsSlider() {
         </Swiper>
       )}
 
-      <button
-        className="next-slide text-gray-600 p-2 mt-4 absolute top-1/2 -translate-y-1/2 xl:-left-5 2xl:left-5 left-5 z-50"
-        aria-label="اسلاید بعدی"
-      >
-        <ArrowLeft2 />
-      </button>
-      <button
-        className="prev-slide text-gray-600 p-2 mt-4 absolute top-1/2 -translate-y-1/2 z-50 xl:-right-5 2xl:right-5 right-5"
-        aria-label="اسلاید قبلی"
-      >
-        <ArrowRight2 />
-      </button>
+      {products.length > 1 && (
+        <>
+          <SliderNavButton
+            direction="next"
+            className="next-slide absolute top-1/2 -translate-y-1/2 xl:-left-3 2xl:left-8 left-6 z-50"
+          />
+          <SliderNavButton
+            direction="prev"
+            className="prev-slide absolute top-1/2 -translate-y-1/2 z-50 xl:-right-3 2xl:right-8 right-6"
+          />
+        </>
+      )}
 
       <ViewAllProductsCard />
     </div>

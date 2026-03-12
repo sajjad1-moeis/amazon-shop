@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { Add } from "iconsax-reactjs";
+import { Add, MessageQuestion } from "iconsax-reactjs";
 import { toast } from "sonner";
-import PageHeader from "@/template/Admin/PageHeader";
+import { Button } from "@/components/ui/button";
 import TicketCategoriesTable from "@/template/Admin/tickets/categories/TicketCategoriesTable";
 import CreateTicketCategoryModal from "@/template/Admin/tickets/categories/CreateTicketCategoryModal";
 import AdminPagination from "@/components/ui/AdminPagination";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 import { ticketCategoryService } from "@/services/ticket/ticketCategoryService";
 
 export default function TicketCategoriesPage() {
@@ -21,17 +22,14 @@ export default function TicketCategoriesPage() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [toggleLoadingId, setToggleLoadingId] = useState(null);
 
   const fetchCategories = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await ticketCategoryService.getAll();
-      if (response && response.success && response.data) {
-        setCategories(Array.isArray(response.data) ? response.data : []);
-      } else {
-        toast.error(response?.message || "خطا در دریافت دسته‌بندی‌ها");
-        setCategories([]);
-      }
+      const data = await ticketCategoryService.getAll();
+      const list = Array.isArray(data) ? data : Array.isArray(data?.categories) ? data.categories : [];
+      setCategories(list);
     } catch (error) {
       console.error("Error fetching categories:", error);
       toast.error(error?.message || "خطا در دریافت دسته‌بندی‌ها");
@@ -66,15 +64,11 @@ export default function TicketCategoriesPage() {
 
     setDeleteLoading(true);
     try {
-      const response = await ticketCategoryService.softDelete(selectedCategoryId);
-      if (response && response.success) {
-        toast.success("دسته‌بندی با موفقیت حذف شد");
-        setDeleteDialogOpen(false);
-        setSelectedCategoryId(null);
-        fetchCategories();
-      } else {
-        toast.error(response?.message || "خطا در حذف دسته‌بندی");
-      }
+      await ticketCategoryService.softDelete(selectedCategoryId);
+      toast.success("دسته‌بندی با موفقیت حذف شد");
+      setDeleteDialogOpen(false);
+      setSelectedCategoryId(null);
+      fetchCategories();
     } catch (error) {
       console.error("Error deleting category:", error);
       toast.error(error?.message || "خطا در حذف دسته‌بندی");
@@ -85,21 +79,20 @@ export default function TicketCategoriesPage() {
 
   const handleToggleActive = async (category) => {
     try {
+      setToggleLoadingId(category.id);
       const currentActive = category.isActive !== false;
-      const response = await ticketCategoryService.update(category.id, {
+      await ticketCategoryService.update(category.id, {
         name: category.name,
         description: category.description || "",
         isActive: !currentActive,
       });
-      if (response && response.success) {
-        toast.success(`دسته‌بندی ${!currentActive ? "فعال" : "غیرفعال"} شد`);
-        fetchCategories();
-      } else {
-        toast.error(response?.message || "خطا در به‌روزرسانی دسته‌بندی");
-      }
+      toast.success(`دسته‌بندی ${!currentActive ? "فعال" : "غیرفعال"} شد`);
+      fetchCategories();
     } catch (error) {
       console.error("Error toggling category:", error);
       toast.error(error?.message || "خطا در به‌روزرسانی دسته‌بندی");
+    } finally {
+      setToggleLoadingId(null);
     }
   };
 
@@ -114,17 +107,25 @@ export default function TicketCategoriesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="">
-        <PageHeader
-          title="دسته‌بندی‌های تیکت"
-          buttonText="دسته‌بندی جدید"
-          buttonIcon={<Add size={20} className="ml-2" />}
-          onButtonClick={() => {
-            setEditingCategory(null);
-            setIsModalOpen(true);
-          }}
-        />
+      <AdminPageHeader
+        title="دسته‌بندی‌های تیکت"
+        subtitle="مدیریت دسته‌بندی‌های تیکت پشتیبانی"
+        icon={MessageQuestion}
+        actions={
+          <Button
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+            onClick={() => {
+              setEditingCategory(null);
+              setIsModalOpen(true);
+            }}
+          >
+            <Add size={20} className="ml-2" />
+            <span className="max-md:hidden">دسته‌بندی جدید</span>
+          </Button>
+        }
+      />
 
+      <AdminSectionCard title="لیست دسته‌بندی‌ها">
         {loading ? (
           <div className="p-8 text-center text-gray-400">در حال بارگذاری...</div>
         ) : (
@@ -134,8 +135,9 @@ export default function TicketCategoriesPage() {
               onEdit={handleEdit}
               onDelete={handleDelete}
               onToggleActive={handleToggleActive}
+              toggleLoadingId={toggleLoadingId}
             />
-            <div className="pt-4 border-t border-gray-700">
+            <div className="pt-4 border-t border-gray-600 mt-4">
               <AdminPagination
                 currentPage={pageNumber}
                 totalPages={Math.ceil(categories.length / pageSize) || 1}
@@ -144,7 +146,7 @@ export default function TicketCategoriesPage() {
             </div>
           </>
         )}
-      </div>
+      </AdminSectionCard>
 
       <CreateTicketCategoryModal
         isOpen={isModalOpen}

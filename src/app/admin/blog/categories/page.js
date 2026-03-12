@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Add } from "iconsax-reactjs";
+import { Add, Category2 } from "iconsax-reactjs";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import PageHeader from "@/template/Admin/PageHeader";
+import { Button } from "@/components/ui/button";
 import BlogCategoriesTable from "@/template/Admin/blog/categories/BlogCategoriesTable";
 import AdminPagination from "@/components/ui/AdminPagination";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 import { blogCategoryService } from "@/services/blog/blogCategoryService";
 
 export default function BlogCategoriesPage() {
@@ -84,20 +85,25 @@ export default function BlogCategoriesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="">
-        <PageHeader
-          title="دسته‌بندی‌های وبلاگ"
-          buttonText="دسته‌بندی جدید"
-          buttonIcon={<Add size={20} className="ml-2" />}
-          onButtonClick={() => router.push("/admin/blog/categories/create")}
-        />
+      <AdminPageHeader
+        title="دسته‌بندی‌های وبلاگ"
+        subtitle="مدیریت دسته‌بندی‌های پست‌های وبلاگ"
+        icon={Category2}
+        actions={
+          <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => router.push("/admin/blog/categories/create")}>
+            <Add size={20} className="ml-2" />
+            <span className="max-md:hidden">دسته‌بندی جدید</span>
+          </Button>
+        }
+      />
 
+      <AdminSectionCard title="لیست دسته‌بندی‌ها">
         {loading ? (
           <div className="p-8 text-center text-gray-400">در حال بارگذاری...</div>
         ) : (
           <>
             <BlogCategoriesTable categories={displayedCategories} onEdit={handleEdit} onDelete={handleDelete} />
-            <div className="pt-4 border-t border-gray-700">
+            <div className="pt-4 border-t border-gray-600 mt-4">
               <AdminPagination
                 currentPage={pageNumber}
                 totalPages={Math.ceil(categories.length / pageSize) || 1}
@@ -106,7 +112,7 @@ export default function BlogCategoriesPage() {
             </div>
           </>
         )}
-      </div>
+      </AdminSectionCard>
 
       <ConfirmDialog
         open={deleteDialogOpen}

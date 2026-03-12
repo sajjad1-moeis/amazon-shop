@@ -308,12 +308,21 @@ export default function ProductsClient() {
               <ProductCardSkeletonList count={8} />
             </div>
           ) : (
-            <ProductList viewMode={viewMode} products={products} totalCount={totalCount} searchMode={isSearchMode} />
+            <>
+              <ProductList
+                viewMode={viewMode}
+                products={products}
+                totalCount={totalCount}
+                searchMode={isSearchMode}
+                searchQuery={query.search}
+              />
+              {!isSearchMode && (
+                <div className="max-lg:px-4 lg:container pb-12">
+                  <ProductNotFoundSection searchQuery={query.search} />
+                </div>
+              )}
+            </>
           )}
-          {/* بخش «محصول خود را پیدا نکردید؟» — انتهای صفحه محصولات */}
-          <div className="max-lg:px-4 lg:container pb-12">
-            <ProductNotFoundSection searchQuery={query.search} />
-          </div>
         </div>
       </div>
     </>

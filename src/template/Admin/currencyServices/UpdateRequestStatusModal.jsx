@@ -1,24 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 
 const STATUS_OPTIONS = [
@@ -31,18 +19,15 @@ const STATUS_OPTIONS = [
   { value: 7, label: "لغو شده" },
 ];
 
-export default function UpdateRequestStatusModal({
-  open,
-  onOpenChange,
-  request,
-  onSubmit,
-  loading,
-}) {
+export default function UpdateRequestStatusModal({ open, onOpenChange, request, onSubmit, loading }) {
   const [status, setStatus] = useState(5);
   const [processNotes, setProcessNotes] = useState("");
   const [rejectionReason, setRejectionReason] = useState("");
   const [completionNotes, setCompletionNotes] = useState("");
   const [referenceNumber, setReferenceNumber] = useState("");
+  const requestId = request?.id;
+  const requestLabel = request?.referenceNumber || requestId || "-";
+  const requestServiceName = request?.serviceTypeName || "—";
 
   useEffect(() => {
     if (open && request) {
@@ -56,7 +41,8 @@ export default function UpdateRequestStatusModal({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(request.id, {
+    if (!requestId) return;
+    onSubmit(requestId, {
       status: Number(status),
       processNotes: processNotes.trim() || undefined,
       rejectionReason: rejectionReason.trim() || undefined,
@@ -65,7 +51,7 @@ export default function UpdateRequestStatusModal({
     });
   };
 
-  if (!request) return null;
+  if (!open || !request) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -74,7 +60,7 @@ export default function UpdateRequestStatusModal({
           <DialogTitle className="text-white">تغییر وضعیت درخواست</DialogTitle>
         </DialogHeader>
         <p className="text-gray-400 text-sm">
-          #{request.referenceNumber || request.id} · {request.serviceTypeName || "—"}
+          #{requestLabel} · {requestServiceName}
         </p>
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div>

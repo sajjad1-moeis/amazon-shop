@@ -18,6 +18,7 @@ const formSchema = z.object({
     .string()
     .min(1, { message: "لطفاً شماره موبایل خود را وارد کنید." })
     .regex(/^09\d{9}$/, { message: "شماره موبایل باید با 09 شروع شود و 11 رقم باشد." }),
+  email: z.string().email({ message: "لطفاً یک ایمیل معتبر وارد کنید." }),
 });
 
 export default function PayPalCashoutPage() {
@@ -28,6 +29,7 @@ export default function PayPalCashoutPage() {
     defaultValues: {
       name: "",
       mobile: "",
+      email: "",
     },
   });
 
@@ -117,6 +119,25 @@ export default function PayPalCashoutPage() {
                         <Input
                           type="tel"
                           placeholder="مثلاً ۰۹۱۳۰۰۰..."
+                          className="h-12 bg-[#F9FAFB29] dark:bg-dark-field border-2 border-[#E5E7EB52] placeholder:text-gray-300 placeholder:max-md:text-xs dark:border-dark-stroke rounded-xl text-right"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-base text-white">ایمیل</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="مثلاً example@gmail.com"
                           className="h-12 bg-[#F9FAFB29] dark:bg-dark-field border-2 border-[#E5E7EB52] placeholder:text-gray-300 placeholder:max-md:text-xs dark:border-dark-stroke rounded-xl text-right"
                           {...field}
                         />

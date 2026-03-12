@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -9,9 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FORM_STYLES } from "../../formStyles";
 import { cn } from "@/lib/utils";
+import { AdminPersianDatePicker } from "@/components/admin";
 
 const formSchema = z
   .object({
@@ -75,36 +75,45 @@ const DISCOUNT_TYPE_OPTIONS = [
   { value: "fixed", label: "مقدار ثابت (تومان)" },
 ];
 
-export default function DiscountForm({ onSubmit, loading = false }) {
+const defaultValues = {
+  code: "",
+  type: "percentage",
+  value: "",
+  minPurchase: "",
+  maxDiscount: "",
+  usageLimit: "",
+  startDate: "",
+  endDate: "",
+};
+
+export default function DiscountForm({ onSubmit, loading = false, initialData = null, isEdit = false, submitLabel }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      code: "",
-      type: "percentage",
-      value: "",
-      minPurchase: "",
-      maxDiscount: "",
-      usageLimit: "",
-      startDate: "",
-      endDate: "",
-    },
+    defaultValues: initialData || defaultValues,
   });
+
+  useEffect(() => {
+    if (initialData && Object.keys(initialData).length) {
+      form.reset(initialData);
+    }
+  }, [initialData, form]);
 
   const discountType = form.watch("type");
 
   const submitHandler = async (data) => {
     try {
-      // تبدیل رشته‌ها به عدد
+      // نوع تخفیف مطابق API: 1 = Percentage, 2 = FixedAmount (از discountCodeService.DiscountType)
+      const typeValue = data.type === "percentage" ? 1 : 2;
       const formData = {
         code: data.code.trim().toUpperCase(),
-        type: data.type === "percentage" ? 0 : 1, // 0 = percentage, 1 = fixed
+        type: typeValue,
         value: parseFloat(data.value),
-        minPurchase: data.minPurchase ? parseFloat(data.minPurchase) : null,
-        maxDiscount: data.maxDiscount ? parseFloat(data.maxDiscount) : null,
-        usageLimit: data.usageLimit ? parseInt(data.usageLimit, 10) : null,
-        startDate: new Date(data.startDate).toISOString(),
-        endDate: new Date(data.endDate).toISOString(),
+        startDate: new Date(data.startDate + "T00:00:00").toISOString(),
+        endDate: new Date(data.endDate + "T23:59:59").toISOString(),
       };
+      if (data.minPurchase?.trim()) formData.minPurchase = parseFloat(data.minPurchase);
+      if (data.maxDiscount?.trim()) formData.maxDiscount = parseFloat(data.maxDiscount);
+      if (data.usageLimit?.trim()) formData.usageLimit = parseInt(data.usageLimit, 10);
 
       await onSubmit(formData);
     } catch (error) {
@@ -113,13 +122,12 @@ export default function DiscountForm({ onSubmit, loading = false }) {
   };
 
   return (
-    <Card className={FORM_STYLES.card}>
-      <CardHeader>
-        <CardTitle className={FORM_STYLES.cardTitle}>اطلاعات کوپن تخفیف</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(submitHandler)} className="space-y-6" dir="rtl">
+    <div className={FORM_STYLES.card}>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(submitHandler)} className="p-6 space-y-6" dir="rtl">
+          <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider pb-2 border-b border-gray-700/60">
+            اطلاعات کوپن تخفیف
+          </h3>
             {/* کد کوپن */}
             <FormField
               control={form.control}
@@ -272,7 +280,12 @@ export default function DiscountForm({ onSubmit, loading = false }) {
                       تاریخ شروع <span className="text-red-400">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} type="date" className={FORM_STYLES.input} dir="ltr" />
+                      <AdminPersianDatePicker
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="تاریخ شروع"
+                        className={FORM_STYLES.input}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -288,7 +301,12 @@ export default function DiscountForm({ onSubmit, loading = false }) {
                       تاریخ پایان <span className="text-red-400">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} type="date" className={FORM_STYLES.input} dir="ltr" />
+                      <AdminPersianDatePicker
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="تاریخ پایان"
+                        className={FORM_STYLES.input}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -297,15 +315,14 @@ export default function DiscountForm({ onSubmit, loading = false }) {
             </div>
 
             {/* دکمه‌های عملیات */}
-            <div className="flex justify-end gap-3 pt-4">
-              <Button type="submit" disabled={loading} className="bg-blue-600 hover:bg-blue-700 min-w-32">
-                {loading ? "در حال ذخیره..." : "ایجاد کوپن"}
+            <div className="flex justify-end gap-3 pt-4 border-t border-gray-700/60">
+              <Button type="submit" disabled={loading} className={FORM_STYLES.button}>
+                {loading ? "در حال ذخیره..." : submitLabel ?? (isEdit ? "ذخیره تغییرات" : "ایجاد کوپن")}
               </Button>
             </div>
           </form>
         </Form>
-      </CardContent>
-    </Card>
+    </div>
   );
 }
 

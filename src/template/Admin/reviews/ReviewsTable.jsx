@@ -6,12 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
 import { Eye, TickCircle, CloseCircle } from "iconsax-reactjs";
+import { formatDateFa } from "@/utils/adminDateUtils";
 
 const getReviewStatusBadge = (status) => {
   const statusMap = {
     1: { label: "در انتظار", className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" },
     2: { label: "تایید شده", className: "bg-green-500/20 text-green-400 border-green-500/30" },
     3: { label: "رد شده", className: "bg-red-500/20 text-red-400 border-red-500/30" },
+    4: { label: "اسپم", className: "bg-red-600/20 text-red-500 border-red-600/30" },
   };
   const statusInfo = statusMap[status] || statusMap[1];
   return (
@@ -21,7 +23,7 @@ const getReviewStatusBadge = (status) => {
   );
 };
 
-export default function ReviewsTable({ reviews }) {
+export default function ReviewsTable({ reviews, onApprove, onReject }) {
   if (reviews.length === 0) {
     return <div className="p-8 text-center text-gray-400">نظری یافت نشد</div>;
   }
@@ -61,9 +63,7 @@ export default function ReviewsTable({ reviews }) {
             </TableCell>
             <TableCell>{getReviewStatusBadge(review.status)}</TableCell>
             <TableCell className="text-gray-300">
-              {review.createdAt
-                ? new Date(review.createdAt).toLocaleDateString("fa-IR")
-                : review.date || "-"}
+              {review.createdAt ? formatDateFa(review.createdAt) : review.date || "-"}
             </TableCell>
             <TableCell>
               <div className="flex items-center gap-2">
@@ -72,10 +72,20 @@ export default function ReviewsTable({ reviews }) {
                 </Button>
                 {review.status === 1 && (
                   <>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-green-400 hover:bg-green-400/20">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-green-400 hover:bg-green-400/20"
+                      onClick={() => onApprove?.(review.id)}
+                    >
                       <TickCircle size={18} />
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-red-400 hover:bg-red-400/20">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-red-400 hover:bg-red-400/20"
+                      onClick={() => onReject?.(review.id)}
+                    >
                       <CloseCircle size={18} />
                     </Button>
                   </>

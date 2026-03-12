@@ -3,7 +3,7 @@ import PaymentSteps from "@/template/CurrencyServices/PaymentSteps";
 import Benefits from "@/template/CurrencyServices/BenefitsSection";
 import ServicesList from "@/template/CurrencyServices/ServicesList";
 import Testimonials from "@/template/CurrencyServices/Testimonials";
-import IndexLayout from "@/layout/IndexLayout";
+import ServicesLayout from "@/layout/ServicesLayout";
 import FAQSection from "@/components/module/FAQSection";
 import { cn } from "@/lib/utils";
 
@@ -17,7 +17,7 @@ export const DotBg = ({ className }) => {
 
 export default function CurrencyServices() {
   return (
-    <IndexLayout>
+    <ServicesLayout>
       <div className="bg-gray-50 dark:bg-dark-bg">
         <TabsSection />
         <div className="relative">
@@ -33,6 +33,6 @@ export default function CurrencyServices() {
         <FAQSection />
         <div className="pb-10 md:pb-20" />
       </div>
-    </IndexLayout>
+    </ServicesLayout>
   );
 }

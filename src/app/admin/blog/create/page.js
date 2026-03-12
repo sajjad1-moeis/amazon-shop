@@ -11,6 +11,7 @@ export default function CreateBlogPage() {
   const router = useRouter();
   const {
     formData,
+    setFormData,
     categories,
     tags,
     loading,
@@ -36,7 +37,7 @@ export default function CreateBlogPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-4xl mx-auto" dir="rtl">
       <PageHeader title="پست جدید" description="ایجاد پست جدید برای وبلاگ" />
 
       <BlogForm
@@ -47,9 +48,12 @@ export default function CreateBlogPage() {
         onSubmit={handleSubmit}
         onChange={handleChange}
         onSelectChange={handleSelectChange}
+        onContentChange={(name, content) => setFormData((prev) => ({ ...prev, [name]: content }))}
         onTagToggle={handleTagToggle}
         onFileChange={handleFileChange}
         isEdit={false}
+        backHref="/admin/blog/list"
+        backLabel="بازگشت به لیست"
       />
     </div>
   );

@@ -2,31 +2,29 @@
 
 import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Wallet3 } from "iconsax-reactjs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { settingsService } from "@/services/settings/settingsService";
+import { unwrapApiData } from "@/services/api/client";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
+import { FORM_STYLES } from "@/template/Admin/formStyles";
+
+const DEFAULT_PAYMENT = { gateway: "", merchantId: "", apiKey: "", callbackUrl: "", isSandbox: false };
 
 export default function PaymentSettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [settings, setSettings] = useState({
-    gateway: "",
-    merchantId: "",
-    apiKey: "",
-    callbackUrl: "",
-  });
+  const [settings, setSettings] = useState(DEFAULT_PAYMENT);
 
   const fetchSettings = async () => {
     try {
       setLoading(true);
       const response = await settingsService.getPayment();
-
-      if (response.success && response.data) {
-        setSettings(response.data);
-      }
+      const data = unwrapApiData(response);
+      if (data && typeof data === "object") setSettings((prev) => ({ ...DEFAULT_PAYMENT, ...prev, ...data }));
     } catch (error) {
       toast.error(error.message || "خطا در دریافت تنظیمات");
       console.error("Error fetching settings:", error);
@@ -43,10 +41,8 @@ export default function PaymentSettingsPage() {
     e.preventDefault();
     setSaving(true);
     try {
-      const response = await settingsService.updatePayment(settings);
-      if (response.success) {
-        toast.success("تنظیمات با موفقیت به‌روزرسانی شد");
-      }
+      unwrapApiData(await settingsService.updatePayment(settings));
+      toast.success("تنظیمات با موفقیت به‌روزرسانی شد");
     } catch (error) {
       toast.error(error.message || "خطا در به‌روزرسانی تنظیمات");
     } finally {
@@ -61,86 +57,38 @@ export default function PaymentSettingsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">تنظیمات پرداخت</h1>
-        <p className="text-gray-400">تنظیمات درگاه‌های پرداخت</p>
-      </div>
-
-      <Card className="bg-gray-800 border-gray-700">
-        <CardHeader>
-          <CardTitle className="text-white">فرم تنظیمات</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <div className="p-8 text-center text-gray-400">
-              <Spinner size="lg" />
+      <AdminPageHeader title="تنظیمات پرداخت" subtitle="تنظیمات درگاه‌های پرداخت" icon={Wallet3} />
+      <AdminSectionCard title="فرم تنظیمات">
+        {loading ? (
+          <div className="p-8 text-center text-gray-400"><Spinner size="lg" /></div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label className={FORM_STYLES.label}>درگاه پرداخت</Label>
+                <Input name="gateway" value={settings.gateway || ""} onChange={handleChange} className={FORM_STYLES.input} />
+              </div>
+              <div className="space-y-2">
+                <Label className={FORM_STYLES.label}>Merchant ID</Label>
+                <Input name="merchantId" value={settings.merchantId || ""} onChange={handleChange} className={FORM_STYLES.input} />
+              </div>
+              <div className="space-y-2">
+                <Label className={FORM_STYLES.label}>API Key</Label>
+                <Input name="apiKey" value={settings.apiKey || ""} onChange={handleChange} className={FORM_STYLES.input} />
+              </div>
+              <div className="space-y-2">
+                <Label className={FORM_STYLES.label}>Callback URL</Label>
+                <Input name="callbackUrl" value={settings.callbackUrl || ""} onChange={handleChange} className={FORM_STYLES.input} />
+              </div>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="gateway" className="text-gray-300">
-                    درگاه پرداخت
-                  </Label>
-                  <Input
-                    id="gateway"
-                    name="gateway"
-                    value={settings.gateway}
-                    onChange={handleChange}
-                    className="bg-gray-800 border-gray-700 text-white"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="merchantId" className="text-gray-300">
-                    Merchant ID
-                  </Label>
-                  <Input
-                    id="merchantId"
-                    name="merchantId"
-                    value={settings.merchantId}
-                    onChange={handleChange}
-                    className="bg-gray-800 border-gray-700 text-white"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="apiKey" className="text-gray-300">
-                    API Key
-                  </Label>
-                  <Input
-                    id="apiKey"
-                    name="apiKey"
-                    type="password"
-                    value={settings.apiKey}
-                    onChange={handleChange}
-                    className="bg-gray-800 border-gray-700 text-white"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="callbackUrl" className="text-gray-300">
-                    Callback URL
-                  </Label>
-                  <Input
-                    id="callbackUrl"
-                    name="callbackUrl"
-                    value={settings.callbackUrl}
-                    onChange={handleChange}
-                    className="bg-gray-800 border-gray-700 text-white"
-                  />
-                </div>
-              </div>
-              <div className="flex justify-end pt-4">
-                <Button
-                  type="submit"
-                  disabled={saving}
-                  className="bg-green-500 hover:bg-green-600 text-white"
-                >
-                  {saving ? "در حال ذخیره..." : "ذخیره تنظیمات"}
-                </Button>
-              </div>
-            </form>
-          )}
-        </CardContent>
-      </Card>
+            <div className="flex justify-end pt-4 border-t border-gray-700/60">
+              <Button type="submit" disabled={saving} className={FORM_STYLES.button}>
+                {saving ? "در حال ذخیره..." : "ذخیره تنظیمات"}
+              </Button>
+            </div>
+          </form>
+        )}
+      </AdminSectionCard>
     </div>
   );
 }

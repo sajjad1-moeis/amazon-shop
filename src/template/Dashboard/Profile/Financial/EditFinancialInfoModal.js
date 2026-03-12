@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,9 +9,12 @@ import BankSelector from "./BankSelector";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { filterInputStyles } from "@/utils/filterStyles";
+import { userService } from "@/services/user/userService";
+import { unwrapApiData } from "@/services/api/client";
 
-export default function EditFinancialInfoModal({ isOpen, onClose, initialData }) {
+export default function EditFinancialInfoModal({ isOpen, onClose, initialData, bankAccounts = [], onUpdated }) {
   const [formData, setFormData] = useState({
+    preferredBankAccountId: initialData?.preferredBankAccountId ?? "",
     shaba: initialData?.shaba || "",
     bankAccount: initialData?.bankAccount || "",
     bank: initialData?.bank || "",
@@ -21,13 +24,45 @@ export default function EditFinancialInfoModal({ isOpen, onClose, initialData })
     expiryDate: initialData?.expiryDate || "",
     cardHolderName: initialData?.cardHolderName || "",
   });
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (isOpen && initialData) {
+      setFormData((prev) => ({
+        ...prev,
+        preferredBankAccountId: initialData?.preferredBankAccountId ?? "",
+        shaba: initialData?.shaba || "",
+        bankAccount: initialData?.bankAccount || "",
+        bank: initialData?.bank || "",
+        accountHolderName: initialData?.accountHolderName || "",
+        cardNumber: initialData?.cardNumber || "",
+        cvv2: initialData?.cvv2 || "",
+        expiryDate: initialData?.expiryDate || "",
+        cardHolderName: initialData?.cardHolderName || "",
+      }));
+    }
+  }, [isOpen, initialData]);
 
   const handleChange = (key, value) => setFormData((prev) => ({ ...prev, [key]: value }));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    toast.success("اطلاعات مالی با موفقیت ذخیره شد");
-    onClose();
+    setSaving(true);
+    try {
+      const body = {};
+      const preferredId = formData.preferredBankAccountId ? Number(formData.preferredBankAccountId) : undefined;
+      if (preferredId) body.preferredBankAccountId = preferredId;
+
+      const res = await userService.updateFinancialInfo(body);
+      unwrapApiData(res);
+      toast.success("اطلاعات مالی با موفقیت ذخیره شد");
+      if (onUpdated) onUpdated();
+      onClose();
+    } catch (err) {
+      toast.error(err?.message || err?.data?.message || "خطا در ذخیره اطلاعات مالی");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -40,6 +75,34 @@ export default function EditFinancialInfoModal({ isOpen, onClose, initialData })
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
+          {/* حساب بانکی ترجیحی (Phase 20 — api/Users/UpdateFinancialInfo) */}
+          {Array.isArray(bankAccounts) && bankAccounts.length > 0 && (
+            <div className="space-y-3 sm:space-y-4">
+              <h4 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2 text-primary-700 dark:text-dark-title">
+                حساب بانکی ترجیحی
+              </h4>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-caption">
+                حساب مورد نظر برای واریز و برداشت را انتخاب کنید
+              </p>
+              <div className="space-y-2">
+                <Label className="text-xs sm:text-sm">حساب ترجیحی</Label>
+                <select
+                  value={formData.preferredBankAccountId}
+                  onChange={(e) => handleChange("preferredBankAccountId", e.target.value)}
+                  className={cn("h-10 sm:h-11 w-full rounded-lg border bg-gray-50 text-sm", filterInputStyles)}
+                  dir="rtl"
+                >
+                  <option value="">انتخاب نکنید</option>
+                  {bankAccounts.map((acc) => (
+                    <option key={acc.id} value={acc.id}>
+                      {acc.shaba || acc.iban || acc.sheba || `حساب ${acc.id}`}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
+
           {/* ===== اطلاعات مالی پایه ===== */}
           <div className="space-y-3 sm:space-y-4">
             <div>
@@ -165,9 +228,10 @@ export default function EditFinancialInfoModal({ isOpen, onClose, initialData })
             </Button>
             <Button
               type="submit"
+              disabled={saving}
               className="bg-primary-600 w-full hover:bg-primary-700 text-white text-sm sm:text-base"
             >
-              ذخیره تغییرات
+              {saving ? "در حال ذخیره..." : "ذخیره تغییرات"}
             </Button>
           </DialogFooter>
         </form>

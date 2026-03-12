@@ -3,78 +3,106 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import PageHeader from "@/template/Admin/PageHeader";
+import { Wallet3 } from "iconsax-reactjs";
 import PaymentsTable from "@/template/Admin/payments/PaymentsTable";
+import PaymentsFilters from "@/template/Admin/payments/PaymentsFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import { paymentService } from "@/services/payment/paymentService";
+import { unwrapApiData } from "@/services/api/client";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 
 export default function PaymentsPage() {
   const searchParams = useSearchParams();
   const statusParam = searchParams.get("status");
+  /** status: ۱=موفق، ۲=ناموفق، ۳=در انتظار، ۴=استرداد‌شده (مطابق doc) */
+  const statusFilter =
+    statusParam && statusParam !== "all"
+      ? statusParam === "success"
+        ? 1
+        : statusParam === "failed"
+          ? 2
+          : statusParam === "pending"
+            ? 3
+            : statusParam === "refund"
+              ? 4
+              : undefined
+      : undefined;
+  const searchTerm = searchParams.get("search") || "";
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
 
-  const fetchPayments = async () => {
-    try {
-      setLoading(true);
-      const status = statusParam === "success" ? 1 : statusParam === "failed" ? 2 : undefined;
-      const response = await paymentService.getPaginated({
-        pageNumber,
-        pageSize,
-        status,
-        searchTerm: searchTerm || undefined,
-      });
+  useEffect(() => {
+    setPageNumber(1);
+  }, [searchTerm, statusFilter]);
 
-      if (response.success && response.data) {
-        setPayments(response.data.payments || response.data || []);
-        setTotalPages(response.data.totalPages || 1);
-      }
+  const handleRefund = async (orderId, body) => {
+    try {
+      await paymentService.refund(orderId, body);
+      toast.success("استرداد با موفقیت انجام شد");
+      setPayments((prev) =>
+        prev.map((p) =>
+          (p.orderId ?? p.id) === orderId ? { ...p, status: 4 } : p
+        )
+      );
     } catch (error) {
-      toast.error(error.message || "خطا در دریافت پرداخت‌ها");
-      console.error("Error fetching payments:", error);
-    } finally {
-      setLoading(false);
+      toast.error(error.message || "خطا در استرداد پرداخت");
     }
   };
 
   useEffect(() => {
-    if (searchTerm) {
-      setPageNumber(1);
-    }
-  }, [searchTerm]);
+    let cancelled = false;
+    (async () => {
+      try {
+        setLoading(true);
+        const response = await paymentService.getPaginated({
+          pageNumber,
+          pageSize,
+          status: statusFilter,
+          searchTerm: searchTerm || undefined,
+        });
 
-  useEffect(() => {
-    fetchPayments();
-  }, [pageNumber, searchTerm, statusParam]);
+        if (cancelled) return;
+        const data = unwrapApiData(response);
+        setPayments(Array.isArray(data?.payments) ? data.payments : Array.isArray(data) ? data : []);
+        setTotalPages(Math.max(1, data?.totalPages ?? 1));
+      } catch (error) {
+        if (!cancelled) {
+          toast.error(error.message || "خطا در دریافت پرداخت‌ها");
+          console.error("Error fetching payments:", error);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [pageNumber, pageSize, searchTerm, statusFilter]);
 
   return (
     <div className="space-y-6">
-      <div className="">
-        <PageHeader
-          title="پرداخت‌ها"
-          searchPlaceholder="جستجو ..."
-          searchValue={searchTerm}
-          onSearchChange={setSearchTerm}
-        />
-
+      <AdminPageHeader title="پرداخت‌ها" subtitle="مشاهده تراکنش‌ها و وضعیت پرداخت" icon={Wallet3}>
+        <PaymentsFilters />
+      </AdminPageHeader>
+      <AdminSectionCard title="لیست پرداخت‌ها">
         {loading ? (
           <div className="p-8 text-center text-gray-400">
             <Spinner size="lg" />
           </div>
         ) : (
           <>
-            <PaymentsTable payments={payments} />
-            <div className="pt-4 border-t border-gray-700">
+            <PaymentsTable payments={payments} onRefund={handleRefund} />
+            <div className="pt-4 mt-4 border-t border-gray-600">
               <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
             </div>
           </>
         )}
-      </div>
+      </AdminSectionCard>
     </div>
   );
 }

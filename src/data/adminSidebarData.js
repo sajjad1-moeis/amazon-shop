@@ -78,6 +78,8 @@ export const ADMIN_SIDEBAR_ITEMS = [
     children: [
       { name: "مدیریت نقش‌ها", href: "/admin/roles" },
       { name: "اضافه کردن نقش", href: "/admin/roles/create" },
+      { name: "کاربران ادمین", href: "/admin/security/admins" },
+      { name: "دسترسی‌ها", href: "/admin/security/permissions" },
       { name: "لاگ‌های سیستم", href: "/admin/security/logs" },
     ],
   },
@@ -92,7 +94,7 @@ export const ADMIN_SIDEBAR_ITEMS = [
       { name: "لیست محصولات", href: "/admin/products/list" },
       { name: "دسته‌بندی‌ها", href: "/admin/products/categories" },
       { name: "برندها", href: "/admin/products/brands" },
-      { name: "گزارش محصولات", href: "/admin/products/reports" },
+      { name: "گزارش محصولات", href: "/admin/reports/products" },
     ],
   },
   {
@@ -101,14 +103,6 @@ export const ADMIN_SIDEBAR_ITEMS = [
     color: "#F59E0B",
     href: "/admin/orders",
     key: "order",
-    children: [
-      { name: "همه سفارشات", href: "/admin/orders" },
-      { name: "سفارشات در انتظار", href: "/admin/orders/pending" },
-      { name: "سفارشات در حال پردازش", href: "/admin/orders/processing" },
-      { name: "سفارشات ارسال شده", href: "/admin/orders/shipped" },
-      { name: "سفارشات تحویل شده", href: "/admin/orders/delivered" },
-      { name: "سفارشات لغو شده", href: "/admin/orders/cancelled" },
-    ],
   },
   {
     name: "درخواست‌های مرجوعی",
@@ -137,7 +131,6 @@ export const ADMIN_SIDEBAR_ITEMS = [
     children: [
       { name: "کوپن جدید", href: "/admin/discounts/create" },
       { name: "لیست کوپن‌ها", href: "/admin/discounts/list" },
-      { name: "تخفیف‌های ویژه", href: "/admin/discounts/special" },
     ],
   },
   {
@@ -146,11 +139,6 @@ export const ADMIN_SIDEBAR_ITEMS = [
     color: "#F59E0B",
     href: "/admin/reviews",
     key: "review",
-    children: [
-      { name: "همه نظرات", href: "/admin/reviews" },
-      { name: "نظرات در انتظار تایید", href: "/admin/reviews/pending" },
-      { name: "نظرات تایید شده", href: "/admin/reviews/approved" },
-    ],
   },
 
   {
@@ -162,7 +150,7 @@ export const ADMIN_SIDEBAR_ITEMS = [
     children: [
       { name: "روش‌های ارسال", href: "/admin/shipping/methods" },
       { name: "مناطق ارسال", href: "/admin/shipping/zones" },
-      { name: "گزارش ارسال‌ها", href: "/admin/shipping/reports" },
+      { name: "گزارش ارسال‌ها", href: "/admin/reports/shipping" },
     ],
   },
   {
@@ -171,12 +159,6 @@ export const ADMIN_SIDEBAR_ITEMS = [
     color: "#8B5CF6",
     href: "/admin/reports",
     key: "report",
-    children: [
-      { name: "گزارش فروش", href: "/admin/reports/sales" },
-      { name: "گزارش کاربران", href: "/admin/reports/users" },
-      { name: "گزارش محصولات", href: "/admin/reports/products" },
-      { name: "گزارش مالی", href: "/admin/reports/financial" },
-    ],
   },
   {
     name: "پرداخت‌ها",
@@ -184,12 +166,6 @@ export const ADMIN_SIDEBAR_ITEMS = [
     color: "#10b981",
     href: "/admin/payments",
     key: "payment",
-    children: [
-      { name: "همه پرداخت‌ها", href: "/admin/payments" },
-      { name: "پرداخت‌های موفق", href: "/admin/payments/success" },
-      { name: "پرداخت‌های ناموفق", href: "/admin/payments/failed" },
-      { name: "درخواست‌های بازگشت وجه", href: "/admin/payments/refunds" },
-    ],
   },
   {
     name: "انبار و موجودی",
@@ -197,12 +173,6 @@ export const ADMIN_SIDEBAR_ITEMS = [
     color: "#F59E0B",
     href: "/admin/inventory",
     key: "inventory",
-    children: [
-      { name: "موجودی محصولات", href: "/admin/inventory" },
-      { name: "ورود کالا", href: "/admin/inventory/stock-in" },
-      { name: "خروج کالا", href: "/admin/inventory/stock-out" },
-      { name: "گزارش موجودی", href: "/admin/inventory/reports" },
-    ],
   },
 
   {

@@ -4,6 +4,7 @@ import React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import TableActions from "../TableActions";
+import { formatDateTimeFa } from "@/utils/adminDateUtils";
 
 const getReadStatusBadge = (isRead) => {
   if (isRead) {
@@ -24,21 +25,6 @@ export default function ContactUsTable({ contacts, onView, onMarkAsRead, markAsR
   if (contacts.length === 0) {
     return <div className="p-8 text-center text-gray-400">درخواستی یافت نشد</div>;
   }
-
-  const formatDate = (dateString) => {
-    if (!dateString) return "-";
-    try {
-      return new Date(dateString).toLocaleDateString("fa-IR", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-    } catch {
-      return dateString;
-    }
-  };
 
   const truncateMessage = (message, maxLength = 100) => {
     if (!message) return "-";
@@ -69,7 +55,7 @@ export default function ContactUsTable({ contacts, onView, onMarkAsRead, markAsR
               </div>
             </TableCell>
             <TableCell>{getReadStatusBadge(contact.isRead)}</TableCell>
-            <TableCell className="text-gray-300">{formatDate(contact.createdAt)}</TableCell>
+            <TableCell className="text-gray-300">{formatDateTimeFa(contact.createdAt)}</TableCell>
             <TableCell>
               <TableActions
                 onView={() => onView(contact.id)}

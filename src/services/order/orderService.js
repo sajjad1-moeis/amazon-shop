@@ -77,6 +77,12 @@ export const orderService = {
     return unwrapApiData(res);
   },
 
+  /** همان GetOrderById اما بدون unwrap — برای نمایش ریسپانس خام */
+  getOrderByIdRaw: async (orderId) => {
+    const client = getAuthenticatedClient();
+    return client.get(`Order/GetOrderById?${qs({ orderId })}`).json();
+  },
+
   /** GET api/Order/GetOrderByOrderNumber?orderNumber={number} */
   getOrderByOrderNumber: async (orderNumber) => {
     const client = getAuthenticatedClient();
@@ -226,21 +232,51 @@ export const orderService = {
   },
 
   /**
-   * سازگاری با صفحه ادمین قبلی: لیست با/بدون فیلتر وضعیت.
+   * سازگاری با صفحه ادمین: لیست با فیلتر وضعیت و جستجو بر اساس نام/شماره/موبایل.
    * برمی‌گرداند: { success: true, data: { orders: [], totalPages: number } }
    */
   getPaginated: async (params = {}) => {
-    const { status } = params ?? {};
-    const list =
+    const { status, searchTerm, pageNumber = 1, pageSize = 20 } = params ?? {};
+    const raw =
       status != null && status !== ""
         ? await orderService.getOrdersByStatus(Number(status))
         : await orderService.getAllOrders();
-    const orders = Array.isArray(list) ? list : [];
+    const list = Array.isArray(raw) ? raw : raw?.data ?? [];
+    let orders = Array.isArray(list) ? list : [];
+
+    if (searchTerm && typeof searchTerm === "string" && searchTerm.trim()) {
+      const term = searchTerm.trim().toLowerCase();
+      orders = orders.filter((order) => {
+        const name =
+          order.customerName ??
+          order.userFullName ??
+          order.userName ??
+          order.recipientName ??
+          "";
+        const orderNum = order.orderNumber != null ? String(order.orderNumber) : "";
+        const phone =
+          order.userPhoneNumber ??
+          order.phoneNumber ??
+          order.recipientPhone ??
+          order.mobile ??
+          "";
+        return (
+          (name && name.toLowerCase().includes(term)) ||
+          (orderNum && orderNum.toLowerCase().includes(term)) ||
+          (phone && phone.replace(/\s/g, "").includes(term.replace(/\s/g, "")))
+        );
+      });
+    }
+
+    const total = orders.length;
+    const start = (Math.max(1, pageNumber) - 1) * pageSize;
+    const paged = orders.slice(start, start + pageSize);
+
     return {
       success: true,
       data: {
-        orders,
-        totalPages: Math.max(1, Math.ceil(orders.length / (params?.pageSize || 20))),
+        orders: paged,
+        totalPages: Math.max(1, Math.ceil(total / pageSize)),
       },
     };
   },

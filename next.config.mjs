@@ -21,6 +21,11 @@ const nextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "m.media-amazon.com", pathname: "/**" },
       { protocol: "http", hostname: "m.media-amazon.com", pathname: "/**" },
+      { protocol: "https", hostname: "flagcdn.com", pathname: "/**" },
+      { protocol: "https", hostname: "micrls.com", pathname: "/**" },
+      { protocol: "http", hostname: "micrls.com", pathname: "/**" },
+      { protocol: "http", hostname: "107.161.175.45", pathname: "/**" },
+      { protocol: "https", hostname: "107.161.175.45", pathname: "/**" },
     ],
   },
 
@@ -60,6 +65,11 @@ const nextConfig = {
   // Experimental features
   experimental: {
     optimizePackageImports: ["iconsax-reactjs", "lucide-react"],
+  },
+
+  // Keep Turbopack root scoped to this project when it is used explicitly.
+  turbopack: {
+    root: process.cwd(),
   },
 };
 

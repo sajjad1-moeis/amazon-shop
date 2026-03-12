@@ -31,6 +31,14 @@ import PointsTerms from "./template/Guide/PointsTerms";
 
 export const ADDRESS_FORM_FIELDS = [
   {
+    id: "title",
+    label: "عنوان آدرس",
+    placeholder: "مثال: خانه، محل کار",
+    type: "text",
+    gridCols: 1,
+    required: true,
+  },
+  {
     id: "province",
     label: "استان",
     placeholder: "",
@@ -96,11 +104,11 @@ export const ADDRESS_FORM_FIELDS = [
   },
   {
     id: "mobile",
-    label: "شماره تلفن",
-    placeholder: "شماره تلفن همراه را وارد کنید",
+    label: "شماره تلفن گیرنده",
+    placeholder: "۰۹۱۲۳۴۵۶۷۸۹",
     type: "tel",
     gridCols: 2,
-    required: false,
+    required: true,
   },
   {
     id: "landline",

@@ -46,8 +46,8 @@ export default function BrandsTable({ brands, onEdit, onDelete }) {
             <TableCell>
               <TableActions
                 showView={false}
-                onEdit={onEdit ? () => onEdit(brand.id) : undefined}
-                onDelete={onDelete ? () => onDelete(brand.id) : undefined}
+                onEdit={() => onEdit?.(brand.id)}
+                onDelete={() => onDelete?.(brand.id)}
               />
             </TableCell>
           </TableRow>

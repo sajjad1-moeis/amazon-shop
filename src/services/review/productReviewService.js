@@ -36,6 +36,21 @@ export const productReviewService = {
     return client.get(`ProductReview/GetByStatus?status=${status}`).json();
   },
 
+  /** GET api/ProductReview/GetPaginated — pageNumber, pageSize (حداکثر ۱۰۰), status (۱–۴), productId?, searchTerm? */
+  getPaginated: async (params = {}) => {
+    const { pageNumber = 1, pageSize = 20, status, productId, searchTerm } = params;
+    const cappedSize = Math.min(Math.max(1, Number(pageSize) || 20), 100);
+    const qs = new URLSearchParams({
+      pageNumber: String(pageNumber),
+      pageSize: String(cappedSize),
+    });
+    if (status !== undefined && status !== null) qs.append("status", String(status));
+    if (productId !== undefined && productId !== null) qs.append("productId", String(productId));
+    if (searchTerm != null && searchTerm !== "") qs.append("searchTerm", searchTerm);
+    const client = getAuthenticatedClient();
+    return client.get(`ProductReview/GetPaginated?${qs.toString()}`).json();
+  },
+
   getByRating: async (productId, rating) => {
     const client = getAuthenticatedClient();
     const qs = new URLSearchParams({ productId: String(productId), rating: String(rating) });
@@ -65,9 +80,10 @@ export const productReviewService = {
     return client.post(`ProductReview/Approve?id=${id}`).json();
   },
 
-  reject: async (id) => {
+  /** POST api/ProductReview/Reject?id= — body: { reason? } */
+  reject: async (id, reason) => {
     const client = getAuthenticatedClient();
-    return client.post(`ProductReview/Reject?id=${id}`).json();
+    return client.post(`ProductReview/Reject?id=${id}`, { json: reason != null ? { reason } : {} }).json();
   },
 
   getReviewCountByProductId: async (productId) => {

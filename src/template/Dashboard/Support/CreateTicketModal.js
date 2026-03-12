@@ -71,10 +71,9 @@ export default function CreateTicketModal({ isOpen, onClose, onSubmit }) {
   const fetchCategories = async () => {
     try {
       setLoadingCategories(true);
-      const response = await ticketCategoryService.getActive();
-      if (response?.success && response.data) {
-        setCategories(Array.isArray(response.data) ? response.data : []);
-      }
+      const data = await ticketCategoryService.getActive();
+      const list = Array.isArray(data) ? data : Array.isArray(data?.categories) ? data.categories : [];
+      setCategories(list);
     } catch (error) {
       toast.error("خطا در دریافت دسته‌بندی‌ها");
       setCategories([]);
@@ -102,22 +101,20 @@ export default function CreateTicketModal({ isOpen, onClose, onSubmit }) {
       };
 
       const response = await ticketService.create(ticketData);
+      const ticketId = response?.data?.id ?? response?.id;
 
-      if (response?.success && response.data?.id) {
-        let fileUploadSuccess = true;
-
+      if (ticketId) {
         if (data.file) {
           try {
-            await ticketService.uploadTicketFile(response.data.id, data.file);
+            await ticketService.uploadTicketFile(ticketId, data.file);
           } catch (fileError) {
-            fileUploadSuccess = false;
             toast.warning("تیکت ایجاد شد اما فایل آپلود نشد");
           }
         }
 
         toast.success("تیکت با موفقیت ایجاد شد");
         form.reset();
-        onClose();
+        onClose?.();
         onSubmit?.();
       } else {
         toast.error(response?.message || "خطا در ایجاد تیکت");

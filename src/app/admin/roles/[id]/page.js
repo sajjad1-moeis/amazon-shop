@@ -8,10 +8,10 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { ArrowRight, Edit, Trash, Profile2User, Calendar, Document } from "iconsax-reactjs";
-import PageHeader from "@/template/Admin/PageHeader";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import { AdminPageHeader } from "@/components/admin";
 import { roleService } from "@/services/role/roleService";
-import { formatDate } from "@/utils/dateFormatter";
+import { formatDateFa } from "@/utils/adminDateUtils";
 
 export default function RoleDetailPage() {
   const params = useParams();
@@ -101,12 +101,16 @@ export default function RoleDetailPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title={`جزئیات نقش: ${role.name}`}
-        buttonText="بازگشت به لیست"
-        buttonIcon={<ArrowRight size={20} className="ml-2" />}
-        onButtonClick={() => router.push("/admin/roles")}
-      />
+      <AdminPageHeader title={`جزئیات نقش: ${role.name}`} subtitle="مشاهده و ویرایش نقش و دسترسی‌ها" icon={Profile2User}>
+        <Button
+          variant="outline"
+          className="border-gray-500 text-gray-300 hover:bg-gray-600/40"
+          onClick={() => router.push("/admin/roles")}
+        >
+          <ArrowRight size={20} className="ml-2" />
+          <span className="max-md:hidden">بازگشت به لیست</span>
+        </Button>
+      </AdminPageHeader>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* اطلاعات اصلی */}
@@ -173,7 +177,7 @@ export default function RoleDetailPage() {
                     <Calendar size={16} />
                     تاریخ ایجاد
                   </label>
-                  <p className="text-gray-300 mt-1">{formatDate(role.createdAt)}</p>
+                  <p className="text-gray-300 mt-1">{formatDateFa(role.createdAt)}</p>
                 </div>
               </div>
             </CardContent>

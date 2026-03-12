@@ -3,12 +3,14 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { MessageQuestion } from "iconsax-reactjs";
 import TicketsTable from "@/template/Admin/tickets/TicketsTable";
 import TicketsFilters from "@/template/Admin/tickets/TicketsFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
 import { Spinner } from "@/components/ui/spinner";
 import { adminTicketService } from "@/services/ticket/adminTicketService";
 import { unwrapApiData } from "@/services/api/client";
+import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 
 export default function TicketsPage() {
   const router = useRouter();
@@ -40,20 +42,27 @@ export default function TicketsPage() {
   const fetchTickets = useCallback(async () => {
     try {
       setLoading(true);
-      const searchParam = searchParams.get("search");
-      const searchTermValue = searchParam || "";
-      const response = await adminTicketService.searchTickets({
-        searchTerm: searchTermValue || undefined,
-        status,
+      const searchTermValue = searchParams.get("search") || "";
+      const priorityParam = searchParams.get("priority");
+      const categoryIdParam = searchParams.get("categoryId");
+      const phoneNumberParam = searchParams.get("phoneNumber");
+      const assignedParam = searchParams.get("assignedToUserId");
+      const response = await adminTicketService.getPaginated({
         pageNumber,
         pageSize,
+        status,
+        searchTerm: searchTermValue || undefined,
+        priority: priorityParam ? parseInt(priorityParam, 10) : undefined,
+        categoryId: categoryIdParam ? parseInt(categoryIdParam, 10) : undefined,
+        phoneNumber: phoneNumberParam ? phoneNumberParam.trim() : undefined,
+        assignedToUserId: assignedParam ? parseInt(assignedParam, 10) : undefined,
       });
 
       const data = unwrapApiData(response);
       const list = Array.isArray(data?.tickets) ? data.tickets : Array.isArray(data) ? data : [];
       setTickets(list);
-      setTotalPages(data?.totalPages || 1);
-      setTotalCount(data?.totalCount || 0);
+      setTotalPages(data?.totalPages ?? 1);
+      setTotalCount(data?.totalCount ?? 0);
     } catch (error) {
       toast.error(error.message || "خطا در دریافت تیکت‌ها");
       console.error("Error fetching tickets:", error);
@@ -86,12 +95,10 @@ export default function TicketsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="">
-        <div className="mb-5">
-          <h1 className="text-lg md:text-xl text-gray-100 mb-4">تیکت ها</h1>
-          <TicketsFilters />
-        </div>
-
+      <AdminPageHeader title="تیکت‌ها و پشتیبانی" subtitle="مشاهده و پاسخ به تیکت‌های کاربران" icon={MessageQuestion}>
+        <TicketsFilters />
+      </AdminPageHeader>
+      <AdminSectionCard title="لیست تیکت‌ها">
         {loading ? (
           <div className="p-8 text-center text-gray-400">
             <Spinner size="lg" />
@@ -99,12 +106,12 @@ export default function TicketsPage() {
         ) : (
           <>
             <TicketsTable tickets={tickets} onView={handleView} />
-            <div className="pt-4 border-t border-gray-700">
+            <div className="pt-4 mt-4 border-t border-gray-600">
               <AdminPagination currentPage={pageNumber} totalPages={totalPages} onPageChange={handlePageChange} />
             </div>
           </>
         )}
-      </div>
+      </AdminSectionCard>
     </div>
   );
 }

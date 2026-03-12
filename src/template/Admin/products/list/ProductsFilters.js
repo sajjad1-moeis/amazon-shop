@@ -103,6 +103,7 @@ export default function ProductsFilters({ isInDrawer = false }) {
       <FilterSearchInput value={searchValue} onChange={handleSearchChange} isAdmin placeholder="جستجو محصول..." />
 
       <StatusSelect
+        value={filterCategory}
         onValueChange={handleCategoryChange}
         placeholder="دسته‌بندی"
         options={categoryOptions}
@@ -111,6 +112,7 @@ export default function ProductsFilters({ isInDrawer = false }) {
         isAdmin
       />
       <StatusSelect
+        value={filterBrand}
         onValueChange={handleBrandChange}
         placeholder="برند"
         options={brandOptions}
@@ -119,6 +121,7 @@ export default function ProductsFilters({ isInDrawer = false }) {
         isAdmin
       />
       <StatusSelect
+        value={filterStatus}
         onValueChange={handleStatusChange}
         placeholder="وضعیت"
         options={STATUS_OPTIONS}

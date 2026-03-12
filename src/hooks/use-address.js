@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { toast } from "sonner";
 
 export const DEFAULT_FORM_DATA = {
+  title: "",
   province: "",
   city: "",
   address: "",
