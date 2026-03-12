@@ -18,6 +18,7 @@ export function applyProductSeoHead(product) {
   const title =
     product.seoTitle ??
     product.SeoTitle ??
+    product.title_fa ??
     product.title ??
     product.name ??
     "محصول";

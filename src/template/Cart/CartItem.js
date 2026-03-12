@@ -7,8 +7,12 @@ import { ShieldTick, Trash, TruckFast } from "iconsax-reactjs";
 import { MinusIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
+import { getProductName } from "@/utils/productHelpers";
 import { shoppingCartService } from "@/services/shoppingCart/shoppingCartService";
 import { toast } from "sonner";
+
+const MAX_QUANTITY = 999;
+const MAX_SAFE_INT32 = 2147483647;
 
 function CartItem({ item, userId, onUpdate }) {
   const [quantity, setQuantity] = useState(item?.quantity ?? 1);
@@ -16,17 +20,30 @@ function CartItem({ item, userId, onUpdate }) {
 
   useEffect(() => {
     const q = item?.quantity ?? 1;
-    setQuantity(q);
+    setQuantity(Math.min(MAX_QUANTITY, Math.max(1, Number(q) || 1)));
   }, [item?.quantity]);
 
+  const cartItemId =
+    typeof item?.id === "number" ? item.id : Number(item?.id);
+  const hasValidCartItemId =
+    Number.isFinite(cartItemId) &&
+    cartItemId > 0 &&
+    cartItemId <= MAX_SAFE_INT32 &&
+    cartItemId === Math.floor(cartItemId);
+
   const handleQuantityChange = async (newQuantity) => {
-    if (newQuantity < 1) return;
+    const qty = Math.min(MAX_QUANTITY, Math.max(1, Math.floor(Number(newQuantity) || 1)));
+    if (qty < 1) return;
     if (!userId) return;
+    if (!hasValidCartItemId) {
+      toast.error("شناسه آیتم سبد نامعتبر است");
+      return;
+    }
     const prevQuantity = quantity;
-    setQuantity(newQuantity);
+    setQuantity(qty);
     try {
-      await shoppingCartService.updateCartItem(userId, item.id, {
-        quantity: newQuantity,
+      await shoppingCartService.updateCartItem(userId, Math.floor(cartItemId), {
+        quantity: qty,
         hasQualityShield: item.hasQualityShield ?? false,
       });
       onUpdate?.();
@@ -39,9 +56,13 @@ function CartItem({ item, userId, onUpdate }) {
 
   const handleRemove = async () => {
     if (!userId) return;
+    if (!hasValidCartItemId) {
+      toast.error("شناسه آیتم سبد نامعتبر است");
+      return;
+    }
     try {
       setLoading(true);
-      await shoppingCartService.removeItem(userId, item.id);
+      await shoppingCartService.removeItem(userId, Math.floor(cartItemId));
       toast.success("محصول از سبد خرید حذف شد");
       onUpdate?.();
     } catch (error) {
@@ -66,7 +87,7 @@ function CartItem({ item, userId, onUpdate }) {
   };
 
   const product = item?.product ?? {};
-  const title = item?.productTitle ?? product?.name ?? "محصول";
+  const title = item?.productTitle ?? getProductName(product);
   const imageUrl = item?.productMainImageUrl ?? product?.image ?? "/image/Home/product.png";
   const price = item?.price ?? 0;
   const discountPrice = item?.discountPrice ?? 0;

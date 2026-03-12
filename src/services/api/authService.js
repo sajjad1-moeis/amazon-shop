@@ -22,6 +22,11 @@ export const authService = {
     return postAuth(client, "Auth/LoginWithPhone", data);
   },
 
+  loginWithGoogle: async (data) => {
+    const client = getPublicClient();
+    return postAuth(client, "Auth/LoginWithGoogle", data);
+  },
+
   sendForgotPasswordOtp: async (data) => {
     const client = getPublicClient();
     return postAuth(client, "Auth/SendForgotPasswordOtp", data);

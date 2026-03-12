@@ -1,20 +1,12 @@
 import React from "react";
-import Header from "../components/module/Header";
-import Footer from "../components/module/Footer";
-import BottomNavigation from "@/components/module/BottomNavigation";
 import { CartCountProvider } from "@/contexts/CartCountContext";
 
+/**
+ * قالب اصلی صفحات عمومی: فقط CartCountProvider.
+ * هدر، فوتر و نوار پایین از LayoutShell در روت لایوت می‌آیند تا همیشه نمایش داده شوند.
+ */
 function IndexLayout({ children }) {
-  return (
-    <CartCountProvider>
-      <div>
-        <Header />
-        {children}
-        <Footer />
-        <BottomNavigation />
-      </div>
-    </CartCountProvider>
-  );
+  return <CartCountProvider>{children}</CartCountProvider>;
 }
 
 export default IndexLayout;

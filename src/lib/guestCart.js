@@ -51,7 +51,7 @@ export function addGuestCartItem(item) {
       productId,
       quantity: qty,
       hasQualityShield: Boolean(item.hasQualityShield),
-      title: item.title,
+      title: item.title_fa ?? item.title,
       imageUrl: item.imageUrl,
     });
   }

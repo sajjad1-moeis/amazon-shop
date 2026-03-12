@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Star } from "lucide-react";
 import IndexLayout from "@/layout/IndexLayout";
-import ProductDetailsAccordion from "@/template/Product/ProductDetailsAccordion";
+import ProductDetailsAccordion, { buildSpecsFromProduct } from "@/template/Product/ProductDetailsAccordion";
 import ProductReviewsSection from "@/template/Product/ProductReviewsSection";
 import RelatedSlider from "@/template/Product/RelatedSlider";
 import AccessoriesSlider from "@/template/Product/AccessoriesSlider";
@@ -14,16 +14,17 @@ import ProductClientWrapper from "@/template/Product/ProductClientWrapper";
 import ProductVariationDimensions from "@/template/Product/ProductVariationDimensions";
 import { Button } from "@/components/ui/button";
 import { productService } from "@/services/product/productService";
+import { pricingService } from "@/services/pricing/pricingService";
 import {
   getProductName,
   getMainImage,
   getProductImages,
   getProductImageAlt,
   getBreadcrumbItems,
-  getBasePrice,
-  getProductDescription,
+  getDisplayPriceToman,
   getDisplayBrand,
   parseProductNum,
+  formatPriceToman,
 } from "@/utils/productHelpers";
 import { prefetchScraperDetails, getScraperDetailsCached } from "@/utils/scraperPrefetch";
 import { useAuth } from "@/contexts/AuthContext";
@@ -31,6 +32,7 @@ import { userRecentViewService } from "@/services/userRecentView/userRecentViewS
 import { applyProductSeoHead } from "@/utils/metadata";
 import NotFoundView from "@/components/NotFoundView";
 import { getNotFoundPreset } from "@/data/notFoundPresets";
+import { cn } from "@/lib/utils";
 
 export default function ProductDetailPage({ params }) {
   const resolved = use(
@@ -58,6 +60,9 @@ export default function ProductDetailPage({ params }) {
     let cancelled = false;
     setLoading(true);
     setError(null);
+    setProduct(null); // با سوییچ واریانت (ASIN جدید) محصول قبلی پاک شود تا قیمت/دادهٔ قدیمی نمایش داده نشود
+    // ASIN آمازون دقیقاً ۱۰ کاراکتر حرف/عدد است — اگر این فرمت باشد حتی اگر همه رقم باشد (مثل 0743273966) باید مسیر ASIN برویم
+    const isAsinFormat = (id) => /^[A-Z0-9]{10}$/i.test(String(id || ""));
     const isNumericId = /^\d+$/.test(String(productId));
     const MAX_SAFE_INT32 = 2147483647;
     const numId = Number(productId);
@@ -85,7 +90,8 @@ export default function ProductDetailPage({ params }) {
       if (!cancelled) setLoading(false);
     };
 
-    if (isValidNumericId) {
+    // شناسه عددی فقط وقتی getById بزنیم که فرمت ASIN نباشد (ASIN = ۱۰ کاراکتر)
+    if (isValidNumericId && !isAsinFormat(productId)) {
       productService
         .getById(productId)
         .then((response) => {
@@ -115,7 +121,6 @@ export default function ProductDetailPage({ params }) {
       }
     };
     const wait = (ms) => new Promise((r) => setTimeout(r, ms));
-    const isAsinFormat = (id) => /^[A-Z0-9]{10}$/.test(String(id || ""));
 
     productService
       .getByASIN(productId)
@@ -123,7 +128,41 @@ export default function ProductDetailPage({ params }) {
         if (cancelled) return;
         const dto = response?.data ?? response;
         if (!dto || response?.success === false) throw new Error(response?.message || "محصول یافت نشد");
-        applyProduct(dto);
+        // اگر محصول از DB آمد ولی عکس/توضیح ناقص است، جزئیات اسکرپر را بگیر و DB را پر کن
+        const needsEnrichment = (p) => {
+          if (!p?.id) return false;
+          const images = Array.isArray(p?.images) ? p.images : (Array.isArray(p?.imageUrls) ? p.imageUrls : []);
+          const hasEnoughImages = images.length >= 2;
+          const hasDesc = p?.description && String(p.description).trim().length > 80;
+          const hasTitleFa = p?.title_fa && String(p.title_fa).trim().length > 0;
+          return !hasEnoughImages || !hasDesc || (!hasTitleFa && (p?.title || p?.name));
+        };
+        if (needsEnrichment(dto)) {
+          return (productService.getScraperProductDetails(productId) || Promise.resolve(null))
+            .then((detailsRes) => {
+              if (cancelled || !detailsRes?.success) return { fromDb: true, dto };
+              return productService
+                .updateFromScraperDetails(dto.id, detailsRes)
+                .then(() => productService.getById(dto.id))
+                .then((res) => {
+                  const updated = res?.data ?? res;
+                  const merged = updated || dto;
+                  if (detailsRes?.title_fa && merged) merged.title_fa = detailsRes.title_fa;
+                  return { fromDb: true, dto: merged };
+                })
+                .catch(() => ({ fromDb: true, dto }));
+            });
+        }
+        return { fromDb: true, dto };
+      })
+      .then((maybeFromDb) => {
+        if (cancelled) return;
+        if (maybeFromDb?.fromDb && maybeFromDb?.dto) {
+          applyProduct(maybeFromDb.dto);
+          done();
+          return;
+        }
+        return maybeFromDb;
       })
       .catch(() => {
         if (cancelled) return;
@@ -154,6 +193,7 @@ export default function ProductDetailPage({ params }) {
               const payload = {
                 asin: productId,
                 title: d.title ?? d.name,
+                title_fa: d.title_fa ?? null,
                 brand: d.brand,
                 current_price: d.current_price ?? d.price ?? d.discountPrice,
                 original_price: d.original_price ?? d.price,
@@ -174,6 +214,8 @@ export default function ProductDetailPage({ params }) {
               };
               if (d.variation_dimensions && Object.keys(d.variation_dimensions).length > 0)
                 payload.variation_dimensions = d.variation_dimensions;
+              if (d.weight_kg != null) payload.weight_kg = d.weight_kg;
+              if (d.weight_category) payload.weight_category = d.weight_category;
               return payload;
             });
           }
@@ -185,13 +227,14 @@ export default function ProductDetailPage({ params }) {
       })
       .then((payload) => {
         if (cancelled || !payload?.asin) return;
-        // صبر برای لود کامل: اول جزئیات را بگیر؛ اگر ناقص بود چند ثانیه صبر کن و دوباره بگیر؛ کامل‌ترین پاسخ را استفاده کن، بعد ذخیره
+        // صبر برای لود کامل: حداقل یک عکس یا توضیح کافی؛ بعد ذخیره تا همهٔ داده (مثلاً ۴ عکس) در DB ذخیره شود
         const FULL_DETAILS_WAIT_MS = 5000;
+        const FULL_DETAILS_WAIT_MS_EXTRA = 8000;
         const isDetailsComplete = (d) => {
           if (!d || !d.success) return false;
           const imgCount = Array.isArray(d.images) ? d.images.length : 0;
           const hasDesc = d.description && String(d.description).trim().length > 80;
-          return imgCount >= 2 || hasDesc;
+          return imgCount >= 1 || hasDesc;
         };
         const richness = (d) => {
           if (!d || !d.success) return 0;
@@ -209,7 +252,13 @@ export default function ProductDetailPage({ params }) {
               .then(() => fetchDetails())
               .then((second) => {
                 if (cancelled) return null;
-                return richness(second) >= richness(first) ? second : first;
+                const best = richness(second) >= richness(first) ? second : first;
+                const hasAnyImage = Array.isArray(best?.images) && best.images.length > 0;
+                if (hasAnyImage || isDetailsComplete(best)) return best;
+                return wait(FULL_DETAILS_WAIT_MS_EXTRA).then(() => fetchDetails()).then((third) => {
+                  if (cancelled) return best;
+                  return richness(third) >= richness(best) ? third : best;
+                });
               });
           })
           .then((detailsRes) => {
@@ -219,7 +268,12 @@ export default function ProductDetailPage({ params }) {
             if (details) {
               if (Array.isArray(details.images) && details.images.length > 0)
                 fullPayload.images = details.images;
+              else if (Array.isArray(payload.images) && payload.images.length > 0)
+                fullPayload.images = payload.images;
+              else if (Array.isArray(payload.image_urls) && payload.image_urls.length > 0)
+                fullPayload.images = payload.image_urls;
               if (details.description) fullPayload.description = details.description;
+              if (details.description_fa) fullPayload.description_fa = details.description_fa;
               if (details.description_html) fullPayload.description_html = details.description_html;
               if (Array.isArray(details.attributes) && details.attributes.length > 0)
                 fullPayload.attributes = details.attributes;
@@ -238,8 +292,48 @@ export default function ProductDetailPage({ params }) {
               if (details.dimensions) fullPayload.dimensions = details.dimensions;
               if (details.variation_dimensions && Object.keys(details.variation_dimensions).length > 0)
                 fullPayload.variation_dimensions = details.variation_dimensions;
+              if (details.title) fullPayload.title = details.title;
+              if (details.title_fa) fullPayload.title_fa = details.title_fa;
+              // قیمت از پاسخ جزئیات اسکرپر (برای واریانت‌ها اندپوینت /details حالا current_price برمی‌گرداند)
+              if (details.current_price != null) fullPayload.current_price = details.current_price;
+              if (details.original_price != null) fullPayload.original_price = details.original_price;
+              if (details.price != null && fullPayload.current_price == null) fullPayload.current_price = details.price;
+              if (Array.isArray(details.product_badges) && details.product_badges.length > 0)
+                fullPayload.product_badges = details.product_badges;
+              if (details.is_limited_time_deal != null) fullPayload.is_limited_time_deal = details.is_limited_time_deal;
+              if (details.limited_time_deal_text) fullPayload.limited_time_deal_text = details.limited_time_deal_text;
+              if (details.free_returns != null) fullPayload.free_returns = details.free_returns;
+              if (Array.isArray(details.promo_messages) && details.promo_messages.length > 0)
+                fullPayload.promo_messages = details.promo_messages;
+              if (details.is_best_seller != null) fullPayload.is_best_seller = details.is_best_seller;
+              if (details.best_seller_text) fullPayload.best_seller_text = details.best_seller_text;
+              if (details.is_amazons_choice != null) fullPayload.is_amazons_choice = details.is_amazons_choice;
             }
-            return productService.saveIfNotExistsFromScraper(fullPayload).then((res) => ({ res, fullPayload }));
+            // قبل از ذخیره حتماً قیمت تومان را از موتور قیمت بگیر و در payload بگذار تا هم نمایش پایدار باشد هم در DB درست ذخیره شود
+            const hasToman = fullPayload.ourPrice != null && Number(fullPayload.ourPrice) > 0;
+            const baseAed = parseProductNum(fullPayload.current_price ?? fullPayload.price);
+            const ensurePriceThenSave = () =>
+              productService.saveIfNotExistsFromScraper(fullPayload).then((res) => ({ res, fullPayload }));
+            if (hasToman) {
+              return ensurePriceThenSave();
+            }
+            if (baseAed <= 0) {
+              return ensurePriceThenSave();
+            }
+            return pricingService
+              .preview({
+                asin: fullPayload.asin ?? fullPayload.amazonASIN ?? productId,
+                basePriceAed: baseAed,
+                weightKg: fullPayload.weight_kg ?? fullPayload.weightKg ?? undefined,
+              })
+              .then((data) => {
+                if (data?.finalPriceIrr != null && Number(data.finalPriceIrr) > 0) {
+                  fullPayload.ourPrice = data.finalPriceIrr;
+                  fullPayload.finalPrice = data.finalPriceIrr;
+                }
+                return ensurePriceThenSave();
+              })
+              .catch(() => ensurePriceThenSave());
           })
           .then((data) => {
             if (cancelled) return;
@@ -247,9 +341,7 @@ export default function ProductDetailPage({ params }) {
             const { res, fullPayload } = data;
             const savedId =
               res?.data?.productId ?? res?.data?.id ?? res?.data?.productID ?? res?.data?.ProductId;
-            try {
-              if (typeof sessionStorage !== "undefined") sessionStorage.removeItem(`scraperProduct_${productId}`);
-            } catch (_) {}
+            // sessionStorage را پاک نمی‌کنیم تا بعد از رفرش اگر getByASIN خطا داد، همان payload (با ourPrice) برای نمایش قیمت در دسترس باشد
             if (res?.success && savedId != null) {
               return productService.getById(savedId).then((response) => ({ response, payload: fullPayload }));
             }
@@ -269,6 +361,7 @@ export default function ProductDetailPage({ params }) {
               else if (Array.isArray(payload.image_urls) && payload.image_urls.length > 0) dto.image_urls = payload.image_urls;
               if (Array.isArray(payload.reviews) && payload.reviews.length > 0) dto.reviews = payload.reviews;
               if (payload.description) dto.description = payload.description;
+              if (payload.description_fa) dto.description_fa = payload.description_fa;
               if (payload.description_html) dto.description_html = payload.description_html;
               if (payload.currency) dto.currency = payload.currency;
               if (payload.seller) dto.seller = payload.seller;
@@ -284,6 +377,20 @@ export default function ProductDetailPage({ params }) {
               if (payload.variation_dimensions && Object.keys(payload.variation_dimensions).length > 0)
                 dto.variation_dimensions = payload.variation_dimensions;
               if (payload.product_url) dto.amazonUrl = dto.amazonUrl || payload.product_url;
+              if (payload.title) dto.title = payload.title;
+              if (payload.title_fa) dto.title_fa = payload.title_fa;
+              if (payload.ourPrice != null) dto.ourPrice = payload.ourPrice;
+              if (payload.finalPrice != null) dto.finalPrice = payload.finalPrice;
+              if (Array.isArray(payload.product_badges) && payload.product_badges.length > 0)
+                dto.product_badges = payload.product_badges;
+              if (payload.is_limited_time_deal != null) dto.is_limited_time_deal = payload.is_limited_time_deal;
+              if (payload.limited_time_deal_text) dto.limited_time_deal_text = payload.limited_time_deal_text;
+              if (payload.free_returns != null) dto.free_returns = payload.free_returns;
+              if (Array.isArray(payload.promo_messages) && payload.promo_messages.length > 0)
+                dto.promo_messages = payload.promo_messages;
+              if (payload.is_best_seller != null) dto.is_best_seller = payload.is_best_seller;
+              if (payload.best_seller_text) dto.best_seller_text = payload.best_seller_text;
+              if (payload.is_amazons_choice != null) dto.is_amazons_choice = payload.is_amazons_choice;
             }
             applyProduct(dto);
           })
@@ -320,12 +427,51 @@ export default function ProductDetailPage({ params }) {
     applyProductSeoHead(product);
   }, [product]);
 
+  // وقتی محصول ourPrice/finalPrice ندارد (مثلاً لود با ASIN یا getById بدون OurPrice)، یک بار preview بزن و قیمت تومان را ست کن
+  const pricePreviewFetchedRef = useRef(false);
+  useEffect(() => {
+    pricePreviewFetchedRef.current = false;
+  }, [productId]);
+  useEffect(() => {
+    if (!product) return;
+    const hasToman = (product.ourPrice ?? product.finalPrice ?? product.OurPrice ?? product.FinalPrice) != null && Number(product.ourPrice ?? product.finalPrice ?? product.OurPrice ?? product.FinalPrice) > 0;
+    if (hasToman) return;
+    // قیمت پایه درهم: از API وقتی OurPrice خالی است basePriceAed برمی‌گردد؛ وگرنه current_price/price/Price
+    const baseAed = parseProductNum(product.basePriceAed ?? product.BasePriceAed ?? product.current_price ?? product.price ?? product.Price);
+    if (baseAed <= 0) return;
+    if (pricePreviewFetchedRef.current) return;
+    pricePreviewFetchedRef.current = true;
+    pricingService
+      .preview({
+        asin: product.asin ?? product.amazonASIN ?? product.ASIN ?? productId,
+        basePriceAed: baseAed,
+        weightKg: product.weight_kg ?? product.weightKg ?? undefined,
+      })
+      .then((data) => {
+        if (!data?.finalPriceIrr || Number(data.finalPriceIrr) <= 0) return;
+        setProduct((prev) =>
+          prev ? { ...prev, ourPrice: data.finalPriceIrr, finalPrice: data.finalPriceIrr } : prev
+        );
+        // ذخیرهٔ قیمت در DB تا رفرش و لیست محصولات از همان منبع بخوانند
+        if (product?.id && data?.finalPriceIrr)
+          productService.updateProductPrice(product.id, data.finalPriceIrr).catch(() => {});
+      })
+      .catch(() => {
+        pricePreviewFetchedRef.current = false;
+      });
+  }, [product?.id, product?.asin, product?.basePriceAed, product?.current_price, product?.price, product?.ourPrice, product?.finalPrice, productId]);
+
   // ==========================================
   // On-demand enrichment — فقط یک درخواست /details (عکس + توضیحات + برند + مشخصات)
   // مثل استراتژی عکس‌ها؛ همهٔ جزئیات با هم و سریع لود می‌شوند.
   // ==========================================
   const detailsPromiseRef = useRef(null);
   const detailsEnrichedAsinRef = useRef(null);
+
+  // با سوییچ واریانت (ASIN جدید) enrichment برای همان ASIN دوباره اجرا شود
+  useEffect(() => {
+    detailsEnrichedAsinRef.current = null;
+  }, [productId]);
 
   const isAsinInUrl = productId && !/^\d+$/.test(String(productId));
   const dataSource = isAsinInUrl ? "scraper" : "db";
@@ -359,6 +505,7 @@ export default function ProductDetailPage({ params }) {
       if (Array.isArray(res.images) && res.images.length > 0)
         next.images = res.images;
       if (res.description != null && res.description) next.description = res.description;
+      if (res.description_fa != null && res.description_fa) next.description_fa = res.description_fa;
       if (res.description_html) next.description_html = res.description_html;
       if (Array.isArray(res.attributes) && res.attributes.length > 0) next.attributes = res.attributes;
       if (Array.isArray(res.reviews) && res.reviews.length > 0) next.reviews = res.reviews;
@@ -373,6 +520,16 @@ export default function ProductDetailPage({ params }) {
       if (res.dimensions) next.dimensions = res.dimensions;
       if (res.variation_dimensions && Object.keys(res.variation_dimensions).length > 0)
         next.variation_dimensions = res.variation_dimensions;
+      if (Array.isArray(res.product_badges) && res.product_badges.length > 0)
+        next.product_badges = res.product_badges;
+      if (res.is_limited_time_deal != null) next.is_limited_time_deal = res.is_limited_time_deal;
+      if (res.limited_time_deal_text) next.limited_time_deal_text = res.limited_time_deal_text;
+      if (res.free_returns != null) next.free_returns = res.free_returns;
+      if (Array.isArray(res.promo_messages) && res.promo_messages.length > 0)
+        next.promo_messages = res.promo_messages;
+      if (res.is_best_seller != null) next.is_best_seller = res.is_best_seller;
+      if (res.best_seller_text) next.best_seller_text = res.best_seller_text;
+      if (res.is_amazons_choice != null) next.is_amazons_choice = res.is_amazons_choice;
       return next;
     });
   };
@@ -397,6 +554,9 @@ export default function ProductDetailPage({ params }) {
   // وقتی محصول با ID بارگذاری شده ولی در DB ناقص است (فقط یک عکس، بدون توضیحات کامل) — جزئیات را از اسکرپر بگیر و در DB ذخیره کن
   const updatedFromScraperRef = useRef(false);
   useEffect(() => {
+    updatedFromScraperRef.current = false;
+  }, [productId]);
+  useEffect(() => {
     if (dataSource !== "db" || !product?.id || loading) return;
     const asin = product?.asin ?? product?.amazonASIN ?? product?.ASIN;
     if (!asin) return;
@@ -417,6 +577,7 @@ export default function ProductDetailPage({ params }) {
               const next = { ...prev };
               if (Array.isArray(res.images) && res.images.length > 0) next.images = res.images;
               if (res.description) next.description = res.description;
+              if (res.description_fa) next.description_fa = res.description_fa;
               if (res.description_html) next.description_html = res.description_html;
               if (Array.isArray(res.attributes) && res.attributes.length > 0) next.attributes = res.attributes;
               if (Array.isArray(res.reviews) && res.reviews.length > 0) next.reviews = res.reviews;
@@ -425,6 +586,16 @@ export default function ProductDetailPage({ params }) {
               if (res.brand != null && String(res.brand).trim()) next.brand = String(res.brand).trim();
               if (res.variation_dimensions && Object.keys(res.variation_dimensions).length > 0)
                 next.variation_dimensions = res.variation_dimensions;
+              if (Array.isArray(res.product_badges) && res.product_badges.length > 0)
+                next.product_badges = res.product_badges;
+              if (res.is_limited_time_deal != null) next.is_limited_time_deal = res.is_limited_time_deal;
+              if (res.limited_time_deal_text) next.limited_time_deal_text = res.limited_time_deal_text;
+              if (res.free_returns != null) next.free_returns = res.free_returns;
+              if (Array.isArray(res.promo_messages) && res.promo_messages.length > 0)
+                next.promo_messages = res.promo_messages;
+              if (res.is_best_seller != null) next.is_best_seller = res.is_best_seller;
+              if (res.best_seller_text) next.best_seller_text = res.best_seller_text;
+              if (res.is_amazons_choice != null) next.is_amazons_choice = res.is_amazons_choice;
               next.isFullStored = true;
               return next;
             });
@@ -497,7 +668,7 @@ export default function ProductDetailPage({ params }) {
   const safeNumId = rawNumId != null && rawNumId <= 2147483647 && rawNumId >= -2147483648 ? rawNumId : null;
   const numericProductId = product?.id ?? safeNumId;
   const colors = product.colors || product.availableColors || [];
-  const displayPrice = getBasePrice(product);
+  const displayPrice = getDisplayPriceToman(product);
   const listPrice = parseProductNum(
     product?.original_price ?? product?.price ?? product?.discountPrice
   ) || displayPrice;
@@ -505,12 +676,11 @@ export default function ProductDetailPage({ params }) {
   const reviewCountVal = Math.floor(
     parseProductNum(product?.reviews_count ?? product?.reviewCount)
   );
-  const hasDiscount = listPrice > displayPrice && listPrice > 0;
+  const hasDiscount =
+    displayPrice > 0 && listPrice > displayPrice && listPrice > 0;
   const discountPercent = hasDiscount
     ? Math.round(((listPrice - displayPrice) / listPrice) * 100)
     : 0;
-  const description = getProductDescription(product);
-
   return (
     <IndexLayout>
       <div className="min-h-screen bg-gray-50 dark:bg-transparent" dir="rtl">
@@ -584,6 +754,71 @@ export default function ProductDetailPage({ params }) {
                     </span>
                   )}
                 </div>
+                {((product?.product_badges ?? product?.productBadges ?? product?.badges)?.length > 0 || product?.best_seller_text || product?.bestSellerText || product?.is_best_seller || product?.isBestSeller || product?.is_amazons_choice || product?.isAmazonsChoice || product?.is_limited_time_deal || product?.isLimitedTimeDeal) && (
+                  <div className="flex flex-wrap items-center gap-2 mb-4">
+                    {(product?.product_badges ?? product?.productBadges ?? product?.badges ?? []).map((badge, index) => (
+                      <span
+                        key={index}
+                        className={cn(
+                          "text-xs px-2.5 py-1 rounded-md text-white whitespace-nowrap",
+                          badge === "Limited time deal" || badge === "تخفیف محدود زمان" || (typeof badge === "string" && badge.toLowerCase().includes("limited time deal"))
+                            ? "bg-red-600 dark:bg-red-700"
+                            : badge === "FREE Returns"
+                              ? "bg-green-600 dark:bg-green-700"
+                              : badge === "Savings" || badge === "صرفه‌جویی"
+                                ? "bg-emerald-600 dark:bg-emerald-700"
+                                : badge === "Best Seller" || (typeof badge === "string" && badge.toLowerCase().includes("best seller"))
+                                  ? "bg-orange-500 dark:bg-orange-600"
+                                  : badge === "Amazon's Choice" || (typeof badge === "string" && badge.toLowerCase().includes("amazon") && badge.toLowerCase().includes("choice"))
+                                    ? "bg-green-600 dark:bg-green-700"
+                                    : "bg-primary-600 dark:bg-primary-700"
+                        )}
+                      >
+                        {badge === "Limited time deal" || badge === "تخفیف محدود زمان"
+                          ? "تخفیف محدود زمان"
+                          : badge === "FREE Returns"
+                            ? "مرجوعی رایگان"
+                            : badge === "Savings"
+                              ? "صرفه‌جویی"
+                              : badge === "Best Seller" || (typeof badge === "string" && badge.toLowerCase().includes("best seller"))
+                                ? "بیشترین فروش"
+                                : badge === "Amazon's Choice" || (typeof badge === "string" && badge.toLowerCase().includes("amazon") && badge.toLowerCase().includes("choice"))
+                                  ? "انتخاب آمازون"
+                                  : badge}
+                      </span>
+                    ))}
+                    {(product?.is_limited_time_deal || product?.isLimitedTimeDeal) && !(product?.product_badges ?? product?.productBadges ?? product?.badges ?? []).some((b) => typeof b === "string" && (b.toLowerCase().includes("limited time deal") || b === "تخفیف محدود زمان")) && (
+                      <span className="text-xs px-2.5 py-1 rounded-md bg-red-600 dark:bg-red-700 text-white whitespace-nowrap">
+                        تخفیف محدود زمان
+                      </span>
+                    )}
+                    {(product?.is_best_seller || product?.isBestSeller || product?.best_seller_text || product?.bestSellerText) && !(product?.product_badges ?? product?.productBadges ?? product?.badges ?? []).some((b) => typeof b === "string" && b.toLowerCase().includes("best seller")) && (
+                      <span className="text-xs px-2.5 py-1 rounded-md bg-orange-500 dark:bg-orange-600 text-white whitespace-nowrap">
+                        بیشترین فروش
+                      </span>
+                    )}
+                    {(product?.is_amazons_choice || product?.isAmazonsChoice) && !(product?.product_badges ?? product?.productBadges ?? product?.badges ?? []).some((b) => typeof b === "string" && b.toLowerCase().includes("amazon") && b.toLowerCase().includes("choice")) && (
+                      <span className="text-xs px-2.5 py-1 rounded-md bg-green-600 dark:bg-green-700 text-white whitespace-nowrap">
+                        انتخاب آمازون
+                      </span>
+                    )}
+                    {(product?.best_seller_text || product?.bestSellerText) && (product.best_seller_text ?? product.bestSellerText ?? "").includes(" in ") && (
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                        {product.best_seller_text ?? product.bestSellerText}
+                      </span>
+                    )}
+                  </div>
+                )}
+                {Array.isArray(product?.promo_messages ?? product?.promoMessages) && (product.promo_messages ?? product.promoMessages).length > 0 && (
+                  <div className="mb-4 p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800">
+                    <p className="text-xs font-medium text-emerald-800 dark:text-emerald-200 mb-2">پرومو و تخفیف</p>
+                    <ul className="text-sm text-emerald-700 dark:text-emerald-300 space-y-1 list-disc list-inside">
+                      {(product.promo_messages ?? product.promoMessages ?? []).map((msg, i) => (
+                        <li key={i}>{msg}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
                 {hasVariations && (
                   <ProductVariationDimensions
                     variationDimensions={variationDimensions}
@@ -594,38 +829,39 @@ export default function ProductDetailPage({ params }) {
                     }
                   />
                 )}
-                {description && (
-                  <div className="mb-6">
-                    <h3 className="mb-2 text-gray-800 dark:text-dark-titre md:text-lg text-right">
-                      معرفی کوتاه
-                    </h3>
-                    <p className="text-sm text-gray-600 leading-relaxed text-right whitespace-pre-line">
-                      {description}
-                    </p>
-                  </div>
-                )}
-                {product?.attributes && product.attributes.length > 0 && (
-                  <div>
-                    <h3 className="mb-3 text-right text-gray-800 dark:text-white">
-                      مشخصات فنی
-                    </h3>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      {product.attributes.map((atr, index) => (
-                        <div
-                          key={index}
-                          className="bg-gray-100 border dark:bg-dark-field dark:border-0 border-gray-200 p-2 rounded-lg"
-                        >
-                          <p className="text-gray-700 dark:text-dark-titre max-md:text-sm">
-                            {atr.name}
-                          </p>
-                          <p className="text-gray-500 text-sm dark:text-dark-text max-md:text-xs mt-2">
-                            {atr.value}
-                          </p>
-                        </div>
-                      ))}
+                {(() => {
+                  const allSpecs = buildSpecsFromProduct(product);
+                  const boxKeys = new Set([
+                    "brand", "colour", "color", "ear placement", "form factor", "impedance",
+                    "برند", "رنگ", "قرارگیری گوش", "فاکتور فرم", "امپدانس",
+                  ]);
+                  const specs = allSpecs.filter(
+                    (s) => boxKeys.has(s.label.trim().toLowerCase()) || boxKeys.has(s.label.trim())
+                  );
+                  if (specs.length === 0) return null;
+                  return (
+                    <div>
+                      <h3 className="mb-3 text-right text-gray-800 dark:text-white">
+                        مشخصات فنی
+                      </h3>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {specs.map((spec, index) => (
+                          <div
+                            key={`${spec.label}-${index}`}
+                            className="bg-gray-100 border dark:bg-dark-field dark:border-0 border-gray-200 p-2 rounded-lg"
+                          >
+                            <p className="text-gray-700 dark:text-dark-titre max-md:text-sm">
+                              {spec.label}
+                            </p>
+                            <p className="text-gray-500 text-sm dark:text-dark-text max-md:text-xs mt-2">
+                              {spec.value}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  );
+                })()}
               </div>
               <div className="max-md:hidden">
                 <ProductDetailsAccordion product={product} dataSource={dataSource} />
@@ -639,12 +875,7 @@ export default function ProductDetailPage({ params }) {
                     <p className="text-gray-500 text-sm">قیمت :</p>
                     <div className="flex-between gap-2">
                       <div>
-                        <span className="text-2xl">
-                          {displayPrice.toLocaleString("fa-IR")}
-                        </span>
-                        <span className="text-sm">
-                          {product?.currency_symbol || product?.currency === "AED" ? " درهم" : " تومان"}
-                        </span>
+                        <span className="text-2xl">{formatPriceToman(displayPrice)}</span>
                       </div>
                       {hasDiscount && (
                         <span className="bg-orange-600 text-white text-xs px-2 py-1 rounded">
@@ -654,8 +885,7 @@ export default function ProductDetailPage({ params }) {
                     </div>
                     {hasDiscount && (
                       <div className="text-sm text-gray-400 line-through mt-1">
-                        {listPrice.toLocaleString("fa-IR")}
-                        {product?.currency_symbol || product?.currency === "AED" ? " درهم" : " تومان"}
+                        {formatPriceToman(listPrice)}
                       </div>
                     )}
                   </div>

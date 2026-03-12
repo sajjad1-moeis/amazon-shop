@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { getProductName } from "@/utils/productHelpers";
 import { Magicpen } from "iconsax-reactjs";
 import { Star } from "lucide-react";
 import SelectColor from "./SelectColor";
@@ -10,7 +11,7 @@ export default function ProductInfoSection({ product, colors, selectedColor, set
     <div>
       {/* Title */}
       <h1 className="md:text-2xl text-gray-900 dark:text-dark-titre mb-2 text-right">
-        {product?.name || product?.title || "نام محصول"}
+        {getProductName(product)}
       </h1>
 
       {product?.englishName && (
@@ -131,11 +132,13 @@ export default function ProductInfoSection({ product, colors, selectedColor, set
         <SelectColor colors={colors} selectedColor={selectedColor} setSelectedColor={setSelectedColor} />
       )}
 
-      {/* Short Description */}
-      {product?.shortDescription && (
+      {/* Short Description — ترجیح نسخهٔ فارسی (description_fa/shortDescription_fa)، سپس انگلیسی */}
+      {(product?.description_fa ?? product?.descriptionFa ?? product?.shortDescription_fa ?? product?.shortDescriptionFa ?? product?.shortDescription ?? product?.description) && (
         <div className="mb-6">
-          <h3 className=" mb-2 text-gray-800 dark:text-dark-titre md:text-lg text-right">معرفی کوتاه</h3>
-          <p className="text-sm text-gray-600 leading-relaxed text-right">{product.shortDescription}</p>
+          <h3 className=" mb-2 text-gray-800 dark:text-dark-titre md:text-lg text-right">توضیحات کوتاه</h3>
+          <p className="text-sm text-gray-600 leading-relaxed text-right">
+            {product?.description_fa ?? product?.descriptionFa ?? product?.shortDescription_fa ?? product?.shortDescriptionFa ?? product?.shortDescription ?? product?.description}
+          </p>
         </div>
       )}
 
@@ -143,12 +146,11 @@ export default function ProductInfoSection({ product, colors, selectedColor, set
       {product?.attributes && product.attributes.length > 0 && (
         <div>
           <h3 className=" mb-3 text-right text-gray-800 dark:text-white">ویژگی ها</h3>
-
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {product.attributes.map((atr) => (
-              <div className="bg-gray-100 border dark:bg-dark-field dark:border-0 border-gray-200 p-2 rounded-lg">
-                <p className="text-gray-700 dark:text-dark-titre max-md:text-sm">{atr.name}</p>
-                <p className="text-gray-500 text-sm dark:text-dark-text max-md:text-xs mt-2">{atr.value}</p>
+            {product.attributes.map((atr, index) => (
+              <div key={index} className="bg-gray-100 border dark:bg-dark-field dark:border-0 border-gray-200 p-2 rounded-lg">
+                <p className="text-gray-700 dark:text-dark-titre max-md:text-sm">{atr.name_fa ?? atr.nameFa ?? atr.name ?? atr.label}</p>
+                <p className="text-gray-500 text-sm dark:text-dark-text max-md:text-xs mt-2">{atr.value_fa ?? atr.valueFa ?? atr.value}</p>
               </div>
             ))}
           </div>

@@ -3,7 +3,6 @@
 import Image from "next/image";
 import React from "react";
 import { Heart, ShoppingCart } from "iconsax-reactjs";
-import { HeadphonesIcon } from "lucide-react";
 import TopBar from "./Topbar";
 import Link from "next/link";
 import BtnShowLoginModal from "../BtnShowLoginModal";
@@ -12,11 +11,9 @@ import DiscountAmazonButton from "../DiscountAmazonButton";
 import DrawerMobile from "./DrawerMobile";
 import SearchDropdown from "./SearchDropdown";
 import { useCartCount } from "@/contexts/CartCountContext";
-import { useCrispOnClick } from "./CrispChat";
 
 function Header() {
   const { cartCount } = useCartCount();
-  const { loadAndOpen: openCrisp, loading: crispLoading } = useCrispOnClick();
   return (
     <header className="w-full ">
       <div className="dark:bg-dark-header bg-primary-500 py-1.5 ">
@@ -30,18 +27,6 @@ function Header() {
             <Image alt="PayPal" src="/image/Header/paypal.png" width={65} height={48} />
             <p className="dark:text-[#D4F4FF] text-info-200 font-thin text-sm hidden sm:inline">داری، کلیک کن</p>
           </Link>
-          <button
-            type="button"
-            onClick={openCrisp}
-            disabled={crispLoading}
-            className="flex-between gap-2 max-lg:hidden hover:opacity-90 transition-opacity disabled:opacity-70"
-            aria-label="پشتیبانی 24 ساعته"
-          >
-            <HeadphonesIcon className="dark:text-[#E9F0FF] text-primary-300" />
-            <p className="dark:text-[#E9F0FF] text-primary-300">
-              {crispLoading ? "در حال بارگذاری..." : "پشتیبانی 24 ساعته"}
-            </p>
-          </button>
           <Link href={"/products"} className="flex-between gap-2">
             <p className="dark:text-[#D4F4FF] text-info-200 font-thin text-sm max-lg:hidden">
               تخفیف ویژه خرید اولی‌ها! تا ۵٪ هزینه خدمات کمتر برای اولین سفارش شما 🎁

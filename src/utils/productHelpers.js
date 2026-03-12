@@ -118,11 +118,11 @@ function getTitleFromVariationDimensions(product) {
 }
 
 /**
- * Get product name (fallback to title) — اسکرپر: title.
+ * Get product name for display — ترجیح title_fa (فارسی) از اسکرپر، سپس title/name.
  * اگر عنوان خالی یا «بدون عنوان» باشد، از برچسب واریانت (سایز/رنگ) استفاده می‌کند.
  */
 export function getProductName(product) {
-  const raw = product?.name || product?.title || "";
+  const raw = product?.title_fa ?? product?.titleFa ?? product?.name ?? product?.title ?? "";
   const t = typeof raw === "string" ? raw.trim() : "";
   if (t && t !== NO_TITLE_FA) return raw;
   const fromVariations = getTitleFromVariationDimensions(product);
@@ -145,11 +145,14 @@ function isEffectivelyTitle(product, text) {
 }
 
 /**
- * Get product description (fallback chain) — اسکرپر: description و در صورت نبود، bullet_points.
+ * Get product description (fallback chain) — ترجیح نسخهٔ فارسی (description_fa / shortDescription_fa)، سپس انگلیسی.
+ * اسکرپر: description و در صورت نبود، bullet_points.
  * اگر مقدار به‌دست‌آمده عملاً همان عنوان محصول باشد، خالی برمی‌گرداند تا در مشخصات فنی دوباره نمایش داده نشود.
  */
 export function getProductDescription(product) {
-  const desc = product?.shortDescription || product?.description || "";
+  const descFa = product?.description_fa ?? product?.shortDescription_fa ?? product?.descriptionFa ?? product?.shortDescriptionFa;
+  const descEn = product?.shortDescription || product?.description || "";
+  const desc = (descFa && String(descFa).trim()) ? descFa : descEn;
   if (desc.trim()) {
     if (isEffectivelyTitle(product, desc)) return "";
     return desc;
@@ -163,6 +166,51 @@ export function getProductDescription(product) {
     return joined;
   }
   return "";
+}
+
+/**
+ * نرمال کردن برچسب برای کلید یکتا (اولین خط، فشرده‌سازی فاصله‌ها)
+ */
+function normalizeSpecLabelForKey(label) {
+  if (label == null || typeof label !== "string") return "";
+  const firstLine = label.split(/\n/)[0] || "";
+  return firstLine.replace(/\s+/g, " ").trim();
+}
+
+/**
+ * بررسی می‌کند مقدار مشخصات معنی‌دار است (نه خالی، نه فقط «:»، نه تکرار برچسب)
+ */
+function isMeaningfulSpecValue(value, label) {
+  if (value == null || typeof value !== "string") return false;
+  const v = value.replace(/\s+/g, " ").trim();
+  if (!v || v === ":" || v === ":\u200f" || v.length < 2) return false;
+  const labelNorm = normalizeSpecLabelForKey(label);
+  if (labelNorm && v === labelNorm) return false;
+  if (labelNorm && v.startsWith(labelNorm) && /^[\s:\u200f]*$/.test(v.slice(labelNorm.length))) return false;
+  return true;
+}
+
+/**
+ * آرایهٔ مشخصات فنی بدون تکرار و بدون سطرهای نامعتبر.
+ * اسکرپر/آمازون گاهی همان فیلد را در چند جدول تکرار می‌کند یا مقدار را در label می‌گذارد و value فقط «:» می‌شود.
+ * خروجی همان ساختار attributeها (name, name_fa, value, value_fa و ...) برای استفاده در گرید و آکاردئون.
+ */
+export function getDeduplicatedAttributes(product) {
+  const attrs = product?.attributes;
+  if (!Array.isArray(attrs) || attrs.length === 0) return [];
+  const seenKeys = new Set();
+  const result = [];
+  for (const a of attrs) {
+    const label = a.name_fa ?? a.nameFa ?? a.name ?? a.label ?? "";
+    const value = String(a.value_fa ?? a.valueFa ?? a.value ?? "").trim();
+    const key = normalizeSpecLabelForKey(label);
+    if (!key) continue;
+    if (!isMeaningfulSpecValue(value, label)) continue;
+    if (seenKeys.has(key)) continue;
+    seenKeys.add(key);
+    result.push(a);
+  }
+  return result;
 }
 
 /**
@@ -205,13 +253,17 @@ const DELIVERY_PRICE_MAP = {
 };
 
 /**
- * Calculate final price including color and delivery options
+ * Calculate final price including color and delivery options.
+ * پایه = قیمت تومان (ourPrice/finalPrice از موتور قیمت) تا با باکس «قیمت» و سایدبار یکسان باشد.
+ * وقتی پایه ۰ است (قیمت نامشخص)، خروجی ۰ باشد تا فقط هزینهٔ اکسپرس به‌عنوان «قیمت محصول» نمایش داده نشود.
  */
 export function calculateProductPrice(product, selectedColor, selectedDelivery) {
-  const basePrice = getBasePrice(product);
+  const baseToman = getDisplayPriceToman(product);
+  if (!Number.isFinite(baseToman) || baseToman <= 0) return 0;
   const colorPrice = COLOR_PRICE_MAP[selectedColor] || 0;
   const deliveryPrice = DELIVERY_PRICE_MAP[selectedDelivery] || 0;
-  return basePrice + colorPrice + deliveryPrice;
+  const total = baseToman + colorPrice + deliveryPrice;
+  return Number.isFinite(total) && total >= 0 ? total : 0;
 }
 
 /**
@@ -223,6 +275,18 @@ export function parseProductNum(value) {
   const s = String(value).replace(/,/g, "").replace(/[^\d.-]/g, "").trim();
   const n = parseFloat(s);
   return Number.isFinite(n) ? n : 0;
+}
+
+/**
+ * فرمت نمایش قیمت به تومان: فقط عدد صحیح، با جداکننده هزارگان فارسی، بدون اعشار یا اسلش.
+ * برای نمایش در کارت و لیست محصولات (قیمت همیشه تومان).
+ * مقدار ۰ = «قیمت نامشخص» (جلوگیری از نمایش اشتباه قیمت درهم به‌جای تومان).
+ */
+export function formatPriceToman(value) {
+  const n = parseProductNum(value);
+  if (!Number.isFinite(n) || n < 0 || n === 0) return "قیمت نامشخص";
+  const integer = Math.round(n);
+  return `${integer.toLocaleString("fa-IR", { maximumFractionDigits: 0 })} تومان`;
 }
 
 function parseNum(value) {
@@ -239,6 +303,22 @@ export function getBasePrice(product) {
     product?.price ??
     product?.ourPrice;
   return parseNum(raw);
+}
+
+/**
+ * قیمت نمایشی به تومان برای کارت و بخش خرید.
+ * فقط ourPrice/finalPrice (از موتور قیمت یا API) استفاده می‌شود؛ هرگز getBasePrice به‌عنوان تومان استفاده نمی‌شود
+ * چون برای محصولات اسکرپر current_price در درهم (AED) است و نمایش آن به‌عنوان تومان اشتباه است (مثلاً «۶۵ تومان»).
+ * از OurPrice/FinalPrice (PascalCase از API) هم پشتیبانی می‌شود.
+ * مقادیر خیلی کوچک (< 1000) به‌عنوان تومان معتبر در نظر گرفته نمی‌شوند (احتمالاً AED ذخیره‌شده به‌عنوان تومان، مثلاً ۳۷).
+ */
+export function getDisplayPriceToman(product) {
+  const toman = parseProductNum(
+    product?.ourPrice ?? product?.finalPrice ?? product?.OurPrice ?? product?.FinalPrice
+  );
+  if (!Number.isFinite(toman) || toman <= 0) return 0;
+  if (toman < 1000) return 0; // جلوگیری از نمایش «۳۷ تومان» وقتی مقدار درهم به‌اشتباه به‌عنوان تومان برگشته
+  return toman;
 }
 
 /**
@@ -346,8 +426,8 @@ export function mapProductListDto(item) {
   return {
     id: item.id,
     productId: item.id,
-    title: item.title,
-    name: item.title,
+    title: item.title_fa ?? item.title,
+    name: item.title_fa ?? item.title,
     mainImageUrl: item.mainImageUrl,
     image: item.mainImageUrl,
     price: item.price ?? item.finalPrice,

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { getProductName } from "@/utils/productHelpers";
 
 export default function ProductPreviewCard({ product }) {
   if (!product) return null;
@@ -9,10 +10,10 @@ export default function ProductPreviewCard({ product }) {
       {/* Product Image */}
       <div className="flex gap-2">
         <div className=" size-16 md:w-36  sm:h-48 md:h-28 relative flex-shrink-0 rounded-lg sm:rounded-xl overflow-hidden bg-gray-100 dark:bg-dark-box">
-          <Image src={product.image} alt={product.title} fill className="object-cover" />
+          <Image src={product.image} alt={getProductName(product)} fill className="object-cover" />
         </div>
         <div className="md:hidden">
-          <h3 className="text-sm mb-3 text-gray-900 dark:text-dark-titre leading-5 sm:leading-6">{product.title}</h3>
+          <h3 className="text-sm mb-3 text-gray-900 dark:text-dark-titre leading-5 sm:leading-6">{getProductName(product)}</h3>
 
           {/* Brand + Status */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 w-full">
@@ -28,7 +29,7 @@ export default function ProductPreviewCard({ product }) {
       <div className="flex-1 flex flex-col gap-2 sm:gap-3">
         {/* Title */}
         <h3 className="text-sm max-md:hidden sm:text-[15px] font-bold text-gray-900 dark:text-dark-titre leading-5 sm:leading-6">
-          {product.title}
+          {getProductName(product)}
         </h3>
 
         {/* Brand + Status */}

@@ -156,6 +156,7 @@ export default function Footer() {
                   width={64}
                   height={88}
                   className="object-contain"
+                  style={{ width: 'auto', height: 'auto' }}
                 />
               </a>
 
@@ -198,7 +199,9 @@ export default function Footer() {
                   width={64}
                   height={88}
                   className="object-contain"
+                  style={{ width: 'auto', height: 'auto' }}
                   referrerPolicy="origin"
+                  onError={(e) => { e.target.style.display = 'none'; }}
                 />
               </div>
 

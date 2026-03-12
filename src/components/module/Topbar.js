@@ -13,11 +13,15 @@ import ScrapingDropdown from "./ScrapingDropdown";
 
 export default function TopBar() {
   const categoriesTrigger = (
-    <Button variant="gray" className="flex items-center md:gap-2 gap-0 rounded-xl px-3 py-0 h-9 max-xl:hidden">
+    <span
+      role="button"
+      tabIndex={0}
+      className="inline-flex items-center justify-center md:gap-2 gap-0 rounded-xl px-3 py-0 h-9 max-xl:hidden bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 cursor-pointer font-medium text-sm"
+    >
       <MenuIcon size={18} variant="Bulk" />
       <span className="text-sm">دسته بندی</span>
       <ArrowDown2 size={18} />
-    </Button>
+    </span>
   );
 
   return (

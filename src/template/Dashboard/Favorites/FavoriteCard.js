@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Trash } from "iconsax-reactjs";
+import { getProductName } from "@/utils/productHelpers";
 
 export default function FavoriteCard({ product, onRemove }) {
   const trackingStatusLabel = product.trackingStatus === "inactive" ? "غیرفعال" : "فعال";
@@ -43,10 +44,10 @@ export default function FavoriteCard({ product, onRemove }) {
 
       <div className="flex  max-md:w-full">
         <div className="max-md:!max-w-22 max-lg:max-w-32 w-full md:h-32 lg:w-36 lg:h-40 relative overflow-hidden">
-          <Image src={product.image} alt={product.title} fill className="object-cover" />
+          <Image src={product.image} alt={getProductName(product)} fill className="object-cover" />
         </div>
         <div className="p-3 lg:hidden w-full space-y-4">
-          <h3 className="text-sm  text-gray-900 dark:text-dark-titre leading-6 ">{product.title}</h3>
+          <h3 className="text-sm  text-gray-900 dark:text-dark-titre leading-6 ">{getProductName(product)}</h3>
           <div className="flex-between gap-3  mt-3">
             {/* Brand Logo */}
 
@@ -73,7 +74,7 @@ export default function FavoriteCard({ product, onRemove }) {
           {/* Product Title */}
           <div className="">
             <h3 className=" text-base xl:text-lg  text-gray-900 dark:text-dark-titre leading-6 max-lg:hidden">
-              {product.title}
+              {getProductName(product)}
             </h3>
 
             {/* Brand Section */}

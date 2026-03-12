@@ -45,6 +45,7 @@ export default function ProductNotFoundSection({
                     width={1200}
                     height={600}
                     className="w-full h-auto object-cover"
+                    alt={region.name ? `جستجو در ${region.name}` : "منطقه آمازون"}
                   />
                 </div>
               </div>

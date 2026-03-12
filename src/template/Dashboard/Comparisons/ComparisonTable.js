@@ -4,6 +4,7 @@ import React from "react";
 import { TickCircle, CloseCircle } from "iconsax-reactjs";
 import { cn } from "@/lib/utils";
 import ViewAllTable from "@/components/ViewAllTable";
+import { getProductName } from "@/utils/productHelpers";
 
 export default function ComparisonTable({ products, features }) {
   const getFeatureValue = (product, featureKey) => {
@@ -53,7 +54,7 @@ export default function ComparisonTable({ products, features }) {
                       index > 0 && "border-r border-gray-200 dark:border-dark-stroke"
                     )}
                   >
-                    {product.title}
+                    {getProductName(product)}
                   </th>
                 ))}
               </tr>

@@ -4,6 +4,7 @@
 
 import { fetchProductForMeta } from "./fetchProductForMeta";
 import ProductSchemaScript from "./ProductSchemaScript";
+import { getProductName } from "@/utils/productHelpers";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://micrls.com";
 
@@ -25,9 +26,7 @@ export async function generateMetadata({ params }) {
   const title =
     data.seoTitle ??
     data.SeoTitle ??
-    data.title ??
-    data.name ??
-    "محصول";
+    getProductName(data ?? {});
   const description =
     data.metaDescription ??
     data.MetaDescription ??

@@ -14,7 +14,7 @@ import { isAdminUser } from "@/utils/authHelpers";
 import { toast } from "sonner";
 
 export default function LoginView({ onGoSignup, onGoReset, onSuccess, redirectTo }) {
-  const { login, loading } = useAuth();
+  const { login, loginWithGoogle, loading } = useAuth();
   const router = useRouter();
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
@@ -92,6 +92,8 @@ export default function LoginView({ onGoSignup, onGoReset, onSuccess, redirectTo
         <Button
           type="button"
           variant="ghost"
+          onClick={() => loginWithGoogle(redirectTo)}
+          disabled={loading}
           className="h-10 w-full rounded-lg text-xs border-primary-500 border-2 text-primary-500 dark:border-dark-primary dark:text-dark-primary"
         >
           <Google />

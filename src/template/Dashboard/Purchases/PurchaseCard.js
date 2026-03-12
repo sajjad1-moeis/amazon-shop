@@ -2,18 +2,19 @@
 
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { getProductName } from "@/utils/productHelpers";
 
 export default function PurchaseCard({ product }) {
   return (
     <div className="bg-white dark:bg-dark-box rounded-xl border border-gray-200 dark:border-dark-stroke">
       {/* Product Image */}
       <div className="relative w-full h-40 md:mb-3  overflow-hidden rounded-t-xl bg-gray-100 dark:bg-dark-field">
-        <Image src={product.image} alt={product.title} fill className="object-cover" />
+        <Image src={product.image} alt={getProductName(product)} fill className="object-cover" />
       </div>
 
       <div className="p-2 md:p-3">
         {/* Title */}
-        <p className="text-xs md:text-sm text-gray-800 dark:text-dark-titre leading-6 mb-3">{product.title}</p>
+        <p className="text-xs md:text-sm text-gray-800 dark:text-dark-titre leading-6 mb-3">{getProductName(product)}</p>
 
         {/* 3 Boxes Row */}
         <div className="flex flex-wrap  gap-1 md:gap-2 mb-3 md:mb-4">

@@ -1,5 +1,8 @@
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import Providers from "@/components/Providers";
+import CrispChat from "@/components/module/CrispChat";
+import LayoutShell from "@/components/LayoutShell";
 import localFont from "next/font/local";
 import "../styles/globals.css";
 import { Toaster } from "sonner";
@@ -34,10 +37,15 @@ export default function RootLayout({ children }) {
     <html lang="fa" suppressHydrationWarning className={iranSans.variable}>
       <body dir="rtl" className="font-sans">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <AuthProvider>
-            <main className="overflow-hidden  dark:bg-dark-bg">{children}</main>
+          <Providers>
+            <AuthProvider>
+              <main className="overflow-hidden  dark:bg-dark-bg">
+                <LayoutShell>{children}</LayoutShell>
+              </main>
             <Toaster dir="rtl" position="top-right" richColors className={iranSans.variable} />
-          </AuthProvider>
+            <CrispChat />
+            </AuthProvider>
+          </Providers>
         </ThemeProvider>
       </body>
     </html>

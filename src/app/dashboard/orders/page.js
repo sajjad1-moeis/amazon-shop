@@ -52,7 +52,7 @@ function mapApiOrderToCard(apiOrder) {
 
   const products = items.map((item, index) => {
     const productId = item.productId ?? item.id ?? index;
-    const name = item.productName ?? item.title ?? item.name ?? "محصول";
+    const name = item.title_fa ?? item.productName ?? item.title ?? item.name ?? "محصول";
     const image =
       item.productImageUrl ??
       item.imageUrl ??

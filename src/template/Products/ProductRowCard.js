@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { parseProductNum } from "@/utils/productHelpers";
+import { parseProductNum, getProductName, formatPriceToman } from "@/utils/productHelpers";
 import { ShieldTick, Star1, TickSquare, Timer1 } from "iconsax-reactjs";
 import Image from "next/image";
 import Link from "next/link";
@@ -21,10 +21,12 @@ function ProductRowCard({ product }) {
     product?.mainImage ||
     product?.image_url_hq ||
     product?.image_url ||
+    (Array.isArray(product?.images) && product.images[0]) ||
+    (Array.isArray(product?.imageUrls) && product.imageUrls[0]) ||
     product?.image ||
     "/image/Home/product.png";
 
-  const title = product?.title || product?.name || "ساعت مچی مردانه Invicta مدل 0361 سری Reserve کرونوگراف";
+  const title = getProductName(product);
 
   const shortDesc =
     product?.shortDescription ||
@@ -47,7 +49,7 @@ function ProductRowCard({ product }) {
 
   const reviewCount = Math.max(0, Math.floor(parseProductNum(product?.reviewCount ?? product?.reviews_count) || 0));
 
-  const formatPrice = (n) => (Number.isFinite(n) && n >= 0 ? `${n.toLocaleString("fa-IR")} تومان` : "—");
+  const formatPrice = (n) => (Number.isFinite(n) && n >= 0 ? formatPriceToman(n) : "—");
   const productSlug = product?.id ?? product?.asin ?? product?.amazonASIN ?? "";
 
   const router = useRouter();

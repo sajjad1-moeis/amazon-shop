@@ -40,7 +40,7 @@ function CheapProducts() {
   return (
     <div className="mt-22 container categories relative max-md:border-y  dark:border-dark-field  max-md:py-5">
       <TitleCard
-        title={"محصولات زیر ۱۰۰ درهم"}
+        title={"محصولات ویژه با قیمت مناسب"}
         content={"مشاهده همه محصولات"}
         className={"mb-8"}
         contentHref={"/products"}

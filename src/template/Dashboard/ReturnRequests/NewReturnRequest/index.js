@@ -24,7 +24,7 @@ function mapOrderForSelector(apiOrder) {
     items: items.map((item, idx) => ({
       id: item.id ?? item.orderItemId ?? item.productId ?? idx,
       productId: item.productId ?? item.id,
-      productName: item.productName ?? item.title ?? item.name ?? "محصول",
+      productName: item.title_fa ?? item.productName ?? item.title ?? item.name ?? "محصول",
       quantity: item.quantity ?? item.count ?? 1,
     })),
   };

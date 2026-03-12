@@ -1,7 +1,8 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
+import React, { createContext, useContext, useState, useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { authAPI } from "@/lib/api-client";
 import { saveToken, getToken, removeToken, isAuthenticated } from "@/lib/token-manager";
 import { isAdminUser } from "@/utils/authHelpers";
@@ -24,8 +25,12 @@ const extractToken = (data) =>
   data?.tokens?.accessToken || data?.tokens?.token || data?.accessToken || data?.token || null;
 
 export const AuthProvider = ({ children }) => {
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [googleSyncInProgress, setGoogleSyncInProgress] = useState(false);
+  const googleSyncDoneRef = useRef(false);
+  const { data: session, status: sessionStatus } = useSession();
 
   /* ---------- Init Auth ---------- */
   useEffect(() => {
@@ -57,6 +62,92 @@ export const AuthProvider = ({ children }) => {
 
     initAuth();
   }, []);
+
+  /** بعد از ورود موفق: اگر روی صفحهٔ اصلی یا auth هستیم به داشبورد/ادمین برو، وگرنه همان صفحه (ادامه خرید) بمان. */
+  const redirectAfterLogin = (currentPath, loggedUser) => {
+    const isHomeOrAuth =
+      !currentPath ||
+      currentPath === "/" ||
+      currentPath.startsWith("/api/auth");
+    if (isHomeOrAuth) {
+      router.push(isAdminUser(loggedUser) ? "/admin" : "/dashboard");
+    } else {
+      router.refresh();
+    }
+  };
+
+  /* ---------- Sync Google session to backend ---------- */
+  const mockGoogleLogin = process.env.NEXT_PUBLIC_MOCK_GOOGLE_LOGIN === "true";
+
+  useEffect(() => {
+    if (
+      sessionStatus !== "authenticated" ||
+      !session?.idToken ||
+      user ||
+      googleSyncDoneRef.current ||
+      getToken()
+    ) {
+      return;
+    }
+    googleSyncDoneRef.current = true;
+    setGoogleSyncInProgress(true);
+    const syncGoogle = async () => {
+      try {
+        setLoading(true);
+
+        if (mockGoogleLogin) {
+          saveToken("mock-token-google-test");
+          const fakeUser = {
+            id: 0,
+            userId: 0,
+            email: session.user?.email ?? "",
+            firstName: session.user?.name ?? "کاربر تست",
+            lastName: "",
+            roles: [],
+          };
+          setUser(fakeUser);
+          toast.success("ورود با گوگل (حالت تست بدون بک‌اند)");
+          redirectAfterLogin("/", fakeUser);
+          return;
+        }
+
+        const response = await authAPI.loginWithGoogle({ googleToken: session.idToken });
+        if (!response?.success || !response?.data) {
+          const backendMsg = response?.message || "ورود با گوگل انجام نشد";
+          toast.error(backendMsg);
+          googleSyncDoneRef.current = false;
+          return;
+        }
+        const token = extractToken(response.data);
+        if (token) saveToken(token);
+        const loggedUser = response.data.user || response.data;
+        if (loggedUser) setUser(loggedUser);
+        const userId = loggedUser?.id ?? loggedUser?.userId;
+        if (userId) {
+          try {
+            await mergeGuestCartToServer(userId, shoppingCartService);
+          } catch (_) {}
+        }
+        toast.success(response.message || "ورود با گوگل موفقیت‌آمیز بود");
+        redirectAfterLogin(typeof window !== "undefined" ? window.location.pathname : "/", loggedUser);
+      } catch (error) {
+        const isNetworkError =
+          !error?.data &&
+          (error?.message === "Failed to fetch" ||
+            error?.name === "TypeError" ||
+            /network|fetch|connection|ECONNREFUSED/i.test(String(error?.message || "")));
+        const msg = isNetworkError
+          ? "سرور در دسترس نیست. لطفاً بکند را اجرا کنید (مثلاً پورت ۷۸۹۲) و دوباره امتحان کنید."
+          : error?.data?.message || error?.message || "خطا در ارتباط با سرور";
+        toast.error(msg);
+        googleSyncDoneRef.current = false;
+      } finally {
+        setLoading(false);
+        setGoogleSyncInProgress(false);
+      }
+    };
+    syncGoogle();
+  }, [sessionStatus, session?.idToken, user, mockGoogleLogin]);
 
   /* ---------- Auth Actions ---------- */
 
@@ -215,6 +306,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const loginWithGoogle = (callbackUrl) => {
+    const url =
+      callbackUrl ?? (typeof window !== "undefined" ? window.location.pathname || "/" : "/");
+    signIn("google", { callbackUrl: url });
+  };
+
   const logout = async () => {
     try {
       setLoading(true);
@@ -227,7 +324,10 @@ export const AuthProvider = ({ children }) => {
           // Continue with logout even if API call fails
         }
       }
-
+      try {
+        await signOut({ redirect: false });
+      } catch (_) {}
+      googleSyncDoneRef.current = false;
       toast.success("با موفقیت خارج شدید");
       return { success: true };
     } catch (error) {
@@ -259,6 +359,7 @@ export const AuthProvider = ({ children }) => {
       isAuthenticated: isAuthenticated() && user !== null,
       isAdmin: isAdminUser(user),
       login,
+      loginWithGoogle,
       sendRegistrationOtp,
       verifyRegistrationOtp,
       sendForgotPasswordOtp,
@@ -271,5 +372,12 @@ export const AuthProvider = ({ children }) => {
     [user, loading]
   );
 
+  if (googleSyncInProgress) {
+    return (
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-white dark:bg-dark-bg">
+        <p className="text-sm text-gray-600 dark:text-gray-400">در حال ورود...</p>
+      </div>
+    );
+  }
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

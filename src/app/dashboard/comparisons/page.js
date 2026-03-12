@@ -24,8 +24,8 @@ function mapApiToComparison(item) {
     title: item.title ?? item.name ?? "مقایسه",
     category: item.category ?? item.categoryName ?? "-",
     products: [
-      { id: first?.id, title: first?.title ?? first?.name ?? "-", image: first?.image ?? first?.imageUrl },
-      { id: second?.id, title: second?.title ?? second?.name ?? "-", image: second?.image ?? second?.imageUrl },
+      { id: first?.id, title: first?.title_fa ?? first?.title ?? first?.name ?? "-", image: first?.image ?? first?.imageUrl },
+      { id: second?.id, title: second?.title_fa ?? second?.title ?? second?.name ?? "-", image: second?.image ?? second?.imageUrl },
     ],
     productsCount: item.productsCount ?? products.length ?? 0,
     saveDate: item.saveDate ?? item.createdAt ? new Date(item.createdAt).toLocaleDateString("fa-IR") : "-",

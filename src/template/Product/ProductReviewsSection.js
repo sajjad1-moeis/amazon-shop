@@ -42,7 +42,9 @@ export default function ProductReviewsSection({ product, dataSource = "db" }) {
       if (dataSource === "scraper") {
         if (Array.isArray(data) && data.length > 0) setProductReviews(data);
       } else {
-        setProductReviews(Array.isArray(data) ? data : []);
+        // وقتی از DB لود شده و product.reviews (نظرات اسکرپ‌شدهٔ ذخیره‌شده) وجود دارد، آن را حفظ کن و با نظرات کاربر جایگزین نکن
+        const hasScrapedReviews = Array.isArray(product?.reviews) && product.reviews.length > 0;
+        if (!hasScrapedReviews) setProductReviews(Array.isArray(data) ? data : []);
       }
     }).catch(() => {});
     productReviewService.getReviewCountByProductId(productId).then((res) => {
@@ -53,10 +55,12 @@ export default function ProductReviewsSection({ product, dataSource = "db" }) {
         setTotalReviews(typeof data === "number" ? data : 0);
       }
     }).catch(() => {});
-  }, [productId, dataSource]);
+  }, [productId, dataSource, product?.reviews]);
 
   // مسیر اسکرپینگ: همگام‌سازی با داده اسکرپر وقتی از product می‌رسد (اولویت با نظرات اسکرپر)
   const scraperReviews = dataSource === "scraper" ? product?.reviews : undefined;
+  // مسیر DB: نظرات اسکرپ‌شدهٔ ذخیره‌شده در دیتابیس (همان‌طور که در UpdateFromScraperDetails ذخیره شده)
+  const dbScrapedReviews = dataSource === "db" ? product?.reviews : undefined;
   const scraperReviewsCount = dataSource === "scraper" ? (product?.reviews_count ?? product?.reviewCount) : undefined;
   const scraperRating = dataSource === "scraper" ? product?.rating : undefined;
 
@@ -66,6 +70,13 @@ export default function ProductReviewsSection({ product, dataSource = "db" }) {
       setProductReviews(scraperReviews);
     }
   }, [dataSource, scraperReviews]);
+
+  useEffect(() => {
+    if (dataSource !== "db") return;
+    if (Array.isArray(dbScrapedReviews) && dbScrapedReviews.length > 0) {
+      setProductReviews(dbScrapedReviews);
+    }
+  }, [dataSource, dbScrapedReviews]);
 
   useEffect(() => {
     if (dataSource !== "scraper") return;

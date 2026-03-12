@@ -1,6 +1,7 @@
 "use client";
 
 import PriceDetailsModal from "./PriceDetailsModal";
+import { formatPriceToman } from "@/utils/productHelpers";
 
 export default function PriceDisplaySection({
   product,
@@ -8,12 +9,11 @@ export default function PriceDisplaySection({
   basePrice,
   selectedColor,
   selectedDelivery,
+  priceBreakdown,
 }) {
   const numPrice = Number(finalPrice);
   const hasPrice = Number.isFinite(numPrice) && numPrice >= 0;
-  const isAed = product?.currency === "AED" || product?.currency_symbol === "AED";
-  const suffix = isAed ? " درهم" : " تومان";
-  const displayPrice = hasPrice ? numPrice.toLocaleString("fa-IR") + suffix : "قیمت نامشخص";
+  const displayPrice = hasPrice ? formatPriceToman(numPrice) : "قیمت نامشخص";
 
   return (
     <div className="space-y-2">
@@ -31,6 +31,7 @@ export default function PriceDisplaySection({
         product={product}
         finalPrice={finalPrice}
         basePrice={basePrice}
+        priceBreakdown={priceBreakdown}
         selectedColor={selectedColor}
         selectedDelivery={selectedDelivery}
       />

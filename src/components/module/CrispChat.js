@@ -1,52 +1,22 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useEffect } from "react";
 
-const CRISP_SCRIPT = "https://client.crisp.chat/l.js";
+const CRISP_WEBSITE_ID =
+  typeof process !== "undefined" && process.env?.NEXT_PUBLIC_CRISP_WEBSITE_ID
+    ? process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID
+    : "4e13846e-a58b-4f6c-a145-36c3d851cfc0";
 
 /**
- * لود اسکریپت Crisp فقط با کلیک کاربر (بدون لود خودکار).
- * بعد از اولین کلیک، اسکریپت یک‌بار لود می‌شود و چت باز می‌شود.
+ * ویجت چت Crisp — آیکون و چت پیش‌فرض Crisp در سمت چپ صفحه.
  */
-export function useCrispOnClick() {
-  const loaded = useRef(false);
-  const [loading, setLoading] = useState(false);
-
-  const loadAndOpen = useCallback(() => {
-    const websiteId = process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID;
-    if (!websiteId) {
-      window.open("/contact-us", "_blank");
-      return;
-    }
-    if (loaded.current) {
-      if (typeof window !== "undefined" && window.$crisp) {
-        try {
-          window.$crisp.push(["do", "chat:open"]);
-        } catch (_) {}
-      }
-      return;
-    }
-    setLoading(true);
-    if (typeof window !== "undefined") {
-      window.CRISP_WEBSITE_ID = websiteId;
-      window.$crisp = [];
-    }
-    const script = document.createElement("script");
-    script.src = CRISP_SCRIPT;
-    script.async = true;
-    script.onload = () => {
-      loaded.current = true;
-      setLoading(false);
-      if (window.$crisp) {
-        try {
-          window.$crisp.push(["config", "color:primary", ["#6366f1"]]);
-          window.$crisp.push(["do", "chat:open"]);
-        } catch (_) {}
-      }
-    };
-    script.onerror = () => setLoading(false);
-    document.head.appendChild(script);
+export default function CrispChat() {
+  useEffect(() => {
+    import("crisp-sdk-web").then(({ Crisp, ChatboxPosition }) => {
+      Crisp.configure(CRISP_WEBSITE_ID);
+      Crisp.setPosition(ChatboxPosition.Left);
+    }).catch(() => {});
   }, []);
 
-  return { loadAndOpen, loading };
+  return null;
 }

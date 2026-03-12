@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Star, X } from "lucide-react";
+import { getProductName } from "@/utils/productHelpers";
 
 export default function ProductComparisonColumn({ product, onRemove }) {
   return (
@@ -21,7 +22,7 @@ export default function ProductComparisonColumn({ product, onRemove }) {
       <div className="relative max-h-80 w-full aspect-square mb-2  overflow-hidden">
         <Image
           src={product.image || "/image/Home/product.png"}
-          alt={product.title}
+          alt={getProductName(product)}
           fill
           className="object-cover rounded-2xl"
           sizes="(max-width: 768px) 100vw, 33vw"
@@ -30,7 +31,7 @@ export default function ProductComparisonColumn({ product, onRemove }) {
 
       {/* Product Title */}
       <h3 className="font-medium text-neutral-800 dark:text-dark-titre  line-clamp-2 min-h-[2.5rem]">
-        {product.title}
+        {getProductName(product)}
       </h3>
 
       {/* Retailer Badge */}

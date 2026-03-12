@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Heart } from "iconsax-reactjs";
+import { formatPriceToman } from "@/utils/productHelpers";
 
 export default function StickyAddToCart({ onAddToCart, loading, price, className }) {
   return (
@@ -17,7 +18,7 @@ export default function StickyAddToCart({ onAddToCart, loading, price, className
         <div className="flex flex-col">
           <span className="text-xs text-gray-500 dark:text-gray-400">قیمت نهایی</span>
           <span className="text-lg font-bold text-gray-900 dark:text-dark-titre">
-            {price ? `${Number(price).toLocaleString("fa-IR")} تومان` : "قیمت نامشخص"}
+            {price != null && Number.isFinite(Number(price)) ? formatPriceToman(price) : "قیمت نامشخص"}
           </span>
         </div>
         <div class="flex gap-2">

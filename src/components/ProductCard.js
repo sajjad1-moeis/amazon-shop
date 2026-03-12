@@ -6,7 +6,7 @@ import React from "react";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { parseProductNum } from "@/utils/productHelpers";
+import { parseProductNum, getProductName, formatPriceToman } from "@/utils/productHelpers";
 import { prefetchScraperImages } from "@/utils/scraperPrefetch";
 import { Heart, ShoppingCart, Layer } from "iconsax-reactjs";
 import { useAuth } from "@/contexts/AuthContext";
@@ -32,13 +32,27 @@ function ProductCard({ className, product, badges }) {
   const image =
     product?.image_url_hq ||
     product?.image_url ||
+    (Array.isArray(product?.images) && product.images[0]) ||
+    (Array.isArray(product?.imageUrls) && product.imageUrls[0]) ||
     product?.image ||
     product?.mainImage ||
     product?.mainImageUrl ||
     "/image/Home/product.png";
-  const title = product?.title || product?.name || "نام محصول";
-  const salePriceRaw = product?.current_price ?? product?.discountPrice ?? product?.price;
-  const listPriceRaw = product?.original_price ?? product?.price ?? product?.discountPrice;
+  const title = getProductName(product);
+  // اولویت با قیمت ریالی از بک‌اند (finalPrice / ourPrice)؛ سپس قیمت نمایشی
+  const salePriceRaw =
+    product?.finalPrice ??
+    product?.ourPrice ??
+    product?.discountPrice ??
+    product?.current_price ??
+    product?.price;
+  const listPriceRaw =
+    product?.price ??
+    product?.original_price ??
+    product?.originalPrice ??
+    product?.discountPrice ??
+    product?.ourPrice ??
+    product?.finalPrice;
   const salePrice = Math.max(0, parseProductNum(salePriceRaw));
   const listPrice = Math.max(0, parseProductNum(listPriceRaw) || salePrice || 0);
   const price = listPrice;
@@ -49,18 +63,25 @@ function ProductCard({ className, product, badges }) {
   const reviewCountNum = parseProductNum(product?.reviews_count ?? product?.reviewCount);
   const reviewCount = Math.max(0, Math.floor(reviewCountNum));
 
-  const rawBadges = badges !== undefined ? badges : product?.badges;
+  const rawBadges =
+    badges !== undefined ? badges : (product?.product_badges ?? product?.productBadges ?? product?.badges);
   const isPrime =
-    product?.is_prime ?? product?.isPrimeEligible ?? product?.is_prime_delivery ?? false;
+    product?.is_prime ?? product?.isPrimeEligible ?? product?.is_prime_delivery ?? product?.is_amazons_choice ?? product?.isAmazonsChoice ?? false;
   const isFreeDelivery =
     product?.is_free_delivery ?? product?.isFreeDelivery ?? false;
+  // فقط وقتی زمان تحویل ۵ روز یا بیشتر باشد تگ «ارسال بین‌المللی» نمایش داده شود (هماهنگ با اسکرپر)
+  const deliveryDaysRaw = product?.estimatedDeliveryDays ?? product?.estimated_delivery_days;
+  const deliveryDaysNum = deliveryDaysRaw != null ? Number(deliveryDaysRaw) : NaN;
+  const deliveryDays = Number.isFinite(deliveryDaysNum) && deliveryDaysNum >= 1 && deliveryDaysNum <= 365 ? deliveryDaysNum : null;
   const hasInternational =
-    product?.hasInternationalShipping ?? product?.is_international ?? false;
+    (deliveryDays != null && deliveryDays >= 5) ||
+    ((product?.hasInternationalShipping ?? product?.is_international ?? false) && (deliveryDays == null || deliveryDays >= 5));
   const shipsFromUAE =
     product?.shipsFromUAE ?? product?.is_local_dubai ?? false;
   const hasQualityShield = product?.hasQualityShield ?? false;
-  const isBestSeller = product?.isBestSeller ?? false;
+  const isBestSeller = product?.isBestSeller ?? product?.is_best_seller ?? false;
   const isNewArrival = product?.isNewArrival ?? false;
+  const isLimitedTimeDeal = product?.isLimitedTimeDeal ?? product?.is_limited_time_deal ?? false;
   const discountPct =
     product?.discount_percentage != null
       ? parseProductNum(product.discount_percentage)
@@ -68,14 +89,15 @@ function ProductCard({ className, product, badges }) {
         ? parseProductNum(product.discountPercentage)
         : null;
   const fromProduct = [
+    isLimitedTimeDeal && "تخفیف محدود زمان",
     isPrime && "انتخاب آمازون",
+    isBestSeller && "بیشترین فروش",
     isFreeDelivery && "ارسال رایگان",
     discountPct != null && Number(discountPct) > 0 &&
       `${Math.round(Number(discountPct))}٪ تخفیف`,
     hasInternational && "ارسال بین المللی",
     shipsFromUAE && "ارسال از امارات",
     hasQualityShield && "ضمانت کیفیت",
-    isBestSeller && "پرفروش ترین",
     isNewArrival && "تازه وارد",
   ].filter(Boolean);
   const fromScraper = fromProduct.slice(0, 5);
@@ -83,7 +105,6 @@ function ProductCard({ className, product, badges }) {
     ? rawBadges.filter((b) => typeof b === "string").slice(0, 5)
     : fromScraper;
   const seller = product?.seller || "amazon";
-  const sellerCountry = product?.sellerCountry || "🇦🇪";
 
   const calculateDiscount = () => {
     if (!Number.isFinite(listPrice) || !Number.isFinite(salePrice) || listPrice <= 0) return 0;
@@ -93,13 +114,7 @@ function ProductCard({ className, product, badges }) {
 
   const discount = calculateDiscount();
 
-  const isAed = product?.currency === "AED" || product?.currency_symbol === "AED";
-  const formatPrice = (value, forceAed) => {
-    const n = parseProductNum(value);
-    if (!Number.isFinite(n) || n < 0) return "قیمت نامشخص";
-    const suffix = forceAed || isAed ? " درهم" : " تومان";
-    return `${n.toLocaleString("fa-IR")}${suffix}`;
-  };
+  const formatPrice = (value) => formatPriceToman(value);
 
   const handleProductClick = (e) => {
     e.preventDefault();
@@ -129,7 +144,7 @@ function ProductCard({ className, product, badges }) {
       const imgHq = product?.image_url_hq || product?.image_url || product?.image || product?.mainImage;
       const scraperPayload = {
         asin,
-        title: product?.title || product?.name,
+        title: getProductName(product),
         brand: product?.brand,
         current_price: rawCurrentPrice != null ? String(rawCurrentPrice) : null,
         original_price: rawOriginalPrice != null ? String(rawOriginalPrice) : null,
@@ -149,6 +164,13 @@ function ProductCard({ className, product, badges }) {
         attributes: product?.attributes,
         reviews: product?.reviews,
       };
+      if (product?.ourPrice != null || product?.finalPrice != null) {
+        scraperPayload.ourPrice = product.ourPrice ?? product.finalPrice;
+        scraperPayload.finalPrice = product.finalPrice ?? product.ourPrice;
+      }
+      if (product?.weight_kg != null || product?.weightKg != null) {
+        scraperPayload.weight_kg = product.weight_kg ?? product.weightKg;
+      }
       try {
         if (typeof sessionStorage !== "undefined") {
           sessionStorage.setItem(`scraperProduct_${asin}`, JSON.stringify(scraperPayload));
@@ -262,9 +284,9 @@ function ProductCard({ className, product, badges }) {
                       key={index}
                       className={cn(
                         "text-xs px-2 py-1 rounded text-white whitespace-nowrap",
-                        badge === "انتخاب آمازون"
+                        badge === "انتخاب آمازون" || badge === "Amazon's Choice" || (typeof badge === "string" && badge.toLowerCase().includes("amazon") && badge.toLowerCase().includes("choice"))
                           ? "bg-green-600 dark:bg-green-700"
-                          : badge === "پرفروش ترین"
+                          : badge === "پرفروش ترین" || badge === "بیشترین فروش"
                             ? "bg-orange-500 dark:bg-orange-600"
                             : badge === "ارسال از امارات"
                               ? "bg-blue-600 dark:bg-blue-700"
@@ -272,10 +294,28 @@ function ProductCard({ className, product, badges }) {
                                 ? "bg-emerald-600 dark:bg-emerald-700"
                                 : badge === "تازه وارد"
                                   ? "bg-violet-600 dark:bg-violet-700"
-                                  : "bg-primary-600 dark:bg-primary-700",
+                                  : badge === "Limited time deal" || badge === "تخفیف محدود زمان" || (typeof badge === "string" && badge.toLowerCase().includes("limited time deal"))
+                                    ? "bg-red-600 dark:bg-red-700"
+                                    : badge === "FREE Returns"
+                                      ? "bg-green-600 dark:bg-green-700"
+                                      : badge === "Savings" || badge === "صرفه‌جویی"
+                                        ? "bg-emerald-600 dark:bg-emerald-700"
+                                        : badge === "Best Seller" || badge === "پرفروش ترین" || (typeof badge === "string" && badge.toLowerCase().includes("best seller"))
+                                          ? "bg-orange-500 dark:bg-orange-600"
+                                          : "bg-primary-600 dark:bg-primary-700",
                       )}
                     >
-                      {badge}
+                      {badge === "Limited time deal"
+                        ? "تخفیف محدود زمان"
+                        : badge === "FREE Returns"
+                          ? "مرجوعی رایگان"
+                          : badge === "Savings"
+                            ? "صرفه‌جویی"
+                            : badge === "Best Seller" || (typeof badge === "string" && badge.toLowerCase().includes("best seller"))
+                              ? "بیشترین فروش"
+                              : badge === "Amazon's Choice" || (typeof badge === "string" && badge.toLowerCase().includes("amazon") && badge.toLowerCase().includes("choice"))
+                                ? "انتخاب آمازون"
+                                : badge}
                     </span>
                   ))}
                 </div>
@@ -300,10 +340,11 @@ function ProductCard({ className, product, badges }) {
                 <span className="text-xs text-gray-500 dark:text-dark-text">({reviewCount})</span>
               </div>
 
-              {/* Seller Info */}
+              {/* منبع فروش — بدون نمایش واحد درهم یا نماد AED */}
               <div className="flex items-center gap-1">
-                <span className="text-orange-500 font-bold text-base leading-none">a</span>
-                <span className="text-base leading-none">{sellerCountry}</span>
+                <span className="text-xs text-gray-500 dark:text-dark-text">
+                  {seller === "amazon" ? "آمازون" : seller}
+                </span>
               </div>
             </div>
 

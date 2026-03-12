@@ -11,6 +11,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import { ArrowCircleLeft, ArrowCircleRight } from "iconsax-reactjs";
+import { getProductName, formatPriceToman } from "@/utils/productHelpers";
 import { userDashboardService } from "@/services/userDashboard/userDashboardService";
 import { unwrapApiData } from "@/services/api/client";
 import { Spinner } from "@/components/ui/spinner";
@@ -52,10 +53,12 @@ function normalizeSuggestedProducts(raw) {
         priceRaw == null
           ? "-"
           : typeof priceRaw === "number"
-            ? `${priceRaw.toLocaleString("fa-IR")} تومان`
+            ? formatPriceToman(priceRaw)
             : String(priceRaw);
 
-      const title = item.title ?? item.productName ?? item.name ?? item.productTitle ?? "";
+      const titleRaw = item.title_fa ?? item.title ?? item.productName ?? item.name ?? item.productTitle ?? "";
+      const byHelper = getProductName(item);
+      const title = byHelper !== "محصول" ? byHelper : (titleRaw || "محصول پیشنهادی");
       if (title && typeof title === "string" && /عملیات موفق|success|message/i.test(title)) return null;
 
       const image =
@@ -161,14 +164,14 @@ export default function ProductSuggestions() {
                     {isExternalImage ? (
                       <img
                         src={product.image}
-                        alt={product.title || "محصول پیشنهادی"}
+                        alt={getProductName(product) || "محصول پیشنهادی"}
                         className="absolute inset-0 w-full h-full object-cover"
                         loading="lazy"
                       />
                     ) : (
                       <Image
                         src={product.image}
-                        alt={product.title || "محصول پیشنهادی"}
+                        alt={getProductName(product) || "محصول پیشنهادی"}
                         fill
                         className="object-cover"
                       />
@@ -177,7 +180,7 @@ export default function ProductSuggestions() {
 
                   <div className="space-y-3 col-span-2 md:col-span-3 p-3">
                     <h4 className="text-sm md:text-base max-md:border-b max-md:pb-4 dark:border-dark-stroke border-gray-200 text-gray-900 dark:text-dark-titre line-clamp-2">
-                      {product.title}
+                      {getProductName(product)}
                     </h4>
 
                     <div className="flex items-center justify-between gap-2">

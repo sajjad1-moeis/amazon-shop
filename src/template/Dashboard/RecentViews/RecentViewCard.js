@@ -11,6 +11,7 @@ import { useCartCount } from "@/contexts/CartCountContext";
 import { shoppingCartService } from "@/services/shoppingCart/shoppingCartService";
 import { compareService } from "@/services/compare/compareService";
 import { toast } from "sonner";
+import { getProductName } from "@/utils/productHelpers";
 
 export default function RecentViewCard({ product, onDelete }) {
   const router = useRouter();
@@ -74,7 +75,7 @@ export default function RecentViewCard({ product, onDelete }) {
       <div className="relative w-full h-40 sm:h-48 bg-gray-100 dark:bg-dark-field">
         <Image
           src={product.image}
-          alt={product.title}
+          alt={getProductName(product)}
           fill
           className="object-cover"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
@@ -94,7 +95,7 @@ export default function RecentViewCard({ product, onDelete }) {
       <div className="p-2 sm:p-3">
         {/* Title */}
         <p className="text-xs sm:text-sm text-gray-800 dark:text-dark-titre leading-5 sm:leading-6 mb-2 sm:mb-3 line-clamp-2">
-          {product.title}
+          {getProductName(product)}
         </p>
 
         {/* Price */}

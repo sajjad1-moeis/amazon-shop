@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { shoppingCartService } from "@/services/shoppingCart/shoppingCartService";
 import { toast } from "sonner";
@@ -11,7 +11,11 @@ import DeliveryTypeSection from "./DeliveryTypeSection";
 import PriceDisplaySection from "./PriceDisplaySection";
 import ActionButtonsSection from "./ActionButtonsSection";
 import SidebarActions from "./SidebarActions";
-import { calculateProductPrice, getBasePrice } from "@/utils/productHelpers";
+import { calculateProductPrice, getDisplayPriceToman } from "@/utils/productHelpers";
+import { productService } from "@/services/product/productService";
+
+const MAX_SAFE_INT32 = 2147483647;
+const MAX_QUANTITY = 999;
 
 export default function PurchaseSection({
   selectedDelivery,
@@ -24,17 +28,58 @@ export default function PurchaseSection({
   const [loading, setLoading] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [priceBreakdown, setPriceBreakdown] = useState(null);
   const pathname = usePathname();
   const { user } = useAuth();
   const { refreshCartCount } = useCartCount();
 
   const finalPrice = calculateProductPrice(product, selectedColor, selectedDelivery);
-  const basePrice = getBasePrice(product);
+  const basePrice = getDisplayPriceToman(product);
 
   const rawId = product?.id ?? product?.productId ?? productId;
   const cartProductId = typeof rawId === "number" ? rawId : Number(rawId);
-  const hasValidProductId = Number.isFinite(cartProductId) && cartProductId > 0;
+  const hasValidProductId =
+    Number.isFinite(cartProductId) &&
+    cartProductId > 0 &&
+    cartProductId <= MAX_SAFE_INT32 &&
+    cartProductId === Math.floor(cartProductId);
   const canAddToCart = hasValidProductId;
+
+  // Load server-side price breakdown for this product when we have a valid numeric id.
+  useEffect(() => {
+    const idSource = product?.id ?? productId;
+    const numericId = Number(idSource);
+    if (
+      !Number.isFinite(numericId) ||
+      numericId <= 0 ||
+      numericId > MAX_SAFE_INT32 ||
+      numericId !== Math.floor(numericId)
+    ) {
+      setPriceBreakdown(null);
+      return;
+    }
+
+    let cancelled = false;
+
+    productService
+      .getPriceBreakdown(numericId)
+      .then((response) => {
+        if (cancelled) return;
+        const dto = response?.data ?? response;
+        if (!dto || response?.success === false) {
+          setPriceBreakdown(null);
+          return;
+        }
+        setPriceBreakdown(dto);
+      })
+      .catch(() => {
+        if (!cancelled) setPriceBreakdown(null);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [product?.id, productId]);
 
   const addToCart = async () => {
     if (!hasValidProductId) {
@@ -45,11 +90,14 @@ export default function PurchaseSection({
       setAuthModalOpen(true);
       return;
     }
-    const qty = Number(quantity) || 1;
+    const qty = Math.min(
+      MAX_QUANTITY,
+      Math.max(1, Math.floor(Number(quantity) || 1))
+    );
     try {
       setLoading(true);
       await shoppingCartService.addToCart(user.id, {
-        productId: cartProductId,
+        productId: Math.floor(cartProductId),
         quantity: qty,
         hasQualityShield: false,
       });
@@ -79,6 +127,7 @@ export default function PurchaseSection({
             product={product}
             finalPrice={finalPrice}
             basePrice={basePrice}
+            priceBreakdown={priceBreakdown}
             selectedColor={selectedColor}
             selectedDelivery={selectedDelivery}
           />
