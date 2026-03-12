@@ -4,8 +4,16 @@ import React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit2, Trash } from "iconsax-reactjs";
+import { Edit2, Trash, User } from "iconsax-reactjs";
 import { formatDateFa } from "@/utils/adminDateUtils";
+
+/** نام و نام خانوادگی ادمین؛ در صورت خالی بودن "—" نمایش داده می‌شود (ایمیل جایگزین نمی‌شود). */
+const getAdminDisplayName = (admin) => {
+  const first = (admin.firstName ?? "").trim();
+  const last = (admin.lastName ?? "").trim();
+  const full = [first, last].filter(Boolean).join(" ");
+  return full || "—";
+};
 
 export default function AdminsTable({ admins, onEdit, onDelete }) {
   if (admins.length === 0) {
@@ -28,7 +36,12 @@ export default function AdminsTable({ admins, onEdit, onDelete }) {
         {admins.map((admin) => (
           <TableRow key={admin.id} className="border-gray-700 hover:bg-gray-700/50">
             <TableCell className="text-white font-medium">
-              {[admin.firstName, admin.lastName].filter(Boolean).join(" ") || admin.name || "—"}
+              <div className="flex items-center gap-3">
+                <div className="h-9 w-9 rounded-full bg-gray-700 flex items-center justify-center text-gray-400">
+                  <User size={20} />
+                </div>
+                <span>{getAdminDisplayName(admin)}</span>
+              </div>
             </TableCell>
             <TableCell className="text-gray-300">{admin.email || "—"}</TableCell>
             <TableCell className="text-gray-300">{admin.phoneNumber || "—"}</TableCell>

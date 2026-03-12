@@ -1,30 +1,29 @@
 import { getPublicClient, getAuthenticatedClient } from "../api/client";
 
 /**
- * API Phase 23 — ProductBrand: GetPaginated, GetById, Create, Update, Delete
- * GetAll در بک‌اند وجود ندارد؛ از GetPaginated با pageSize بزرگ استفاده می‌شود.
+ * سرویس برند محصول — ProductBrand
+ * مطابق قرارداد بک‌اند:
+ * - GET ProductBrand/GetAll
+ * - GET ProductBrand/GetActive
+ * - GET ProductBrand/GetById
+ * - POST ProductBrand/Create
+ * - PUT ProductBrand/Update?id={id}
+ * - DELETE ProductBrand/Delete?id={id}
  */
-const LARGE_PAGE_SIZE = 99999;
 
 export const productBrandService = {
-  /** برمی‌گرداند { success, data: brands[] } — سازگار با فراخوان‌کنندگان getAll */
+  /** GET api/ProductBrand/GetAll — لیست کامل برندها برای جدول/کمبوباکس‌ها */
   getAll: async () => {
-    const res = await productBrandService.getPaginated({
-      pageNumber: 1,
-      pageSize: LARGE_PAGE_SIZE,
-    });
-    const data = res?.data ?? res;
-    const brands = Array.isArray(data?.brands) ? data.brands : Array.isArray(data) ? data : [];
-    return { success: res?.success !== false, data: brands };
+    const client = getAuthenticatedClient();
+    return client.get("ProductBrand/GetAll").json();
   },
 
-  /** GET api/ProductBrand/GetPaginated — pageNumber, pageSize (حداکثر ۱۰۰), searchTerm?, isActive? */
+  /** (در صورت نیاز به صفحه‌بندی) GET api/ProductBrand/GetPaginated — pageNumber, pageSize, searchTerm?, isActive? */
   getPaginated: async (params = {}) => {
     const { pageNumber = 1, pageSize = 20, searchTerm, isActive } = params;
-    const cappedSize = Math.min(Math.max(1, Number(pageSize) || 20), 99999);
     const qs = new URLSearchParams({
       pageNumber: String(pageNumber),
-      pageSize: String(cappedSize),
+      pageSize: String(pageSize),
     });
     if (searchTerm != null && searchTerm !== "") qs.append("searchTerm", searchTerm);
     if (isActive !== undefined && isActive !== null) qs.append("isActive", String(isActive));

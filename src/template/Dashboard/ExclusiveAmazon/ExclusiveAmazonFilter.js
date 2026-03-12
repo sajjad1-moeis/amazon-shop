@@ -23,14 +23,14 @@ export default function ExclusiveAmazonFilter({ filters, onFiltersChange }) {
       <FilterSection>
         {/* Search Input */}
         <FilterSearchInput
-          value={filters.searchQuery || ""}
+          value={filters?.searchQuery ?? ""}
           onChange={(value) => handleFilterChange("searchQuery", value)}
           placeholder="جستجو نام محصول..."
         />
 
         {/* Time Range Filter */}
         <DateFilterSelect
-          value={filters.timeRange || filters.dateRange || ""}
+          value={filters?.timeRange ?? filters?.dateRange ?? ""}
           onValueChange={(value) => {
             handleFilterChange("timeRange", value);
             handleFilterChange("dateRange", value);
@@ -41,7 +41,7 @@ export default function ExclusiveAmazonFilter({ filters, onFiltersChange }) {
 
         {/* Status Filter */}
         <StatusSelect
-          value={filters.status || ""}
+          value={filters?.status ?? ""}
           onValueChange={(value) => handleFilterChange("status", value)}
           placeholder="وضعیت"
           options={statusOptions}

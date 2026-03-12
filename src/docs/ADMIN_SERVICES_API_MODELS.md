@@ -75,8 +75,12 @@
 |--------|-----|------|------------|------------------|
 | productCategoryService | GET | `ProductCategory/GetAll` | — | آرایهٔ دسته‌ها: `id`, `name`, ... |
 | productCategoryService | DELETE | `ProductCategory/SoftDelete?id={id}` | `id` | استاندارد |
-| productBrandService | GET | `ProductBrand/GetAll` | — | آرایهٔ برندها: `id`, `name`, ... |
-| productBrandService | DELETE | `ProductBrand/Delete?id={id}` | `id` | استاندارد |
+| productBrandService | GET | `ProductBrand/GetAll` | — | آرایهٔ برندها: `id`, `name`, `slug`, `isActive`, `createdAt` |
+| productBrandService | GET | `ProductBrand/GetActive` | — | فقط برندهای فعال برای فیلترها/کمبوباکس‌ها |
+| productBrandService | GET | `ProductBrand/GetById?id={id}` | `id` | یک برند برای فرم ویرایش |
+| productBrandService | POST | `ProductBrand/Create` | `{ name, slug, isActive }` | ایجاد برند جدید |
+| productBrandService | PUT | `ProductBrand/Update?id={id}` | `id`, `{ name?, slug?, isActive? }` | ویرایش برند؛ فقط فیلدهای موجود آپدیت می‌شوند؛ `UpdatedAt` هم ست می‌شود |
+| productBrandService | DELETE | `ProductBrand/Delete?id={id}` | `id` | حذف نرم برند |
 
 ---
 
@@ -99,7 +103,7 @@
 |-----|------|--------|------|------------------|
 | GET | `Security/GetLogs` | `pageNumber`, `pageSize`, `level?`, `startDate?`, `endDate?` | — | `data`: `{ logs: LogItem[], totalPages? }` — هر لاگ: `id`, `level`, `message`, `timestamp`, ... |
 | GET | `Security/GetPermissions` | — | — | لیست/درخت دسترسی‌ها (صفحه دسترسی‌ها هنوز بدون اتصال است) |
-| GET | `Security/GetAdmins` | `pageNumber`, `pageSize`, `searchTerm?` | — | `data`: `{ admins: AdminItem[], totalCount?, totalPages? }` — هر ادمین: `id`, `name`, `email`, `role`, `isActive` — **صفحه ادمین‌ها الان موک دارد؛ با این اندپوینت می‌توان جایگزین کرد.** |
+| GET | `Security/GetAdmins` | `pageNumber`, `pageSize`, `searchTerm?` | — | `data`: `{ admins: AdminItem[], totalCount?, totalPages? }` — هر ادمین: `id`, `name`, `email`, `role`, `isActive`, `profileImage?` (URL کامل یا `\"\"`) — **صفحه ادمین‌ها الان با این اندپوینت متصل شده و برای آواتار از `profileImage` استفاده می‌کند.** |
 | POST | `Security/CreateAdmin` | — | `{ name, email, password?, roleId? }` | استاندارد |
 | PUT | `Security/UpdateAdmin?id={id}` | `id` | فیلدهای قابل ویرایش | استاندارد |
 | DELETE | `Security/DeleteAdmin?id={id}` | `id` | — | استاندارد |

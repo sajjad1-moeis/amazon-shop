@@ -23,7 +23,7 @@ const transactionStatusOptions = [
 
 export default function TransactionsFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
-    onFiltersChange(key, value);
+    onFiltersChange(key, value === "all" ? "" : value);
   };
 
   return (

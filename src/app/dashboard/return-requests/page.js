@@ -26,14 +26,20 @@ const STATUS_MAP = {
 
 function mapApiReturn(r) {
   if (!r) return null;
-  const status = STATUS_MAP[r.status] ?? r.status;
+  const rawStatus = r.status;
+  const status =
+    STATUS_MAP[Number(rawStatus)] ??
+    STATUS_MAP[rawStatus] ??
+    (typeof rawStatus === "string" ? rawStatus.toLowerCase() : rawStatus);
   const createdAt = r.createdAt ?? r.date;
   const dateStr = createdAt ? new Date(createdAt).toLocaleDateString("fa-IR") : "-";
+  const category = (r.category ?? r.categoryName ?? r.product?.category ?? "").toString().toLowerCase().trim();
   return {
     ...r,
     id: r.id,
-    status,
+    status: status ?? "pending",
     date: dateStr,
+    category: category || undefined,
   };
 }
 
@@ -84,8 +90,13 @@ export default function ReturnRequestsList() {
 
   const filteredReturns = useMemo(() => {
     let list = [...returns];
-    if (filters.status) {
-      list = list.filter((r) => String(r.status).toLowerCase() === String(filters.status).toLowerCase());
+    if (filters.status && filters.status !== "all") {
+      const statusLower = String(filters.status).toLowerCase();
+      list = list.filter((r) => String(r.status ?? "").toLowerCase() === statusLower);
+    }
+    if (filters.category && filters.category !== "all") {
+      const catLower = String(filters.category).toLowerCase();
+      list = list.filter((r) => String(r.category ?? "").toLowerCase() === catLower);
     }
     if (filters.searchQuery?.trim()) {
       const q = filters.searchQuery.trim().toLowerCase();
@@ -93,7 +104,8 @@ export default function ReturnRequestsList() {
         (r) =>
           String(r.id ?? "").toLowerCase().includes(q) ||
           String(r.returnNumber ?? "").toLowerCase().includes(q) ||
-          String(r.orderNumber ?? "").toLowerCase().includes(q)
+          String(r.orderNumber ?? "").toLowerCase().includes(q) ||
+          String(r.productName ?? r.product?.name ?? "").toLowerCase().includes(q)
       );
     }
     if (filters.sortBy === "newest") {
@@ -143,9 +155,7 @@ export default function ReturnRequestsList() {
 
       <ReturnRequestsFilter
         filters={filters}
-        onFiltersChange={(key, value) =>
-          setFilters((prev) => ({ ...prev, [key]: value === "all" ? "" : value }))
-        }
+        onFiltersChange={(key, value) => setFilters((prev) => ({ ...prev, [key]: value }))}
       />
 
       {activeReturn && (

@@ -25,7 +25,7 @@ import {
 } from "iconsax-reactjs";
 import SwitchButton from "@/components/SwitchButton";
 
-const items = [
+export const DASHBOARD_NAV_ITEMS = [
   { id: "dashboard", label: "داشبورد", href: "/dashboard", icon: Element4 },
 
   {
@@ -81,7 +81,7 @@ function SidebarContent({ onLinkClick }) {
 
   // Auto-expand if a child is active
   useEffect(() => {
-    items.forEach((item) => {
+    DASHBOARD_NAV_ITEMS.forEach((item) => {
       if (item.children) {
         const activeChild = item.children.find(
           (c) => pathname === c.href || pathMatches(pathname, c.href)
@@ -158,7 +158,7 @@ function SidebarContent({ onLinkClick }) {
 
       {/* Navigation */}
       <nav className="space-y-2">
-        {items.map((item) => {
+        {DASHBOARD_NAV_ITEMS.map((item) => {
           const Active = isActive(item);
           const Icon = item.icon;
 

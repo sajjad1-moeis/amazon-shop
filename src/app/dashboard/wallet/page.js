@@ -75,7 +75,7 @@ export default function WalletList() {
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({
       ...prev,
-      [key]: value === "all" ? "" : value,
+      [key]: value,
     }));
   };
 
@@ -94,7 +94,7 @@ export default function WalletList() {
     }
 
     // فیلتر نوع تراکنش (API: 1=Deposit, 2=Withdrawal, 3=Refund, 4=Reward, 5=Discount)
-    if (filters.transactionType) {
+    if (filters.transactionType && filters.transactionType !== "all") {
       const typeMap = {
         charge: [1, "1", "charge", "deposit"],
         withdraw: [2, "2", "withdraw", "withdrawal"],
@@ -112,14 +112,14 @@ export default function WalletList() {
     }
 
     // فیلتر وضعیت
-    if (filters.status) {
+    if (filters.status && filters.status !== "all") {
       list = list.filter(
         (t) => String(t.status ?? "").toLowerCase() === String(filters.status).toLowerCase(),
       );
     }
 
     // فیلتر بازه تاریخ
-    if (filters.dateRange) {
+    if (filters.dateRange && filters.dateRange !== "all") {
       const now = new Date();
       let from = null;
       if (filters.dateRange === "today") {

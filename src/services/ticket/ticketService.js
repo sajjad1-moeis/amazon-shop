@@ -1,4 +1,5 @@
-import { getAuthenticatedClient } from "../api/client";
+import { getAuthenticatedClient, API_BASE_URL } from "../api/client";
+import { getToken } from "@/lib/token-manager";
 
 /** وضعیت تیکت — مطابق داک مرحله ۸ */
 export const TicketStatus = {
@@ -70,6 +71,12 @@ export const ticketService = {
     return client.post(`Ticket/Update?id=${id}`, { json: data }).json();
   },
 
+  /** بستن تیکت (وضعیت = بسته شده) */
+  closeTicket: async (id) => {
+    const client = getAuthenticatedClient();
+    return client.post(`Ticket/Update?id=${id}`, { json: { status: TicketStatus.Closed } }).json();
+  },
+
   /** POST api/Ticket/AddMessage — بدنه: CreateTicketMessageDto */
   addMessage: async (body) => {
     const client = getAuthenticatedClient();
@@ -111,15 +118,29 @@ export const ticketService = {
     return client.post(`Ticket/${ticketId}/Rate`, { json: body }).json();
   },
 
-  /** POST api/Ticket/UploadTicketFile?ticketId= — form: file */
+  /** POST api/Ticket/UploadTicketFile?ticketId= — آپلود با fetch ساده (multipart/form-data) */
   uploadTicketFile: async (ticketId, file) => {
-    const client = getAuthenticatedClient();
+    const base = (API_BASE_URL || "").replace(/\/$/, "");
+    const url = `${base}/Ticket/UploadTicketFile?ticketId=${encodeURIComponent(ticketId)}`;
+    const token = getToken();
+    if (!token) throw new Error("Access token not found");
     const formData = new FormData();
     formData.append("file", file);
-    return client
-      .extend({ retry: { limit: 0 } })
-      .post(`Ticket/UploadTicketFile?ticketId=${ticketId}`, { body: formData })
-      .json();
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const err = new Error(data?.message || res.statusText || "خطا در آپلود فایل");
+      err.response = res;
+      err.data = data;
+      throw err;
+    }
+    return data;
   },
 
   /** POST api/Ticket/UploadTicketFiles?ticketId= — form: files */

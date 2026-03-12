@@ -91,16 +91,28 @@ const STATUS_CONFIG = {
     label: "در انتظار پرداخت",
     className: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
   },
-  // Ticket statuses (numeric)
+  // Ticket statuses (numeric: 1=Open, 2=InProgress, 3=WaitingForUser, 4=Resolved, 5=Closed)
   0: {
     label: "در انتظار",
     className: "bg-yellow-100 text-yellow-700 dark:bg-dark-blue dark:text-primary-300",
   },
   1: {
+    label: "باز",
+    className: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+  },
+  2: {
     label: "در حال بررسی",
     className: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
   },
-  2: {
+  3: {
+    label: "در انتظار کاربر",
+    className: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
+  },
+  4: {
+    label: "پاسخ داده شده",
+    className: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+  },
+  5: {
     label: "بسته شده",
     className: "bg-gray-100 dark:bg-dark-field text-gray-700 dark:bg-dark-field dark:text-dark-text",
   },
@@ -108,6 +120,10 @@ const STATUS_CONFIG = {
   closed: {
     label: "بسته شده",
     className: "bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300",
+  },
+  open: {
+    label: "باز",
+    className: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
   },
 };
 

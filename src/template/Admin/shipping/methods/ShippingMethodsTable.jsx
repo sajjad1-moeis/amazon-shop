@@ -16,7 +16,7 @@ export default function ShippingMethodsTable({ methods, onRefresh, onEdit }) {
         <TableRow className="border-gray-700 hover:bg-gray-700/50">
           <TableHead className="text-gray-300">نام</TableHead>
           <TableHead className="text-gray-300">هزینه (تومان)</TableHead>
-          <TableHead className="text-gray-300">زمان تقریبی (روز)</TableHead>
+          <TableHead className="text-gray-300">زمان تقریبی</TableHead>
           <TableHead className="text-gray-300">وضعیت</TableHead>
           <TableHead className="text-gray-300">عملیات</TableHead>
         </TableRow>
@@ -26,7 +26,13 @@ export default function ShippingMethodsTable({ methods, onRefresh, onEdit }) {
           <TableRow key={method.id} className="border-gray-700 hover:bg-gray-700/50">
             <TableCell className="text-white font-medium">{method.name}</TableCell>
             <TableCell className="text-gray-300">{(method.price ?? 0).toLocaleString("fa-IR")}</TableCell>
-            <TableCell className="text-gray-300">{method.estimatedDays ?? "-"}</TableCell>
+            <TableCell className="text-gray-300">
+              {method.estimatedDeliveryDescription && method.estimatedDeliveryDescription.trim().length > 0
+                ? method.estimatedDeliveryDescription
+                : method.estimatedDays != null
+                ? `${method.estimatedDays} روز`
+                : "-"}
+            </TableCell>
             <TableCell>
               <Badge
                 variant="outline"

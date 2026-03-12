@@ -32,12 +32,12 @@ export default function MessagesList() {
       const params = {
         pageNumber: 1,
         pageSize: 50,
-        messageType: filters.messageType || undefined,
+        messageType: filters.messageType && filters.messageType !== "all" ? filters.messageType : undefined,
         onlyUnread: filters.status === "unread" || undefined,
         searchQuery: filters.searchQuery?.trim() || undefined,
-        sortBy: filters.sortBy || undefined,
+        sortBy: filters.sortBy && filters.sortBy !== "all" ? filters.sortBy : undefined,
       };
-      if (filters.dateRange) {
+      if (filters.dateRange && filters.dateRange !== "all") {
         const now = new Date();
         let from = null;
         if (filters.dateRange === "today") {
@@ -72,7 +72,7 @@ export default function MessagesList() {
   }, [fetchMessages]);
 
   const handleFilterChange = (key, value) => {
-    setFilters((prev) => ({ ...prev, [key]: value === "all" ? "" : value }));
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   if (userId == null) {

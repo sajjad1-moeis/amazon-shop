@@ -21,6 +21,7 @@ export default function CreateShippingMethodPage() {
     description: "",
     price: "",
     estimatedDays: "",
+    estimatedDeliveryDescription: "",
     isActive: true,
   });
 
@@ -43,6 +44,7 @@ export default function CreateShippingMethodPage() {
       const payload = {
         name: formData.name.trim(),
         description: formData.description?.trim() || undefined,
+        estimatedDeliveryDescription: formData.estimatedDeliveryDescription?.trim() || undefined,
         isActive: formData.isActive,
       };
       if (formData.price !== "" && formData.price != null) {
@@ -107,9 +109,23 @@ export default function CreateShippingMethodPage() {
               name="description"
               value={formData.description}
               onChange={handleChange}
-              placeholder="توضیح کوتاه درباره روش ارسال"
+              placeholder="توضیح داخلی برای ادمین‌ها (مثلاً محدودیت‌ها، نکات خاص)"
               className={FORM_STYLES.textarea || FORM_STYLES.input}
               rows={3}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="estimatedDeliveryDescription" className={FORM_STYLES.label}>
+              متن زمان تقریبی ارسال (اختیاری)
+            </Label>
+            <Input
+              id="estimatedDeliveryDescription"
+              name="estimatedDeliveryDescription"
+              value={formData.estimatedDeliveryDescription}
+              onChange={handleChange}
+              placeholder="مثال: ۲ تا ۵ روز کاری"
+              className={FORM_STYLES.input}
             />
           </div>
 

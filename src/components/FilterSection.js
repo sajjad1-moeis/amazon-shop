@@ -69,7 +69,7 @@ export default function FilterSection({ children, isAdmin, className }) {
               <div className="overflow-y-auto">
                 <FilterDrawerContent
                   filterSelects={filterSelects}
-                  searchInput={isAdmin ? searchInput : undefined}
+                  searchInput={searchInput}
                 />
               </div>
             </DrawerContent>

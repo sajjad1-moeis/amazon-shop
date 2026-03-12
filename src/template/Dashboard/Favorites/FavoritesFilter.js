@@ -20,7 +20,7 @@ const trackingStatusOptions = [
 
 export default function FavoritesFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
-    onFiltersChange(key, value);
+    onFiltersChange(key, value === "all" ? "" : value);
   };
 
   return (
@@ -28,14 +28,14 @@ export default function FavoritesFilter({ filters, onFiltersChange }) {
       <FilterSection>
         {/* Search Input */}
         <FilterSearchInput
-          value={filters.searchQuery || ""}
+          value={filters?.searchQuery ?? ""}
           onChange={(value) => handleFilterChange("searchQuery", value)}
           placeholder="نام محصول..."
         />
 
         {/* Brand */}
         <StatusSelect
-          value={filters.brand || ""}
+          value={filters?.brand ?? ""}
           onValueChange={(value) => handleFilterChange("brand", value)}
           placeholder="برند"
           options={brandOptions}
@@ -44,7 +44,7 @@ export default function FavoritesFilter({ filters, onFiltersChange }) {
 
         {/* Tracking Status */}
         <StatusSelect
-          value={filters.trackingStatus || ""}
+          value={filters?.trackingStatus ?? ""}
           onValueChange={(value) => handleFilterChange("trackingStatus", value)}
           placeholder="وضعیت ردیابی"
           options={trackingStatusOptions}
@@ -53,7 +53,7 @@ export default function FavoritesFilter({ filters, onFiltersChange }) {
 
         {/* Sort By */}
         <SortBySelect
-          value={filters.sortBy || ""}
+          value={filters?.sortBy ?? ""}
           onValueChange={(value) => handleFilterChange("sortBy", value)}
           placeholder="مرتب‌سازی"
           includeAll={true}

@@ -1,22 +1,27 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Search, Menu } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import React, { useMemo, useState, useEffect } from "react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import Image from "next/image";
 import Link from "next/link";
-import { Notification, SearchNormal1, User, Home2 } from "iconsax-reactjs";
+import { Notification, SearchNormal1, User } from "iconsax-reactjs";
 import SwitchButton from "@/components/SwitchButton";
 import { notificationService } from "@/services/notification/notificationService";
 import { unwrapApiData } from "@/services/api/client";
+import { useRouter } from "next/navigation";
+import { DASHBOARD_NAV_ITEMS } from "@/template/Dashboard/Sidebar";
 
 export default function DashboardHeader({ onMenuClick }) {
   const { user } = useAuth();
+  const router = useRouter();
   const userName = user?.fullName || user?.firstName || "کاربر";
   const userId = user?.id ?? user?.userId;
   const [unreadCount, setUnreadCount] = useState(0);
+  const [query, setQuery] = useState("");
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
     if (userId == null) return;
@@ -28,6 +33,44 @@ export default function DashboardHeader({ onMenuClick }) {
       })
       .catch(() => setUnreadCount(0));
   }, [userId]);
+
+  const routes = useMemo(() => {
+    /** @type {{label: string; href: string; parentLabel?: string}[]} */
+    const out = [];
+    for (const item of DASHBOARD_NAV_ITEMS) {
+      if (item?.href && item?.label) out.push({ label: item.label, href: item.href });
+      if (Array.isArray(item?.children)) {
+        for (const child of item.children) {
+          if (child?.href && child?.label) out.push({ label: child.label, href: child.href, parentLabel: item.label });
+        }
+      }
+    }
+    // remove dup hrefs
+    const seen = new Set();
+    return out.filter((r) => (seen.has(r.href) ? false : (seen.add(r.href), true)));
+  }, []);
+
+  const suggestions = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+    const scored = routes
+      .map((r) => {
+        const hay = `${r.label} ${r.parentLabel ?? ""} ${r.href}`.toLowerCase();
+        const idx = hay.indexOf(q);
+        return { r, idx };
+      })
+      .filter((x) => x.idx !== -1)
+      .sort((a, b) => a.idx - b.idx || a.r.label.length - b.r.label.length)
+      .slice(0, 8)
+      .map((x) => x.r);
+    return scored;
+  }, [query, routes]);
+
+  const goToRoute = (href) => {
+    router.push(href);
+    setShowSuggestions(false);
+    setMobileSearchOpen(false);
+  };
 
   return (
     <header className="py-2 md:py-4 z-50 w-full bg-primary-500 dark:bg-dark-box/35 border-b dark:border-0 border-[#2a4a6f]">
@@ -55,18 +98,56 @@ export default function DashboardHeader({ onMenuClick }) {
           </Link>
         </div>
 
-        {/* Center: Search Bar */}
-        <div className="flex-1 max-md:hidden flex items-center justify-center mx-2 md:mx-4">
-          <div className="bg-white  dark:bg-[#8989893D] dark:border-dark-stroke dark:border w-full rounded-lg p-1 flex-between">
+        {/* Center: Search Bar (Desktop) */}
+        <div className="flex-1 max-md:hidden flex items-center justify-center mx-2 md:mx-4 relative">
+          <div className="bg-white dark:bg-[#8989893D] dark:border-dark-stroke dark:border w-full rounded-lg p-1 flex-between">
             <input
               type="text"
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setShowSuggestions(true);
+              }}
+              onFocus={() => setShowSuggestions(true)}
+              onBlur={() => {
+                // allow click on suggestion
+                setTimeout(() => setShowSuggestions(false), 120);
+              }}
               className="px-2 outline-none placeholder:max-md:text-xs bg-transparent"
               placeholder="جستجو در داشبورد"
+              dir="rtl"
+              aria-label="جستجو در داشبورد"
             />
-            <button className="bg-yellow-500 hover:bg-yellow-600 text-primary-800 gap-2 flex-between rounded-lg p-2 md:px-3 py-2">
+            <button
+              type="button"
+              onClick={() => setShowSuggestions(true)}
+              className="bg-yellow-500 hover:bg-yellow-600 text-primary-800 gap-2 flex-between rounded-lg p-2 md:px-3 py-2"
+              aria-label="نمایش نتایج جستجو"
+              title="جستجو"
+            >
               <SearchNormal1 className="max-lg:size-6" /> <span className="max-lg:hidden">جستجو</span>
             </button>
           </div>
+
+          {showSuggestions && suggestions.length > 0 && (
+            <div className="absolute top-full mt-2 w-full rounded-xl bg-white dark:bg-dark-box border border-gray-200 dark:border-dark-stroke shadow-xl z-50 overflow-hidden">
+              {suggestions.map((s) => (
+                <button
+                  key={s.href}
+                  type="button"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => goToRoute(s.href)}
+                  className="w-full text-right px-3 py-2.5 hover:bg-gray-50 dark:hover:bg-dark-field transition-colors"
+                >
+                  <div className="text-sm font-medium text-gray-900 dark:text-dark-title">{s.label}</div>
+                  <div className="text-xs text-gray-500 dark:text-dark-text flex items-center gap-2">
+                    {s.parentLabel && <span className="truncate">{s.parentLabel}</span>}
+                    <span className="truncate">{s.href}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Right: User Info & Logo */}
@@ -83,12 +164,14 @@ export default function DashboardHeader({ onMenuClick }) {
             </Link>
             <SwitchButton />
 
-            <User className="h-4 w-4 md:h-5 md:w-5" />
-            <span className="text-xs md:text-sm lg:text-base font-medium hidden md:inline">{userName}</span>
+            <Link href="/dashboard/account/profile" className="inline-flex items-center gap-2" title="پروفایل">
+              <User className="h-4 w-4 md:h-5 md:w-5" />
+              <span className="text-xs md:text-sm lg:text-base font-medium hidden md:inline">{userName}</span>
+            </Link>
           </div>
 
-          {/* Mobile: Only Icons */}
-          <div className="sm:hidden flex items-center gap-2 text-white dark:text-primary-100">
+          {/* Mobile: Only Icons + Search */}
+          <div className="sm:hidden flex items-center gap-2 text-white dark:text-primary-100 relative">
             <Link href="/dashboard/notifications" className="relative inline-flex">
               <Notification />
               {unreadCount > 0 && (
@@ -97,7 +180,61 @@ export default function DashboardHeader({ onMenuClick }) {
                 </span>
               )}
             </Link>
-            <User />
+            <button
+              type="button"
+              onClick={() => setMobileSearchOpen((v) => !v)}
+              className="inline-flex"
+              aria-label="باز کردن جستجو"
+              title="جستجو"
+            >
+              <SearchNormal1 />
+            </button>
+            <Link href="/dashboard/account/profile" className="inline-flex" title="پروفایل">
+              <User />
+            </Link>
+
+            {mobileSearchOpen && (
+              <div className="absolute right-0 top-full mt-2 w-[min(92vw,380px)] rounded-xl bg-white dark:bg-dark-box border border-gray-200 dark:border-dark-stroke shadow-xl p-2 z-50">
+                <form
+                  className="flex items-center gap-2"
+                  onSubmit={(e) => e.preventDefault()}
+                >
+                  <input
+                    type="text"
+                    value={query}
+                    onChange={(e) => {
+                      setQuery(e.target.value);
+                      setShowSuggestions(true);
+                    }}
+                    className="flex-1 bg-transparent outline-none px-2 py-2 text-sm"
+                    placeholder="جستجو در داشبورد"
+                    dir="rtl"
+                    autoFocus
+                  />
+                  <button type="button" className="bg-yellow-500 hover:bg-yellow-600 text-primary-800 rounded-lg px-3 py-2 text-sm font-medium">
+                    جستجو
+                  </button>
+                </form>
+
+                {suggestions.length > 0 && (
+                  <div className="mt-2 border-t border-gray-200 dark:border-dark-stroke pt-2 max-h-[50vh] overflow-auto">
+                    {suggestions.map((s) => (
+                      <button
+                        key={s.href}
+                        type="button"
+                        onClick={() => goToRoute(s.href)}
+                        className="w-full text-right px-2 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-dark-field transition-colors"
+                      >
+                        <div className="text-sm font-medium text-gray-900 dark:text-dark-title">{s.label}</div>
+                        <div className="text-xs text-gray-500 dark:text-dark-text truncate">
+                          {s.parentLabel ? `${s.parentLabel} • ${s.href}` : s.href}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

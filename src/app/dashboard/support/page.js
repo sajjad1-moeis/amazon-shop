@@ -90,27 +90,10 @@ function Page() {
     fetchTickets();
   }, [fetchTickets]);
 
-  const handleAddTicket = async (newTicket) => {
-    try {
-      const priorityMap = { high: 3, medium: 2, low: 1 };
-      const response = await ticketService.create({
-        subject: newTicket.title,
-        categoryId: newTicket.category,
-        priority: priorityMap[newTicket.priority] || 2,
-        message: newTicket.description,
-      });
-
-      if (response.success) {
-        toast.success("تیکت با موفقیت ایجاد شد");
-        setIsModalOpen(false);
-        fetchTickets();
-      } else {
-        toast.error(response.message || "خطا در ایجاد تیکت");
-      }
-    } catch (error) {
-      toast.error(error.message || "خطا در ایجاد تیکت");
-      console.error("Error creating ticket:", error);
-    }
+  /** بعد از ایجاد تیکت در مودال: بستن مودال و بروزرسانی لیست */
+  const handleTicketCreated = () => {
+    setIsModalOpen(false);
+    fetchTickets();
   };
 
   const handleDeleteTicket = async (ticketId) => {
@@ -171,7 +154,7 @@ function Page() {
         </div>
 
         {/* Create Ticket Modal */}
-        <CreateTicketModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={handleAddTicket} />
+        <CreateTicketModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={handleTicketCreated} />
       </>
     </DashboardLayout>
   );

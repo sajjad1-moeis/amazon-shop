@@ -78,7 +78,7 @@ export default function PriceLockList() {
   }, [fetchLocks]);
 
   const handleFilterChange = (key, value) => {
-    setHistoryFilters((prev) => ({ ...prev, [key]: value === "all" ? "" : value }));
+    setHistoryFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   const filteredHistory = useMemo(() => {
@@ -87,13 +87,15 @@ export default function PriceLockList() {
       const q = historyFilters.searchQuery.trim().toLowerCase();
       list = list.filter((item) => (item.productName ?? "").toLowerCase().includes(q));
     }
-    if (historyFilters.status) {
+    if (historyFilters.status && historyFilters.status !== "all") {
       list = list.filter((item) => item.status === historyFilters.status);
     }
-    if (historyFilters.timeRange) {
+    if (historyFilters.timeRange && historyFilters.timeRange !== "all") {
       const now = new Date();
       let from = null;
-      if (historyFilters.timeRange === "week") {
+      if (historyFilters.timeRange === "today") {
+        from = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      } else if (historyFilters.timeRange === "week") {
         from = new Date(now);
         from.setDate(from.getDate() - 7);
       } else if (historyFilters.timeRange === "month") {

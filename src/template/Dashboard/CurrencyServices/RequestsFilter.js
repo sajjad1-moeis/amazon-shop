@@ -28,7 +28,7 @@ const STATUS_OPTIONS = [
 
 export default function RequestsFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
-    onFiltersChange(key, value);
+    onFiltersChange(key, value === "all" ? "" : value);
   };
 
   return (
@@ -36,14 +36,14 @@ export default function RequestsFilter({ filters, onFiltersChange }) {
       <FilterSection>
         {/* Search */}
         <FilterSearchInput
-          value={filters.searchQuery || ""}
+          value={filters?.searchQuery ?? ""}
           onChange={(value) => handleFilterChange("searchQuery", value)}
           placeholder="کد درخواست..."
         />
 
         {/* Service Type */}
         <StatusSelect
-          value={filters.serviceType || ""}
+          value={filters?.serviceType ?? ""}
           onValueChange={(value) => handleFilterChange("serviceType", value)}
           placeholder="نوع خدمت"
           options={SERVICE_TYPE_OPTIONS}
@@ -52,7 +52,7 @@ export default function RequestsFilter({ filters, onFiltersChange }) {
 
         {/* Status */}
         <StatusSelect
-          value={filters.status || ""}
+          value={filters?.status ?? ""}
           onValueChange={(value) => handleFilterChange("status", value)}
           placeholder="وضعیت"
           options={STATUS_OPTIONS}
@@ -61,7 +61,7 @@ export default function RequestsFilter({ filters, onFiltersChange }) {
 
         {/* Date Range */}
         <DateFilterSelect
-          value={filters.dateRange || ""}
+          value={filters?.dateRange ?? ""}
           onValueChange={(value) => handleFilterChange("dateRange", value)}
           placeholder="بازه تاریخ"
           includeAll={true}

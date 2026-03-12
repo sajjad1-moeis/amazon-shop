@@ -23,7 +23,7 @@ const paymentStatusOptions = [
 
 export default function OrdersFilter({ filters, onFiltersChange }) {
   const handleFilterChange = (key, value) => {
-    onFiltersChange(key, value);
+    onFiltersChange(key, value === "all" ? "" : value);
   };
 
   return (
@@ -31,14 +31,14 @@ export default function OrdersFilter({ filters, onFiltersChange }) {
       <FilterSection>
         {/* Search Input */}
         <FilterSearchInput
-          value={filters.searchQuery || ""}
+          value={filters?.searchQuery ?? ""}
           onChange={(value) => handleFilterChange("searchQuery", value)}
           placeholder="شماره سفارش یا نام محصول..."
         />
 
         {/* Time Range Filter */}
         <DateFilterSelect
-          value={filters.timeRange || ""}
+          value={filters?.timeRange ?? ""}
           onValueChange={(value) => handleFilterChange("timeRange", value)}
           placeholder="بازه زمانی"
           includeAll={true}
@@ -46,7 +46,7 @@ export default function OrdersFilter({ filters, onFiltersChange }) {
 
         {/* Status Filter */}
         <StatusSelect
-          value={filters.status || ""}
+          value={filters?.status ?? ""}
           onValueChange={(value) => handleFilterChange("status", value)}
           placeholder="وضعیت سفارش"
           options={statusOptions}
@@ -55,7 +55,7 @@ export default function OrdersFilter({ filters, onFiltersChange }) {
 
         {/* Payment Status Filter */}
         <StatusSelect
-          value={filters.paymentStatus || ""}
+          value={filters?.paymentStatus ?? ""}
           onValueChange={(value) => handleFilterChange("paymentStatus", value)}
           placeholder="وضعیت پرداخت"
           options={paymentStatusOptions}

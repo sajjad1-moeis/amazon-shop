@@ -23,14 +23,14 @@ export default function RecentViewFilter({ filters, onFiltersChange }) {
       <FilterSection>
         {/* Search Input */}
         <FilterSearchInput
-          value={filters.searchQuery || ""}
+          value={filters?.searchQuery ?? ""}
           onChange={(value) => handleFilterChange("searchQuery", value)}
           placeholder="جستجو بر اساس نام محصول..."
         />
 
         {/* Category */}
         <StatusSelect
-          value={filters.category || undefined}
+          value={filters?.category ?? ""}
           onValueChange={(value) => handleFilterChange("category", value)}
           placeholder="دسته بندی"
           options={categoryOptions}
@@ -39,7 +39,7 @@ export default function RecentViewFilter({ filters, onFiltersChange }) {
 
         {/* Date Range */}
         <DateFilterSelect
-          value={filters.dateRange || undefined}
+          value={filters?.dateRange ?? ""}
           onValueChange={(value) => handleFilterChange("dateRange", value)}
           placeholder="بازه زمانی"
           includeAll={true}
@@ -47,7 +47,7 @@ export default function RecentViewFilter({ filters, onFiltersChange }) {
 
         {/* Sort By */}
         <SortBySelect
-          value={filters.sortBy || undefined}
+          value={filters?.sortBy ?? ""}
           onValueChange={(value) => handleFilterChange("sortBy", value)}
           placeholder="مرتب سازی"
           includeAll={true}
