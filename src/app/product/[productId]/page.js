@@ -264,6 +264,8 @@ export default function ProductDetailPage({ params }) {
           .then((detailsRes) => {
             if (cancelled) return null;
             const fullPayload = { ...payload };
+            // برای API بک‌اند (SaveIfNotExists) حتماً ASIN را روی payload ست کن (همیشه از productId به‌عنوان fallback)
+            fullPayload.asin = fullPayload.asin || fullPayload.amazonASIN || fullPayload.ASIN || productId;
             const details = detailsRes?.success ? detailsRes : detailsRes;
             if (details) {
               if (Array.isArray(details.images) && details.images.length > 0)
@@ -308,12 +310,24 @@ export default function ProductDetailPage({ params }) {
               if (details.is_best_seller != null) fullPayload.is_best_seller = details.is_best_seller;
               if (details.best_seller_text) fullPayload.best_seller_text = details.best_seller_text;
               if (details.is_amazons_choice != null) fullPayload.is_amazons_choice = details.is_amazons_choice;
+              if (details.is_international != null) fullPayload.is_international = details.is_international;
+              if (details.ships_from != null) fullPayload.ships_from = details.ships_from;
+              if (details.shipping_summary != null) fullPayload.shipping_summary = details.shipping_summary;
+              if (details.estimated_delivery_days != null) fullPayload.estimated_delivery_days = details.estimated_delivery_days;
             }
             // قبل از ذخیره حتماً قیمت تومان را از موتور قیمت بگیر و در payload بگذار تا هم نمایش پایدار باشد هم در DB درست ذخیره شود
             const hasToman = fullPayload.ourPrice != null && Number(fullPayload.ourPrice) > 0;
             const baseAed = parseProductNum(fullPayload.current_price ?? fullPayload.price);
             const ensurePriceThenSave = () =>
-              productService.saveIfNotExistsFromScraper(fullPayload).then((res) => ({ res, fullPayload }));
+              productService
+                .saveIfNotExistsFromScraper(fullPayload, productId)
+                .then((res) => ({ res, fullPayload }))
+                .catch((err) => {
+                  if (err?.response?.status === 400 && fullPayload) {
+                    return { res: { success: false, data: null }, fullPayload };
+                  }
+                  throw err;
+                });
             if (hasToman) {
               return ensurePriceThenSave();
             }
@@ -345,9 +359,9 @@ export default function ProductDetailPage({ params }) {
             if (res?.success && savedId != null) {
               return productService.getById(savedId).then((response) => ({ response, payload: fullPayload }));
             }
-            // اگر سرور savedId برنگرداند (مثلاً محصول از قبل وجود داشته)، باز هم جزئیات (ازجمله variation_dimensions) را روی state اعمال کن
+            // اگر سرور savedId برنگرداند (مثلاً 400 یا محصول از قبل وجود داشته)، باز هم جزئیات را از fullPayload روی state بگذار تا صفحه خالی نماند
             if (fullPayload && typeof fullPayload === "object") {
-              setProduct((prev) => (prev ? { ...prev, ...fullPayload } : prev));
+              setProduct((prev) => (prev ? { ...prev, ...fullPayload } : fullPayload));
             }
             return null;
           })
@@ -530,6 +544,12 @@ export default function ProductDetailPage({ params }) {
       if (res.is_best_seller != null) next.is_best_seller = res.is_best_seller;
       if (res.best_seller_text) next.best_seller_text = res.best_seller_text;
       if (res.is_amazons_choice != null) next.is_amazons_choice = res.is_amazons_choice;
+      if (res.is_international != null) next.is_international = res.is_international;
+      if (res.ships_from != null) next.ships_from = res.ships_from;
+      if (res.ships_from_code != null) next.ships_from_code = res.ships_from_code;
+      if (res.shipping_type != null) next.shipping_type = res.shipping_type;
+      if (res.estimated_delivery_days != null) next.estimated_delivery_days = res.estimated_delivery_days;
+      if (res.shipping_summary != null) next.shipping_summary = res.shipping_summary;
       return next;
     });
   };
@@ -596,6 +616,10 @@ export default function ProductDetailPage({ params }) {
               if (res.is_best_seller != null) next.is_best_seller = res.is_best_seller;
               if (res.best_seller_text) next.best_seller_text = res.best_seller_text;
               if (res.is_amazons_choice != null) next.is_amazons_choice = res.is_amazons_choice;
+              if (res.is_international != null) next.is_international = res.is_international;
+              if (res.ships_from != null) next.ships_from = res.ships_from;
+              if (res.shipping_summary != null) next.shipping_summary = res.shipping_summary;
+              if (res.estimated_delivery_days != null) next.estimated_delivery_days = res.estimated_delivery_days;
               next.isFullStored = true;
               return next;
             });
@@ -754,8 +778,17 @@ export default function ProductDetailPage({ params }) {
                     </span>
                   )}
                 </div>
-                {((product?.product_badges ?? product?.productBadges ?? product?.badges)?.length > 0 || product?.best_seller_text || product?.bestSellerText || product?.is_best_seller || product?.isBestSeller || product?.is_amazons_choice || product?.isAmazonsChoice || product?.is_limited_time_deal || product?.isLimitedTimeDeal) && (
+                {((product?.product_badges ?? product?.productBadges ?? product?.badges)?.length > 0 || product?.best_seller_text || product?.bestSellerText || product?.is_best_seller || product?.isBestSeller || product?.is_amazons_choice || product?.isAmazonsChoice || product?.is_limited_time_deal || product?.isLimitedTimeDeal || product?.is_international) && (
                   <div className="flex flex-wrap items-center gap-2 mb-4">
+                    {product?.is_international && (
+                      <span
+                        className="text-xs px-2.5 py-1 rounded-md text-white whitespace-nowrap bg-blue-600 dark:bg-blue-700"
+                        title={product?.shipping_summary ?? undefined}
+                      >
+                        ارسال بین‌المللی
+                        {product?.ships_from ? ` از ${product.ships_from}` : ""}
+                      </span>
+                    )}
                     {(product?.product_badges ?? product?.productBadges ?? product?.badges ?? [])
                       // حذف تگ‌های مرجوعی رایگان و صرفه‌جویی
                       .filter(

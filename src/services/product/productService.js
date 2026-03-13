@@ -381,13 +381,34 @@ export const productService = {
       out.savings_amount = String(out.savings_amount);
     if (out.discount_percentage != null && typeof out.discount_percentage !== "string")
       out.discount_percentage = String(out.discount_percentage);
+    // backend انتظار دارد estimated_delivery_days به‌صورت string بیاید (ScraperProductDto.EstimatedDeliveryDays = string?)
+    // اگر عدد باشد (مثل 14)، مبدل JSON خطا می‌دهد و کل مدل بایندینگ Fail می‌شود.
+    if (out.estimated_delivery_days != null && typeof out.estimated_delivery_days !== "string") {
+      out.estimated_delivery_days = String(out.estimated_delivery_days);
+    }
+    // بک‌اند برای ScraperProductDto.ShippingSummary یک آبجکت انتظار دارد؛
+    // اگر از اسکرپر به‌صورت string آمده (مثل "🌍 International shipping ...")، برای جلوگیری از 400 ModelState آن را حذف می‌کنیم.
+    if (out.shipping_summary != null && typeof out.shipping_summary !== "object") {
+      delete out.shipping_summary;
+    }
     return out;
   },
 
-  // ذخیره محصول اسکرپ شده در صورت عدم وجود (برای محصولات باز شده از Amazon)
-  saveIfNotExistsFromScraper: async (scraperProduct) => {
+  /**
+   * ذخیره محصول اسکرپ شده در صورت عدم وجود (برای محصولات باز شده از Amazon).
+   * @param {object} scraperProduct - آبجکت محصول از اسکرپر
+   * @param {string} [asinFallback] - ASIN از URL (مثلاً productId) تا حتماً در بادی ارسال شود و بک‌اند 400 ندهد
+   */
+  saveIfNotExistsFromScraper: async (scraperProduct, asinFallback) => {
     const client = getPublicClient();
-    const body = productService._normalizeScraperPayloadForApi(scraperProduct);
+    const body = productService._normalizeScraperPayloadForApi(scraperProduct) || {};
+    const asin =
+      (body.asin && String(body.asin).trim()) ||
+      (body.amazonASIN && String(body.amazonASIN).trim()) ||
+      (body.ASIN && String(body.ASIN).trim()) ||
+      (asinFallback != null && String(asinFallback).trim()) ||
+      "";
+    if (asin) body.asin = asin;
     return client.post("Product/SaveIfNotExists", { json: body }).json();
   },
 
