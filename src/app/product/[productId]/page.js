@@ -216,6 +216,10 @@ export default function ProductDetailPage({ params }) {
                 payload.variation_dimensions = d.variation_dimensions;
               if (d.weight_kg != null) payload.weight_kg = d.weight_kg;
               if (d.weight_category) payload.weight_category = d.weight_category;
+              if (d.is_international != null) payload.is_international = d.is_international;
+              if (d.estimated_delivery_days != null) payload.estimated_delivery_days = d.estimated_delivery_days;
+              if (d.ships_from != null) payload.ships_from = d.ships_from;
+              if (d.shipping_summary != null) payload.shipping_summary = d.shipping_summary;
               return payload;
             });
           }
@@ -299,6 +303,7 @@ export default function ProductDetailPage({ params }) {
               // قیمت از پاسخ جزئیات اسکرپر (برای واریانت‌ها اندپوینت /details حالا current_price برمی‌گرداند)
               if (details.current_price != null) fullPayload.current_price = details.current_price;
               if (details.original_price != null) fullPayload.original_price = details.original_price;
+              if (details.discount_percentage != null) fullPayload.discount_percentage = details.discount_percentage;
               if (details.price != null && fullPayload.current_price == null) fullPayload.current_price = details.price;
               if (Array.isArray(details.product_badges) && details.product_badges.length > 0)
                 fullPayload.product_badges = details.product_badges;
@@ -405,6 +410,13 @@ export default function ProductDetailPage({ params }) {
               if (payload.is_best_seller != null) dto.is_best_seller = payload.is_best_seller;
               if (payload.best_seller_text) dto.best_seller_text = payload.best_seller_text;
               if (payload.is_amazons_choice != null) dto.is_amazons_choice = payload.is_amazons_choice;
+              if (payload.is_international != null) dto.is_international = payload.is_international;
+              if (payload.estimated_delivery_days != null) dto.estimated_delivery_days = payload.estimated_delivery_days;
+              if (payload.ships_from != null) dto.ships_from = payload.ships_from;
+              if (payload.shipping_summary != null) dto.shipping_summary = payload.shipping_summary;
+              if (payload.original_price != null) dto.original_price = payload.original_price;
+              if (payload.current_price != null) dto.current_price = payload.current_price;
+              if (payload.discount_percentage != null) dto.discount_percentage = payload.discount_percentage;
             }
             applyProduct(dto);
           })
@@ -550,6 +562,9 @@ export default function ProductDetailPage({ params }) {
       if (res.shipping_type != null) next.shipping_type = res.shipping_type;
       if (res.estimated_delivery_days != null) next.estimated_delivery_days = res.estimated_delivery_days;
       if (res.shipping_summary != null) next.shipping_summary = res.shipping_summary;
+      if (res.original_price != null) next.original_price = res.original_price;
+      if (res.current_price != null) next.current_price = res.current_price;
+      if (res.discount_percentage != null) next.discount_percentage = res.discount_percentage;
       return next;
     });
   };
@@ -696,15 +711,64 @@ export default function ProductDetailPage({ params }) {
   const listPrice = parseProductNum(
     product?.original_price ?? product?.price ?? product?.discountPrice
   ) || displayPrice;
+  const isScraperProduct = /^[A-Z0-9]{10}$/i.test(String(productId ?? ""));
+  const rawOriginalAed = parseProductNum(
+    product?.original_price ?? product?.originalPrice
+  );
+  const rawCurrentAed = parseProductNum(
+    product?.current_price ?? product?.currentPrice ?? product?.basePriceAed
+  );
+  // فقط اعدادی که در محدودهٔ منطقی درهم هستند (قیمت درهم معمولاً زیر ۱۰۰٬۰۰۰) — جلوگیری از نمایش تومان به‌عنوان درهم
+  const isPlausibleAed = (v) => Number.isFinite(v) && v > 0 && v <= 100_000;
+  const originalPriceAed = isPlausibleAed(rawOriginalAed) ? rawOriginalAed : 0;
+  const currentPriceAed = isPlausibleAed(rawCurrentAed) ? rawCurrentAed : 0;
+  const discountPctFromProduct = parseProductNum(
+    product?.discount_percentage ?? product?.discountPercentage
+  );
+  // فقط وقتی تخفیف واقعی داریم: درصد از اسکرپر > 0 یا قیمت فعلی درهم کمتر از قیمت اصلی درهم
+  const hasScraperDiscount =
+    isScraperProduct &&
+    ((discountPctFromProduct > 0 && discountPctFromProduct <= 99) ||
+      (originalPriceAed > 0 && currentPriceAed > 0 && currentPriceAed < originalPriceAed));
+  const hasDbDiscount =
+    !isScraperProduct &&
+    originalPriceAed > 0 &&
+    (discountPctFromProduct > 0 || (currentPriceAed > 0 && currentPriceAed < originalPriceAed));
+  const hasDiscount = isScraperProduct
+    ? hasScraperDiscount
+    : hasDbDiscount || (displayPrice > 0 && listPrice > displayPrice && listPrice > 0);
+  const discountPercentRaw = hasDiscount
+    ? isScraperProduct && (discountPctFromProduct > 0 || originalPriceAed > 0)
+      ? discountPctFromProduct > 0
+        ? Math.round(Number(discountPctFromProduct))
+        : originalPriceAed > 0 && currentPriceAed > 0 && currentPriceAed < originalPriceAed
+          ? Math.round(((originalPriceAed - currentPriceAed) / originalPriceAed) * 100)
+          : 0
+      : hasDbDiscount && (discountPctFromProduct > 0 || (originalPriceAed > 0 && currentPriceAed < originalPriceAed))
+        ? discountPctFromProduct > 0
+          ? Math.round(Number(discountPctFromProduct))
+          : Math.round(((originalPriceAed - currentPriceAed) / originalPriceAed) * 100)
+        : listPrice > 0
+          ? Math.round(((listPrice - displayPrice) / listPrice) * 100)
+          : 0
+    : 0;
+  const discountPercent = Math.min(99, Math.max(0, discountPercentRaw));
+  const strikethroughAed =
+    (isScraperProduct || hasDbDiscount) &&
+    originalPriceAed > 0 &&
+    hasDiscount
+      ? `${Number(originalPriceAed).toLocaleString("fa-IR", { maximumFractionDigits: 2 })} درهم`
+      : null;
   const ratingVal = parseProductNum(product?.rating);
   const reviewCountVal = Math.floor(
     parseProductNum(product?.reviews_count ?? product?.reviewCount)
   );
-  const hasDiscount =
-    displayPrice > 0 && listPrice > displayPrice && listPrice > 0;
-  const discountPercent = hasDiscount
-    ? Math.round(((listPrice - displayPrice) / listPrice) * 100)
-    : 0;
+  const deliveryDaysNum = product?.estimated_delivery_days != null ? Number(product.estimated_delivery_days) : NaN;
+  const deliveryDays = Number.isFinite(deliveryDaysNum) && deliveryDaysNum >= 1 && deliveryDaysNum <= 365 ? deliveryDaysNum : null;
+  const showInternationalBadge =
+    product?.is_international === true ||
+    product?.isInternational === true ||
+    (deliveryDays != null && deliveryDays >= 5);
   return (
     <IndexLayout>
       <div className="min-h-screen bg-gray-50 dark:bg-transparent" dir="rtl">
@@ -778,9 +842,9 @@ export default function ProductDetailPage({ params }) {
                     </span>
                   )}
                 </div>
-                {((product?.product_badges ?? product?.productBadges ?? product?.badges)?.length > 0 || product?.best_seller_text || product?.bestSellerText || product?.is_best_seller || product?.isBestSeller || product?.is_amazons_choice || product?.isAmazonsChoice || product?.is_limited_time_deal || product?.isLimitedTimeDeal || product?.is_international) && (
+                {((product?.product_badges ?? product?.productBadges ?? product?.badges)?.length > 0 || product?.best_seller_text || product?.bestSellerText || product?.is_best_seller || product?.isBestSeller || product?.is_amazons_choice || product?.isAmazonsChoice || product?.is_limited_time_deal || product?.isLimitedTimeDeal || showInternationalBadge) && (
                   <div className="flex flex-wrap items-center gap-2 mb-4">
-                    {product?.is_international && (
+                    {showInternationalBadge && (
                       <span
                         className="text-xs px-2.5 py-1 rounded-md text-white whitespace-nowrap bg-blue-600 dark:bg-blue-700"
                         title={product?.shipping_summary ?? undefined}
@@ -790,13 +854,17 @@ export default function ProductDetailPage({ params }) {
                       </span>
                     )}
                     {(product?.product_badges ?? product?.productBadges ?? product?.badges ?? [])
-                      // حذف تگ‌های مرجوعی رایگان و صرفه‌جویی
+                      // حذف تگ‌های مرجوعی رایگان، صرفه‌جویی، پرومو تخفیف و Save X%
                       .filter(
                         (badge) =>
+                          typeof badge === "string" &&
                           !(
                             badge === "FREE Returns" ||
                             badge === "Savings" ||
-                            badge === "صرفه‌جویی"
+                            badge === "صرفه‌جویی" ||
+                            badge.toLowerCase().includes("promo") ||
+                            badge.includes("پرومو") ||
+                            (badge.toLowerCase().startsWith("save ") && badge.includes("%"))
                           )
                       )
                       .map((badge, index) => (
@@ -870,15 +938,15 @@ export default function ProductDetailPage({ params }) {
                       <div>
                         <span className="text-2xl">{formatPriceToman(displayPrice)}</span>
                       </div>
-                      {hasDiscount && (
+                      {hasDiscount && discountPercent > 0 && (
                         <span className="bg-orange-600 text-white text-xs px-2 py-1 rounded">
                           {discountPercent}٪
                         </span>
                       )}
                     </div>
                     {hasDiscount && (
-                      <div className="text-sm text-gray-400 line-through mt-1">
-                        {formatPriceToman(listPrice)}
+                      <div className="text-sm text-gray-400 dark:text-gray-500 line-through mt-1">
+                        {strikethroughAed ?? formatPriceToman(listPrice)}
                       </div>
                     )}
                   </div>

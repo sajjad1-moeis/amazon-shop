@@ -24,6 +24,7 @@ function ProductCard({ className, product, badges }) {
 
   const productId = product?.id ?? product?.productId ?? null;
   const asin = product?.asin ?? product?.ASIN ?? product?.amazonASIN ?? null;
+  const isScraperResult = Boolean(asin && !productId);
   // API GetById فقط int (حداکثر ۲۱۴۷۴۸۳۶۴۷) را قبول می‌کند؛ اگر id بزرگتر باشد از ASIN برای لینک استفاده کن
   const MAX_SAFE_INT32 = 2147483647;
   const numericId = productId != null ? Number(productId) : NaN;
@@ -99,9 +100,20 @@ function ProductCard({ className, product, badges }) {
     isNewArrival && "تازه وارد",
   ].filter(Boolean);
   const fromScraper = fromProduct.slice(0, 5);
+  const excludeBadge = (b) =>
+    b === "FREE Returns" ||
+    b === "Savings" ||
+    b === "صرفه‌جویی" ||
+    (typeof b === "string" && (
+      b.toLowerCase().includes("promo") ||
+      b.includes("پرومو") ||
+      (b.toLowerCase().startsWith("save ") && b.includes("%"))
+    ));
   const productBadges =
     Array.isArray(rawBadges) && rawBadges.length > 0
-      ? rawBadges.filter((b) => typeof b === "string").slice(0, 5)
+      ? rawBadges
+          .filter((b) => typeof b === "string" && !excludeBadge(b))
+          .slice(0, 5)
       : fromScraper;
   const seller = product?.seller || "amazon";
   const sellerCountry = product?.sellerCountry || "🇦🇪";
@@ -115,9 +127,44 @@ function ProductCard({ className, product, badges }) {
     return Math.min(99, Math.round(((listPrice - salePrice) / listPrice) * 100));
   };
 
-  const discount = calculateDiscount();
+  const calculatedDiscount = calculateDiscount();
 
   const formatPrice = (value) => formatPriceToman(value);
+
+  const isPlausibleAed = (v) => Number.isFinite(v) && v > 0 && v <= 100_000;
+  const rawOriginalAed = parseProductNum(product?.original_price ?? product?.originalPrice);
+  const rawCurrentAed = parseProductNum(
+    product?.current_price ?? product?.currentPrice ?? product?.basePriceAed
+  );
+  const originalPriceAed = isPlausibleAed(rawOriginalAed) ? rawOriginalAed : 0;
+  const currentPriceAed = isPlausibleAed(rawCurrentAed) ? rawCurrentAed : 0;
+  const discountFromAed =
+    originalPriceAed > 0 && currentPriceAed > 0 && currentPriceAed < originalPriceAed
+      ? Math.min(99, Math.round(((originalPriceAed - currentPriceAed) / originalPriceAed) * 100))
+      : null;
+  const discount =
+    discountPct != null && Number.isFinite(Number(discountPct)) && Number(discountPct) > 0
+      ? Math.round(Number(discountPct))
+      : discountFromAed != null
+        ? discountFromAed
+        : calculatedDiscount;
+  const hasRealScraperDiscount =
+    isScraperResult &&
+    ((discountPct != null && Number(discountPct) > 0) ||
+      (originalPriceAed > 0 && currentPriceAed > 0 && currentPriceAed < originalPriceAed));
+  const hasDbDiscount = productId && originalPriceAed > 0 && (discount > 0 || currentPriceAed > 0 && currentPriceAed < originalPriceAed);
+
+  const formatAedOriginal = () => {
+    if (!originalPriceAed) return null;
+    if (!productId && (!currency || currency !== "AED")) return null;
+    return `${originalPriceAed.toLocaleString("fa-IR", { maximumFractionDigits: 2 })} درهم`;
+  };
+
+  const aedOriginalFormatted = (hasRealScraperDiscount || hasDbDiscount) ? formatAedOriginal() : null;
+  const hasDiscount = isScraperResult ? hasRealScraperDiscount : discount > 0 || hasDbDiscount;
+  const showAedOriginal = Boolean((isScraperResult || productId) && aedOriginalFormatted && hasDiscount);
+  const showIrrListPrice = !isScraperResult && hasDiscount && price > discountPrice;
+  const showDiscountBadge = hasDiscount && discount > 0;
 
   const handleProductClick = (e) => {
     e.preventDefault();
@@ -366,12 +413,17 @@ function ProductCard({ className, product, badges }) {
             {/* Price Section - این قسمت با flex-grow به پایین می‌رود */}
             <div className="flex flex-col gap-1.5 mt-auto">
               <div className="flex-between">
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col items-start gap-0.5">
                   <span className="font-bold dark:text-dark-titre text-gray-900 max-lg:text-sm text-base">
                     {formatPrice(discountPrice || price)}
                   </span>
+                  {showAedOriginal && (
+                    <span className="text-xs md:text-sm text-gray-400 dark:text-[#B3B9C466] line-through">
+                      {aedOriginalFormatted}
+                    </span>
+                  )}
                 </div>
-                {discount > 0 && (
+                {showDiscountBadge && (
                   <div className="flex items-center gap-2">
                     <span className="bg-orange-600 text-white text-xs px-2 py-0.5 rounded">{discount}%</span>
                   </div>
@@ -379,7 +431,7 @@ function ProductCard({ className, product, badges }) {
               </div>
 
               <div className="flex-between">
-                {discount > 0 && price > discountPrice && (
+                {showIrrListPrice && (
                   <span className="text-xs md:text-sm text-gray-400 dark:text-[#B3B9C466] line-through max-md:hidden">
                     {formatPrice(price)}
                   </span>

@@ -4,9 +4,56 @@ import { Button } from "@/components/ui/button";
 import { shoppingCartService } from "@/services/shoppingCart/shoppingCartService";
 import { toast } from "sonner";
 import { useState } from "react";
+import { getDisplayPriceToman, formatPriceToman, parseProductNum } from "@/utils/productHelpers";
 
-export default function PurchaseSection({ selectedDelivery, setSelectedDelivery, productId, quantity = 1 }) {
+export default function PurchaseSection({ selectedDelivery, setSelectedDelivery, productId, product, quantity = 1 }) {
   const [loading, setLoading] = useState(false);
+
+  const productIdStr = String(productId ?? "");
+  const isScraperProduct = /^[A-Z0-9]{10}$/i.test(productIdStr);
+  const displayPrice = product ? getDisplayPriceToman(product) : 0;
+  const rawOriginalAed = product ? parseProductNum(product?.original_price ?? product?.originalPrice) : 0;
+  const rawCurrentAed = product
+    ? parseProductNum(product?.current_price ?? product?.currentPrice ?? product?.basePriceAed)
+    : 0;
+  const isPlausibleAed = (v) => Number.isFinite(v) && v > 0 && v <= 100_000;
+  const originalPriceAed = isPlausibleAed(rawOriginalAed) ? rawOriginalAed : 0;
+  const currentPriceAed = isPlausibleAed(rawCurrentAed) ? rawCurrentAed : 0;
+  const discountPctFromProduct = product ? parseProductNum(product?.discount_percentage ?? product?.discountPercentage) : 0;
+  const hasScraperDiscount =
+    isScraperProduct &&
+    ((discountPctFromProduct > 0 && discountPctFromProduct <= 99) ||
+      (originalPriceAed > 0 && currentPriceAed > 0 && currentPriceAed < originalPriceAed));
+  const hasDbDiscount =
+    !isScraperProduct &&
+    originalPriceAed > 0 &&
+    (discountPctFromProduct > 0 || (currentPriceAed > 0 && currentPriceAed < originalPriceAed));
+  const listPrice = product ? parseProductNum(product?.original_price ?? product?.price ?? product?.discountPrice) || displayPrice : displayPrice;
+  const hasDiscount = isScraperProduct
+    ? hasScraperDiscount
+    : hasDbDiscount || (displayPrice > 0 && listPrice > displayPrice && listPrice > 0);
+  const discountPercentRaw = hasDiscount
+    ? isScraperProduct && (discountPctFromProduct > 0 || originalPriceAed > 0)
+      ? discountPctFromProduct > 0
+        ? Math.round(Number(discountPctFromProduct))
+        : originalPriceAed > 0 && currentPriceAed > 0 && currentPriceAed < originalPriceAed
+          ? Math.round(((originalPriceAed - currentPriceAed) / originalPriceAed) * 100)
+          : 0
+      : hasDbDiscount && (discountPctFromProduct > 0 || (originalPriceAed > 0 && currentPriceAed < originalPriceAed))
+        ? discountPctFromProduct > 0
+          ? Math.round(Number(discountPctFromProduct))
+          : Math.round(((originalPriceAed - currentPriceAed) / originalPriceAed) * 100)
+        : listPrice > 0
+          ? Math.round(((listPrice - displayPrice) / listPrice) * 100)
+          : 0
+    : 0;
+  const discountPercent = Math.min(99, Math.max(0, discountPercentRaw));
+  const strikethroughAed =
+    (isScraperProduct || hasDbDiscount) && originalPriceAed > 0 && hasDiscount
+      ? `${Number(originalPriceAed).toLocaleString("fa-IR", { maximumFractionDigits: 2 })} درهم`
+      : null;
+  const priceDisplay = displayPrice > 0 ? formatPriceToman(displayPrice) : "قیمت نامشخص";
+  const listPriceDisplay = listPrice > 0 ? formatPriceToman(listPrice) : "";
 
   const handleAddToCart = async () => {
     if (!productId) {
@@ -65,18 +112,23 @@ export default function PurchaseSection({ selectedDelivery, setSelectedDelivery,
         </div>
       </div>
 
-      {/* Price */}
+      {/* Price — هم‌سو با کارت محصول و باکس قیمت صفحه: تومان + در صورت تخفیف اسکرپر خط‌خورده درهم */}
       <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-2xl font-bold text-gray-900 dark:text-white">۱۲,۴۵۰,۰۰۰</span>
-          <span className="text-sm text-gray-600 dark:text-gray-400">تومان</span>
+          <span className="text-2xl font-bold text-gray-900 dark:text-white">{priceDisplay}</span>
         </div>
-        <div className="flex items-center gap-2 mb-3">
-          <span className="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-bold px-2 py-1 rounded">
-            ۱۹٪
-          </span>
-          <span className="text-sm text-gray-400 dark:text-gray-500 line-through">۱۲,۴۵۰,۰۰۰ تومان</span>
-        </div>
+        {hasDiscount && (strikethroughAed ?? listPriceDisplay) && (
+          <div className="flex items-center gap-2 mb-3">
+            {discountPercent > 0 && (
+              <span className="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-bold px-2 py-1 rounded">
+                {discountPercent}٪
+              </span>
+            )}
+            <span className="text-sm text-gray-400 dark:text-gray-500 line-through">
+              {strikethroughAed ?? listPriceDisplay}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Seller */}
