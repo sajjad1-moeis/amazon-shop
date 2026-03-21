@@ -1,11 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { ArrowUp, Bag2, CardPos, Instagram, Send2, Shield, Truck, Whatsapp, Youtube } from "iconsax-reactjs";
 import RecentVisits from "./RecentVisits";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { contactService } from "@/services/contact/contactService";
+import { toast } from "sonner";
 
 const links = [
   { title: "درباره ما", href: "/about-us" },
@@ -29,6 +31,39 @@ const links = [
 ];
 
 export default function Footer() {
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [submittingNewsletter, setSubmittingNewsletter] = useState(false);
+
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault();
+    const email = newsletterEmail.trim();
+    if (!email) {
+      toast.error("ایمیل را وارد کنید");
+      return;
+    }
+    if (!validateEmail(email)) {
+      toast.error("فرمت ایمیل صحیح نیست");
+      return;
+    }
+
+    try {
+      setSubmittingNewsletter(true);
+      await contactService.create({
+        fullName: "عضویت خبرنامه",
+        email,
+        message: "درخواست عضویت در خبرنامه وب‌سایت",
+      });
+      setNewsletterEmail("");
+      toast.success("عضویت شما در خبرنامه ثبت شد");
+    } catch (err) {
+      toast.error(err?.message || "ثبت خبرنامه ناموفق بود");
+    } finally {
+      setSubmittingNewsletter(false);
+    }
+  };
+
   return (
     <footer
       className="w-full bg-white dark:bg-[#101010] text-gray-700 dark:text-white border-t border-neutral-100 dark:border-gray-800"
@@ -87,19 +122,26 @@ export default function Footer() {
               </div>
             </div>
 
-            <div className="sm:flex items-center gap-3">
+            <form onSubmit={handleNewsletterSubmit} className="sm:flex items-center gap-3">
               <label className="text-sm px-3 py-2 rounded-lg text-gray-400 dark:text-gray-300">خبرنامه</label>
               <div className="flex items-center gap-3 bg-gray-50 dark:bg-dark-field border border-gray-200 dark:border-gray-700 rounded-lg p-1">
                 <input
                   type="email"
+                  value={newsletterEmail}
+                  onChange={(e) => setNewsletterEmail(e.target.value)}
                   placeholder="ایمیل خود را وارد کنید"
+                  disabled={submittingNewsletter}
                   className="bg-transparent placeholder-gray-400 dark:placeholder-[#BEBEBE99] text-right px-3 focus:outline-none w-max text-gray-700 dark:text-white"
                 />
-                <Button className="bg-gray-300 dark:bg-[#383E46] text-gray-600 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-600">
-                  ارسال
+                <Button
+                  type="submit"
+                  disabled={submittingNewsletter}
+                  className="bg-gray-300 dark:bg-[#383E46] text-gray-600 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-600 disabled:opacity-60"
+                >
+                  {submittingNewsletter ? "در حال ارسال..." : "ارسال"}
                 </Button>
               </div>
-            </div>
+            </form>
           </div>
 
           {/* Social Icons */}
@@ -239,7 +281,7 @@ export default function Footer() {
               <Link
                 key={index}
                 href={item.href}
-                className="hover:underline px-3 md:px-4 border-l border-gray-200 dark:border-gray-700 first:border-l-0 first:pl-0 hover:text-gray-900 dark:hover:text-white transition-colors text-[13px] md:text-sm"
+                className="hover:underline px-3 md:px-4 border-s border-gray-200 dark:border-gray-700 first:border-s-0 hover:text-gray-900 dark:hover:text-white transition-colors text-[13px] md:text-sm"
               >
                 {item.title}
               </Link>

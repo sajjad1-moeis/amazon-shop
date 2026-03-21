@@ -12,12 +12,12 @@ function ProductCardSkeleton({ className }) {
   return (
     <div
       className={cn(
-        "rounded-xl flex flex-col overflow-hidden bg-white dark:bg-dark-box h-full border border-gray-200 dark:border-dark-stroke shadow-[0px_2px_4px_0px_#0000001A]",
+        "flex h-full min-h-0 w-full flex-col self-stretch overflow-hidden rounded-xl border border-gray-200 bg-white shadow-[0px_2px_4px_0px_#0000001A] dark:border-dark-stroke dark:bg-dark-box",
         className,
       )}
     >
-      <Skeleton className="aspect-square flex-shrink-0 rounded-none rounded-t-xl w-full dark:bg-dark-bg" />
-      <div className="p-3 lg:p-4 flex flex-col gap-2.5 flex-grow">
+      <Skeleton className="aspect-square w-full flex-shrink-0 rounded-none rounded-t-xl dark:bg-dark-bg" />
+      <div className="flex min-h-0 flex-1 flex-col gap-2.5 p-3 lg:p-4">
         <Skeleton className="h-4 w-full rounded dark:bg-dark-bg" />
         <Skeleton className="h-4 w-2/3 rounded dark:bg-dark-bg" />
         <div className="flex items-center justify-between">

@@ -12,7 +12,7 @@ const navigationItems = [
   { id: "dashboard", label: "داشبورد", icon: Profile, href: "/dashboard" },
   { id: "favorites", label: "علاقه‌مندی", icon: Heart, href: "/dashboard/favorites" },
   { id: "cart", label: "سبد خرید", icon: ShoppingCart, href: "/cart" },
-  { id: "tracking", label: "پیگیری سفارش", icon: BoxTick, href: "/tracking" },
+  { id: "tracking", label: "سفارشات", icon: BoxTick, href: "/dashboard/orders" },
   // { id: "currency", label: "خدمات ارزی", icon: BitcoinConvert, href: "/currency-services" },
 ];
 
@@ -70,7 +70,7 @@ export default function BottomNavigation() {
               >
                 <span className="relative inline-flex">
                   <Icon
-                    className={cn("transition-all duration-300", isActive ? "text-blue-600" : "text-gray-500")}
+                    className={cn("transition-all duration-300 max-md:size-5", isActive ? "text-blue-600" : "text-gray-500")}
                     variant={isActive ? "Bold" : "Outline"}
                   />
                   {showCartBadge && (

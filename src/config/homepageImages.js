@@ -19,12 +19,12 @@ export const HOMEPAGE_IMAGES = {
   /** بنر اصلی هیرو (تک‌تصویر — در صورت عدم استفاده از اسلایدر) */
   heroBanner: "/image/Home/amazonBg.jpg",
 
-  /** بنرهای گرید ۴تایی — تخفیفات/دسته‌بندی (۱ تا ۴). هر آیتم: src و href (لینک مقصد). */
+  /** بنرهای گرید ۴تایی — لینک به جستجوی سایت (/products?search=…). چپ→راست: action figure، headphone، Air purifier، keychron */
   banners: [
-    { src: "/image/Home/banner1.png", href: "/products" },
-    { src: "/image/Home/banner2.png", href: "/products" },
-    { src: "/image/Home/banner3.png", href: "/products" },
-    { src: "/image/Home/banner4.png", href: "/products" },
+    { src: "/image/Home/banner1.png", href: "/products?search=action%20figure" },
+    { src: "/image/Home/banner2.png", href: "/products?search=headphone" },
+    { src: "/image/Home/banner3.png", href: "/products?search=Air%20purifier" },
+    { src: "/image/Home/banner4.png", href: "/products?search=keychron" },
   ],
 };
 

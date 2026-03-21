@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
-import { Heart, ShoppingCart } from "iconsax-reactjs";
+import React, { useState } from "react";
+import { Category2, Heart, ShoppingCart } from "iconsax-reactjs";
 import { HeadphonesIcon } from "lucide-react";
 import TopBar from "./Topbar";
 import Link from "next/link";
@@ -10,13 +10,16 @@ import BtnShowLoginModal from "../BtnShowLoginModal";
 import SwitchButton from "../SwitchButton";
 import DiscountAmazonButton from "../DiscountAmazonButton";
 import DrawerMobile from "./DrawerMobile";
+import MobileCategoriesMegaDrawer from "./MobileCategoriesMegaDrawer";
 import SearchDropdown from "./SearchDropdown";
+import { Button } from "../ui/button";
 import { useCartCount } from "@/contexts/CartCountContext";
 import { useCrispOnClick } from "./CrispChat";
 
 function Header() {
   const { cartCount } = useCartCount();
   const { loadAndOpen: openCrisp, loading: crispLoading } = useCrispOnClick();
+  const [mobileCategoriesOpen, setMobileCategoriesOpen] = useState(false);
 
   return (
     <header className="w-full ">
@@ -29,13 +32,13 @@ function Header() {
             aria-label="PayPal"
           >
             <Image alt="PayPal" src="/image/Header/paypal.png" width={65} height={48} />
-            <p className="dark:text-[#D4F4FF] text-info-200 font-thin text-sm hidden sm:inline">داری، کلیک کن</p>
+            <p className="dark:text-[#D4F4FF] text-info-200 font-thin text-sm max-sm:hidden">داری، کلیک کن</p>
           </Link>
-          <Link href={"/products"} className="flex-between gap-2">
-            <p className="dark:text-[#D4F4FF] text-info-200 font-thin text-sm max-lg:hidden">
+          <div className="flex-between gap-2 max-lg:hidden">
+            <p className="dark:text-[#D4F4FF] text-info-200 font-thin text-sm">
               تخفیف ویژه خرید اولی‌ها! تا ۵٪ هزینه خدمات کمتر برای اولین سفارش شما 🎁
             </p>
-          </Link>
+          </div>
           <button
             type="button"
             onClick={openCrisp}
@@ -63,8 +66,18 @@ function Header() {
       >
         <div className="max-md:flex-col flex-between  max-2xl:px-3 xl:container gap-2 md:gap-10  w-full">
           <div className="flex-between max-lg:mb-2 min-w-0 max-md:w-full">
-            <div className="flex-between min-w-0">
-              <DrawerMobile />
+            <div className="flex items-center min-w-0 sm:gap-2">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setMobileCategoriesOpen(true)}
+                className="shrink-0 rounded-xl p-1 text-white hover:bg-white/10 lg:hidden"
+                aria-label="دسته‌بندی محصولات"
+              >
+                <Category2 size={22} variant="Outline" className="sm:mr-1" />
+                <span className="hidden text-xs font-medium sm:inline">دسته‌بندی</span>
+              </Button>
+              <DrawerMobile onOpenCategoriesMega={() => setMobileCategoriesOpen(true)} />
               <Link
                 href="/"
                 className="flex-shrink-0 flex items-center min-w-[120px] md:min-w-[140px] lg:min-w-[170px]"
@@ -84,7 +97,7 @@ function Header() {
             <DiscountAmazonButton className={"md:hidden flex-shrink-0"} />
           </div>
           <SearchDropdown />
-          <div className="flex-between text-white gap-3 max-md:hidden">
+          <div className="flex-between gap-3 text-white max-md:hidden">
             <Link href={"/dashboard/favorites"}>
               <div className="p-3 rounded-lg border-2 dark:border-[#898989] dark:text-[#898989] border-white max-lg:hidden">
                 <Heart />
@@ -103,6 +116,7 @@ function Header() {
         </div>
       </div>
       <TopBar />
+      <MobileCategoriesMegaDrawer open={mobileCategoriesOpen} onOpenChange={setMobileCategoriesOpen} />
     </header>
   );
 }

@@ -71,7 +71,8 @@ const SelectContent = React.forwardRef(({ className, children, position = "poppe
         className={cn(
           "p-1",
           position === "popper" &&
-            "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"
+            /* min(…, max-content) تا در Safari/mac ارتفاع به اندازهٔ لیست باشد، نه فضای خالی زیر آیتم‌ها */
+            "h-auto min-h-0 w-full min-w-[var(--radix-select-trigger-width)] max-h-[min(20rem,max-content)] overflow-y-auto"
         )}
       >
         {children}

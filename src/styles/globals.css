@@ -99,16 +99,29 @@
   }
 }
 
+/* ارتفاع خودکار تا ردیف اسلایدها بر اساس بلندترین کارت تنظیم شود */
 .swiper {
   width: 100%;
-  height: 100%;
+  height: auto;
+}
+
+.swiper-wrapper {
+  align-items: stretch;
 }
 
 .swiper-slide {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
+  height: auto;
+  align-self: stretch;
   padding-bottom: 1px;
+}
+
+/* اسلایدهای تمام‌عرض (بنر و …) داخل اسلاید کشیده می‌شوند */
+.swiper-slide > * {
+  width: 100%;
+  min-height: 0;
 }
 
 .box-wrapper {
@@ -356,5 +369,19 @@ img {
   [class*="sticky"] {
     position: -webkit-sticky;
     position: sticky;
+  }
+}
+
+/**
+ * رادیکس + react-remove-scroll روی body مقدار overflow:hidden و گاهی padding-right می‌گذارند → پرش scrollbar و قفل اسکرول.
+ * با modal=false برای Dialog/Sheet این برای دیالوگ‌ها برطرف می‌شود؛ این قانون برای Select/Popover مودال و دراور پشتیبان است.
+ */
+@supports selector(:has(*)) {
+  body:has([role="dialog"][data-state="open"]),
+  body:has([role="listbox"][data-state="open"]),
+  body:has([data-vaul-drawer][data-state="open"]) {
+    overflow: auto !important;
+    padding-right: 0 !important;
+    margin-right: 0 !important;
   }
 }

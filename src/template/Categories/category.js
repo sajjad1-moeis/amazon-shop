@@ -1,26 +1,28 @@
 import React from "react";
-import Image from "next/image";
+import Link from "next/link";
+import { staticMainCategories } from "@/components/module/MegaMenu/megaMenuCategoryData";
+import { cn } from "@/lib/utils";
 
-export default function AmazonSection() {
+/** صفحه دسته‌بندی — نسخه استاتیک (بدون API) */
+export default function CategorySection() {
   return (
     <div className="">
-      <div className="w-full container relative">
-        <h2 className="text-gray-700 dark:text-dark-title text-lg md:text-3xl text-center mb-4 md:mb-8">دسته بندی </h2>
-      </div>
-      <div className="grid grid-cols-3 lg:grid-cols-4 gap-3 md:gap-8">
-        {[1, 2, 3, 5, 5, 5, 5, 8].map((i) => (
-          <div className="relative aspect-square max-md:h-32 w-full">
-            <Image
-              src="/image/Category/category1.png"
-              alt={`محصول بازدید شده شماره `}
-              fill
-              className=" rounded-md w-full"
-              priority={1}
-            />
-          </div>
-        ))}
-
-        {/* Product Slider Box */}
+      <div className="container relative w-full">
+        <h2 className="mb-4 text-center text-lg text-gray-700 dark:text-dark-title md:mb-8 md:text-3xl">دسته‌بندی</h2>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 md:gap-4">
+          {staticMainCategories.map((cat) => (
+            <Link
+              key={cat.href}
+              href={cat.href}
+              className={cn(
+                "rounded-xl border border-gray-200 bg-white p-4 text-center text-sm font-medium shadow-sm transition-colors",
+                "hover:border-primary-400 hover:text-primary-600 dark:border-dark-stroke dark:bg-dark-box dark:text-dark-titre dark:hover:border-primary-500"
+              )}
+            >
+              {cat.label}
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );

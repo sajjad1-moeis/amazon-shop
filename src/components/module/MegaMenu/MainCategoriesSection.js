@@ -2,24 +2,18 @@
 
 import React from "react";
 import Link from "next/link";
-import { Monitor, Shirt, Footprints, BookOpen, Car, Camera, Sofa } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { staticMainCategories } from "./megaMenuCategoryData";
 
-const mainCategories = [
-  { label: "کالای دیجیتال", href: "/categories/digital", icon: Monitor },
-  { label: "مد و پوشاک", href: "/categories/fashion", icon: Shirt },
-  { label: "ورزش و سفر", href: "/categories/sports", icon: Footprints },
-  { label: "کتاب، لوازم التحریر و هنر", href: "/categories/books", icon: BookOpen },
-  { label: "لوازم خودرو و موتور سیکلت", href: "/categories/automotive", icon: Car },
-  { label: "صوتی و تصویری", href: "/categories/audio-video", icon: Camera },
-  { label: "خانه و آشپزخانه", href: "/categories/home-kitchen", icon: Sofa },
-];
-
+/**
+ * @param {string} props.selectedCategory
+ * @param {function} props.onCategoryHover
+ */
 export default function MainCategoriesSection({ className, selectedCategory, onCategoryHover }) {
   return (
     <div className={cn("", className)} dir="rtl">
       <div className="space-y-2">
-        {mainCategories.map((category, index) => {
+        {staticMainCategories.map((category, index) => {
           const Icon = category.icon;
           const isSelected = selectedCategory === category.label;
           return (
@@ -30,7 +24,7 @@ export default function MainCategoriesSection({ className, selectedCategory, onC
                   "flex items-center gap-3 p-1 rounded-lg transition-colors group relative",
                   isSelected
                     ? "bg-primary-50 dark:bg-dark-blue border-r-2 border-primary-500 dark:border-primary-300"
-                    : "hover:bg-gray-50 dark:hover:bg-dark-field",
+                    : "hover:bg-gray-50 dark:hover:bg-dark-field"
                 )}
               >
                 <div
@@ -38,7 +32,7 @@ export default function MainCategoriesSection({ className, selectedCategory, onC
                     "flex-shrink-0 w-8 h-8 flex items-center justify-center transition-colors",
                     isSelected
                       ? "text-primary-600 dark:text-primary-300"
-                      : "text-gray-600 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400",
+                      : "text-gray-600 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400"
                   )}
                 >
                   <Icon size={20} />
@@ -48,7 +42,7 @@ export default function MainCategoriesSection({ className, selectedCategory, onC
                     "text-sm  transition-colors",
                     isSelected
                       ? "text-primary-600 dark:text-primary-300"
-                      : "text-gray-900 dark:text-dark-titre group-hover:text-primary-600 dark:group-hover:text-primary-400",
+                      : "text-gray-900 dark:text-dark-titre group-hover:text-primary-600 dark:group-hover:text-primary-400"
                   )}
                 >
                   {category.label}

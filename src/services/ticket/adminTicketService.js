@@ -132,9 +132,16 @@ export const adminTicketService = {
   // افزودن پیام از طرف پشتیبان (POST /api/AdminTicket/{ticketId}/AddMessage)
   addMessage: async (ticketId, { message, isInternal = false, attachmentUrl }) => {
     const client = getAuthenticatedClient();
+    const id = typeof ticketId === "string" ? ticketId.replace(/\/$/, "") : ticketId;
+    const idNum = parseInt(id, 10);
     return client
-      .post(`AdminTicket/${ticketId}/AddMessage`, {
-        json: { message, isInternal, attachmentUrl },
+      .post(`AdminTicket/${id}/AddMessage`, {
+        json: {
+          ticketId: Number.isNaN(idNum) ? id : idNum,
+          message,
+          isInternal,
+          attachmentUrl,
+        },
       })
       .json();
   },
@@ -142,9 +149,15 @@ export const adminTicketService = {
   // افزودن پیام از طرف ادمین (برای سازگاری با کد موجود)
   addAdminMessage: async (ticketId, message, isInternal = false) => {
     const client = getAuthenticatedClient();
+    const id = typeof ticketId === "string" ? ticketId.replace(/\/$/, "") : ticketId;
+    const idNum = parseInt(id, 10);
     return client
-      .post(`AdminTicket/${ticketId}/AddMessage`, {
-        json: { message, isInternal },
+      .post(`AdminTicket/${id}/AddMessage`, {
+        json: {
+          ticketId: Number.isNaN(idNum) ? id : idNum,
+          message,
+          isInternal,
+        },
       })
       .json();
   },
