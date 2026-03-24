@@ -55,25 +55,7 @@ function ExplosionOfferBox() {
     <div className="min-w-[150px] lg:min-w-[200px] rounded-xl p-4 flex justify-center items-center text-center max-md:hidden">
       <div>
         <div className="flex items-center justify-center relative">
-          {/* فقط یک نیم‌دایره — طبق زمان باقی‌مانده کم و زیاد می‌شود (بدون دایرهٔ دوم) */}
-          <svg className="absolute inset-0 w-[135px] h-[105px]" viewBox="0 0 135 105" style={{ transform: "rotate(-90deg)" }}>
-            <path
-              d={`M ${67.5 + radius} 52.5 A ${radius} ${radius} 0 0 0 ${67.5 - radius} 52.5`}
-              fill="none"
-              stroke="url(#explosionSemiGradient)"
-              strokeWidth="6"
-              strokeLinecap="round"
-              strokeDasharray={halfCircleLength}
-              strokeDashoffset={strokeDashoffset}
-              className="transition-[stroke-dashoffset] duration-1000 ease-linear"
-            />
-            <defs>
-              <linearGradient id="explosionSemiGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#FF9900" />
-                <stop offset="100%" stopColor="#F05252" />
-              </linearGradient>
-            </defs>
-          </svg>
+   
           {/* آیکون ساعت — خاکستری (پس‌زمینه) + نارنجی. نیم‌دایرهٔ نارنجی که خط کشیدی همون بالاست که کم و زیاد می‌شود */}
           <div className="relative z-10">
             <svg width="135" height="105" viewBox="0 0 135 105" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-sm">

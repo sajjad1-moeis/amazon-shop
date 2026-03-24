@@ -291,7 +291,7 @@ export default function Footer() {
           {/* کپی‌رایت — ردیف پایین جدا */}
           <div className="pt-4 pb-8 border-t border-gray-100 dark:border-gray-800">
             <p className="text-center text-[12px] md:text-xs text-neutral-400 dark:text-gray-500">
-              تمامی حقوق این وب‌سایت متعلق به میکرولس می‌باشد.
+              کلیه حقوق این وب‌سایت برای میکرولس محفوظ است. © 2026
             </p>
           </div>
         </section>
