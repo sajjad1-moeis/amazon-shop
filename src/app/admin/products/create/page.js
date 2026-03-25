@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,6 +14,7 @@ import { productService } from "@/services/product/productService";
 import { productCategoryService } from "@/services/product/productCategoryService";
 import { productBrandService } from "@/services/product/productBrandService";
 import { Spinner } from "@/components/ui/spinner";
+import { unwrapApiData } from "@/services/api/client";
 
 export default function CreateProductPage() {
   const router = useRouter();
@@ -26,6 +27,8 @@ export default function CreateProductPage() {
     englishName: "",
     categoryId: "",
     brandId: "",
+    amazonUrl: "",
+    amazonASIN: "",
     price: "",
     discountPrice: "",
     stock: "",
@@ -36,6 +39,10 @@ export default function CreateProductPage() {
     inStock: true,
   });
 
+  const imageInputRef = useRef(null);
+  const [mainImageFile, setMainImageFile] = useState(null);
+  const [mainImagePreview, setMainImagePreview] = useState("");
+
   useEffect(() => {
     fetchFilters();
   }, []);
@@ -43,17 +50,30 @@ export default function CreateProductPage() {
   const fetchFilters = async () => {
     try {
       setLoadingFilters(true);
+      // برای برندها از همون متد صفحه لیست برندها استفاده می‌کنیم چون GetAll endpoint شما NotFound می‌دهد.
       const [categoriesRes, brandsRes] = await Promise.all([
         productCategoryService.getAll(),
-        productBrandService.getAll(),
+        productBrandService.getPaginated({
+          pageNumber: 1,
+          pageSize: 9999,
+          searchTerm: undefined,
+          isActive: undefined,
+        }),
       ]);
 
-      if (categoriesRes.success && categoriesRes.data) {
-        setCategories(categoriesRes.data || []);
-      }
-      if (brandsRes.success && brandsRes.data) {
-        setBrands(brandsRes.data || []);
-      }
+      const normalizeList = (res, keys = []) => {
+        if (Array.isArray(res)) return res;
+        if (Array.isArray(res?.data)) return res.data;
+        for (const k of keys) {
+          const v = res?.data?.[k] ?? res?.[k];
+          if (Array.isArray(v)) return v;
+        }
+        return [];
+      };
+
+      setCategories(normalizeList(categoriesRes, ["categories", "items", "list"]));
+      const brandsPayload = unwrapApiData(brandsRes);
+      setBrands(Array.isArray(brandsPayload?.brands) ? brandsPayload.brands : []);
     } catch (error) {
       toast.error("خطا در دریافت فیلترها");
       console.error("Error fetching filters:", error);
@@ -78,7 +98,15 @@ export default function CreateProductPage() {
     e.preventDefault();
     setLoading(true);
 
-    if (!formData.name || !formData.categoryId || !formData.brandId || !formData.price || !formData.stock) {
+    if (
+      !formData.name ||
+      !formData.categoryId ||
+      !formData.brandId ||
+      !formData.amazonUrl ||
+      !formData.amazonASIN ||
+      !formData.price ||
+      !formData.stock
+    ) {
       toast.error("لطفاً تمام فیلدهای الزامی را پر کنید");
       setLoading(false);
       return;
@@ -86,10 +114,15 @@ export default function CreateProductPage() {
 
     try {
       const payload = {
+        title: formData.name,
         name: formData.name,
         englishName: formData.englishName || undefined,
         categoryId: parseInt(formData.categoryId),
         brandId: parseInt(formData.brandId),
+        amazonUrl: formData.amazonUrl,
+        amazonLink: formData.amazonUrl,
+        AmazonASIN: formData.amazonASIN,
+        amazonASIN: formData.amazonASIN,
         price: parseFloat(formData.price),
         discountPrice: formData.discountPrice ? parseFloat(formData.discountPrice) : undefined,
         stock: parseInt(formData.stock),
@@ -103,6 +136,16 @@ export default function CreateProductPage() {
       const response = await productService.create(payload);
 
       if (response.success) {
+        const createdId = response?.data?.id ?? response?.id ?? response?.data?.productId;
+        if (createdId != null && mainImageFile instanceof File) {
+          try {
+            await productService.uploadMainImage(parseInt(createdId, 10), mainImageFile);
+          } catch (err) {
+            toast.error("محصول ایجاد شد ولی آپلود عکس با خطا مواجه شد");
+            console.error("Error uploading main image:", err);
+          }
+        }
+
         toast.success("محصول با موفقیت ایجاد شد");
         router.push("/admin/products/list");
       } else {
@@ -190,8 +233,8 @@ export default function CreateProductPage() {
                     </SelectTrigger>
                     <SelectContent className="bg-gray-800 border-gray-700">
                       {categories.map((cat) => (
-                        <SelectItem key={cat.id} value={cat.id.toString()}>
-                          {cat.name}
+                        <SelectItem key={cat.id ?? cat.categoryId} value={String(cat.id ?? cat.categoryId)}>
+                          {cat.name ?? cat.title ?? cat.categoryName ?? `دسته ${cat.id ?? cat.categoryId}`}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -208,12 +251,42 @@ export default function CreateProductPage() {
                     </SelectTrigger>
                     <SelectContent className="bg-gray-800 border-gray-700">
                       {brands.map((brand) => (
-                        <SelectItem key={brand.id} value={brand.id.toString()}>
-                          {brand.name}
+                        <SelectItem key={brand.id ?? brand.brandId} value={String(brand.id ?? brand.brandId)}>
+                          {brand.name ?? brand.title ?? brand.brandName ?? `برند ${brand.id ?? brand.brandId}`}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="amazonUrl" className={labelClass}>
+                    لینک آمازون <span className="text-red-400/90">*</span>
+                  </Label>
+                  <Input
+                    id="amazonUrl"
+                    name="amazonUrl"
+                    value={formData.amazonUrl}
+                    onChange={handleChange}
+                    placeholder="https://www.amazon.ae/.../dp/ASIN"
+                    className={inputClass}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="amazonASIN" className={labelClass}>
+                    AmazonASIN <span className="text-red-400/90">*</span>
+                  </Label>
+                  <Input
+                    id="amazonASIN"
+                    name="amazonASIN"
+                    value={formData.amazonASIN}
+                    onChange={handleChange}
+                    placeholder="مثال: B0CHWRXH8B"
+                    className={inputClass}
+                    required
+                  />
                 </div>
 
                 <div className="space-y-2">
@@ -316,6 +389,60 @@ export default function CreateProductPage() {
                   className={inputClass + " min-h-[140px] resize-none py-3"}
                   rows={5}
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label className={labelClass} htmlFor="product-main-image">
+                  عکس محصول
+                </Label>
+                <input
+                  ref={imageInputRef}
+                  id="product-main-image"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] || null;
+                    setMainImageFile(file);
+                    if (mainImagePreview?.startsWith("blob:")) URL.revokeObjectURL(mainImagePreview);
+                    setMainImagePreview(file ? URL.createObjectURL(file) : "");
+                  }}
+                />
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    className={inputClass + " cursor-pointer w-full flex items-center justify-between px-4"}
+                    onClick={() => imageInputRef.current?.click()}
+                  >
+                    <span className="text-gray-400">{mainImageFile ? mainImageFile.name : "انتخاب فایل تصویر"}</span>
+                    <span className="text-gray-500">آپلود</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="h-11 px-5 rounded-xl bg-gray-800/60 border border-gray-700/60 text-red-400 hover:text-red-500 hover:bg-gray-800/80 transition-colors disabled:opacity-50 disabled:pointer-events-none"
+                    disabled={!mainImageFile}
+                    onClick={() => {
+                      if (imageInputRef.current) imageInputRef.current.value = "";
+                      if (mainImagePreview?.startsWith("blob:")) URL.revokeObjectURL(mainImagePreview);
+                      setMainImageFile(null);
+                      setMainImagePreview("");
+                    }}
+                  >
+                    حذف
+                  </button>
+                </div>
+
+                {mainImagePreview ? (
+                  <div className="pt-3 flex items-center justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={mainImagePreview}
+                      alt="Preview"
+                      className="w-40 h-40 object-cover rounded-xl border border-gray-700/60 bg-gray-900/30"
+                    />
+                  </div>
+                ) : null}
               </div>
 
               <div className="flex items-center gap-3 pt-2 border-t border-gray-700/60">
