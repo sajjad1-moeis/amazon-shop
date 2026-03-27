@@ -20,7 +20,7 @@ import SliderNavButton from "@/components/SliderNavButton";
  */
 const FLASH_SALE_HOURS_LEFT = 24;
 
-function ExplosionOfferBox() {
+export function ExplosionOfferBox() {
   const endTime = useMemo(
     () => Date.now() + FLASH_SALE_HOURS_LEFT * 60 * 60 * 1000,
     []

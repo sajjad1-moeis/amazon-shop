@@ -1,5 +1,5 @@
 import IndexLayout from "@/layout/IndexLayout";
-import OutletPageClient from "@/template/Outlet/OutletPageClient";
+import OutletDealsPageClient from "@/template/Outlet/OutletDealsPageClient";
 
 export const metadata = {
   title: "حراجی آمازون | اوتلت میکرولس",
@@ -9,7 +9,7 @@ export const metadata = {
 export default function OutletPage() {
   return (
     <IndexLayout>
-      <OutletPageClient />
+      <OutletDealsPageClient activeTab="outlet" />
     </IndexLayout>
   );
 }
