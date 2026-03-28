@@ -22,11 +22,18 @@ function loadCrispSdk() {
 }
 
 export async function openCrispSupport() {
-  const { Crisp, ChatboxPosition } = await loadCrispSdk();
+  const { Crisp } = await loadCrispSdk();
   if (!crispConfigured) {
     Crisp.configure(CRISP_WEBSITE_ID, { autoload: false });
-    Crisp.setPosition(ChatboxPosition.Left);
+    // setPosition در crisp-sdk-web با $crisp (بدون window) در ESM خطا می‌دهد؛ همان config را مستقیم می‌فرستیم.
     crispConfigured = true;
   }
+  if (!Crisp.isCrispInjected()) {
+    Crisp.load();
+  }
+  if (typeof window !== "undefined" && Array.isArray(window.$crisp)) {
+    window.$crisp.push(["config", "position:reverse", [true]]);
+  }
+  Crisp.chat.show();
   Crisp.chat.open();
 }

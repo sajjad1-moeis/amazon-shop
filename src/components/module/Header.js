@@ -23,7 +23,9 @@ function Header() {
     setCrispLoading(true);
     import("@/lib/openCrispSupport")
       .then((m) => m.openCrispSupport())
-      .catch(() => {})
+      .catch((err) => {
+        console.error("[Crisp]", err);
+      })
       .finally(() => setCrispLoading(false));
   }, []);
 
