@@ -10,6 +10,24 @@ const CRISP_WEBSITE_ID =
 
 let crispSdkPromise = null;
 let crispConfigured = false;
+let crispCloseHandlerBound = false;
+
+function markCrispAllowedFromHeader() {
+  if (typeof document !== "undefined") {
+    document.documentElement.setAttribute("data-crisp-from-header", "");
+  }
+}
+
+function bindCrispCloseHidesWidget(Crisp) {
+  if (crispCloseHandlerBound || typeof window === "undefined") return;
+  crispCloseHandlerBound = true;
+  Crisp.chat.onChatClosed(() => {
+    document.documentElement.removeAttribute("data-crisp-from-header");
+    if (Array.isArray(window.$crisp)) {
+      window.$crisp.push(["do", "chat:hide"]);
+    }
+  });
+}
 
 function loadCrispSdk() {
   if (!crispSdkPromise) {
@@ -22,6 +40,7 @@ function loadCrispSdk() {
 }
 
 export async function openCrispSupport() {
+  markCrispAllowedFromHeader();
   const { Crisp } = await loadCrispSdk();
   if (!crispConfigured) {
     Crisp.configure(CRISP_WEBSITE_ID, { autoload: false });
@@ -36,4 +55,5 @@ export async function openCrispSupport() {
   }
   Crisp.chat.show();
   Crisp.chat.open();
+  bindCrispCloseHidesWidget(Crisp);
 }

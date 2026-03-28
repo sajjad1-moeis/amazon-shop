@@ -386,8 +386,13 @@ img {
   }
 }
 
-/* Crisp: پنهان‌کردن آیکن شناور پیش‌فرض؛ باز کردن فقط از هدر (بعد از لود اسکریپت Crisp ممکن است دوباره ظاهر شود). */
-.crisp-client [aria-label="Open chat"] {
-  display: none !important;
+/*
+ * Crisp: تا وقتی کاربر «پشتیبانی ۲۴ ساعته» را نزده، کل ویجت مخفی است (بدون آیکن/حباب).
+ * با کلیک، data-crisp-from-header روی <html> می‌آید؛ با بستن چت در openCrispSupport دوباره برداشته می‌شود.
+ */
+html:not([data-crisp-from-header]) .crisp-client,
+html:not([data-crisp-from-header]) #crisp-chatbox {
+  visibility: hidden !important;
+  opacity: 0 !important;
   pointer-events: none !important;
 }
