@@ -1,6 +1,10 @@
 /**
- * فقط از onClick دکمهٔ «پشتیبانی ۲۴ ساعته» صدا زده شود.
- * بدون prefetch/preconnect: هیچ درخواست خارجی و هیچ import به crisp-sdk-web تا قبل از همان کلیک اجرا نمی‌شود.
+ * Crisp فقط بعد از کلیک دکمهٔ «پشتیبانی ۲۴ ساعته»:
+ * - هیچ import استاتیک به crisp-sdk-web در باندل اولیه نیست.
+ * - از layout/head هیچ اسکریپت Crisp تزریق نمی‌شود.
+ *
+ * از هدر با Promise.all دو chunk (این فایل + crisp-sdk-web) هم‌زمان fetch می‌شوند
+ * تا به‌جای دو مرحلهٔ متوالی، یک راند تأخیر شبکه کمتر شود.
  */
 
 const CRISP_WEBSITE_ID =
@@ -8,7 +12,6 @@ const CRISP_WEBSITE_ID =
     ? process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID
     : "4e13846e-a58b-4f6c-a145-36c3d851cfc0";
 
-let crispSdkPromise = null;
 let crispConfigured = false;
 let crispCloseHandlerBound = false;
 let crispOutsidePointerBound = false;
@@ -63,22 +66,12 @@ function bindCrispOutsideClose(Crisp) {
   );
 }
 
-function loadCrispSdk() {
-  if (!crispSdkPromise) {
-    crispSdkPromise = import(
-      /* webpackChunkName: "crisp-sdk-web" */
-      "crisp-sdk-web"
-    );
-  }
-  return crispSdkPromise;
-}
-
-export async function openCrispSupport() {
+/** Crisp را از `import("crisp-sdk-web")` بدهید؛ فقط بعد از کلیک کاربر. */
+export function runCrispOpen(Crisp) {
   markCrispAllowedFromHeader();
-  const { Crisp } = await loadCrispSdk();
   if (!crispConfigured) {
     Crisp.configure(CRISP_WEBSITE_ID, { autoload: false });
-    // setPosition در crisp-sdk-web با $crisp (بدون window) در ESM خطا می‌دهد؛ همان config را مستقیم می‌فرستیم.
+    // setPosition در crisp-sdk-web با $crisp (بدون window) در ESM خطا می‌دهد.
     crispConfigured = true;
   }
   if (!Crisp.isCrispInjected()) {

@@ -388,7 +388,7 @@ img {
 
 /*
  * Crisp: تا وقتی کاربر «پشتیبانی ۲۴ ساعته» را نزده، کل ویجت مخفی است (بدون آیکن/حباب).
- * با کلیک، data-crisp-from-header روی <html> می‌آید؛ با بستن چت در openCrispSupport دوباره برداشته می‌شود.
+ * با کلیک، data-crisp-from-header روی <html> می‌آید؛ با بستن چت در runCrispOpen دوباره برداشته می‌شود.
  */
 html:not([data-crisp-from-header]) .crisp-client,
 html:not([data-crisp-from-header]) #crisp-chatbox {

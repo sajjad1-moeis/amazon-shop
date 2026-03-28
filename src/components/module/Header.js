@@ -20,12 +20,11 @@ function Header() {
   const [crispLoading, setCrispLoading] = useState(false);
 
   const openCrisp = useCallback(() => {
-    if (typeof document !== "undefined") {
-      document.documentElement.setAttribute("data-crisp-from-header", "");
-    }
     setCrispLoading(true);
-    import("@/lib/openCrispSupport")
-      .then((m) => m.openCrispSupport())
+    Promise.all([import("crisp-sdk-web"), import("@/lib/openCrispSupport")])
+      .then(([{ Crisp }, { runCrispOpen }]) => {
+        runCrispOpen(Crisp);
+      })
       .catch((err) => {
         console.error("[Crisp]", err);
         if (typeof document !== "undefined") {
