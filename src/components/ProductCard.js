@@ -306,16 +306,16 @@ function ProductCard({ className, product, badges }) {
   };
 
   return (
-    <div className="group relative h-full w-full">
+    <div className="group relative flex h-full min-h-0 w-full flex-col self-stretch">
       <Link
         href={`/product/${hrefId}`}
         onClick={handleProductClick}
         onMouseEnter={handleMouseEnter}
-        className="block h-full"
+        className="flex h-full min-h-0 flex-1 flex-col focus:outline-none"
       >
         <div
           className={cn(
-            "shadow-box rounded-xl overflow-hidden flex flex-col cursor-pointer transition-all duration-200 bg-white dark:bg-dark-box h-full",
+            "shadow-box rounded-xl overflow-hidden flex min-h-0 flex-1 flex-col cursor-pointer transition-all duration-200 bg-white dark:bg-dark-box",
             "hover:shadow-lg hover:ring-2 hover:ring-primary-500/30 hover:border-primary-500/50",
             className || "border border-gray-200 dark:border-dark-stroke",
           )}
@@ -373,8 +373,8 @@ function ProductCard({ className, product, badges }) {
             )}
           </div>
 
-          {/* Product Info */}
-          <div className="p-3 lg:p-4 dark:text-dark-titre flex flex-col gap-2.5 flex-grow">
+          {/* Product Info — flex-1 تا فضای باقی‌مانده پر شود و قیمت با mt-auto به پایین بچسبد */}
+          <div className="flex min-h-0 flex-1 flex-col gap-2.5 p-3 lg:p-4 dark:text-dark-titre">
             {/* Product Name */}
             <p className="font-medium text-right leading-6 max-lg:text-sm text-gray-900 dark:text-dark-titre line-clamp-2 ">
               {title}

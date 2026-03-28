@@ -126,8 +126,8 @@ export default function TicketDetailPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
+    <div className="w-full min-w-0 space-y-6">
+      <div className="w-full min-w-0">
         <TicketDetailHeader
           ticket={ticket}
           updating={updating}

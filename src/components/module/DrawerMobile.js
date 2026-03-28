@@ -32,7 +32,7 @@ const menuItems = [
   { title: "پی‌پال", href: "/paypal-cashout", icon: Wallet3 },
   { title: "محصولات", href: "/products", icon: ShoppingBag },
   { title: "تخفیف‌های آمازون", href: "/outlet", icon: TicketDiscount },
-  { title: "دسته‌بندی‌ها", href: "/categories", icon: Category2 },
+  { title: "دسته‌بندی‌ها", href: "/categories", icon: Category2, openCategoriesSheet: true },
   { title: "داشبورد", href: "/dashboard", icon: Element4 },
   { title: "گیفت کارت", href: "/gift-cart", icon: Gift },
   { title: "خدمات ارزی", href: "/currency-services", icon: DollarCircle },
@@ -51,7 +51,7 @@ const menuItems = [
   { title: "خرید از ایکیا", href: "/shops/ikea", icon: ShoppingCart },
 ];
 
-export default function DrawerMobile() {
+export default function DrawerMobile({ onOpenCategoriesMega }) {
   const [sheetOpen, setSheetOpen] = useState(false);
   const pathname = usePathname();
 
@@ -60,7 +60,17 @@ export default function DrawerMobile() {
     return pathname === href || pathname.startsWith(href + "/");
   };
 
+  const handleItemClick = (item) => {
+    if (item.openCategoriesSheet) {
+      setSheetOpen(false);
+      onOpenCategoriesMega?.();
+      return;
+    }
+    setSheetOpen(false);
+  };
+
   return (
+    <>
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger asChild>
         <Button
@@ -92,21 +102,36 @@ export default function DrawerMobile() {
             {menuItems.map((item) => {
               const active = isActive(item.href);
               const Icon = item.icon;
+              const isCategories = !!item.openCategoriesSheet;
               return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    onClick={() => setSheetOpen(false)}
-                    className={cn(
-                      "flex items-center gap-3 w-full py-2.5 px-3 rounded-lg text-sm font-medium transition-colors",
-                      active
-                        ? "bg-primary-500/15 text-primary-700 dark:bg-primary-500/20 dark:text-primary-300"
-                        : "text-gray-700 dark:text-dark-titre hover:bg-gray-100 dark:hover:bg-dark-field"
-                    )}
-                  >
-                    <Icon size={20} className={cn("shrink-0", active ? "text-primary-600 dark:text-primary-400" : "text-gray-500 dark:text-gray-400")} />
-                    <span>{item.title}</span>
-                  </Link>
+                <li key={item.href + (isCategories ? "-cat" : "")}>
+                  {isCategories ? (
+                    <button
+                      type="button"
+                      onClick={() => handleItemClick(item)}
+                      className={cn(
+                        "flex items-center gap-3 w-full py-2.5 px-3 rounded-lg text-sm font-medium transition-colors text-right",
+                        "text-gray-700 dark:text-dark-titre hover:bg-gray-100 dark:hover:bg-dark-field"
+                      )}
+                    >
+                      <Icon size={20} className="shrink-0 text-gray-500 dark:text-gray-400" />
+                      <span>{item.title}</span>
+                    </button>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      onClick={() => setSheetOpen(false)}
+                      className={cn(
+                        "flex items-center gap-3 w-full py-2.5 px-3 rounded-lg text-sm font-medium transition-colors",
+                        active
+                          ? "bg-primary-500/15 text-primary-700 dark:bg-primary-500/20 dark:text-primary-300"
+                          : "text-gray-700 dark:text-dark-titre hover:bg-gray-100 dark:hover:bg-dark-field"
+                      )}
+                    >
+                      <Icon size={20} className={cn("shrink-0", active ? "text-primary-600 dark:text-primary-400" : "text-gray-500 dark:text-gray-400")} />
+                      <span>{item.title}</span>
+                    </Link>
+                  )}
                 </li>
               );
             })}
@@ -114,5 +139,6 @@ export default function DrawerMobile() {
         </nav>
       </SheetContent>
     </Sheet>
+    </>
   );
 }
