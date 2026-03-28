@@ -285,7 +285,7 @@ export const productService = {
     const client = getAuthenticatedClient();
     const formData = new FormData();
     formData.append("file", file);
-    return client.post(`Product/UploadMainImage?productId=${productId}`, { body: formData }).json();
+    return client.post(`Product/UploadMainImage?id=${productId}`, { body: formData }).json();
   },
 
   uploadProductImages: async (productId, files) => {
@@ -298,12 +298,12 @@ export const productService = {
     } else {
       formData.append("files", files);
     }
-    return client.post(`Product/UploadProductImages?productId=${productId}`, { body: formData }).json();
+    return client.post(`Product/UploadProductImages?id=${productId}`, { body: formData }).json();
   },
 
   deleteProductImage: async (productId, imageIndex) => {
     const client = getAuthenticatedClient();
-    return client.delete(`Product/DeleteProductImage?productId=${productId}&imageIndex=${imageIndex}`).json();
+    return client.delete(`Product/DeleteProductImage?id=${productId}&imageIndex=${imageIndex}`).json();
   },
 
   getStatistics: async () => {
