@@ -14,8 +14,10 @@ export default function LayoutShell({ children }) {
   const pathname = usePathname() ?? "";
   const isDashboard = pathname.startsWith("/dashboard");
   const isAdmin = pathname.startsWith("/admin");
+  /** صفحهٔ خدمات ارزی قالب مخصوص (ServicesHeader) دارد؛ هدر/فوتر اصلی سایت تکراری می‌شود */
+  const isCurrencyServicesPublic = pathname === "/currency-services" || pathname.startsWith("/currency-services/");
 
-  if (isDashboard || isAdmin) {
+  if (isDashboard || isAdmin || isCurrencyServicesPublic) {
     return <>{children}</>;
   }
 

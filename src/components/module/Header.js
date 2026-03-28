@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Category2, Heart, ShoppingCart } from "iconsax-reactjs";
 import { HeadphonesIcon } from "lucide-react";
 import TopBar from "./Topbar";
@@ -14,12 +14,18 @@ import MobileCategoriesMegaDrawer from "./MobileCategoriesMegaDrawer";
 import SearchDropdown from "./SearchDropdown";
 import { Button } from "../ui/button";
 import { useCartCount } from "@/contexts/CartCountContext";
-import { useCrispOnClick } from "./CrispChat";
-
 function Header() {
   const { cartCount } = useCartCount();
-  const { loadAndOpen: openCrisp, loading: crispLoading } = useCrispOnClick();
   const [mobileCategoriesOpen, setMobileCategoriesOpen] = useState(false);
+  const [crispLoading, setCrispLoading] = useState(false);
+
+  const openCrisp = useCallback(() => {
+    setCrispLoading(true);
+    import("@/lib/openCrispSupport")
+      .then((m) => m.openCrispSupport())
+      .catch(() => {})
+      .finally(() => setCrispLoading(false));
+  }, []);
 
   return (
     <header className="w-full ">
