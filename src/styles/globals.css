@@ -385,3 +385,9 @@ img {
     margin-right: 0 !important;
   }
 }
+
+/* Crisp: پنهان‌کردن آیکن شناور پیش‌فرض؛ باز کردن فقط از هدر (بعد از لود اسکریپت Crisp ممکن است دوباره ظاهر شود). */
+.crisp-client [aria-label="Open chat"] {
+  display: none !important;
+  pointer-events: none !important;
+}

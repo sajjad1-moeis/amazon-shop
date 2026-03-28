@@ -1,7 +1,6 @@
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Providers from "@/components/Providers";
-import CrispChat from "@/components/module/CrispChat";
 import LayoutShell from "@/components/LayoutShell";
 import localFont from "next/font/local";
 import "../styles/globals.css";
@@ -43,7 +42,6 @@ export default function RootLayout({ children }) {
                 <LayoutShell>{children}</LayoutShell>
               </main>
             <Toaster dir="rtl" position="top-right" richColors className={iranSans.variable} />
-            <CrispChat />
             </AuthProvider>
           </Providers>
         </ThemeProvider>

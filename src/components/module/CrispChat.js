@@ -1,66 +1,43 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 const CRISP_WEBSITE_ID =
   typeof process !== "undefined" && process.env?.NEXT_PUBLIC_CRISP_WEBSITE_ID
     ? process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID
     : "4e13846e-a58b-4f6c-a145-36c3d851cfc0";
 
-let crispInitPromise = null;
+let crispModulePromise = null;
 
-function ensureCrisp() {
-  if (!crispInitPromise) {
-    crispInitPromise = import("crisp-sdk-web")
-      .then(({ Crisp, ChatboxPosition }) => {
-        Crisp.configure(CRISP_WEBSITE_ID);
-        Crisp.setPosition(ChatboxPosition.Left);
-        return Crisp;
-      })
-      .catch((err) => {
-        crispInitPromise = null;
-        throw err;
-      });
+function getCrispModule() {
+  if (!crispModulePromise) {
+    crispModulePromise = import("crisp-sdk-web");
   }
-  return crispInitPromise;
+  return crispModulePromise;
 }
 
 /**
- * برای دکمهٔ «پشتیبانی» در هدر: بعد از لود SDK، چت را باز می‌کند.
+ * Crisp فقط با کلیک «پشتیبانی ۲۴ ساعته» در هدر لود می‌شود (بدون درخواست به crisp.chat در لود اولیهٔ صفحه).
  */
 export function useCrispOnClick() {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let cancelled = false;
-    ensureCrisp()
-      .catch(() => {})
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const [loading, setLoading] = useState(false);
 
   const loadAndOpen = useCallback(() => {
-    ensureCrisp()
-      .then((Crisp) => {
+    setLoading(true);
+    getCrispModule()
+      .then(({ Crisp, ChatboxPosition }) => {
+        Crisp.configure(CRISP_WEBSITE_ID, { autoload: false });
+        Crisp.setPosition(ChatboxPosition.Left);
         Crisp.chat.open();
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   return { loadAndOpen, loading };
 }
 
-/**
- * ویجت چت Crisp — آیکون و چت پیش‌فرض Crisp در سمت چپ صفحه.
- */
+/** عمداً خالی: ویجت پیش‌فرض Crisp در layout رندر نمی‌شود تا اسکریپت خارجی در لود اول نیاید. */
 export default function CrispChat() {
-  useEffect(() => {
-    ensureCrisp().catch(() => {});
-  }, []);
-
   return null;
 }
