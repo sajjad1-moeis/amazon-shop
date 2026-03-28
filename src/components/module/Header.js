@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Category2, Heart, ShoppingCart } from "iconsax-reactjs";
 import { HeadphonesIcon } from "lucide-react";
 import TopBar from "./Topbar";
@@ -18,28 +18,6 @@ function Header() {
   const { cartCount } = useCartCount();
   const [mobileCategoriesOpen, setMobileCategoriesOpen] = useState(false);
   const [crispLoading, setCrispLoading] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    let done = false;
-    const warm = () => {
-      if (done) return;
-      done = true;
-      window.removeEventListener("mousemove", warm);
-      window.removeEventListener("scroll", warm);
-      import("@/lib/openCrispSupport").then((m) => m.prefetchCrispAssets());
-    };
-    window.addEventListener("mousemove", warm, { passive: true });
-    window.addEventListener("scroll", warm, { passive: true });
-    return () => {
-      window.removeEventListener("mousemove", warm);
-      window.removeEventListener("scroll", warm);
-    };
-  }, []);
-
-  const warmCrispAssets = useCallback(() => {
-    import("@/lib/openCrispSupport").then((m) => m.prefetchCrispAssets());
-  }, []);
 
   const openCrisp = useCallback(() => {
     if (typeof document !== "undefined") {
@@ -79,8 +57,6 @@ function Header() {
             type="button"
             data-crisp-support-trigger
             onClick={openCrisp}
-            onMouseEnter={warmCrispAssets}
-            onFocus={warmCrispAssets}
             disabled={crispLoading}
             className="flex-between gap-2 max-lg:hidden hover:opacity-90 transition-opacity disabled:opacity-70"
             aria-label="پشتیبانی 24 ساعته"

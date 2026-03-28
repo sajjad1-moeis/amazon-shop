@@ -1,15 +1,12 @@
 /**
  * فقط از onClick دکمهٔ «پشتیبانی ۲۴ ساعته» صدا زده شود.
- * هیچ import استاتیکی به crisp-sdk-web در باندل هدر/لایوت نیست؛ تا کلیک، اسکریپت و CDN Crisp لود نمی‌شوند.
+ * بدون prefetch/preconnect: هیچ درخواست خارجی و هیچ import به crisp-sdk-web تا قبل از همان کلیک اجرا نمی‌شود.
  */
 
 const CRISP_WEBSITE_ID =
   typeof process !== "undefined" && process.env?.NEXT_PUBLIC_CRISP_WEBSITE_ID
     ? process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID
     : "4e13846e-a58b-4f6c-a145-36c3d851cfc0";
-
-const CRISP_CLIENT_ORIGIN = "https://client.crisp.chat";
-const CRISP_CLIENT_SCRIPT = `${CRISP_CLIENT_ORIGIN}/l.js`;
 
 let crispSdkPromise = null;
 let crispConfigured = false;
@@ -64,25 +61,6 @@ function bindCrispOutsideClose(Crisp) {
     },
     true
   );
-}
-
-/** بدون باز کردن ویجت: chunk SDK + DNS/اسکریپت Crisp را از قبل آماده می‌کند (hover یا اولین تعامل). */
-export function prefetchCrispAssets() {
-  if (typeof document === "undefined") return;
-  loadCrispSdk();
-  if (document.head.querySelector('link[data-crisp-asset-warm="1"]')) return;
-  const pre = document.createElement("link");
-  pre.rel = "preconnect";
-  pre.href = CRISP_CLIENT_ORIGIN;
-  pre.crossOrigin = "anonymous";
-  pre.setAttribute("data-crisp-asset-warm", "1");
-  document.head.appendChild(pre);
-  const pf = document.createElement("link");
-  pf.rel = "prefetch";
-  pf.as = "script";
-  pf.href = CRISP_CLIENT_SCRIPT;
-  pf.setAttribute("data-crisp-asset-warm", "1");
-  document.head.appendChild(pf);
 }
 
 function loadCrispSdk() {
