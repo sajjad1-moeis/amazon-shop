@@ -50,7 +50,7 @@
 
 - [ ] `/admin/blog/list`
 - [ ] `/admin/contact-us`
-- [ ] `/admin/content/banners` — لیست، ایجاد بنر (آپلود)، ویرایش متادیتا و تعویض تصویر (`Banner/UploadImage`)
+- [ ] `/admin/content/banners` — لیست، ایجاد بنر (آپلود)، ویرایش متادیتا و تعویض اختیاری تصویر (`Banner/UploadImage`) و تعویض تصویر (`Banner/UploadImage`)
 
 ## امنیت و عملیات
 
