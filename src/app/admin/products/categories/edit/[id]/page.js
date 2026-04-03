@@ -96,9 +96,10 @@ export default function EditProductCategoryPage() {
           : null;
       const payload = {
         name: formData.name.trim(),
-        slug: formData.slug?.trim() || undefined,
-        key: formData.key?.trim() || undefined,
-        parentCategoryId: !Number.isNaN(parentId) && parentId != null ? parentId : undefined,
+        slug: formData.slug?.trim() || formData.key?.trim() || undefined,
+        clearParentCategory: formData.parentId === "none",
+        parentCategoryId:
+          !Number.isNaN(parentId) && parentId != null ? parentId : undefined,
         isActive: formData.isActive,
       };
       const hasFiles = imageFile instanceof File || iconFile instanceof File;
@@ -106,8 +107,9 @@ export default function EditProductCategoryPage() {
         await productCategoryService.updateWithFormData(categoryId, {
           name: payload.name,
           slug: payload.slug,
-          key: payload.key,
-          parentCategoryId: payload.parentCategoryId,
+          key: formData.key?.trim() || undefined,
+          parentCategoryId:
+            formData.parentId === "none" ? "none" : payload.parentCategoryId,
           isActive: payload.isActive,
           imageFile: imageFile instanceof File ? imageFile : undefined,
           iconFile: iconFile instanceof File ? iconFile : undefined,

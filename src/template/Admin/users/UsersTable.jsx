@@ -8,6 +8,30 @@ import { Switch } from "@/components/ui/switch";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import TableActions from "../TableActions";
 
+function isPlaceholderEmail(email) {
+  const e = (email ?? "").toString().trim().toLowerCase();
+  return !e ? false : e.endsWith("@placeholder.local");
+}
+
+function getUserNameDisplay(user) {
+  const first = (user.firstName ?? user.FirstName ?? "").toString().trim();
+  const last = (user.lastName ?? user.LastName ?? "").toString().trim();
+  const full = (user.fullName ?? user.FullName ?? "").toString().trim();
+
+  if (full && !isPlaceholderEmail(full)) return full;
+
+  const parts = [first, last].filter(Boolean).filter((p) => !isPlaceholderEmail(p));
+  if (parts.length === 0) return "بدون نام";
+  return parts.join(" ");
+}
+
+function getUserEmailDisplay(user) {
+  const email = (user.email ?? user.Email ?? "").toString().trim();
+  if (!email) return "بدون ایمیل";
+  if (isPlaceholderEmail(email)) return "فاقد ایمیل";
+  return email;
+}
+
 export default function UsersTable({ users, onStatusChange, statusLoadingId }) {
   const router = useRouter();
 
@@ -42,9 +66,9 @@ export default function UsersTable({ users, onStatusChange, statusLoadingId }) {
         {users.map((user) => (
           <TableRow key={user.id} className="border-gray-700 hover:bg-gray-700/50">
               <TableCell className="text-white font-medium whitespace-nowrap">
-              {user.fullName || (user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : "-")}
+              {getUserNameDisplay(user)}
             </TableCell>
-              <TableCell className="text-gray-300 whitespace-nowrap">{user.email || "-"}</TableCell>
+              <TableCell className="text-gray-300 whitespace-nowrap">{getUserEmailDisplay(user)}</TableCell>
               <TableCell className="text-gray-300 whitespace-nowrap">{user.phoneNumber || "-"}</TableCell>
               <TableCell className="whitespace-nowrap">
                 {user.roles && user.roles.length > 0 ? (

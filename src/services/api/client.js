@@ -12,6 +12,16 @@ export const API_BASE_URL =
     ? process.env.NEXT_PUBLIC_API_URL
     : "https://micrls.com/api";
 
+/** مسیر نسبی یا مطلق فایل ذخیره‌شده روی API را به URL قابل باز کردن در مرورگر تبدیل می‌کند */
+export function resolveApiMediaUrl(path) {
+  if (path == null || path === "") return "";
+  const s = String(path).trim();
+  if (s.startsWith("http://") || s.startsWith("https://") || s.startsWith("blob:")) return s;
+  const base = (API_BASE_URL || "").replace(/\/$/, "");
+  if (!base) return s;
+  return `${base}${s.startsWith("/") ? s : `/${s}`}`;
+}
+
 // آدرس اسکرپر پایتون (طبق IMPLEMENTATION_GUIDE: فرانت مستقیم به پایتون برای جستجو)
 // مثال: http://107.161.175.45:5000 (بدون /api در انتها)
 const SCRAPER_BASE_URL =
@@ -95,6 +105,10 @@ function handleTokenExpired() {
   window.location.replace("/");
 }
 
+/**
+ * کلاینت `ky` با Bearer برای API اصلی (`NEXT_PUBLIC_API_URL`).
+ * @see docs/admin-developer-handbook.md
+ */
 export const getAuthenticatedClient = () => {
   const token = getToken();
   if (!token) {
@@ -129,6 +143,7 @@ export const getPublicClient = () => {
 /**
  * استاندارد پاسخ API مرحله ۳: { statusCode, success, message, data }
  * دادهٔ اصلی در data؛ در خطا success: false و message پر است.
+ * @see docs/admin-developer-handbook.md
  */
 export const unwrapApiData = (body) => {
   if (body && body.success === false) {

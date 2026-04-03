@@ -7,7 +7,7 @@ import { Menu, Logout, User, CloseCircle, Home2 } from "iconsax-reactjs";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { SideBarContent } from "./AdminSidebar";
+import { SideBarContentWithSuspense } from "./AdminSidebar";
 import { formatDateFa } from "@/utils/adminDateUtils";
 
 export default function AdminTopBar() {
@@ -27,56 +27,87 @@ export default function AdminTopBar() {
     setOpen(false);
   }, [location]);
 
+  const closeDrawer = () => setOpen(false);
+
   return (
-    <div className="relative">
-      <header className="bg-gray-900 flex items-center justify-between gap-2 p-4 border-b border-gray-800">
-        <Sheet open={open} onOpenChange={setOpen} className="relative">
+    <div className="relative z-40 shrink-0">
+      <header
+        className="sticky top-0 z-40 flex items-center justify-between gap-2 border-b border-gray-800/90 bg-gray-900/95 px-2 py-2.5 pt-[max(0.625rem,env(safe-area-inset-top))] shadow-sm shadow-black/20 backdrop-blur-md supports-[backdrop-filter]:bg-gray-900/90 sm:gap-3 sm:px-3 sm:py-3 lg:px-4"
+        dir="rtl"
+      >
+        <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="lg:hidden text-white hover:bg-gray-800">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-11 w-11 shrink-0 text-white hover:bg-gray-800 lg:hidden"
+              aria-label="باز کردن منوی پنل"
+            >
               <Menu size={24} />
             </Button>
           </SheetTrigger>
           <SheetContent
             side="right"
-            className="bg-gray-900 text-white w-[250px] sm:w-[320px] p-0 overflow-y-auto border-l border-gray-700 [&>button]:hidden"
+            className="w-[min(100vw-0.5rem,20.5rem)] border-l border-gray-700/80 bg-gray-950 p-0 text-white shadow-2xl sm:w-[min(100vw-1rem,22rem)] [&>button]:hidden"
             dir="rtl"
           >
-            <div className="p-2">
-              <div className="flex items-center justify-end mb-4 absolute z-50 left-3">
+            <div className="relative flex h-full flex-col">
+              <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-800/80 bg-gray-950/95 px-3 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur-sm">
+                <span className="text-sm font-semibold text-gray-200">منوی پنل</span>
                 <SheetClose asChild>
-                  <button className="text-white hover:text-gray-300  p-1">
-                    <CloseCircle size={24} />
+                  <button
+                    type="button"
+                    className="flex h-10 w-10 items-center justify-center rounded-full text-gray-300 transition-colors hover:bg-gray-800 hover:text-white"
+                    aria-label="بستن منو"
+                  >
+                    <CloseCircle size={22} />
                   </button>
                 </SheetClose>
               </div>
-              <SideBarContent />
+              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2">
+                <SideBarContentWithSuspense variant="drawer" onLinkClick={closeDrawer} />
+              </div>
             </div>
           </SheetContent>
         </Sheet>
 
-        <div className="flex items-center w-full text-white max-sm:justify-end justify-between">
-          <div className="rounded-lg flex items-center overflow-hidden bg-gray-800 max-sm:hidden" dir="rtl">
-            <div className="p-2 px-3 text-sm">{formatDateFa(new Date())}</div>
-            <div className="bg-blue-600 p-2 px-4 text-sm font-medium">امروز</div>
+        <div className="flex min-w-0 flex-1 items-center justify-between gap-2 text-white">
+          <div
+            className="hidden min-w-0 items-center overflow-hidden rounded-xl border border-gray-700/50 bg-gray-800/80 sm:flex"
+            dir="rtl"
+          >
+            <div className="truncate px-3 py-2 text-xs md:text-sm">{formatDateFa(new Date())}</div>
+            <div className="bg-gradient-to-l from-blue-600 to-blue-500 px-3 py-2 text-xs font-semibold md:text-sm">
+              امروز
+            </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          {/* تاریخ فشرده فقط موبایل */}
+          <div
+            className="flex max-w-[42vw] items-center truncate rounded-lg border border-gray-700/60 bg-gray-800/70 px-2 py-1.5 text-[10px] text-gray-300 sm:hidden"
+            dir="rtl"
+            title={formatDateFa(new Date())}
+          >
+            <span className="truncate">{formatDateFa(new Date())}</span>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-1 sm:gap-2">
             <Link href="/">
               <Button
                 variant="ghost"
                 size="sm"
-                className="border border-gray-700 rounded-full hover:bg-gray-800 text-white gap-1.5 px-3"
+                className="h-10 gap-1 rounded-full border border-gray-700/80 px-2.5 text-white hover:bg-gray-800 sm:h-9 sm:px-3"
                 title="صفحه اصلی"
               >
-                <Home2 size={20} />
-                <span className="max-sm:hidden">صفحه اصلی</span>
+                <Home2 size={20} className="shrink-0" />
+                <span className="hidden sm:inline">صفحه اصلی</span>
               </Button>
             </Link>
             <Button
               variant="ghost"
               size="icon"
               onClick={handleLogout}
-              className="border border-gray-700 rounded-full hover:bg-gray-800 text-white"
+              className="h-10 w-10 rounded-full border border-gray-700/80 hover:bg-gray-800 sm:h-9 sm:w-9"
               title="خروج"
             >
               <Logout size={20} />
@@ -86,7 +117,7 @@ export default function AdminTopBar() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="border border-gray-700 rounded-full hover:bg-gray-800 text-white"
+                className="h-10 w-10 rounded-full border border-gray-700/80 hover:bg-gray-800 sm:h-9 sm:w-9"
               >
                 <User size={20} />
               </Button>

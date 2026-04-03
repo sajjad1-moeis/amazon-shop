@@ -13,6 +13,10 @@ services:
         - NEXT_TELEMETRY_DISABLED=1
     container_name: amazon-shop-app
     restart: unless-stopped
+    # اگر .env کنار همین فایل دارید، متغیرها به کانتینر تزریق می‌شوند (Compose 2.24+)
+    env_file:
+      - path: .env
+        required: false
     ports:
       - "3000:3000"
     environment:
@@ -21,6 +25,11 @@ services:
       - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL:-http://107.161.175.45}
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://107.161.175.45/api}
       - NEXT_PUBLIC_SCRAPER_URL=${NEXT_PUBLIC_SCRAPER_URL:-http://107.161.175.45:5000}
+      # پنل /admin/scraper-proxy — در production از .env کنار compose مقدار بده
+      - SCRAPER_ADMIN_API_KEY=${SCRAPER_ADMIN_API_KEY:-}
+      - SCRAPER_SERVICE_URL=${SCRAPER_SERVICE_URL:-}
+      - SCRAPER_ADMIN_UPSTREAM_TIMEOUT_MS=${SCRAPER_ADMIN_UPSTREAM_TIMEOUT_MS:-120000}
+      - SCRAPER_ADMIN_DOTNET_VERIFY_TIMEOUT_MS=${SCRAPER_ADMIN_DOTNET_VERIFY_TIMEOUT_MS:-12000}
       - PORT=3000
       - HOSTNAME=0.0.0.0
     networks:
@@ -50,10 +59,17 @@ services:
       - .:/app
       - /app/node_modules
       - /app/.next
+    env_file:
+      - path: .env
+        required: false
     environment:
       - NODE_ENV=development
       - NEXT_TELEMETRY_DISABLED=1
       - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL:-http://localhost:5228}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:5228/api}
+      - NEXT_PUBLIC_SCRAPER_URL=${NEXT_PUBLIC_SCRAPER_URL:-http://127.0.0.1:5000}
+      - SCRAPER_ADMIN_API_KEY=${SCRAPER_ADMIN_API_KEY:-}
+      - SCRAPER_SERVICE_URL=${SCRAPER_SERVICE_URL:-}
       - PORT=3000
       - HOSTNAME=0.0.0.0
     networks:

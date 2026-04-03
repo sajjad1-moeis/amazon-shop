@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { FORM_STYLES } from "../../formStyles";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 export default function ChangePasswordDialog({ open, onOpenChange, onSubmit }) {
   const [formData, setFormData] = useState({
@@ -23,6 +24,13 @@ export default function ChangePasswordDialog({ open, onOpenChange, onSubmit }) {
   });
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    if (!open) {
+      setFormData({ newPassword: "", reason: "" });
+      setLoading(false);
+    }
+  }, [open]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -30,32 +38,38 @@ export default function ChangePasswordDialog({ open, onOpenChange, onSubmit }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-
     if (!formData.newPassword || formData.newPassword.length < 6) {
+      toast.error("رمز عبور باید حداقل ۶ کاراکتر باشد");
       return;
     }
 
+    setLoading(true);
     try {
-      await onSubmit(formData);
+      await onSubmit({
+        newPassword: formData.newPassword,
+        reason: formData.reason?.trim() || undefined,
+      });
       setFormData({ newPassword: "", reason: "" });
       onOpenChange(false);
-    } catch (error) {
-      console.error("Error changing password:", error);
+    } catch {
+      /* toast در والد */
     } finally {
       setLoading(false);
     }
   };
 
-  const handleClose = () => {
-    if (!loading) {
+  const handleDialogOpenChange = (nextOpen) => {
+    if (!nextOpen) {
+      if (loading) return;
       setFormData({ newPassword: "", reason: "" });
       onOpenChange(false);
+    } else {
+      onOpenChange(true);
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
+    <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogContent className={cn("text-white", FORM_STYLES.card)}>
         <DialogHeader>
           <DialogTitle className="mb-2 font-thin">تغییر رمز عبور کاربر</DialogTitle>
@@ -80,6 +94,7 @@ export default function ChangePasswordDialog({ open, onOpenChange, onSubmit }) {
                 minLength={6}
                 maxLength={100}
                 placeholder="حداقل 6 کاراکتر"
+                disabled={loading}
               />
             </div>
 
@@ -96,11 +111,12 @@ export default function ChangePasswordDialog({ open, onOpenChange, onSubmit }) {
                 maxLength={500}
                 rows={3}
                 placeholder="مثال: فراموشی رمز عبور"
+                disabled={loading}
               />
             </div>
           </div>
           <DialogFooter className={"gap-2 p-0"}>
-            <Button type="button" className={FORM_STYLES.button} onClick={handleClose} disabled={loading}>
+            <Button type="button" className={FORM_STYLES.button} onClick={() => handleDialogOpenChange(false)} disabled={loading}>
               انصراف
             </Button>
             <Button

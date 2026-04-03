@@ -26,6 +26,8 @@ export async function generateMetadata({ params }) {
   const title =
     data.seoTitle ??
     data.SeoTitle ??
+    data.metaTitle ??
+    data.MetaTitle ??
     getProductName(data ?? {});
   const description =
     data.metaDescription ??

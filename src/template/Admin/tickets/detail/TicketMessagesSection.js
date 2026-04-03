@@ -19,14 +19,20 @@ export default function TicketMessagesSection({ messages }) {
             <div
               key={msg.id}
               className={`w-full min-w-0 p-4 rounded-lg ${
-                msg.isFromAdmin || msg.sender === "admin"
-                  ? "bg-blue-500/20 border border-blue-500/30"
-                  : "bg-gray-600/30 border border-gray-600"
+                msg.isSystem || msg.sender === "system"
+                  ? "bg-amber-500/15 border border-amber-500/25"
+                  : msg.isFromAdmin || msg.sender === "admin"
+                    ? "bg-blue-500/20 border border-blue-500/30"
+                    : "bg-gray-600/30 border border-gray-600"
               }`}
             >
               <div className="flex justify-between items-start mb-2 gap-2">
                 <span className="text-white font-medium shrink-0">
-                  {msg.isFromAdmin || msg.sender === "admin" ? "ادمین" : msg.senderName || "کاربر"}
+                  {msg.isSystem || msg.sender === "system"
+                    ? "سیستم"
+                    : msg.isFromAdmin || msg.sender === "admin"
+                      ? "پشتیبانی"
+                      : msg.senderName || "کاربر"}
                 </span>
                 <span className="text-gray-400 text-sm shrink-0">{formatDateTimeFa(msg.createdAt || msg.time)}</span>
               </div>

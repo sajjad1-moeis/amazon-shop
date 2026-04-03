@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import ProductsFilters from "@/template/Products/ProductsFilters";
 import HeaderSection from "@/template/Products/HeaderSection";
 import ProductList from "@/template/Products/ProductList";
@@ -43,6 +43,17 @@ function buildFilters(query) {
   };
 }
 
+/** جلوگیری از open redirect در پاسخ API (دفاع در عمق) */
+function isSafeSpaRedirectPath(path) {
+  if (path == null || typeof path !== "string") return false;
+  const p = path.trim();
+  if (!p.startsWith("/")) return false;
+  if (p.startsWith("//")) return false;
+  if (p.includes("://")) return false;
+  if (p.includes("\0") || p.includes("\n") || p.includes("\r")) return false;
+  return true;
+}
+
 function buildUrl(pathname, params, overrides = {}) {
   const p = { ...params, ...overrides };
   const q = new URLSearchParams();
@@ -60,6 +71,7 @@ function buildUrl(pathname, params, overrides = {}) {
 
 export default function ProductsClient() {
   const router = useRouter();
+  const pathname = usePathname();
   const sp = useSearchParams();
   const [viewMode, setViewMode] = useState("grid");
   const [products, setProducts] = useState([]);
@@ -108,10 +120,68 @@ export default function ProductsClient() {
           setSearchTermTranslated(null);
         }
 
+        let searchQueryResolved = query.search;
+
         if (hasSearch) {
+          try {
+            const catNum =
+              query.category && /^\d+$/.test(String(query.category).trim())
+                ? Number(query.category)
+                : null;
+            const pr = await productService.previewSearchRules(query.search, catNum);
+            if (pr.blocked) {
+              if (!cancelled) {
+                setProducts([]);
+                setTotalCount(0);
+                setSearchTermOriginal(query.search);
+                setSearchTermTranslated(null);
+                setError("جستجوی این عبارت مجاز نیست.");
+              }
+              return;
+            }
+            if (pr.clientRedirectPath) {
+              const raw = pr.clientRedirectPath.startsWith("/")
+                ? pr.clientRedirectPath
+                : `/${pr.clientRedirectPath}`;
+              if (isSafeSpaRedirectPath(raw) && !cancelled) router.replace(raw);
+              else if (!isSafeSpaRedirectPath(raw) && !cancelled)
+                setError("مسیر هدایت نامعتبر است؛ جستجو ادامه می‌یابد.");
+              if (isSafeSpaRedirectPath(raw)) return;
+            }
+            if (pr.effectiveCategoryId != null) {
+              const newSearch = (pr.effectiveSearchTerm || query.search).trim();
+              if (!cancelled) {
+                router.replace(
+                  buildUrl(pathname || "/products", query, {
+                    search: newSearch,
+                    category: String(pr.effectiveCategoryId),
+                  })
+                );
+              }
+              return;
+            }
+            if (
+              pr.effectiveSearchTerm &&
+              pr.effectiveSearchTerm.trim().toLowerCase() !== query.search.trim().toLowerCase()
+            ) {
+              if (!cancelled) {
+                router.replace(
+                  buildUrl(pathname || "/products", query, {
+                    search: pr.effectiveSearchTerm.trim(),
+                  })
+                );
+              }
+              return;
+            }
+            if (pr.effectiveSearchTerm && pr.effectiveSearchTerm.trim().length >= 2)
+              searchQueryResolved = pr.effectiveSearchTerm.trim();
+          } catch {
+            /* API در دسترس نیست — ادامهٔ جستجوی عادی */
+          }
+
           let list = [];
           if (isScraperConfigured()) {
-            const res = await productService.searchAmazon(query.search);
+            const res = await productService.searchAmazon(searchQueryResolved);
             if (!res?.success && res?.message) setError(res.message);
             const payload = res?.data;
             list = Array.isArray(payload?.data) ? payload.data : [];
@@ -122,7 +192,7 @@ export default function ProductsClient() {
               );
             }
           } else {
-            const res = await productService.search(query.search);
+            const res = await productService.search(searchQueryResolved);
             list = Array.isArray(res?.data) ? res.data : [];
             if (!cancelled) {
               setSearchTermOriginal(null);
@@ -217,6 +287,8 @@ export default function ProductsClient() {
     query.sortBy,
     query.shop,
     query.featured,
+    router,
+    pathname,
   ]);
 
   const updateUrl = (overrides) => {

@@ -16,6 +16,18 @@ NEXT_PUBLIC_API_URL=http://107.161.175.45/api
 # مثال: http://107.161.175.45:5000
 NEXT_PUBLIC_SCRAPER_URL=http://107.161.175.45:5000
 
+# ---------- فقط سمت سرور Next (پنل ادمین /admin/scraper-proxy) — بدون NEXT_PUBLIC ----------
+# باید دقیقاً با ADMIN_API_KEY در myenv/.env اسکرپر یکی باشد (به مرورگر ارسال نمی‌شود).
+# در npm run development اگر این خط خالی بماند ولی ../scraping_product_amazon/myenv/.env همان ADMIN_API_KEY را داشته باشد، Next به‌صورت خودکار از همان استفاده می‌کند.
+# در production / Docker حتماً این متغیر را روی سرویس Next مقداردهی کنید.
+SCRAPER_ADMIN_API_KEY=همان_کلید_۳۲_کاراکتر_اسکرپر
+# اختیاری: اگر Next در داکر است و اسکرپ روی host یا شبکهٔ دیگر — آدرس قابل دسترس از داخل کانتینر Next
+# SCRAPER_SERVICE_URL=http://host.docker.internal:5000
+# مهلت انتظار پاسخ اسکرپر برای درخواست‌های ادمین (میلی‌ثانیه، پیش‌فرض 120000)
+# SCRAPER_ADMIN_UPSTREAM_TIMEOUT_MS=120000
+# مهلت تماس GetUserByToken دات‌نت برای احراز ادمین (پیش‌فرض 12000، بازه ۳۰۰۰–۳۰۰۰۰)
+# SCRAPER_ADMIN_DOTNET_VERIFY_TIMEOUT_MS=12000
+
 # آدرس پایه سایت
 # Production (IP): http://107.161.175.45
 NEXT_PUBLIC_BASE_URL=http://107.161.175.45

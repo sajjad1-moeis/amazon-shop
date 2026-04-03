@@ -4,7 +4,18 @@ import React from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 
-export default function UserInfoCard({ icon: Icon, label, value, isLink = false, href, target, status }) {
+function isExternalHref(href) {
+  if (!href || typeof href !== "string") return true;
+  return (
+    href.startsWith("http://") ||
+    href.startsWith("https://") ||
+    href.startsWith("mailto:") ||
+    href.startsWith("tel:") ||
+    href.startsWith("blob:")
+  );
+}
+
+export default function UserInfoCard({ icon: Icon, label, value, isLink = false, href, target, rel, status }) {
   const getStatusBadge = () => {
     if (status === "success") {
       return <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/40 text-xs">{value}</Badge>;
@@ -37,8 +48,15 @@ export default function UserInfoCard({ icon: Icon, label, value, isLink = false,
   );
 
   if (isLink && href) {
+    if (isExternalHref(href)) {
+      return (
+        <a href={href} target={target} rel={rel || (target === "_blank" ? "noopener noreferrer" : undefined)} className="block">
+          {content}
+        </a>
+      );
+    }
     return (
-      <Link href={href} target={target} className="block">
+      <Link href={href} className="block">
         {content}
       </Link>
     );

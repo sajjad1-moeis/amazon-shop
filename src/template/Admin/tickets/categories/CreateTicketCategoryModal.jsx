@@ -95,7 +95,12 @@ export default function CreateTicketCategoryModal({ isOpen, onClose, onSuccess, 
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+    >
       <DialogContent className="max-w-md bg-gray-800 border-gray-700" dir="rtl">
         <DialogHeader>
           <DialogTitle className="text-white">

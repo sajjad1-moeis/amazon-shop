@@ -67,7 +67,12 @@ export default function CreateProductCategoryPage() {
           name: formData.name.trim(),
           slug: formData.slug?.trim() || undefined,
           key: formData.key?.trim() || undefined,
-          parentCategoryId: !Number.isNaN(parentId) ? parentId : undefined,
+          parentCategoryId:
+            formData.parentId === "none"
+              ? "none"
+              : !Number.isNaN(parentId) && parentId != null
+                ? parentId
+                : undefined,
           isActive: formData.isActive,
           imageFile: imageFile instanceof File ? imageFile : undefined,
           iconFile: iconFile instanceof File ? iconFile : undefined,
@@ -75,10 +80,9 @@ export default function CreateProductCategoryPage() {
       } else {
         const payload = {
           name: formData.name.trim(),
-          slug: formData.slug?.trim() || undefined,
+          slug: formData.slug?.trim() || formData.key?.trim() || undefined,
           isActive: formData.isActive,
         };
-        if (formData.key?.trim()) payload.key = formData.key.trim();
         if (!Number.isNaN(parentId) && parentId != null) payload.parentCategoryId = parentId;
         response = await productCategoryService.create(payload);
       }

@@ -13,7 +13,19 @@ export const productService = {
 
   getById: async (id) => {
     const client = getPublicClient();
-    return client.get(`Product/GetById?id=${id}`).json();
+    return client.get(`Product/GetById?id=${encodeURIComponent(id)}`).json();
+  },
+
+  /**
+   * دریافت محصول برای ویرایش ادمین: با توکن ادمین + skipViewTracking تا view count و تاریخچه بازدید ثبت نشود.
+   */
+  getByIdForAdminEdit: async (id) => {
+    const client = getAuthenticatedClient();
+    const q = new URLSearchParams({
+      id: String(id),
+      skipViewTracking: "true",
+    });
+    return client.get(`Product/GetById?${q.toString()}`).json();
   },
 
   getBySlug: async (slug) => {
@@ -44,6 +56,40 @@ export const productService = {
     const qs = new URLSearchParams();
     if (searchTerm) qs.set("searchTerm", searchTerm);
     return client.get(`Product/Search?${qs.toString()}`).json();
+  },
+
+  /**
+   * فاز ۶: قوانین مدیریت جستجو قبل از اسکرپر (بلاک، ریدایرکت، مترادف، دسته).
+   * GET api/search/preview-rules?q=&categoryId=
+   * @returns {Promise<{ blocked: boolean, clientRedirectPath: string|null, effectiveSearchTerm: string|null, effectiveCategoryId: number|null }>}
+   */
+  previewSearchRules: async (q, categoryId = null) => {
+    const trimmed = typeof q === "string" ? q.trim() : "";
+    if (trimmed.length < 2) {
+      return {
+        blocked: false,
+        clientRedirectPath: null,
+        effectiveSearchTerm: null,
+        effectiveCategoryId: null,
+      };
+    }
+    const client = getPublicClient();
+    const qs = new URLSearchParams();
+    qs.set("q", trimmed);
+    if (categoryId != null && Number.isFinite(Number(categoryId))) {
+      qs.set("categoryId", String(categoryId));
+    }
+    const res = await client.get(`search/preview-rules?${qs.toString()}`).json();
+    const inner = res?.data ?? res;
+    const ec = inner?.effectiveCategoryId ?? inner?.EffectiveCategoryId;
+    const pathRaw = inner?.clientRedirectPath ?? inner?.ClientRedirectPath ?? null;
+    const termRaw = inner?.effectiveSearchTerm ?? inner?.EffectiveSearchTerm ?? null;
+    return {
+      blocked: Boolean(inner?.blocked ?? inner?.Blocked),
+      clientRedirectPath: pathRaw && String(pathRaw).trim() ? String(pathRaw).trim() : null,
+      effectiveSearchTerm: termRaw != null && String(termRaw).trim() ? String(termRaw).trim() : null,
+      effectiveCategoryId: ec != null && Number.isFinite(Number(ec)) ? Number(ec) : null,
+    };
   },
 
   /**
@@ -173,7 +219,7 @@ export const productService = {
     if (sortDescending !== undefined) searchParams.append("sortDescending", sortDescending.toString());
 
     const client = getAuthenticatedClient();
-    return client.get(`Product/GetPaginated?${searchParams.toString()}`).json();
+    return client.get(`admin/products/list?${searchParams.toString()}`).json();
   },
 
   getByCategory: async (categoryId) => {
@@ -241,17 +287,17 @@ export const productService = {
 
   update: async (id, data) => {
     const client = getAuthenticatedClient();
-    return client.put(`Product/Update?id=${id}`, { json: data }).json();
+    return client.post(`Product/update/${id}`, { json: data }).json();
   },
 
   softDelete: async (id) => {
     const client = getAuthenticatedClient();
-    return client.delete(`Product/SoftDelete?id=${id}`).json();
+    return client.post(`Product/delete/${id}`).json();
   },
 
   hardDelete: async (id) => {
     const client = getAuthenticatedClient();
-    return client.delete(`Product/HardDelete?id=${id}`).json();
+    return client.post(`Product/hard-delete/${id}`).json();
   },
 
   restore: async (id) => {
@@ -261,19 +307,20 @@ export const productService = {
 
   changeStatus: async (id, status) => {
     const client = getAuthenticatedClient();
-    return client.put(`Product/ChangeStatus?id=${id}&status=${status}`).json();
+    return client.post(`Product/update/${id}`, { json: { status } }).json();
   },
 
+  /** مطابق api/Inventory/UpdateStock */
   updateStock: async (id, stock) => {
     const client = getAuthenticatedClient();
-    return client.put(`Product/UpdateStock?id=${id}&stock=${stock}`).json();
+    return client.post(`Inventory/UpdateStock?productId=${id}&quantity=${stock}`).json();
   },
 
+  /** POST api/Product/UpdatePrice — body: { productId, ourPrice } */
   updatePrice: async (id, price, discountPrice) => {
     const client = getAuthenticatedClient();
-    const searchParams = new URLSearchParams({ id: id.toString(), price: price.toString() });
-    if (discountPrice) searchParams.append("discountPrice", discountPrice.toString());
-    return client.put(`Product/UpdatePrice?${searchParams.toString()}`).json();
+    const body = { productId: Number(id), ourPrice: price != null ? Number(price) : null };
+    return client.post("Product/UpdatePrice", { json: body }).json();
   },
 
   trackView: async (productId) => {
@@ -301,9 +348,12 @@ export const productService = {
     return client.post(`Product/UploadProductImages?id=${productId}`, { body: formData }).json();
   },
 
+  /** POST api/Product/delete-image/{id}?imageIndex= */
   deleteProductImage: async (productId, imageIndex) => {
     const client = getAuthenticatedClient();
-    return client.delete(`Product/DeleteProductImage?id=${productId}&imageIndex=${imageIndex}`).json();
+    return client
+      .post(`Product/delete-image/${productId}?imageIndex=${encodeURIComponent(imageIndex)}`)
+      .json();
   },
 
   getStatistics: async () => {

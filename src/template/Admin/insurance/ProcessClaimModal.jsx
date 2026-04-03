@@ -142,7 +142,7 @@ export default function ProcessClaimModal({ open, onOpenChange, onSubmit, loadin
             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)} className={FORM_STYLES.button}>
               انصراف
             </Button>
-            <Button type="submit" disabled={loading} className="bg-amber-500 hover:bg-amber-600 text-gray-900 font-medium">
+            <Button type="submit" disabled={loading} className="bg-amber-500 hover:bg-amber-600 text-white font-medium">
               {loading ? <Spinner size="sm" /> : "ثبت"}
             </Button>
           </DialogFooter>

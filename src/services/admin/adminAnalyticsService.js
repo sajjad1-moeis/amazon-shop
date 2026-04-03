@@ -67,5 +67,27 @@ export const adminAnalyticsService = {
     const client = getAuthenticatedClient();
     return client.get("admin/analytics/summary").json();
   },
+
+  /** GET api/admin/analytics/summary/by-date-range?startDate=&endDate= — اختیاری؛ در نبود، فرانت از summary کلی استفاده می‌کند */
+  getSummaryByDateRange: async (params) => {
+    const { startDate, endDate } = params || {};
+    const searchParams = new URLSearchParams();
+    if (startDate) searchParams.append("startDate", startDate);
+    if (endDate) searchParams.append("endDate", endDate);
+    const qs = searchParams.toString();
+    const client = getAuthenticatedClient();
+    return client.get(`admin/analytics/summary/by-date-range${qs ? `?${qs}` : ""}`).json();
+  },
+
+  /** GET api/admin/analytics/conversion-rate?startDate=&endDate= — اختیاری */
+  getConversionRateByDateRange: async (params) => {
+    const { startDate, endDate } = params || {};
+    const searchParams = new URLSearchParams();
+    if (startDate) searchParams.append("startDate", startDate);
+    if (endDate) searchParams.append("endDate", endDate);
+    const qs = searchParams.toString();
+    const client = getAuthenticatedClient();
+    return client.get(`admin/analytics/conversion-rate${qs ? `?${qs}` : ""}`).json();
+  },
 };
 

@@ -64,7 +64,7 @@ export default function UsersFilters({ isInDrawer = false }) {
       <StatusSelect
         value={filterRole}
         onValueChange={handleRoleChangeWithSearch}
-        placeholder="وضعیت"
+        placeholder="نقش کاربر"
         options={ROLE_OPTIONS}
         includeAll={true}
         isInDrawer={isInDrawer}
@@ -74,7 +74,7 @@ export default function UsersFilters({ isInDrawer = false }) {
         isAdmin
         value={filterStatus}
         onValueChange={handleStatusChange}
-        placeholder="وضعیت"
+        placeholder="وضعیت حساب"
         options={STATUS_OPTIONS}
         includeAll={true}
         isInDrawer={isInDrawer}

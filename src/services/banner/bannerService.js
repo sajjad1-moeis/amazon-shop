@@ -1,6 +1,6 @@
 /**
- * سرویس بنر — API مرحله ۸ (api/Banner)
- * کنترلر در سورس بدون [Authorize]؛ Create/Update/Delete معمولاً توسط ادمین.
+ * سرویس بنر — api/Banner
+ * خواندن عمومی؛ Create/Update/Delete/Restore/UploadImage فقط Admin (فاز ۱۰).
  */
 
 import { getPublicClient, getAuthenticatedClient } from "../api/client";
@@ -62,6 +62,14 @@ export const bannerService = {
   /** POST api/Banner/update/{id} — body: UpdateBannerDto (JSON) */
   update: async (id, body) => {
     const res = await authClient().post(`Banner/update/${id}`, { json: body }).json();
+    return unwrapApiData(res);
+  },
+
+  /** POST api/Banner/UploadImage?id= — multipart: فیلد نام `file` */
+  uploadImage: async (id, file) => {
+    const fd = new FormData();
+    fd.append("file", file);
+    const res = await authClient().post(`Banner/UploadImage?id=${id}`, { body: fd }).json();
     return unwrapApiData(res);
   },
 

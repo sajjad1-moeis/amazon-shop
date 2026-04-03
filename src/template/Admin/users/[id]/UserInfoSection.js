@@ -4,19 +4,60 @@ import React from "react";
 import { User, Sms, Call, Calendar, TickCircle, CloseCircle, Image as ImageIcon, SecuritySafe } from "iconsax-reactjs";
 import { formatDateFa } from "@/utils/adminDateUtils";
 import { Badge } from "@/components/ui/badge";
+import { resolveApiMediaUrl } from "@/services/api/client";
 import UserInfoCard from "./UserInfoCard";
 
+function isPlaceholderEmail(email) {
+  const e = (email ?? "").toString().trim().toLowerCase();
+  return !!e && e.endsWith("@placeholder.local");
+}
+
 function fullNameOrFallback(user) {
-  const name = user.fullName || [user.firstName, user.lastName].filter(Boolean).join(" ").trim();
-  return name || user.email || user.userName || "-";
+  const fn = user.firstName ?? user.FirstName;
+  const ln = user.lastName ?? user.LastName;
+  const email = user.email ?? user.Email;
+  const userName = user.userName ?? user.UserName;
+  const safeUserName = isPlaceholderEmail(userName) ? "" : userName;
+
+  const name =
+    user.fullName ||
+    user.FullName ||
+    [fn, ln].filter(Boolean).join(" ").trim();
+
+  // اگر دیتابیس به هر دلیل ایمیل placeholder را در نام/نام خانوادگی نگه داشته
+  // یا اگر نام خالی است، به جای ایمیل پیش‌فرض، چیزی نمایش نده.
+  if (name && !isPlaceholderEmail(name)) return name;
+  if (isPlaceholderEmail(fn) || isPlaceholderEmail(ln)) return "-";
+  if (isPlaceholderEmail(email)) return "-";
+
+  return name || email || safeUserName || "بدون نام";
 }
 
 export default function UserInfoSection({ user }) {
-  const roles = Array.isArray(user.roles)
-    ? user.roles
-    : typeof user.roles === "string"
-      ? user.roles.split(/[،,]/).map((r) => r.trim()).filter(Boolean)
+  const rawRoles = user.roles ?? user.Roles;
+  const roles = Array.isArray(rawRoles)
+    ? rawRoles
+    : typeof rawRoles === "string"
+      ? rawRoles.split(/[،,]/).map((r) => r.trim()).filter(Boolean)
       : [];
+
+  const email = user.email ?? user.Email;
+  const phone = user.phoneNumber ?? user.PhoneNumber;
+  const createdAt = user.createdAt ?? user.CreatedAt;
+  const lastLogin = user.lastLogin ?? user.LastLogin;
+  const isEmailVerified = user.isEmailVerified ?? user.IsEmailVerified ?? false;
+  const isPhoneVerified = user.isPhoneVerified ?? user.IsPhoneVerified ?? false;
+  const profileImage = user.profileImage ?? user.ProfileImage ?? "";
+  const profileImageHref = profileImage ? resolveApiMediaUrl(profileImage) : "";
+  const isBanned = user.isBanned ?? user.IsBanned ?? false;
+  const bannedAt = user.bannedAt ?? user.BannedAt;
+  const banReason = user.banReason ?? user.BanReason;
+
+  const emailDisplay = (() => {
+    if (!email) return "فاقد ایمیل";
+    if (isPlaceholderEmail(email)) return "فاقد ایمیل";
+    return email;
+  })();
 
   return (
     <div className="space-y-6">
@@ -46,42 +87,49 @@ export default function UserInfoSection({ user }) {
       {/* کارت‌های اطلاعات */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 md:gap-4" dir="rtl">
         <UserInfoCard icon={User} label="نام و نام خانوادگی" value={fullNameOrFallback(user)} />
-        <UserInfoCard icon={Sms} label="ایمیل" value={user.email || "-"} isLink href={user.email ? `mailto:${user.email}` : undefined} />
+        <UserInfoCard
+          icon={Sms}
+          label="ایمیل"
+          value={emailDisplay}
+          isLink
+          href={emailDisplay === "فاقد ایمیل" ? undefined : `mailto:${email}`}
+        />
         <UserInfoCard
           icon={Call}
           label="شماره تماس"
-          value={user.phoneNumber || "-"}
+          value={phone || "-"}
           isLink
-          href={user.phoneNumber ? `tel:${user.phoneNumber}` : undefined}
+          href={phone ? `tel:${phone}` : undefined}
         />
-        <UserInfoCard icon={Calendar} label="تاریخ ثبت‌نام" value={formatDateFa(user.createdAt)} />
-        <UserInfoCard icon={Calendar} label="آخرین ورود" value={user.lastLogin ? formatDateFa(user.lastLogin) : "هرگز"} />
+        <UserInfoCard icon={Calendar} label="تاریخ ثبت‌نام" value={formatDateFa(createdAt)} />
+        <UserInfoCard icon={Calendar} label="آخرین ورود" value={lastLogin ? formatDateFa(lastLogin) : "هرگز"} />
         <UserInfoCard
           icon={TickCircle}
           label="وضعیت ایمیل"
-          value={user.isEmailVerified ? "تایید شده" : "تایید نشده"}
-          status={user.isEmailVerified ? "success" : "warning"}
+          value={isEmailVerified ? "تایید شده" : "تایید نشده"}
+          status={isEmailVerified ? "success" : "warning"}
         />
         <UserInfoCard
           icon={TickCircle}
           label="وضعیت شماره تلفن"
-          value={user.isPhoneVerified ? "تایید شده" : "تایید نشده"}
-          status={user.isPhoneVerified ? "success" : "warning"}
+          value={isPhoneVerified ? "تایید شده" : "تایید نشده"}
+          status={isPhoneVerified ? "success" : "warning"}
         />
-        {user.profileImage && (
+        {profileImageHref && (
           <UserInfoCard
             icon={ImageIcon}
             label="تصویر پروفایل"
             value="مشاهده تصویر"
             isLink
-            href={user.profileImage}
+            href={profileImageHref}
             target="_blank"
+            rel="noopener noreferrer"
           />
         )}
-        {user.isBanned && (
+        {isBanned && (
           <>
-            {user.bannedAt && <UserInfoCard icon={CloseCircle} label="تاریخ بن" value={formatDateFa(user.bannedAt)} />}
-            {user.banReason && <UserInfoCard icon={CloseCircle} label="دلیل بن" value={user.banReason} />}
+            {bannedAt && <UserInfoCard icon={CloseCircle} label="تاریخ بن" value={formatDateFa(bannedAt)} />}
+            {banReason && <UserInfoCard icon={CloseCircle} label="دلیل بن" value={banReason} />}
           </>
         )}
       </div>

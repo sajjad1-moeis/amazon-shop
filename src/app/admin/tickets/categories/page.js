@@ -49,6 +49,13 @@ export default function TicketCategoriesPage() {
     setDisplayedCategories(categories.slice(startIndex, endIndex));
   }, [categories, pageNumber, pageSize]);
 
+  useEffect(() => {
+    const maxPage = Math.max(1, Math.ceil(categories.length / pageSize));
+    if (pageNumber > maxPage) {
+      setPageNumber(maxPage);
+    }
+  }, [categories.length, pageNumber, pageSize]);
+
   const handleEdit = (category) => {
     setEditingCategory(category);
     setIsModalOpen(true);
@@ -68,7 +75,7 @@ export default function TicketCategoriesPage() {
       toast.success("دسته‌بندی با موفقیت حذف شد");
       setDeleteDialogOpen(false);
       setSelectedCategoryId(null);
-      fetchCategories();
+      await fetchCategories();
     } catch (error) {
       console.error("Error deleting category:", error);
       toast.error(error?.message || "خطا در حذف دسته‌بندی");
@@ -87,7 +94,7 @@ export default function TicketCategoriesPage() {
         isActive: !currentActive,
       });
       toast.success(`دسته‌بندی ${!currentActive ? "فعال" : "غیرفعال"} شد`);
-      fetchCategories();
+      await fetchCategories();
     } catch (error) {
       console.error("Error toggling category:", error);
       toast.error(error?.message || "خطا در به‌روزرسانی دسته‌بندی");

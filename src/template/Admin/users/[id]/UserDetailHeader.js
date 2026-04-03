@@ -15,15 +15,30 @@ export default function UserDetailHeader({
 }) {
   const router = useRouter();
 
+  const isPlaceholderEmail = (email) => {
+    const e = (email ?? "").toString().trim().toLowerCase();
+    return !!e && e.endsWith("@placeholder.local");
+  };
+
+  const safeEmail = (() => {
+    const email = (user?.email ?? user?.Email ?? "").toString().trim();
+    if (!email) return "";
+    const e = email.toLowerCase();
+    return e.endsWith("@placeholder.local") ? "" : email;
+  })();
+
+  const isBanned = user.isBanned ?? user.IsBanned;
+  const isActive = user.isActive ?? user.IsActive;
+
   const getStatusBadge = () => {
-    if (user.isBanned) {
+    if (isBanned) {
       return (
         <Badge variant="outline" className="bg-red-500/20 text-red-400 border-red-500/40 text-xs font-medium">
           بن شده
         </Badge>
       );
     }
-    return user.isActive ? (
+    return isActive ? (
       <Badge variant="outline" className="bg-emerald-500/20 text-emerald-400 border-emerald-500/40 text-xs font-medium">
         فعال
       </Badge>
@@ -34,11 +49,27 @@ export default function UserDetailHeader({
     );
   };
 
+  const firstName = user.firstName ?? user.FirstName ?? "";
+  const lastName = user.lastName ?? user.LastName ?? "";
+
+  const safeFirstName = isPlaceholderEmail(firstName) ? "" : firstName;
+  const safeLastName = isPlaceholderEmail(lastName) ? "" : lastName;
+  const safeFullName = (() => {
+    const v = (user.fullName ?? user.FullName ?? "").toString().trim();
+    return isPlaceholderEmail(v) ? "" : v;
+  })();
+
+  const safeUserName = (() => {
+    const v = (user?.userName ?? user?.UserName ?? "").toString().trim();
+    if (!v) return "";
+    return isPlaceholderEmail(v) ? "" : v;
+  })();
+
   const displayName =
-    user.fullName ||
-    `${user.firstName || ""} ${user.lastName || ""}`.trim() ||
-    user.userName ||
-    user.email ||
+    safeFullName ||
+    `${safeFirstName} ${safeLastName}`.trim() ||
+    safeUserName ||
+    safeEmail ||
     "کاربر بدون نام";
 
   const btnBase =
@@ -52,9 +83,9 @@ export default function UserDetailHeader({
             <h1 className="text-xl sm:text-2xl font-bold text-white truncate">{displayName}</h1>
             {getStatusBadge()}
           </div>
-          {user.email && (
-            <p className="text-gray-400 text-sm truncate" title={user.email}>
-              {user.email}
+          {safeEmail && (
+            <p className="text-gray-400 text-sm truncate" title={safeEmail}>
+              {safeEmail}
             </p>
           )}
         </div>

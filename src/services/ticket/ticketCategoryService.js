@@ -26,10 +26,10 @@ export const ticketCategoryService = {
     return unwrapApiData(res);
   },
 
-  /** POST api/TicketCategory/update/{id} — body: { name?, description?, isActive? } */
+  /** POST api/TicketCategory/Update?id= — body: UpdateTicketCategoryDto */
   update: async (id, data) => {
     const client = getAuthenticatedClient();
-    const res = await client.post(`TicketCategory/update/${id}`, { json: data }).json();
+    const res = await client.post(`TicketCategory/Update?id=${id}`, { json: data }).json();
     return unwrapApiData(res);
   },
 

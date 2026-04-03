@@ -13,7 +13,7 @@ export default function AdminPageHeader({ title, subtitle, icon: Icon, accentLin
   return (
     <div
       className={cn(
-        "relative rounded-2xl border border-gray-600/80 bg-gradient-to-b from-gray-700/40 to-gray-800/20 overflow-hidden",
+        "relative overflow-hidden rounded-xl border border-gray-600/80 bg-gradient-to-b from-gray-700/40 to-gray-800/20 sm:rounded-2xl",
         "px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-5",
         className
       )}
@@ -31,9 +31,11 @@ export default function AdminPageHeader({ title, subtitle, icon: Icon, accentLin
               </div>
             )}
             <div className="min-w-0">
-              <h1 className="text-xs sm:text-lg md:text-2xl font-bold text-white truncate">{title}</h1>
+              <h1 className="text-base font-bold leading-tight text-white sm:text-lg md:text-2xl sm:truncate">{title}</h1>
               {subtitle && (
-                <p className="text-gray-400 text-[10px] sm:text-xs md:text-sm mt-0.5 line-clamp-1">{subtitle}</p>
+                <p className="mt-0.5 line-clamp-2 text-[11px] text-gray-400 sm:line-clamp-1 sm:text-xs md:text-sm">
+                  {subtitle}
+                </p>
               )}
             </div>
           </div>

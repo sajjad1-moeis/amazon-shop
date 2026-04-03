@@ -234,13 +234,24 @@ export const orderService = {
   /**
    * سازگاری با صفحه ادمین: لیست با فیلتر وضعیت و جستجو بر اساس نام/شماره/موبایل.
    * برمی‌گرداند: { success: true, data: { orders: [], totalPages: number } }
+   * فقط وضعیت‌های صحیح OrderStatus (۱…۸)؛ هر مقدار نامعتبر → همه سفارشات.
    */
   getPaginated: async (params = {}) => {
     const { status, searchTerm, pageNumber = 1, pageSize = 20 } = params ?? {};
-    const raw =
-      status != null && status !== ""
-        ? await orderService.getOrdersByStatus(Number(status))
-        : await orderService.getAllOrders();
+    const statusStr =
+      status == null || status === ""
+        ? ""
+        : String(status).trim();
+    const parsed = statusStr === "" ? NaN : parseInt(statusStr, 10);
+    const statusOk =
+      statusStr !== "" &&
+      Number.isInteger(parsed) &&
+      String(parsed) === statusStr &&
+      parsed >= OrderStatus.Pending &&
+      parsed <= OrderStatus.Failed;
+    const raw = statusOk
+      ? await orderService.getOrdersByStatus(parsed)
+      : await orderService.getAllOrders();
     const list = Array.isArray(raw) ? raw : raw?.data ?? [];
     let orders = Array.isArray(list) ? list : [];
 

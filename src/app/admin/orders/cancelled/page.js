@@ -1,8 +1,5 @@
-"use client";
-
 import { redirect } from "next/navigation";
 
 export default function CancelledOrdersPage() {
-  redirect("/admin/orders?status=cancelled");
+  redirect("/admin/orders?status=6");
 }
-

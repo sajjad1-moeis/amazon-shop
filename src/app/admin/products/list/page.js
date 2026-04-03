@@ -78,9 +78,10 @@ export default function ProductsListPage() {
       });
 
       if (response.success && response.data) {
-        setProducts(response.data.products || response.data || []);
-        setTotalPages(response.data.totalPages || 1);
-        setTotalCount(response.data.totalCount || 0);
+        const d = response.data;
+        setProducts(d.products || d.Products || (Array.isArray(d) ? d : []));
+        setTotalPages(d.totalPages ?? d.TotalPages ?? 1);
+        setTotalCount(d.totalCount ?? d.TotalCount ?? 0);
       } else {
         toast.error(response.message || "خطا در دریافت محصولات");
       }
@@ -94,7 +95,7 @@ export default function ProductsListPage() {
 
   useEffect(() => {
     setPageNumber(1);
-  }, [categoryParam, statusParam, searchTerm]);
+  }, [categoryParam, statusParam, brandParam, searchTerm]);
 
   useEffect(() => {
     fetchProducts();

@@ -1,3 +1,7 @@
+/**
+ * منوی سایدبار ادمین. هر آیتم `key` یکتا دارد (Accordion + آینده permission).
+ * قرارداد API و کلیدهای رزرو فازها: docs/admin-developer-handbook.md ، src/constants/adminPlannedMenuKeys.js
+ */
 import {
   ShoppingBag,
   Category,
@@ -20,7 +24,11 @@ import {
   RotateRight,
   MoneyRecive,
   ShieldSearch,
+  Flash,
+  SearchNormal1,
+  Cpu,
 } from "iconsax-reactjs";
+import { ADMIN_PLANNED_MENU_KEYS } from "@/constants/adminPlannedMenuKeys";
 
 export const ADMIN_SIDEBAR_ITEMS = [
   {
@@ -81,6 +89,8 @@ export const ADMIN_SIDEBAR_ITEMS = [
       { name: "کاربران ادمین", href: "/admin/security/admins" },
       { name: "دسترسی‌ها", href: "/admin/security/permissions" },
       { name: "لاگ‌های سیستم", href: "/admin/security/logs" },
+      { name: "تاریخچه تغییرات (Audit)", href: "/admin/security/audit", key: ADMIN_PLANNED_MENU_KEYS.auditLog },
+      { name: "لاگ عملیاتی", href: "/admin/security/operational-logs", key: ADMIN_PLANNED_MENU_KEYS.logsExtended },
     ],
   },
   {
@@ -95,6 +105,25 @@ export const ADMIN_SIDEBAR_ITEMS = [
       { name: "دسته‌بندی‌ها", href: "/admin/products/categories" },
       { name: "برندها", href: "/admin/products/brands" },
       { name: "گزارش محصولات", href: "/admin/reports/products" },
+      { name: "مرکز ترجمه عنوان", href: "/admin/catalog/translation" },
+      { name: "واژه‌نامه برند (ترجمه)", href: "/admin/catalog/brand-glossary" },
+      { name: "کیفیت محصول (QA)", href: "/admin/catalog/qa" },
+    ],
+  },
+  {
+    name: "مدیریت جستجو",
+    icon: SearchNormal1,
+    color: "#6366f1",
+    href: "/admin/search",
+    key: ADMIN_PLANNED_MENU_KEYS.searchManagement,
+    children: [
+      { name: "داشبورد جستجو", href: "/admin/search" },
+      { name: "گزارش‌ها", href: "/admin/search/reports" },
+      { name: "مترادف‌ها", href: "/admin/search/synonyms" },
+      { name: "ریدایرکت", href: "/admin/search/redirects" },
+      { name: "دسته و لندینگ", href: "/admin/search/category-landings" },
+      { name: "لیست سیاه", href: "/admin/search/blacklist" },
+      { name: "لیست سفید", href: "/admin/search/whitelist" },
     ],
   },
   {
@@ -103,6 +132,14 @@ export const ADMIN_SIDEBAR_ITEMS = [
     color: "#F59E0B",
     href: "/admin/orders",
     key: "order",
+    children: [
+      { name: "همه سفارشات", href: "/admin/orders" },
+      { name: "در انتظار پرداخت", href: "/admin/orders?status=1" },
+      { name: "در حال پردازش", href: "/admin/orders?status=3" },
+      { name: "ارسال شده", href: "/admin/orders?status=4" },
+      { name: "تکمیل شده", href: "/admin/orders?status=5" },
+      { name: "لغو شده", href: "/admin/orders?status=6" },
+    ],
   },
   {
     name: "درخواست‌های مرجوعی",
@@ -191,6 +228,35 @@ export const ADMIN_SIDEBAR_ITEMS = [
     children: [
       { name: "نرخ ارز", href: "/admin/currency-rates" },
       { name: "درخواست‌های سرویس ارز", href: "/admin/currency-services" },
+    ],
+  },
+  {
+    name: "اسکرپ و داده",
+    icon: Flash,
+    color: "#14B8A6",
+    href: "/admin/sources",
+    key: "scraper-data",
+    children: [
+      { name: "سورس‌های داده", href: "/admin/sources" },
+      { name: "Job و همگام‌سازی", href: "/admin/jobs" },
+      { name: "تنظیمات پروکسی اسکرپر", href: "/admin/scraper-proxy" },
+    ],
+  },
+  {
+    name: "فاز ۱۰ — عملیات",
+    icon: Cpu,
+    color: "#6366f1",
+    href: "/admin/integration",
+    key: "admin-operations-hub",
+    children: [
+      {
+        name: "یکپارچه‌سازی",
+        href: "/admin/integration",
+        key: ADMIN_PLANNED_MENU_KEYS.integrationCenter,
+      },
+      { name: "سئو دسته و برند", href: "/admin/seo", key: ADMIN_PLANNED_MENU_KEYS.seoLanding },
+      { name: "بنرها", href: "/admin/content/banners", key: ADMIN_PLANNED_MENU_KEYS.contentBlocks },
+      { name: "هاب قیمت‌گذاری", href: "/admin/pricing", key: ADMIN_PLANNED_MENU_KEYS.pricingHub },
     ],
   },
   {

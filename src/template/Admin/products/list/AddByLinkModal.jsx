@@ -155,7 +155,7 @@ export default function AddByLinkModal({ open, onOpenChange, onSuccess }) {
             >
               انصراف
             </Button>
-            <Button type="submit" disabled={loading} className="bg-yellow-500 hover:bg-yellow-600 text-gray-900">
+            <Button type="submit" disabled={loading} className="bg-yellow-500 hover:bg-yellow-600 text-white">
               {loading ? "در حال ثبت..." : "افزودن محصول"}
             </Button>
           </DialogFooter>

@@ -43,13 +43,14 @@ export const productCategoryService = {
     formData.append("name", name.trim());
     if (slug?.trim()) formData.append("slug", slug.trim());
     if (key?.trim()) formData.append("key", key.trim());
-    if (parentCategoryId != null && parentCategoryId !== "" && parentCategoryId !== "none")
+    if (parentCategoryId === "none") formData.append("parentCategoryId", "none");
+    else if (parentCategoryId != null && parentCategoryId !== "")
       formData.append("parentCategoryId", String(parentCategoryId));
     formData.append("isActive", isActive === true ? "true" : "false");
     if (imageFile instanceof File) formData.append("image", imageFile);
     if (iconFile instanceof File) formData.append("icon", iconFile);
     const base = (API_BASE_URL || "").replace(/\/$/, "");
-    const res = await fetch(`${base}/ProductCategory/Create`, {
+    const res = await fetch(`${base}/ProductCategory/create-form`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
@@ -66,7 +67,7 @@ export const productCategoryService = {
 
   update: async (id, data) => {
     const client = getAuthenticatedClient();
-    return client.put(`ProductCategory/Update?id=${id}`, { json: data }).json();
+    return client.post(`ProductCategory/update/${id}`, { json: data }).json();
   },
 
   /**
@@ -79,14 +80,15 @@ export const productCategoryService = {
     formData.append("name", (name || "").trim());
     if (slug != null && slug !== "") formData.append("slug", slug.trim());
     if (key != null && key !== "") formData.append("key", key.trim());
-    if (parentCategoryId != null && parentCategoryId !== "" && parentCategoryId !== "none")
+    if (parentCategoryId === "none") formData.append("parentCategoryId", "none");
+    else if (parentCategoryId != null && parentCategoryId !== "")
       formData.append("parentCategoryId", String(parentCategoryId));
     formData.append("isActive", isActive === true ? "true" : "false");
     if (imageFile instanceof File) formData.append("image", imageFile);
     if (iconFile instanceof File) formData.append("icon", iconFile);
     const base = (API_BASE_URL || "").replace(/\/$/, "");
-    const res = await fetch(`${base}/ProductCategory/Update?id=${id}`, {
-      method: "PUT",
+    const res = await fetch(`${base}/ProductCategory/update/${id}/form`, {
+      method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
     });
@@ -102,12 +104,12 @@ export const productCategoryService = {
 
   softDelete: async (id) => {
     const client = getAuthenticatedClient();
-    return client.delete(`ProductCategory/SoftDelete?id=${id}`).json();
+    return client.post(`ProductCategory/delete/${id}`).json();
   },
 
   hardDelete: async (id) => {
     const client = getAuthenticatedClient();
-    return client.delete(`ProductCategory/HardDelete?id=${id}`).json();
+    return client.post(`ProductCategory/hard-delete/${id}`).json();
   },
 
   restore: async (id) => {

@@ -2,9 +2,7 @@
 
 import React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MessageText } from "iconsax-reactjs";
 import TableActions from "../TableActions";
 import { formatDateFa } from "@/utils/adminDateUtils";
 
@@ -13,6 +11,7 @@ const getPriorityBadge = (priority) => {
     1: { label: "پایین", className: "bg-gray-500/20 text-gray-400 border-gray-500/30" },
     2: { label: "متوسط", className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" },
     3: { label: "بالا", className: "bg-red-500/20 text-red-400 border-red-500/30" },
+    4: { label: "فوری", className: "bg-rose-600/25 text-rose-300 border-rose-500/35" },
   };
   const priorityInfo = priorityMap[priority] || priorityMap[2];
   return (
@@ -25,7 +24,10 @@ const getPriorityBadge = (priority) => {
 const getTicketStatusBadge = (status) => {
   const statusMap = {
     1: { label: "باز", className: "bg-green-500/20 text-green-400 border-green-500/30" },
-    2: { label: "بسته", className: "bg-gray-500/20 text-gray-400 border-gray-500/30" },
+    2: { label: "در حال بررسی", className: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
+    3: { label: "در انتظار کاربر", className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" },
+    4: { label: "حل شده", className: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" },
+    5: { label: "بسته", className: "bg-gray-500/20 text-gray-400 border-gray-500/30" },
   };
   const statusInfo = statusMap[status] || statusMap[1];
   return (
@@ -64,8 +66,8 @@ export default function TicketsTable({ tickets, onView }) {
               {ticket.customerName || ticket.userFullName || ticket.userName || "-"}
             </TableCell>
             <TableCell className="text-gray-300">{ticket.subject || ticket.title || "-"}</TableCell>
-            <TableCell>{getPriorityBadge(ticket.priority)}</TableCell>
-            <TableCell>{getTicketStatusBadge(ticket.status)}</TableCell>
+            <TableCell>{getPriorityBadge(Number(ticket.priority))}</TableCell>
+            <TableCell>{getTicketStatusBadge(Number(ticket.status))}</TableCell>
             <TableCell className="text-gray-300">{ticket.messagesCount || ticket.messageCount || 0}</TableCell>
             <TableCell className="text-gray-300">
               {ticket.updatedAt ? formatDateFa(ticket.updatedAt) : ticket.lastUpdate || "-"}

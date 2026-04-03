@@ -396,3 +396,77 @@ html:not([data-crisp-from-header]) #crisp-chatbox {
   opacity: 0 !important;
   pointer-events: none !important;
 }
+
+/*
+ * پنل ادمین: بدون متن تیره — متن عادی، لینک، دکمه و hintها روشن (ترجیحاً سفید).
+ * از body:has تا محتوای Portal رادیکس (مودال/منو) هم پوشش داده شود.
+ */
+body:has(.admin-panel) {
+  --foreground: 0 0% 100%;
+  --card-foreground: 0 0% 100%;
+  --popover-foreground: 0 0% 100%;
+  --muted-foreground: 0 0% 92%;
+  --secondary-foreground: 0 0% 100%;
+  --accent-foreground: 0 0% 100%;
+  /* دکمهٔ پیش‌فرض: پس‌زمینه تیره‌تر + متن سفید (به‌جای پس‌زمینه روشن با متن تیره تم دارک) */
+  --primary: 222 70% 36%;
+  --primary-foreground: 0 0% 100%;
+}
+
+body:has(.admin-panel) .text-black,
+body:has(.admin-panel) .text-gray-950,
+body:has(.admin-panel) .text-gray-900,
+body:has(.admin-panel) .text-gray-800,
+body:has(.admin-panel) .text-gray-700 {
+  color: #ffffff !important;
+}
+
+body:has(.admin-panel) .text-gray-600,
+body:has(.admin-panel) .text-gray-500 {
+  color: rgb(255 255 255 / 0.92) !important;
+}
+
+body:has(.admin-panel) .text-gray-400 {
+  color: rgb(255 255 255 / 0.88) !important;
+}
+
+body:has(.admin-panel) .text-gray-300 {
+  color: rgb(255 255 255 / 0.95) !important;
+}
+
+body:has(.admin-panel) .text-slate-900,
+body:has(.admin-panel) .text-slate-800,
+body:has(.admin-panel) .text-slate-700 {
+  color: #ffffff !important;
+}
+
+body:has(.admin-panel) .text-slate-600,
+body:has(.admin-panel) .text-slate-500 {
+  color: rgb(255 255 255 / 0.92) !important;
+}
+
+body:has(.admin-panel) ::placeholder {
+  color: rgb(255 255 255 / 0.48) !important;
+}
+
+/* دکمه‌های shadcn و سایر موارد با primary-foreground */
+body:has(.admin-panel) button.text-primary-foreground,
+body:has(.admin-panel) [role="button"].text-primary-foreground {
+  color: #ffffff !important;
+}
+
+.admin-panel button.text-primary-foreground {
+  color: #ffffff !important;
+}
+
+/* موبایل/تبلت پنل ادمین: جدول‌های عریض با اسکرول افقی؛ اسکرول لمسی نرم */
+@media (max-width: 1023px) {
+  .admin-panel .relative.w-full.overflow-auto {
+    -webkit-overflow-scrolling: touch;
+    scroll-padding-inline: 0.25rem;
+  }
+
+  .admin-panel .relative.w-full.overflow-auto > table {
+    min-width: 36rem;
+  }
+}

@@ -93,7 +93,7 @@ export default function CreateAdminModal({ open, onOpenChange, onSuccess }) {
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="border-gray-600">
               انصراف
             </Button>
-            <Button type="submit" disabled={loading} className="bg-amber-500 hover:bg-amber-600 text-gray-900">
+            <Button type="submit" disabled={loading} className="bg-amber-500 hover:bg-amber-600 text-white">
               {loading ? "در حال ایجاد..." : "ایجاد ادمین"}
             </Button>
           </div>

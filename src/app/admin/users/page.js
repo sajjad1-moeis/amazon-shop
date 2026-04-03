@@ -13,9 +13,15 @@ import { userService } from "@/services/user/userService";
 import { unwrapApiData } from "@/services/api/client";
 import { AdminPageHeader, AdminSectionCard } from "@/components/admin";
 
+function parsePageParam(raw) {
+  if (raw == null || raw === "") return 1;
+  const n = parseInt(raw, 10);
+  return Number.isFinite(n) && n >= 1 ? n : 1;
+}
+
 export default function UsersPage() {
   const router = useRouter();
-  const { user: currentUser } = useAuth();
+  const { user: currentUser, loading: authLoading } = useAuth();
   const searchParams = useSearchParams();
   const roleParam = searchParams.get("role");
   const statusParam = searchParams.get("status");
@@ -24,7 +30,7 @@ export default function UsersPage() {
 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [pageNumber, setPageNumber] = useState(pageParam ? parseInt(pageParam) : 1);
+  const [pageNumber, setPageNumber] = useState(parsePageParam(pageParam));
   const [pageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
@@ -34,25 +40,23 @@ export default function UsersPage() {
   const filterStatus = statusParam || "all";
 
   useEffect(() => {
-    const page = searchParams.get("page");
-    if (page) {
-      setPageNumber(parseInt(page));
-    } else {
-      setPageNumber(1);
-    }
+    setPageNumber(parsePageParam(searchParams.get("page")));
   }, [searchParams]);
 
   const principal = currentUser?.id ?? currentUser?.userId;
 
   const fetchUsers = useCallback(async () => {
+    if (authLoading) return;
     if (principal == null) {
+      setUsers([]);
+      setTotalPages(1);
+      setTotalCount(0);
       setLoading(false);
       return;
     }
     try {
       setLoading(true);
       const response = await userService.getUsersWithFilters({
-        principal,
         pageNumber,
         pageSize,
         searchTerm: searchParam.trim() || undefined,
@@ -65,9 +69,11 @@ export default function UsersPage() {
       });
 
       if (response.success && response.data) {
-        setUsers(response.data.users || []);
-        setTotalPages(response.data.totalPages || 1);
-        setTotalCount(response.data.totalCount || 0);
+        const d = response.data;
+        const list = d.users ?? d.Users ?? [];
+        setUsers(Array.isArray(list) ? list : []);
+        setTotalPages(d.totalPages ?? d.TotalPages ?? 1);
+        setTotalCount(d.totalCount ?? d.TotalCount ?? 0);
       }
     } catch (error) {
       toast.error(error.message || error.data?.message || "خطا در دریافت کاربران");
@@ -75,7 +81,7 @@ export default function UsersPage() {
     } finally {
       setLoading(false);
     }
-  }, [principal, pageNumber, pageSize, searchParam, filterStatus, filterRole]);
+  }, [authLoading, principal, pageNumber, pageSize, searchParam, filterStatus, filterRole]);
 
   const handleChangeStatus = async (userId, isActive) => {
     try {
@@ -101,13 +107,15 @@ export default function UsersPage() {
     fetchUsers();
   }, [fetchUsers]);
 
+  const showTableLoading = authLoading || loading;
+
   return (
     <div className="space-y-6">
       <AdminPageHeader title="لیست کاربران" subtitle="مدیریت و جستجوی کاربران سیستم" icon={People}>
         <UsersFilters />
       </AdminPageHeader>
       <AdminSectionCard title="جدول کاربران">
-        {loading ? (
+        {showTableLoading ? (
           <div className="p-8 text-center text-gray-400">
             <Spinner size="lg" />
           </div>

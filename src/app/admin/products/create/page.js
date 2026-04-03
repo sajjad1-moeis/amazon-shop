@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowRight } from "iconsax-reactjs";
+import { ArrowRight, ArrowDown2, ArrowUp2, Trash, GalleryAdd } from "iconsax-reactjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -40,8 +40,12 @@ export default function CreateProductPage() {
   });
 
   const imageInputRef = useRef(null);
+  const galleryInputRef = useRef(null);
   const [mainImageFile, setMainImageFile] = useState(null);
   const [mainImagePreview, setMainImagePreview] = useState("");
+  /** ترتیب = ترتیب آپلود گالری؛ هر آیتم id پایدار برای کلید React */
+  const galleryIdRef = useRef(0);
+  const [galleryItems, setGalleryItems] = useState([]);
 
   useEffect(() => {
     fetchFilters();
@@ -94,6 +98,41 @@ export default function CreateProductPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleGalleryFilesAdded = (e) => {
+    const picked = Array.from(e.target.files || []).filter((f) => f instanceof File);
+    e.target.value = "";
+    if (!picked.length) return;
+    setGalleryItems((prev) => [
+      ...prev,
+      ...picked.map((file) => {
+        galleryIdRef.current += 1;
+        return {
+          id: `g-${galleryIdRef.current}-${file.lastModified}`,
+          file,
+          previewUrl: URL.createObjectURL(file),
+        };
+      }),
+    ]);
+  };
+
+  const removeGalleryAt = (index) => {
+    setGalleryItems((prev) => {
+      const row = prev[index];
+      if (row?.previewUrl?.startsWith("blob:")) URL.revokeObjectURL(row.previewUrl);
+      return prev.filter((_, i) => i !== index);
+    });
+  };
+
+  const moveGallery = (index, delta) => {
+    setGalleryItems((prev) => {
+      const j = index + delta;
+      if (j < 0 || j >= prev.length) return prev;
+      const next = [...prev];
+      [next[index], next[j]] = [next[j], next[index]];
+      return next;
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -113,36 +152,49 @@ export default function CreateProductPage() {
     }
 
     try {
+      const priceVal = parseFloat(formData.price);
       const payload = {
         title: formData.name,
-        name: formData.name,
+        titleFa: formData.englishName?.trim() || undefined,
         englishName: formData.englishName || undefined,
-        categoryId: parseInt(formData.categoryId),
-        brandId: parseInt(formData.brandId),
+        categoryId: parseInt(formData.categoryId, 10),
+        brandId: parseInt(formData.brandId, 10),
         amazonUrl: formData.amazonUrl,
         amazonLink: formData.amazonUrl,
         AmazonASIN: formData.amazonASIN,
         amazonASIN: formData.amazonASIN,
-        price: parseFloat(formData.price),
+        price: priceVal,
+        ourPrice: priceVal,
         discountPrice: formData.discountPrice ? parseFloat(formData.discountPrice) : undefined,
-        stock: parseInt(formData.stock),
+        stockQuantity: parseInt(formData.stock, 10),
         shortDescription: formData.shortDescription || undefined,
         description: formData.description || undefined,
-        status: parseInt(formData.status),
-        isActive: formData.isActive,
-        inStock: formData.inStock,
+        status: parseInt(formData.status, 10),
+        isInStock: formData.inStock,
       };
 
       const response = await productService.create(payload);
 
       if (response.success) {
         const createdId = response?.data?.id ?? response?.id ?? response?.data?.productId;
-        if (createdId != null && mainImageFile instanceof File) {
+        const pid = createdId != null ? parseInt(createdId, 10) : null;
+        if (pid != null && mainImageFile instanceof File) {
           try {
-            await productService.uploadMainImage(parseInt(createdId, 10), mainImageFile);
+            await productService.uploadMainImage(pid, mainImageFile);
           } catch (err) {
-            toast.error("محصول ایجاد شد ولی آپلود عکس با خطا مواجه شد");
+            toast.error("محصول ایجاد شد ولی آپلود تصویر اصلی با خطا مواجه شد");
             console.error("Error uploading main image:", err);
+          }
+        }
+        if (pid != null && galleryItems.length > 0) {
+          try {
+            await productService.uploadProductImages(
+              pid,
+              galleryItems.map((item) => item.file)
+            );
+          } catch (err) {
+            toast.error("محصول ایجاد شد ولی آپلود تصاویر گالری با خطا مواجه شد");
+            console.error("Error uploading gallery:", err);
           }
         }
 
@@ -393,7 +445,7 @@ export default function CreateProductPage() {
 
               <div className="space-y-2">
                 <Label className={labelClass} htmlFor="product-main-image">
-                  عکس محصول
+                  تصویر اصلی محصول
                 </Label>
                 <input
                   ref={imageInputRef}
@@ -443,6 +495,89 @@ export default function CreateProductPage() {
                     />
                   </div>
                 ) : null}
+              </div>
+
+              <div className="space-y-3 pt-2 border-t border-gray-700/40">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <Label className={labelClass}>تصاویر گالری (به ترتیب)</Label>
+                  <span className="text-xs text-gray-500">
+                    ترتیب از چپ به راست / بالا به پایین؛ با فلش‌ها جابه‌جا کنید — همان ترتیب روی سایت ذخیره می‌شود.
+                  </span>
+                </div>
+                <input
+                  ref={galleryInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={handleGalleryFilesAdded}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="h-10 border-gray-600 text-gray-300 hover:bg-gray-700/50"
+                  onClick={() => galleryInputRef.current?.click()}
+                >
+                  <GalleryAdd size={18} className="ml-2" />
+                  افزودن به گالری
+                </Button>
+                {galleryItems.length > 0 ? (
+                  <ul className="space-y-2 rounded-xl border border-gray-700/60 bg-gray-900/20 p-3">
+                    {galleryItems.map((item, index) => (
+                      <li
+                        key={item.id}
+                        className="flex flex-wrap items-center gap-3 rounded-lg border border-gray-700/50 bg-gray-800/40 px-3 py-2"
+                      >
+                        <span className="text-xs text-gray-500 w-6 shrink-0">{index + 1}</span>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={item.previewUrl}
+                          alt=""
+                          className="w-14 h-14 object-cover rounded-lg border border-gray-700/60"
+                        />
+                        <span className="flex-1 min-w-0 text-sm text-gray-300 truncate" title={item.file.name}>
+                          {item.file.name}
+                        </span>
+                        <div className="flex items-center gap-1 shrink-0">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-gray-400 hover:text-white"
+                            disabled={index === 0}
+                            onClick={() => moveGallery(index, -1)}
+                            title="بالا"
+                          >
+                            <ArrowUp2 size={18} />
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-gray-400 hover:text-white"
+                            disabled={index === galleryItems.length - 1}
+                            onClick={() => moveGallery(index, 1)}
+                            title="پایین"
+                          >
+                            <ArrowDown2 size={18} />
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-red-400 hover:text-red-300"
+                            onClick={() => removeGalleryAt(index)}
+                            title="حذف"
+                          >
+                            <Trash size={18} />
+                          </Button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-gray-500">اختیاری — می‌توانید چند تصویر اضافه کنید.</p>
+                )}
               </div>
 
               <div className="flex items-center gap-3 pt-2 border-t border-gray-700/60">

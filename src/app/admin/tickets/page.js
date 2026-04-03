@@ -16,24 +16,22 @@ export default function TicketsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const statusParam = searchParams.get("status");
-  const pageParam = searchParams.get("page");
 
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
-  const searchParam = searchParams.get("search");
-  const searchTerm = searchParam || "";
-  const [pageNumber, setPageNumber] = useState(pageParam ? parseInt(pageParam) : 1);
+  const [pageNumber, setPageNumber] = useState(1);
   const [pageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
+  const queryKey = searchParams.toString();
 
   // فیلتر وضعیت برای سرچ ادمین: open => 1 (Open), closed => 5 (Closed)
   const status = statusParam === "open" ? 1 : statusParam === "closed" ? 5 : undefined;
 
   useEffect(() => {
     const page = searchParams.get("page");
-    if (page) {
-      setPageNumber(parseInt(page));
+    const parsedPage = page ? parseInt(page, 10) : NaN;
+    if (!Number.isNaN(parsedPage) && parsedPage > 0) {
+      setPageNumber(parsedPage);
     } else {
       setPageNumber(1);
     }
@@ -59,17 +57,22 @@ export default function TicketsPage() {
       });
 
       const data = unwrapApiData(response);
-      const list = Array.isArray(data?.tickets) ? data.tickets : Array.isArray(data) ? data : [];
+      const list = Array.isArray(data?.tickets)
+        ? data.tickets
+        : Array.isArray(data?.Tickets)
+          ? data.Tickets
+          : Array.isArray(data)
+            ? data
+            : [];
       setTickets(list);
-      setTotalPages(data?.totalPages ?? 1);
-      setTotalCount(data?.totalCount ?? 0);
+      setTotalPages(data?.totalPages ?? data?.TotalPages ?? 1);
     } catch (error) {
       toast.error(error.message || "خطا در دریافت تیکت‌ها");
       console.error("Error fetching tickets:", error);
     } finally {
       setLoading(false);
     }
-  }, [pageNumber, pageSize, status, searchParams]);
+  }, [pageNumber, pageSize, status, queryKey]);
 
   const handleView = (ticketId) => {
     router.push(`/admin/tickets/${ticketId}`);
@@ -81,13 +84,6 @@ export default function TicketsPage() {
     params.set("page", newPage.toString());
     router.push(`/admin/tickets?${params.toString()}`);
   };
-
-  useEffect(() => {
-    const search = searchParams.get("search");
-    if (search) {
-      setPageNumber(1);
-    }
-  }, [searchParams]);
 
   useEffect(() => {
     fetchTickets();

@@ -34,7 +34,9 @@ export default function TicketCategoriesTable({
           <TableRow key={category.id} className="border-gray-700 hover:bg-gray-700/50">
             <TableCell className="text-white font-medium">{category.name}</TableCell>
             <TableCell className="text-gray-300 max-w-xs truncate">{category.description || "-"}</TableCell>
-            <TableCell className="text-gray-300">{category.ticketCount || category.ticketCount || 0}</TableCell>
+            <TableCell className="text-gray-300">
+              {category.ticketCount ?? category.ticketsCount ?? category.count ?? 0}
+            </TableCell>
             <TableCell>
               <Badge
                 variant="outline"
@@ -53,7 +55,6 @@ export default function TicketCategoriesTable({
                   onEdit={() => onEdit(category)}
                   onDelete={() => onDelete(category.id)}
                   showView={false}
-                  showEdit={false}
                 />
                 <Button
                   variant="ghost"

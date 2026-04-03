@@ -65,11 +65,8 @@ export const userService = {
   changeUserStatus: async (id, isActive) => {
     const client = getAuthenticatedClient();
     const active = Boolean(isActive);
-    return client
-      .post(`Users/ChangeUserStatus?id=${id}`, {
-        json: { isActive: active, statusDto: { isActive: active } },
-      })
-      .json();
+    const q = new URLSearchParams({ id: String(id), isActive: String(active) });
+    return client.post(`Users/ChangeUserStatus?${q}`, { json: { isActive: active } }).json();
   },
 
   getUsersCount: async () => {
@@ -118,13 +115,12 @@ export const userService = {
 
   deleteProfileImage: async (id) => {
     const client = getAuthenticatedClient();
-    return client.delete(`Users/DeleteProfileImage?id=${id}`).json();
+    return client.post(`Users/delete-profile-image/${id}`).json();
   },
 
   getUsersWithFilters: async (filters = {}) => {
     const client = getAuthenticatedClient();
     const params = {
-      principal: filters.principal,
       pageNumber: filters.pageNumber,
       pageSize: filters.pageSize,
       searchTerm: filters.searchTerm,
