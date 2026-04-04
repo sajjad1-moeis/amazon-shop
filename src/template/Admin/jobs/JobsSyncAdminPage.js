@@ -442,14 +442,18 @@ export default function JobsSyncAdminPage() {
                             <TableHead>زمان</TableHead>
                             <TableHead>جزئیات</TableHead>
                             {tab === "failed" ? <TableHead className="w-[100px]">Retry</TableHead> : null}
-                            {tab === "enqueued" ? <TableHead className="w-[100px]">لغو</TableHead> : null}
+                            {tab === "enqueued" || tab === "processing" ? (
+                              <TableHead className="w-[100px]">لغو</TableHead>
+                            ) : null}
                           </TableRow>
                         </TableHeader>
                         <TableBody>
                           {recentRows.length === 0 ? (
                             <TableRow>
                               <TableCell
-                                colSpan={tab === "failed" || tab === "enqueued" ? 4 : 3}
+                                colSpan={
+                                  tab === "failed" || tab === "enqueued" || tab === "processing" ? 4 : 3
+                                }
                                 className="text-center text-muted-foreground py-10"
                               >
                                 ردیفی نیست.
@@ -475,7 +479,7 @@ export default function JobsSyncAdminPage() {
                                     </Button>
                                   </TableCell>
                                 ) : null}
-                                {tab === "enqueued" ? (
+                                {tab === "enqueued" || tab === "processing" ? (
                                   <TableCell>
                                     <Button
                                       size="sm"

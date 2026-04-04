@@ -64,6 +64,7 @@ export default function ProductTranslationAdminPage() {
   const [editRow, setEditRow] = useState(null);
   const [titleFaDraft, setTitleFaDraft] = useState("");
   const [saving, setSaving] = useState(false);
+  const [suggestBusyId, setSuggestBusyId] = useState(null);
 
   const fetchData = useCallback(
     async (pageNum) => {
@@ -125,11 +126,27 @@ export default function ProductTranslationAdminPage() {
     }
   };
 
+  /** ذخیرهٔ یک‌کلیکی پیشنهاد واژه‌نامه (fallback ترجمه بدون سرویس خارجی) */
+  const applyGlossarySuggestion = async (r) => {
+    const s = (r.suggestedTitleFa || "").trim();
+    if (!s) return;
+    try {
+      setSuggestBusyId(r.id);
+      await adminProductCatalogService.patchTitleFa(r.id, s);
+      toast.success("پیشنهاد واژه‌نامه ذخیره شد");
+      await fetchData(page);
+    } catch (e) {
+      toast.error(e.message || "خطا در ذخیره پیشنهاد");
+    } finally {
+      setSuggestBusyId(null);
+    }
+  };
+
   return (
     <div className="space-y-6 pb-8 p-4 md:p-6 max-w-[1200px] mx-auto">
       <AdminPageHeader
         title="مرکز ترجمه عنوان محصول"
-        subtitle="فاز ۹ — محصولات بدون یا با ترجمه ناقص TitleFa؛ ویرایش دسته‌ای از طریق API bulk نیز ممکن است."
+        subtitle="فاز ۹ — صف بدون/ناقص TitleFa؛ پیشنهاد از واژه‌نامه برند (جایگزینی اصطلاح)؛ ذخیره دستی یا یک‌کلیک «اعمال پیشنهاد»؛ bulk از API."
         icon={LanguageSquare}
         actions={
           <div className="flex flex-wrap gap-2">
@@ -229,6 +246,17 @@ export default function ProductTranslationAdminPage() {
                         <Button variant="ghost" size="sm" onClick={() => openEdit(r)}>
                           <Edit2 className="size-4" />
                         </Button>
+                        {r.suggestedTitleFa?.trim() ? (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="mr-1 h-8 text-xs"
+                            disabled={suggestBusyId === r.id}
+                            onClick={() => applyGlossarySuggestion(r)}
+                          >
+                            {suggestBusyId === r.id ? <Spinner className="size-3" /> : "اعمال پیشنهاد"}
+                          </Button>
+                        ) : null}
                         <Button variant="link" className="px-1 h-auto text-xs" asChild>
                           <Link href={`/admin/products/edit/${r.id}`}>ویرایش محصول</Link>
                         </Button>

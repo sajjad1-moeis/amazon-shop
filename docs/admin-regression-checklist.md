@@ -35,7 +35,7 @@
 
 ## کاتالوگ — ترجمه، QA، واژه‌نامه
 
-- [ ] `/admin/catalog/translation` — صف ترجمه؛ ستون «پیشنهاد واژه‌نامه» در صورت تعریف قوانین
+- [ ] `/admin/catalog/translation` — صف ترجمه؛ پیشنهاد واژه‌نامه؛ دکمه «اعمال پیشنهاد» یک‌کلیک در صورت وجود پیشنهاد
 - [ ] `/admin/catalog/brand-glossary` — CRUD اصطلاحات برند
 - [ ] `/admin/catalog/qa` — صف QA
 
@@ -50,7 +50,7 @@
 
 - [ ] `/admin/blog/list`
 - [ ] `/admin/contact-us`
-- [ ] `/admin/content/banners` — لیست، ایجاد بنر (آپلود)، ویرایش متادیتا و تعویض اختیاری تصویر (`Banner/UploadImage`) و تعویض تصویر (`Banner/UploadImage`)
+- [ ] `/admin/content/banners` — لیست، ایجاد بنر (آپلود)، ویرایش متادیتا و تعویض اختیاری تصویر (`POST Banner/UploadImage?id=`)
 
 ## امنیت و عملیات
 
@@ -86,7 +86,7 @@
 ## Job و سورس‌ها
 
 - [ ] `/admin/sources` — سورس‌های داده؛ فیلد LastSyncAt پس از job قیمت یا `update-prices`
-- [ ] `/admin/jobs` — overview، retry روی failed، **لغو** روی enqueued
+- [ ] `/admin/jobs` — overview، retry روی failed، **لغو** روی enqueued و processing
 - [ ] `/admin/scraper-proxy`
 
 ## سایر
