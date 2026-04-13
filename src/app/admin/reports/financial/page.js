@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
 import { reportService } from "@/services/report/reportService";
 import { unwrapApiData } from "@/services/api/client";
+import { toFiniteAmount } from "@/utils/adminAmountUtils";
 import { ReportPageHeader, ReportStatCard } from "@/components/admin";
 import { Wallet3, MoneySend, TrendUp } from "iconsax-reactjs";
 
@@ -32,11 +33,17 @@ export default function FinancialReportsPage() {
         if (cancelled) return;
         const data = unwrapApiData(res);
         if (data) {
-          setReport({
-            totalRevenue: data.totalRevenue ?? 0,
-            totalCosts: data.totalCosts ?? 0,
-            netProfit: data.netProfit ?? 0,
-          });
+          const totalRevenue = toFiniteAmount(data.totalRevenue ?? data.TotalRevenue, 0);
+          const totalCosts = toFiniteAmount(data.totalCosts ?? data.TotalCosts, 0);
+          const explicitNet = data.netProfit ?? data.NetProfit;
+          let netProfit;
+          if (explicitNet != null && explicitNet !== "") {
+            const n = toFiniteAmount(explicitNet, NaN);
+            netProfit = Number.isFinite(n) ? n : totalRevenue - totalCosts;
+          } else {
+            netProfit = totalRevenue - totalCosts;
+          }
+          setReport({ totalRevenue, totalCosts, netProfit });
         }
       })
       .catch((err) => {

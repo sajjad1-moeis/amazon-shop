@@ -3,6 +3,7 @@ import { reportService } from "../report/reportService";
 import { orderService } from "../order/orderService";
 import { adminAnalyticsService } from "./adminAnalyticsService";
 import { getPreviousPeriodRange, toIsoRange } from "@/lib/adminDashboardDateRange";
+import { toFiniteAmount } from "@/utils/adminAmountUtils";
 
 function pick(obj, camelKey, pascalKey) {
   if (obj == null || typeof obj !== "object") return undefined;
@@ -19,6 +20,27 @@ function pctChange(current, previous) {
   return ((Number(current) - Number(previous)) / Number(previous)) * 100;
 }
 
+function conversionRateFromPayload(convRes) {
+  if (typeof convRes === "number" && Number.isFinite(convRes)) return convRes;
+  if (convRes && typeof convRes === "object") {
+    const v =
+      pick(convRes, "conversionRate", "ConversionRate") ??
+      pick(convRes, "rate", "Rate") ??
+      pick(convRes, "overallConversionRate", "OverallConversionRate");
+    if (v == null || v === "") return null;
+    const n = toFiniteAmount(v, NaN);
+    return Number.isFinite(n) ? n : null;
+  }
+  return null;
+}
+
+function optionalApiPercent(d, camelKey, pascalKey) {
+  const x = pick(d, camelKey, pascalKey);
+  if (x == null || x === "") return null;
+  const n = toFiniteAmount(x, NaN);
+  return Number.isFinite(n) ? n : null;
+}
+
 async function safeUnwrapReport(promise) {
   try {
     const res = await promise;
@@ -33,7 +55,7 @@ async function safeOrderCount(status) {
     const raw = await orderService.getOrderCountByStatus(status);
     if (typeof raw === "number" && Number.isFinite(raw)) return raw;
     const n = pick(raw, "count", "Count") ?? pick(raw, "orderCount", "OrderCount");
-    return Number(n) || 0;
+    return toFiniteAmount(n, 0);
   } catch {
     return 0;
   }
@@ -52,7 +74,10 @@ async function safeOrderCount(status) {
  *   salesDeltaPct: number | null,
  *   ordersDeltaPct: number | null,
  *   usersDeltaPct: number | null,
- *   pendingIsSnapshot?: boolean
+ *   conversionDeltaPct?: number | null,
+ *   pendingIsSnapshot?: boolean,
+ *   registeredOrdersCount?: number | null,
+ *   registeredOrdersDeltaPct?: number | null
  * }>}
  */
 export async function fetchAdminDashboardKpi(start, end) {
@@ -68,35 +93,41 @@ export async function fetchAdminDashboardKpi(start, end) {
     if (d && typeof d === "object" && !Array.isArray(d)) {
       return {
         source: "dashboard-kpi",
-        totalSales: Number(pick(d, "totalSales", "TotalSales") ?? 0),
-        newOrdersCount: Number(pick(d, "newOrdersCount", "NewOrdersCount") ?? 0),
-        pendingOrdersCount: Number(pick(d, "pendingOrdersCount", "PendingOrdersCount") ?? 0),
-        newUsersCount: Number(pick(d, "newUsersCount", "NewUsersCount") ?? 0),
-        conversionRate:
-          (() => {
-            const v = pick(d, "conversionRate", "ConversionRate");
-            return v != null && Number.isFinite(Number(v)) ? Number(v) : null;
-          })(),
+        totalSales: toFiniteAmount(pick(d, "totalSales", "TotalSales"), 0),
+        newOrdersCount: toFiniteAmount(pick(d, "newOrdersCount", "NewOrdersCount"), 0),
+        pendingOrdersCount: toFiniteAmount(pick(d, "pendingOrdersCount", "PendingOrdersCount"), 0),
+        newUsersCount: toFiniteAmount(pick(d, "newUsersCount", "NewUsersCount"), 0),
+        conversionRate: (() => {
+          const v = pick(d, "conversionRate", "ConversionRate");
+          if (v == null || v === "") return null;
+          const n = toFiniteAmount(v, NaN);
+          return Number.isFinite(n) ? n : null;
+        })(),
         conversionNote: pick(d, "conversionFormula", "ConversionFormula") || undefined,
-        salesDeltaPct:
-          pick(d, "totalSalesChangePercent", "TotalSalesChangePercent") != null
-            ? Number(pick(d, "totalSalesChangePercent", "TotalSalesChangePercent"))
-            : null,
-        ordersDeltaPct:
-          pick(d, "newOrdersChangePercent", "NewOrdersChangePercent") != null
-            ? Number(pick(d, "newOrdersChangePercent", "NewOrdersChangePercent"))
-            : null,
-        usersDeltaPct:
-          pick(d, "newUsersChangePercent", "NewUsersChangePercent") != null
-            ? Number(pick(d, "newUsersChangePercent", "NewUsersChangePercent"))
-            : null,
+        salesDeltaPct: optionalApiPercent(d, "totalSalesChangePercent", "TotalSalesChangePercent"),
+        ordersDeltaPct: optionalApiPercent(d, "newOrdersChangePercent", "NewOrdersChangePercent"),
+        usersDeltaPct: optionalApiPercent(d, "newUsersChangePercent", "NewUsersChangePercent"),
+        conversionDeltaPct:
+          optionalApiPercent(d, "conversionRateChangePercent", "ConversionRateChangePercent") ??
+          optionalApiPercent(d, "conversionChangePercent", "ConversionChangePercent"),
+        registeredOrdersCount: (() => {
+          const v = pick(d, "registeredOrdersCount", "RegisteredOrdersCount");
+          if (v == null || v === "") return null;
+          const n = toFiniteAmount(v, NaN);
+          return Number.isFinite(n) ? n : null;
+        })(),
+        registeredOrdersDeltaPct: optionalApiPercent(
+          d,
+          "registeredOrdersChangePercent",
+          "RegisteredOrdersChangePercent"
+        ),
       };
     }
   } catch {
     /* fallback زیر */
   }
 
-  const [salesCur, salesPrev, usersCur, usersPrev, c1, c2, c3, convRes] = await Promise.all([
+  const [salesCur, salesPrev, usersCur, usersPrev, c1, c2, c3, convRes, convPrevRes] = await Promise.all([
     safeUnwrapReport(reportService.getSalesReport({ startDate, endDate })),
     safeUnwrapReport(reportService.getSalesReport(prevIso)),
     safeUnwrapReport(reportService.getUsersReport({ startDate, endDate })),
@@ -112,54 +143,64 @@ export async function fetchAdminDashboardKpi(start, end) {
         return null;
       }
     })(),
+    (async () => {
+      try {
+        const raw = await adminAnalyticsService.getConversionRateByDateRange(prevIso);
+        return unwrapApiData(raw);
+      } catch {
+        return null;
+      }
+    })(),
   ]);
 
   let conversionRate = null;
   let conversionNote =
     "نرخ تبدیل بازه‌ای در صورت پشتیبانی بک‌اند از conversion-rate?startDate=&endDate= نمایش داده می‌شود.";
-  if (typeof convRes === "number" && Number.isFinite(convRes)) {
-    conversionRate = convRes;
-    conversionNote = undefined;
-  } else if (convRes && typeof convRes === "object") {
-    const v =
-      pick(convRes, "conversionRate", "ConversionRate") ??
-      pick(convRes, "rate", "Rate") ??
-      pick(convRes, "overallConversionRate", "OverallConversionRate");
-    if (v != null && Number.isFinite(Number(v))) {
-      conversionRate = Number(v);
-      conversionNote = pick(convRes, "formulaDescription", "FormulaDescription") || undefined;
-    }
+  conversionRate = conversionRateFromPayload(convRes);
+  if (conversionRate != null) {
+    conversionNote =
+      convRes && typeof convRes === "object"
+        ? pick(convRes, "formulaDescription", "FormulaDescription") || undefined
+        : undefined;
   }
 
-  const totalSales = Number(
-    pick(salesCur, "totalSales", "TotalSales") ?? salesCur?.totalRevenue ?? 0
+  const conversionPrev = conversionRateFromPayload(convPrevRes);
+  const conversionDeltaPct =
+    conversionRate != null && conversionPrev != null ? pctChange(conversionRate, conversionPrev) : null;
+
+  const totalSales = toFiniteAmount(
+    pick(salesCur, "totalSales", "TotalSales") ??
+      pick(salesCur, "totalRevenue", "TotalRevenue") ??
+      salesCur?.totalRevenue,
+    0
   );
-  const totalSalesPrev = Number(
-    pick(salesPrev, "totalSales", "TotalSales") ?? salesPrev?.totalRevenue ?? 0
+  const totalSalesPrev = toFiniteAmount(
+    pick(salesPrev, "totalSales", "TotalSales") ??
+      pick(salesPrev, "totalRevenue", "TotalRevenue") ??
+      salesPrev?.totalRevenue,
+    0
   );
 
-  const newOrdersCount = Number(
-    pick(salesCur, "totalOrders", "TotalOrders") ??
-      pick(salesCur, "orderCount", "OrderCount") ??
-      0
+  const newOrdersCount = toFiniteAmount(
+    pick(salesCur, "totalOrders", "TotalOrders") ?? pick(salesCur, "orderCount", "OrderCount"),
+    0
   );
-  const newOrdersPrev = Number(
-    pick(salesPrev, "totalOrders", "TotalOrders") ??
-      pick(salesPrev, "orderCount", "OrderCount") ??
-      0
+  const newOrdersPrev = toFiniteAmount(
+    pick(salesPrev, "totalOrders", "TotalOrders") ?? pick(salesPrev, "orderCount", "OrderCount"),
+    0
   );
 
-  const newUsersCount = Number(
+  const newUsersCount = toFiniteAmount(
     pick(usersCur, "newUsersThisMonth", "NewUsersThisMonth") ??
       pick(usersCur, "newUsers", "NewUsers") ??
-      pick(usersCur, "newUserCount", "NewUserCount") ??
-      0
+      pick(usersCur, "newUserCount", "NewUserCount"),
+    0
   );
-  const newUsersPrev = Number(
+  const newUsersPrev = toFiniteAmount(
     pick(usersPrev, "newUsersThisMonth", "NewUsersThisMonth") ??
       pick(usersPrev, "newUsers", "NewUsers") ??
-      pick(usersPrev, "newUserCount", "NewUserCount") ??
-      0
+      pick(usersPrev, "newUserCount", "NewUserCount"),
+    0
   );
 
   return {
@@ -170,9 +211,12 @@ export async function fetchAdminDashboardKpi(start, end) {
     newUsersCount,
     conversionRate,
     conversionNote,
+    conversionDeltaPct,
     salesDeltaPct: pctChange(totalSales, totalSalesPrev),
     ordersDeltaPct: pctChange(newOrdersCount, newOrdersPrev),
     usersDeltaPct: pctChange(newUsersCount, newUsersPrev),
     pendingIsSnapshot: true,
+    registeredOrdersCount: null,
+    registeredOrdersDeltaPct: null,
   };
 }

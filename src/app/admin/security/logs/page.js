@@ -73,7 +73,13 @@ export default function SecurityLogsPage() {
 
   return (
     <div className="space-y-6">
-      <AdminPageHeader  className="overflow-visible" accentLine={false} title="لاگ‌های سیستم" subtitle="مشاهده رویدادها و لاگ‌های سرور" icon={DocumentText}>
+      <AdminPageHeader
+        className="overflow-visible"
+        accentLine={false}
+        title="لاگ‌های سیستم"
+        subtitle="تجمیع رویدادهای سرور (سطح، بازه). برای لاگ‌های دسته‌ای payment / scraper / API از «لاگ عملیاتی» با فیلتر category استفاده کنید."
+        icon={DocumentText}
+      >
         <div className="flex flex-wrap items-end gap-3">
           <div className="min-w-[120px]">
             <Label className="text-gray-400 text-xs">سطح</Label>

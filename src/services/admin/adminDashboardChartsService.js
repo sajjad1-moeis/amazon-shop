@@ -1,9 +1,11 @@
 import { getAuthenticatedClient, unwrapApiData } from "../api/client";
 import { reportService } from "../report/reportService";
-import { orderService, OrderStatus } from "../order/orderService";
+import { OrderStatus } from "../order/orderService";
 import { adminTicketService } from "../ticket/adminTicketService";
+import { adminAnalyticsService } from "./adminAnalyticsService";
 import { toIsoRange } from "@/lib/adminDashboardDateRange";
 import { fetchScraperProxyStatusJsonDeduped } from "@/lib/adminScraperProxyStatusFetch";
+import { toFiniteAmount } from "@/utils/adminAmountUtils";
 
 function pick(obj, camelKey, pascalKey) {
   if (obj == null || typeof obj !== "object") return undefined;
@@ -118,18 +120,19 @@ function normalizeSeriesPayload(d) {
       row.Day ??
       row.periodStart ??
       row.PeriodStart;
-    const sales = Number(
+    const sales = toFiniteAmount(
       pick(row, "totalSales", "TotalSales") ??
         pick(row, "sales", "Sales") ??
+        pick(row, "revenue", "Revenue") ??
         row.revenue ??
-        row.Revenue ??
-        0
+        row.Revenue,
+      0
     );
-    const orders = Number(
+    const orders = toFiniteAmount(
       pick(row, "totalOrders", "TotalOrders") ??
         pick(row, "orders", "Orders") ??
-        pick(row, "orderCount", "OrderCount") ??
-        0
+        pick(row, "orderCount", "OrderCount"),
+      0
     );
     let label =
       typeof day === "string" || day instanceof Date
@@ -138,8 +141,8 @@ function normalizeSeriesPayload(d) {
     if (!label || label === "Invalid Date") label = `نقطه ${i + 1}`;
     return {
       label,
-      sales: Number.isFinite(sales) ? sales : 0,
-      orders: Number.isFinite(orders) ? orders : 0,
+      sales,
+      orders,
     };
   });
 }
@@ -159,12 +162,12 @@ function normalizeStatusSegments(d) {
   const out = [];
   for (const row of raw) {
     const status = Number(row.status ?? row.Status ?? row.orderStatus ?? row.OrderStatus);
-    const value = Number(row.count ?? row.Count ?? row.value ?? row.Value ?? 0);
+    const value = toFiniteAmount(row.count ?? row.Count ?? row.value ?? row.Value, 0);
     if (!Number.isFinite(status) || status < 1 || status > 8) continue;
     out.push({
       status,
       name: ORDER_STATUS_LABELS[status] || `وضعیت ${status}`,
-      value: Number.isFinite(value) ? value : 0,
+      value,
     });
   }
   return out.length ? out : null;
@@ -215,14 +218,18 @@ export async function fetchSalesTrendSeries(start, end) {
     const results = await mapWithConcurrency(buckets, 5, async (b) => {
       const iso = toIsoRange(b.start, b.end);
       const raw = await safeUnwrap(reportService.getSalesReport(iso));
-      const sales = Number(pick(raw, "totalSales", "TotalSales") ?? raw?.totalRevenue ?? 0);
-      const orders = Number(
-        pick(raw, "totalOrders", "TotalOrders") ?? pick(raw, "orderCount", "OrderCount") ?? 0
+      const sales = toFiniteAmount(
+        pick(raw, "totalSales", "TotalSales") ?? pick(raw, "totalRevenue", "TotalRevenue") ?? raw?.totalRevenue,
+        0
+      );
+      const orders = toFiniteAmount(
+        pick(raw, "totalOrders", "TotalOrders") ?? pick(raw, "orderCount", "OrderCount"),
+        0
       );
       return {
         label: labelForBucket(b.start),
-        sales: Number.isFinite(sales) ? sales : 0,
-        orders: Number.isFinite(orders) ? orders : 0,
+        sales,
+        orders,
       };
     });
     return { ok: true, source: "Report/GetSalesReport (بازه‌های جزئی)", points: results, error: null };
@@ -236,65 +243,90 @@ export async function fetchSalesTrendSeries(start, end) {
   }
 }
 
-async function safeOrderCount(status) {
-  try {
-    const raw = await orderService.getOrderCountByStatus(status);
-    if (typeof raw === "number" && Number.isFinite(raw)) return raw;
-    const n = pick(raw, "count", "Count") ?? pick(raw, "orderCount", "OrderCount");
-    return Number(n) || 0;
-  } catch {
-    return 0;
-  }
-}
-
 /**
- * توزیع وضعیت سفارش؛ در نبود API بازه‌دار، شمارش لحظه‌ای per-status.
+ * توزیع وضعیت سفارش در بازه (تاریخ ثبت). بدون API، خطا برمی‌گردد تا دادهٔ گمراه‌کننده نشان داده نشود.
  */
 export async function fetchOrderStatusDistribution(start, end) {
   const { startDate, endDate } = toIsoRange(start, end);
+  const note = "بر اساس تاریخ ثبت سفارش در بازهٔ انتخابی.";
   try {
     const client = getAuthenticatedClient();
     const qs = new URLSearchParams({ startDate, endDate }).toString();
     const res = await client.get(`admin/analytics/order-status-distribution?${qs}`).json();
     const d = unwrapApiData(res);
+    /* پاسخ موفق با لیست خالی = هیچ سفارشی در بازه ثبت نشده؛ خطا نیست */
+    if (Array.isArray(d) && d.length === 0) {
+      return {
+        ok: true,
+        source: "admin/analytics/order-status-distribution",
+        segments: [],
+        snapshotNote: note,
+        error: null,
+      };
+    }
     const segments = normalizeStatusSegments(d);
     if (segments && segments.length > 0) {
       return {
         ok: true,
         source: "admin/analytics/order-status-distribution",
         segments,
-        snapshotNote: null,
+        snapshotNote: note,
         error: null,
       };
     }
   } catch {
-    /* fallback */
+    /* بدون fallback گمراه‌کننده (شمارش لحظه‌ای ≠ بازه) */
   }
 
-  const statuses = [1, 2, 3, 4, 5, 6, 7, 8];
-  const counts = await Promise.all(statuses.map((s) => safeOrderCount(s)));
-  const segments = statuses
-    .map((status, i) => ({
-      status,
-      name: ORDER_STATUS_LABELS[status] || `وضعیت ${status}`,
-      value: counts[i],
-    }))
-    .filter((x) => x.value > 0);
-
   return {
-    ok: true,
-    source: "OrderCountByStatus (لحظه‌ای)",
-    segments,
-    snapshotNote: "بدون API بازه‌دار؛ بر اساس شمارش فعلی هر وضعیت در سیستم.",
-    error: null,
+    ok: false,
+    source: null,
+    segments: [],
+    snapshotNote: null,
+    error: "برای نمایش توزیع وضعیت در این بازه، اتصال به admin/analytics/order-status-distribution لازم است.",
+  };
+}
+
+function mapAlertRow(row) {
+  if (!row || typeof row !== "object") return null;
+  const id = String(row.id ?? row.Id ?? "").trim();
+  if (!id) return null;
+  const sev = String(row.severity ?? row.Severity ?? "info").toLowerCase();
+  const severity = sev === "critical" || sev === "warning" || sev === "info" ? sev : "info";
+  const cnt = row.count ?? row.Count;
+  return {
+    id,
+    title: String(row.title ?? row.Title ?? ""),
+    description: row.description ?? row.Description ?? undefined,
+    severity,
+    href: row.href ?? row.Href ?? "/admin",
+    count: cnt != null && cnt !== "" ? Number(cnt) : undefined,
   };
 }
 
 /**
- * هشدارهای read-only (پروکسی، تیکت باز). سفارش معطل از KPI در UI ادغام می‌شود.
+ * هشدارها: اولویت با API تجمیعی بک‌اند؛ سپس هشدارهای پیکربندی پروکسی (Next)؛ در نبود API، تیکت باز.
  */
 export async function fetchDashboardAlertsFragment() {
   const items = [];
+  let usedBackendAlerts = false;
+
+  try {
+    const res = await adminAnalyticsService.getDashboardAlerts();
+    const d = unwrapApiData(res);
+    const raw = Array.isArray(d) ? d : Array.isArray(d?.items) ? d.items : null;
+    if (raw === null) {
+      usedBackendAlerts = false;
+    } else {
+      usedBackendAlerts = true;
+      for (const row of raw) {
+        const m = mapAlertRow(row);
+        if (m?.title) items.push(m);
+      }
+    }
+  } catch {
+    usedBackendAlerts = false;
+  }
 
   try {
     const { httpOk, json: j } = await fetchScraperProxyStatusJsonDeduped();
@@ -313,40 +345,42 @@ export async function fetchDashboardAlertsFragment() {
       }
     }
   } catch {
-    /* نادیده — ویجت اصلی داشبورد کار می‌کند */
+    /* نادیده */
   }
 
-  try {
-    const res = await adminTicketService.getPaginated({ pageNumber: 1, pageSize: 1, status: 1 });
-    const d = unwrapApiData(res);
-    const list = Array.isArray(d?.tickets)
-      ? d.tickets
-      : Array.isArray(d?.Tickets)
-        ? d.Tickets
-        : [];
-    const explicit =
-      Number(pick(d, "totalCount", "TotalCount")) ||
-      Number(pick(d, "totalItems", "TotalItems")) ||
-      Number(pick(d, "totalRecords", "TotalRecords")) ||
-      0;
-    const tp = Number(pick(d, "totalPages", "TotalPages")) || 0;
-    const ps = Number(pick(d, "pageSize", "PageSize")) || 1;
-    let estimated = explicit > 0 ? explicit : tp > 0 ? tp * ps : 0;
-    if (estimated === 0 && list.length > 0) {
-      estimated = tp > 0 ? tp * ps : list.length;
+  if (!usedBackendAlerts && items.filter((x) => x.id === "tickets-open").length === 0) {
+    try {
+      const res = await adminTicketService.getPaginated({ pageNumber: 1, pageSize: 1, status: 1 });
+      const d = unwrapApiData(res);
+      const list = Array.isArray(d?.tickets)
+        ? d.tickets
+        : Array.isArray(d?.Tickets)
+          ? d.Tickets
+          : [];
+      const explicit =
+        Number(pick(d, "totalCount", "TotalCount")) ||
+        Number(pick(d, "totalItems", "TotalItems")) ||
+        Number(pick(d, "totalRecords", "TotalRecords")) ||
+        0;
+      const tp = Number(pick(d, "totalPages", "TotalPages")) || 0;
+      const ps = Number(pick(d, "pageSize", "PageSize")) || 1;
+      let estimated = explicit > 0 ? explicit : tp > 0 ? tp * ps : 0;
+      if (estimated === 0 && list.length > 0) {
+        estimated = tp > 0 ? tp * ps : list.length;
+      }
+      if (estimated > 0) {
+        items.push({
+          id: "tickets-open",
+          title: "تیکت‌های باز",
+          description: `${estimated.toLocaleString("fa-IR")} مورد در وضعیت باز؛ پاسخ یا تخصیص بررسی شود.`,
+          severity: estimated > 20 ? "critical" : "warning",
+          href: "/admin/tickets",
+          count: estimated,
+        });
+      }
+    } catch {
+      /* ignore */
     }
-    if (estimated > 0) {
-      items.push({
-        id: "tickets-open",
-        title: "تیکت‌های باز",
-        description: `${estimated.toLocaleString("fa-IR")} مورد در وضعیت باز؛ پاسخ یا تخصیص بررسی شود.`,
-        severity: estimated > 20 ? "critical" : "warning",
-        href: "/admin/tickets?status=open",
-        count: estimated,
-      });
-    }
-  } catch {
-    /* ignore */
   }
 
   return { ok: true, items, error: null };

@@ -119,6 +119,9 @@ export const ADMIN_SIDEBAR_ITEMS = [
     children: [
       { name: "داشبورد جستجو", href: "/admin/search" },
       { name: "گزارش‌ها", href: "/admin/search/reports" },
+      { name: "سرچ‌های بدون نتیجه", href: "/admin/search/reports?tab=zero-result" },
+      { name: "سرچ‌های کم‌کلیک", href: "/admin/search/reports?tab=low-click" },
+      { name: "سرچ‌هایی بدون خرید", href: "/admin/search/reports?tab=no-purchase" },
       { name: "مترادف‌ها", href: "/admin/search/synonyms" },
       { name: "ریدایرکت", href: "/admin/search/redirects" },
       { name: "دسته و لندینگ", href: "/admin/search/category-landings" },
@@ -135,6 +138,7 @@ export const ADMIN_SIDEBAR_ITEMS = [
     children: [
       { name: "همه سفارشات", href: "/admin/orders" },
       { name: "در انتظار پرداخت", href: "/admin/orders?status=1" },
+      { name: "پرداخت‌شده", href: "/admin/orders?status=2" },
       { name: "در حال پردازش", href: "/admin/orders?status=3" },
       { name: "ارسال شده", href: "/admin/orders?status=4" },
       { name: "تکمیل شده", href: "/admin/orders?status=5" },

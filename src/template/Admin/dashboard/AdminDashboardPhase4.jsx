@@ -103,25 +103,25 @@ function ErrorBlock({ message }) {
 function severityStyles(sev) {
   if (sev === "critical") return "border-rose-500/40 bg-rose-950/20 text-rose-200";
   if (sev === "warning") return "border-amber-500/35 bg-amber-950/15 text-amber-100";
+  if (sev === "info") return "border-slate-500/30 bg-slate-900/25 text-slate-200";
   return "border-cyan-500/30 bg-cyan-950/15 text-cyan-100";
 }
 
-export default function AdminDashboardPhase4({ salesTrendWidget, orderStatusWidget, alertsWidget, kpi }) {
+const STATUS_FILTER_MAP = {
+  1: "/admin/orders?status=1",
+  2: "/admin/orders?status=2",
+  3: "/admin/orders?status=3",
+  4: "/admin/orders?status=4",
+  5: "/admin/orders?status=5",
+  6: "/admin/orders?status=6",
+  7: "/admin/orders?status=7",
+  8: "/admin/orders?status=8",
+};
+
+export default function AdminDashboardPhase4({ salesTrendWidget, orderStatusWidget, alertsWidget }) {
   const mergedAlerts = useMemo(() => {
-    const base = Array.isArray(alertsWidget?.data?.items) ? [...alertsWidget.data.items] : [];
-    if (kpi && Number(kpi.pendingOrdersCount) > 0) {
-      const n = Number(kpi.pendingOrdersCount);
-      base.unshift({
-        id: "pending-orders-kpi",
-        title: "سفارش در انتظار / معطل",
-        description: `${formatNum(n)} سفارش در وضعیت‌های در انتظار یا پردازش؛ از لیست سفارشات پیگیری کنید.`,
-        severity: n > 50 ? "critical" : "warning",
-        href: "/admin/orders?status=1",
-        count: n,
-      });
-    }
-    return base;
-  }, [alertsWidget?.data, kpi?.pendingOrdersCount]);
+    return Array.isArray(alertsWidget?.data?.items) ? [...alertsWidget.data.items] : [];
+  }, [alertsWidget?.data]);
 
   const salesPoints = salesTrendWidget?.data?.points ?? [];
   const hasSalesNumbers = salesPoints.some((p) => (p.sales ?? 0) > 0 || (p.orders ?? 0) > 0);
@@ -130,7 +130,7 @@ export default function AdminDashboardPhase4({ salesTrendWidget, orderStatusWidg
 
   return (
     <div className="space-y-3">
-      <h2 className="text-sm font-medium text-gray-400">تحلیل سریع و هشدارها (فاز ۴)</h2>
+      <h2 className="text-sm font-medium text-gray-400">تحلیل سریع، نمودارها و هشدارها</h2>
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <WidgetShell
           title="روند فروش (بازه)"
@@ -172,7 +172,9 @@ export default function AdminDashboardPhase4({ salesTrendWidget, orderStatusWidg
                       name === "sales" ? [formatToman(value), "فروش"] : [formatNum(value), "سفارش"]
                     }
                   />
+                  <Legend wrapperStyle={{ fontSize: "11px", color: "#9ca3af" }} />
                   <Bar dataKey="sales" name="sales" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={48} />
+                  <Bar dataKey="orders" name="orders" fill="#60a5fa" radius={[4, 4, 0, 0]} maxBarSize={48} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -191,40 +193,64 @@ export default function AdminDashboardPhase4({ salesTrendWidget, orderStatusWidg
           ) : orderSegments.length === 0 ? (
             <EmptyBlock message="داده‌ای برای توزیع وضعیت سفارش نیست." />
           ) : (
-            <div className="h-[min(320px,55vw)] w-full min-h-[240px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={orderSegments}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={52}
-                    outerRadius={88}
-                    paddingAngle={2}
+            <div className="space-y-3">
+              <div className="h-[min(320px,55vw)] w-full min-h-[220px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={orderSegments}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={52}
+                      outerRadius={88}
+                      paddingAngle={2}
+                    >
+                      {orderSegments.map((seg, i) => (
+                        <Cell
+                          key={seg.status}
+                          fill={PIE_COLORS[i % PIE_COLORS.length]}
+                          stroke="rgba(31,41,55,0.9)"
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={tooltipStyle}
+                      formatter={(value) => [formatNum(value), "تعداد"]}
+                    />
+                    <Legend wrapperStyle={{ fontSize: "11px", color: "#9ca3af" }} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {orderSegments.map((seg, i) => (
+                  <Link
+                    key={`status-link-${seg.status}`}
+                    href={STATUS_FILTER_MAP[seg.status] || "/admin/orders"}
+                    className="flex items-center justify-between rounded-lg border border-gray-600/80 bg-gray-800/40 px-3 py-2 text-xs text-gray-200 transition-colors hover:border-amber-500/40 hover:bg-gray-800/60"
                   >
-                    {orderSegments.map((seg, i) => (
-                      <Cell
-                        key={seg.status}
-                        fill={PIE_COLORS[i % PIE_COLORS.length]}
-                        stroke="rgba(31,41,55,0.9)"
+                    <span className="flex items-center gap-2">
+                      <span
+                        className="h-2 w-2 rounded-full"
+                        style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }}
                       />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    contentStyle={tooltipStyle}
-                    formatter={(value) => [formatNum(value), "تعداد"]}
-                  />
-                  <Legend wrapperStyle={{ fontSize: "11px", color: "#9ca3af" }} />
-                </PieChart>
-              </ResponsiveContainer>
+                      {seg.name}
+                    </span>
+                    <span className="font-medium">{formatNum(seg.value)}</span>
+                  </Link>
+                ))}
+              </div>
             </div>
           )}
         </WidgetShell>
       </div>
 
-      <WidgetShell title="هشدارهای فوری" icon={NotificationStatus} subtitle="لینک به همان بخش در پنل ادمین">
+      <WidgetShell
+        title="هشدارهای فوری"
+        icon={NotificationStatus}
+        subtitle="تجمیع از API ادمین + هشدار پیکربندی پروکسی؛ لینک به همان بخش در پنل"
+      >
         {alertsWidget?.loading ? (
           <div className="flex justify-center py-14">
             <Spinner size="lg" />

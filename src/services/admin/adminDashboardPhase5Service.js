@@ -40,18 +40,36 @@ async function fetchProxyStatusSafe() {
         ready: false,
         issues: httpStatus > 0 ? [`HTTP ${httpStatus}`] : ["درخواست وضعیت پروکسی ناموفق"],
         raw: null,
+        banCount: null,
+        avgLatencyMs: null,
+        proxies: null,
       };
     }
     const data = json?.data ?? json?.Data;
+    const banRaw = data?.banCount ?? data?.BanCount ?? data?.bannedCount ?? data?.BannedCount;
+    const latRaw = data?.avgLatencyMs ?? data?.AvgLatencyMs ?? data?.averageLatencyMs ?? data?.AverageLatencyMs;
+    const proxiesRaw = data?.proxies ?? data?.Proxies;
     return {
       ok: true,
       reachable: true,
       ready: Boolean(data?.ready),
       issues: Array.isArray(data?.issues) ? data.issues.map(String) : [],
       raw: data ?? null,
+      banCount: banRaw != null && banRaw !== "" && Number.isFinite(Number(banRaw)) ? Number(banRaw) : null,
+      avgLatencyMs: latRaw != null && latRaw !== "" && Number.isFinite(Number(latRaw)) ? Number(latRaw) : null,
+      proxies: Array.isArray(proxiesRaw) ? proxiesRaw : null,
     };
   } catch {
-    return { ok: true, reachable: false, ready: false, issues: ["درخواست وضعیت پروکسی ناموفق"], raw: null };
+    return {
+      ok: true,
+      reachable: false,
+      ready: false,
+      issues: ["درخواست وضعیت پروکسی ناموفق"],
+      raw: null,
+      banCount: null,
+      avgLatencyMs: null,
+      proxies: null,
+    };
   }
 }
 
@@ -174,10 +192,10 @@ function buildFallbackHealthRows({ proxy, currency, ordersOk, ticketsOk }) {
 }
 
 /**
- * بستهٔ دادهٔ فاز ۵ داشبورد: سلامت، پروکسی، سفارش و تیکت اخیر.
- * با reloadNonce در والد تازه می‌شود (وابسته به بازهٔ زمانی نیست).
+ * بستهٔ دادهٔ بخش عملیات و سلامت داشبورد: سلامت، پروکسی، سفارش و تیکت اخیر.
+ * با reloadNonce در والد تازه می‌شود (وابسته به بازهٔ زمانی KPI نیست).
  */
-export async function fetchDashboardPhase5Bundle() {
+export async function fetchAdminDashboardOperationsBundle() {
   const [ordersRes, ticketsRes, proxy, currency, apiHealth] = await Promise.all([
     (async () => {
       try {
@@ -190,7 +208,7 @@ export async function fetchDashboardPhase5Bundle() {
     })(),
     (async () => {
       try {
-        const res = await adminTicketService.getPaginated({ pageNumber: 1, pageSize: 8 });
+        const res = await adminTicketService.getPaginated({ pageNumber: 1, pageSize: 8, status: 1 });
         const data = unwrapApiData(res);
         const tickets = normalizeTicketList(data);
         const ts = (x) => {
@@ -234,6 +252,9 @@ export async function fetchDashboardPhase5Bundle() {
       ready: proxy.ready,
       reachable: proxy.reachable,
       issues: proxy.issues,
+      banCount: proxy.banCount,
+      avgLatencyMs: proxy.avgLatencyMs,
+      proxies: proxy.proxies,
     },
     recentOrders: ordersRes,
     recentTickets: ticketsRes,

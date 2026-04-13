@@ -43,13 +43,14 @@ import {
   fetchOrderStatusDistribution,
   fetchDashboardAlertsFragment,
 } from "@/services/admin/adminDashboardChartsService";
-import { fetchDashboardPhase5Bundle } from "@/services/admin/adminDashboardPhase5Service";
+import { fetchAdminDashboardOperationsBundle } from "@/services/admin/adminDashboardPhase5Service";
+import { toFiniteAmount, toOptionalFiniteNumber } from "@/utils/adminAmountUtils";
 
 const AdminDashboardPhase4 = dynamic(() => import("./AdminDashboardPhase4"), {
   ssr: false,
   loading: () => (
     <div className="space-y-3" aria-busy="true">
-      <h2 className="text-sm font-medium text-gray-400">تحلیل سریع و هشدارها (فاز ۴)</h2>
+      <h2 className="text-sm font-medium text-gray-400">تحلیل سریع، نمودارها و هشدارها</h2>
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <div className="min-h-[280px] animate-pulse rounded-xl border border-gray-600 bg-gray-700/20" />
         <div className="min-h-[280px] animate-pulse rounded-xl border border-gray-600 bg-gray-700/20" />
@@ -63,7 +64,7 @@ const AdminDashboardPhase5 = dynamic(() => import("./AdminDashboardPhase5"), {
   ssr: false,
   loading: () => (
     <div className="space-y-3 py-6" aria-busy="true">
-      <p className="text-sm text-gray-400">عملیات و سلامت سیستم (فاز ۵)…</p>
+      <p className="text-sm text-gray-400">عملیات و سلامت سیستم…</p>
       <div className="h-32 animate-pulse rounded-xl border border-gray-600 bg-gray-700/20" />
     </div>
   ),
@@ -99,8 +100,10 @@ function formatPercent(n) {
 }
 
 function formatToman(n) {
-  if (n == null || Number.isNaN(n)) return "—";
-  return `${Number(n).toLocaleString("fa-IR")} تومان`;
+  if (n == null) return "—";
+  const x = toFiniteAmount(n, NaN);
+  if (!Number.isFinite(x)) return "—";
+  return `${x.toLocaleString("fa-IR")} تومان`;
 }
 
 function DeltaLine({ pct }) {
@@ -130,6 +133,18 @@ const RANGE_PRESETS = [
   { key: DASHBOARD_RANGE_QUERY.CUSTOM, label: "دلخواه" },
 ];
 
+function searchReportHref(term) {
+  const q = new URLSearchParams();
+  if (term) q.set("q", String(term));
+  return `/admin/search/reports${q.toString() ? `?${q.toString()}` : ""}`;
+}
+
+function productListHrefByAsin(asin) {
+  const q = new URLSearchParams();
+  if (asin) q.set("search", String(asin));
+  return `/admin/products/list${q.toString() ? `?${q.toString()}` : ""}`;
+}
+
 function KpiLinkCard({
   href,
   icon: Icon,
@@ -139,6 +154,7 @@ function KpiLinkCard({
   accent = "text-white",
   iconBg = "bg-gray-600/50",
   title: tip,
+  subtitle,
 }) {
   const inner = (
     <div className="rounded-xl border border-gray-600 bg-gray-700/30 p-3 transition-colors hover:border-amber-500/40 hover:bg-gray-700/45 sm:p-4">
@@ -147,6 +163,9 @@ function KpiLinkCard({
           <p className="mb-0.5 text-xs text-gray-400 sm:mb-1 sm:text-sm">{label}</p>
           <p className={`truncate text-lg font-bold sm:text-xl md:text-2xl ${accent}`}>{value}</p>
           <DeltaLine pct={deltaPct} />
+          {subtitle ? (
+            <p className="mt-1.5 text-[11px] leading-relaxed text-gray-500">{subtitle}</p>
+          ) : null}
         </div>
         <div className={`${iconBg} shrink-0 rounded-lg p-2 sm:rounded-xl sm:p-2.5`}>
           <Icon size={20} className={accent} />
@@ -162,8 +181,8 @@ function KpiLinkCard({
   );
 }
 
-function StatCard({ icon: Icon, label, value, accent = "text-white", iconBg = "bg-gray-600/50" }) {
-  return (
+function StatCard({ icon: Icon, label, value, accent = "text-white", iconBg = "bg-gray-600/50", href }) {
+  const body = (
     <div className="rounded-xl border border-gray-600 bg-gray-700/30 p-3 transition-colors hover:border-gray-500/50 sm:p-4">
       <div className="flex items-start justify-between gap-2 sm:gap-3">
         <div className="min-w-0 flex-1">
@@ -175,6 +194,12 @@ function StatCard({ icon: Icon, label, value, accent = "text-white", iconBg = "b
         </div>
       </div>
     </div>
+  );
+  if (!href) return body;
+  return (
+    <Link href={href} className="block rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/60">
+      {body}
+    </Link>
   );
 }
 
@@ -260,7 +285,7 @@ export default function AdminDashboardPage() {
   const [salesTrendWidget, setSalesTrendWidget] = useState({ loading: true, error: null, data: null });
   const [orderStatusWidget, setOrderStatusWidget] = useState({ loading: true, error: null, data: null });
   const [alertsWidget, setAlertsWidget] = useState({ loading: true, error: null, data: null });
-  const [phase5Widget, setPhase5Widget] = useState({ loading: true, error: null, data: null });
+  const [operationsBundle, setOperationsBundle] = useState({ loading: true, error: null, data: null });
 
   useEffect(() => {
     if (rangeParam === DASHBOARD_RANGE_QUERY.CUSTOM && fromParam && toParam) {
@@ -318,7 +343,22 @@ export default function AdminDashboardPage() {
               }
             }
           })(),
-          safeUnwrapResponse(adminAnalyticsService.getNoResultSearches(10)),
+          (async () => {
+            try {
+              const r = await adminAnalyticsService.getNoResultSearchesByDateRange({
+                ...iso,
+                limit: 10,
+              });
+              return unwrapApiData(r);
+            } catch {
+              try {
+                const r = await adminAnalyticsService.getNoResultSearches(10);
+                return unwrapApiData(r);
+              } catch {
+                return [];
+              }
+            }
+          })(),
           safeUnwrapResponse(adminAnalyticsService.getTopSellingProducts(10)),
         ]);
 
@@ -422,21 +462,21 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     let cancelled = false;
-    setPhase5Widget({ loading: true, error: null, data: null });
-    fetchDashboardPhase5Bundle()
+    setOperationsBundle({ loading: true, error: null, data: null });
+    fetchAdminDashboardOperationsBundle()
       .then((r) => {
         if (cancelled) return;
         if (!r?.ok) {
-          setPhase5Widget({ loading: false, error: "بارگذاری بخش عملیات و سلامت ناموفق بود", data: null });
+          setOperationsBundle({ loading: false, error: "بارگذاری بخش عملیات و سلامت ناموفق بود", data: null });
           return;
         }
-        setPhase5Widget({ loading: false, error: null, data: r });
+        setOperationsBundle({ loading: false, error: null, data: r });
       })
       .catch((e) => {
         if (!cancelled) {
-          setPhase5Widget({
+          setOperationsBundle({
             loading: false,
-            error: e?.message || "خطا در بارگذاری فاز ۵",
+            error: e?.message || "خطا در بارگذاری بخش عملیات و سلامت",
             data: null,
           });
         }
@@ -466,15 +506,17 @@ export default function AdminDashboardPage() {
 
   const s = summary || {};
   const u = userStats || {};
-  const totalSearches = pick(s, "totalSearches", "TotalSearches");
-  const totalClicks = pick(s, "totalClicks", "TotalClicks");
-  const totalPurchases = pick(s, "totalPurchases", "TotalPurchases");
-  const overallConversionRate = pick(s, "overallConversionRate", "OverallConversionRate");
-  const overallClickRate = pick(s, "overallClickRate", "OverallClickRate");
-  const uniqueSearchTerms = pick(s, "uniqueSearchTerms", "UniqueSearchTerms");
-  const noResultSearchesCount = pick(s, "noResultSearches", "NoResultSearches");
-  const totalUsers = pick(u, "totalUsers", "TotalUsers");
-  const activeUsers = pick(u, "activeUsers", "ActiveUsers");
+  const totalSearches = toOptionalFiniteNumber(pick(s, "totalSearches", "TotalSearches"));
+  const totalClicks = toOptionalFiniteNumber(pick(s, "totalClicks", "TotalClicks"));
+  const totalPurchases = toOptionalFiniteNumber(pick(s, "totalPurchases", "TotalPurchases"));
+  const overallConversionRate = toOptionalFiniteNumber(
+    pick(s, "overallConversionRate", "OverallConversionRate")
+  );
+  const overallClickRate = toOptionalFiniteNumber(pick(s, "overallClickRate", "OverallClickRate"));
+  const uniqueSearchTerms = toOptionalFiniteNumber(pick(s, "uniqueSearchTerms", "UniqueSearchTerms"));
+  const noResultSearchesCount = toOptionalFiniteNumber(pick(s, "noResultSearches", "NoResultSearches"));
+  const totalUsers = toOptionalFiniteNumber(pick(u, "totalUsers", "TotalUsers"));
+  const activeUsers = toOptionalFiniteNumber(pick(u, "activeUsers", "ActiveUsers"));
 
   if (loading && !lastRefreshAt) {
     return (
@@ -616,11 +658,23 @@ export default function AdminDashboardPage() {
           <KpiLinkCard
             href="/admin/orders"
             icon={ShoppingCart}
-            label="سفارشات در بازه"
+            label="سفارش پرداخت‌شده در بازه"
             value={kpi ? formatNum(kpi.newOrdersCount) : "—"}
             deltaPct={kpi?.ordersDeltaPct}
             accent="text-violet-400"
             iconBg="bg-violet-500/10"
+            title="بر اساس PaidAt در بازهٔ انتخابی"
+            subtitle={
+              kpi?.registeredOrdersCount != null
+                ? `ثبت در بازه (CreatedAt): ${formatNum(kpi.registeredOrdersCount)}${
+                    kpi.registeredOrdersDeltaPct != null && !Number.isNaN(kpi.registeredOrdersDeltaPct)
+                      ? ` — ${kpi.registeredOrdersDeltaPct >= 0 ? "↑" : "↓"} ${Math.abs(Number(kpi.registeredOrdersDeltaPct)).toFixed(1)}٪ نسبت به بازهٔ قبل`
+                      : ""
+                  }`
+                : kpi?.source === "fallback"
+                  ? "تعداد ثبت‌شده در بازه در حالت fallback در دسترس نیست."
+                  : undefined
+            }
           />
           <KpiLinkCard
             href="/admin/orders?status=1"
@@ -645,9 +699,11 @@ export default function AdminDashboardPage() {
             icon={TrendUp}
             label="نرخ تبدیل (بازه)"
             value={kpi?.conversionRate != null ? formatPercent(kpi.conversionRate) : "—"}
+            deltaPct={kpi?.conversionDeltaPct}
             accent="text-pink-400"
             iconBg="bg-pink-500/10"
             title={kpi?.conversionNote}
+            subtitle="بر پایهٔ جستجو در همان بازه است؛ Session مرورگر در این شاخص لحاظ نمی‌شود."
           />
         </div>
       </div>
@@ -656,10 +712,9 @@ export default function AdminDashboardPage() {
         salesTrendWidget={salesTrendWidget}
         orderStatusWidget={orderStatusWidget}
         alertsWidget={alertsWidget}
-        kpi={kpi}
       />
 
-      <AdminDashboardPhase5 phase5Widget={phase5Widget} />
+      <AdminDashboardPhase5 operationsBundle={operationsBundle} />
 
       <div>
         <h2 className="text-sm font-medium text-gray-400 mb-3">دسترسی سریع</h2>
@@ -700,6 +755,7 @@ export default function AdminDashboardPage() {
             value={formatNum(totalSearches)}
             accent="text-blue-400"
             iconBg="bg-blue-500/10"
+            href="/admin/search/reports"
           />
           <StatCard
             icon={MouseCircle}
@@ -707,6 +763,7 @@ export default function AdminDashboardPage() {
             value={formatNum(totalClicks)}
             accent="text-cyan-400"
             iconBg="bg-cyan-500/10"
+            href="/admin/search/reports"
           />
           <StatCard
             icon={Bag2}
@@ -714,6 +771,7 @@ export default function AdminDashboardPage() {
             value={formatNum(totalPurchases)}
             accent="text-emerald-400"
             iconBg="bg-emerald-500/10"
+            href="/admin/reports/sales"
           />
           <StatCard
             icon={TrendUp}
@@ -721,6 +779,7 @@ export default function AdminDashboardPage() {
             value={formatPercent(overallConversionRate)}
             accent="text-violet-400"
             iconBg="bg-violet-500/10"
+            href="/admin/reports/sales"
           />
           <StatCard
             icon={MouseCircle}
@@ -728,6 +787,7 @@ export default function AdminDashboardPage() {
             value={formatPercent(overallClickRate)}
             accent="text-amber-400"
             iconBg="bg-amber-500/10"
+            href="/admin/search/reports"
           />
           <StatCard
             icon={SearchNormal1}
@@ -735,6 +795,7 @@ export default function AdminDashboardPage() {
             value={formatNum(uniqueSearchTerms)}
             accent="text-pink-400"
             iconBg="bg-pink-500/10"
+            href="/admin/search/reports"
           />
           <StatCard
             icon={People}
@@ -742,6 +803,7 @@ export default function AdminDashboardPage() {
             value={formatNum(totalUsers)}
             accent="text-blue-400"
             iconBg="bg-blue-500/10"
+            href="/admin/users"
           />
           <StatCard
             icon={People}
@@ -749,6 +811,7 @@ export default function AdminDashboardPage() {
             value={formatNum(activeUsers)}
             accent="text-emerald-400"
             iconBg="bg-emerald-500/10"
+            href="/admin/users"
           />
           <StatCard
             icon={Danger}
@@ -756,6 +819,7 @@ export default function AdminDashboardPage() {
             value={formatNum(noResultSearchesCount)}
             accent="text-amber-400"
             iconBg="bg-amber-500/10"
+            href="/admin/search/reports?tab=zero-result"
           />
         </div>
       </div>
@@ -765,22 +829,24 @@ export default function AdminDashboardPage() {
           {topSelling.length > 0 ? (
             <ul className="space-y-2">
               {topSelling.map((item, i) => (
-                <li
-                  key={item.asin || i}
-                  className="flex items-center gap-3 p-3 rounded-lg bg-gray-800/40 border border-gray-600/50 hover:border-gray-600 transition-colors"
-                >
-                  <span className="flex-shrink-0 w-7 h-7 rounded-lg bg-gray-600 flex items-center justify-center text-xs font-bold text-gray-300">
-                    {i + 1}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-white text-sm font-medium truncate">{item.title || item.asin || "—"}</p>
-                    <p className="text-gray-500 text-xs mt-0.5">
-                      ASIN: {item.asin || "—"} · بازدید {formatNum(item.viewCount)} · جستجو {formatNum(item.searchCount)}
-                    </p>
-                  </div>
-                  <span className="flex-shrink-0 text-emerald-400 text-sm font-medium">
-                    {formatNum(item.purchaseCount)} خرید
-                  </span>
+                <li key={item.asin || i}>
+                  <Link
+                    href={productListHrefByAsin(item.asin)}
+                    className="flex items-center gap-3 rounded-lg border border-gray-600/50 bg-gray-800/40 p-3 transition-colors hover:border-amber-500/45 hover:bg-gray-800/60"
+                  >
+                    <span className="flex-shrink-0 w-7 h-7 rounded-lg bg-gray-600 flex items-center justify-center text-xs font-bold text-gray-300">
+                      {i + 1}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-white text-sm font-medium truncate">{item.title || item.asin || "—"}</p>
+                      <p className="text-gray-500 text-xs mt-0.5">
+                        ASIN: {item.asin || "—"} · بازدید {formatNum(item.viewCount)} · جستجو {formatNum(item.searchCount)}
+                      </p>
+                    </div>
+                    <span className="flex-shrink-0 text-emerald-400 text-sm font-medium">
+                      {formatNum(item.purchaseCount)} خرید
+                    </span>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -793,17 +859,19 @@ export default function AdminDashboardPage() {
           {popularTerms.length > 0 ? (
             <ul className="space-y-2">
               {popularTerms.map((term, i) => (
-                <li
-                  key={`${pick(term, "searchTerm", "SearchTerm") || "t"}-${i}`}
-                  className="flex items-center justify-between gap-3 p-3 rounded-lg bg-gray-800/40 border border-gray-600/50 hover:border-gray-600 transition-colors"
-                >
-                  <p className="text-white text-sm font-medium truncate flex-1">
-                    {pick(term, "searchTerm", "SearchTerm") || "—"}
-                  </p>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <span className="text-gray-400 text-xs">{formatNum(pick(term, "count", "Count"))} بار</span>
-                    <span className="text-cyan-400 text-xs">کلیک {formatPercent(pick(term, "clickRate", "ClickRate"))}</span>
-                  </div>
+                <li key={`${pick(term, "searchTerm", "SearchTerm") || "t"}-${i}`}>
+                  <Link
+                    href={searchReportHref(pick(term, "searchTerm", "SearchTerm"))}
+                    className="flex items-center justify-between gap-3 rounded-lg border border-gray-600/50 bg-gray-800/40 p-3 transition-colors hover:border-amber-500/45 hover:bg-gray-800/60"
+                  >
+                    <p className="text-white text-sm font-medium truncate flex-1">
+                      {pick(term, "searchTerm", "SearchTerm") || "—"}
+                    </p>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="text-gray-400 text-xs">{formatNum(pick(term, "count", "Count"))} بار</span>
+                      <span className="text-cyan-400 text-xs">کلیک {formatPercent(pick(term, "clickRate", "ClickRate"))}</span>
+                    </div>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -817,13 +885,14 @@ export default function AdminDashboardPage() {
         {noResultSearches.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {noResultSearches.map((item, i) => (
-              <div
+              <Link
                 key={i}
-                className="flex items-center justify-between gap-2 p-3 rounded-lg bg-gray-800/40 border border-amber-500/20"
+                href={searchReportHref(pick(item, "searchTerm", "SearchTerm"))}
+                className="flex items-center justify-between gap-2 rounded-lg border border-amber-500/20 bg-gray-800/40 p-3 transition-colors hover:border-amber-500/50 hover:bg-gray-800/60"
               >
                 <p className="text-white text-sm truncate flex-1">{pick(item, "searchTerm", "SearchTerm") || "—"}</p>
                 <span className="text-amber-400/90 text-xs shrink-0">{formatNum(pick(item, "count", "Count"))} بار</span>
-              </div>
+              </Link>
             ))}
           </div>
         ) : (

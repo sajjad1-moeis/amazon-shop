@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { ShoppingCart } from "iconsax-reactjs";
+import { Button } from "@/components/ui/button";
 import OrdersTable from "@/template/Admin/orders/OrdersTable";
 import OrdersFilters from "@/template/Admin/orders/OrdersFilters";
 import AdminPagination from "@/components/ui/AdminPagination";
@@ -18,6 +19,7 @@ export default function OrdersPage() {
   const pageParam = searchParams.get("page");
   const statusFilter = statusParam && statusParam !== "all" ? statusParam : undefined;
   const searchTerm = searchParams.get("search") || "";
+  const manualOrderHint = searchParams.get("manualOrder") === "1";
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pageNumber, setPageNumber] = useState(pageParam ? parseInt(pageParam, 10) || 1 : 1);
@@ -68,8 +70,33 @@ export default function OrdersPage() {
     router.push(`/admin/orders?${params.toString()}`);
   };
 
+  const dismissManualHint = () => {
+    const p = new URLSearchParams(searchParams.toString());
+    p.delete("manualOrder");
+    const q = p.toString();
+    router.replace(q ? `/admin/orders?${q}` : "/admin/orders");
+  };
+
   return (
     <div className="space-y-6">
+      {manualOrderHint ? (
+        <div className="rounded-xl border border-amber-500/35 bg-amber-950/25 px-4 py-3 text-sm text-amber-100">
+          <p className="font-medium text-amber-50">ثبت سفارش دستی (راهنما)</p>
+          <p className="mt-1.5 text-xs leading-relaxed text-amber-200/90">
+            از همین صفحه سفارش را پیدا کنید و از جزئیات سفارش، وضعیت و پرداخت را مدیریت کنید. فلو اختصاصی «ایجاد سفارش از صفر در پنل»
+            در صورت نیاز در فاز بعد با API اختصاصی اضافه می‌شود.
+          </p>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="mt-2 h-8 text-xs text-amber-300 hover:bg-amber-500/10 hover:text-amber-200"
+            onClick={dismissManualHint}
+          >
+            بستن راهنما
+          </Button>
+        </div>
+      ) : null}
       <AdminPageHeader title="فاکتورها و سفارشات" subtitle="مشاهده و مدیریت سفارشات" icon={ShoppingCart}>
         <OrdersFilters />
       </AdminPageHeader>

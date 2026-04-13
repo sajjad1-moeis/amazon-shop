@@ -14,6 +14,7 @@ import {
   Danger,
   ArrowLeft2,
   Wallet3,
+  ShoppingCart,
 } from "iconsax-reactjs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -88,13 +89,21 @@ function healthPill(status) {
 
 const QUICK_ACTIONS = [
   { label: "محصول جدید", href: "/admin/products/create", icon: Box1, color: "text-emerald-400" },
-  { label: "لیست محصولات", href: "/admin/products/list", icon: Shop, color: "text-teal-400" },
+  {
+    label: "سفارش دستی (راهنما)",
+    href: "/admin/orders?manualOrder=1",
+    icon: ShoppingCart,
+    color: "text-orange-300",
+  },
+  { label: "ایمپورت از لینک", href: "/admin/products/list", icon: Shop, color: "text-teal-400" },
+  { label: "اجرای Sync/Job", href: "/admin/jobs", icon: Cpu, color: "text-indigo-300" },
   { label: "نرخ ارز", href: "/admin/currency-rates", icon: MoneyRecive, color: "text-cyan-400" },
   { label: "سرویس ارز", href: "/admin/currency-services", icon: Wallet3, color: "text-sky-400" },
   { label: "تخفیف‌ها", href: "/admin/discounts/list", icon: DiscountShape, color: "text-rose-400" },
+  { label: "سرچ بدون نتیجه", href: "/admin/search/reports", icon: Danger, color: "text-amber-300" },
   { label: "پروکسی اسکرپر", href: "/admin/scraper-proxy", icon: Flash, color: "text-amber-400" },
-  { label: "انبار", href: "/admin/inventory", icon: Cpu, color: "text-violet-400" },
-  { label: "قیمت‌گذاری", href: "/admin/settings/pricing", icon: Setting3, color: "text-gray-300" },
+  { label: "لاگ‌های عملیاتی", href: "/admin/security/operational-logs", icon: DocumentText, color: "text-violet-300" },
+  { label: "قیمت‌گذاری", href: "/admin/pricing", icon: Setting3, color: "text-gray-300" },
 ];
 
 function SectionHead({ title, subtitle }) {
@@ -115,15 +124,15 @@ function EmptyMini({ message }) {
   );
 }
 
-export default function AdminDashboardPhase5({ phase5Widget }) {
-  const loading = phase5Widget?.loading;
-  const err = phase5Widget?.error;
-  const data = phase5Widget?.data;
+export default function AdminDashboardPhase5({ operationsBundle }) {
+  const loading = operationsBundle?.loading;
+  const err = operationsBundle?.error;
+  const data = operationsBundle?.data;
 
   if (loading) {
     return (
       <div className="space-y-6 py-6">
-        <SectionHead title="عملیات و سلامت سیستم (فاز ۵)" subtitle="در حال بارگذاری…" />
+        <SectionHead title="عملیات و سلامت سیستم" subtitle="در حال بارگذاری…" />
         <div className="flex justify-center py-16">
           <Spinner size="lg" />
         </div>
@@ -134,7 +143,7 @@ export default function AdminDashboardPhase5({ phase5Widget }) {
   if (err) {
     return (
       <div className="space-y-3 rounded-xl border border-rose-500/30 bg-rose-950/20 p-6">
-        <SectionHead title="عملیات و سلامت سیستم (فاز ۵)" />
+        <SectionHead title="عملیات و سلامت سیستم" />
         <div className="flex items-center gap-2 text-rose-300">
           <Danger size={22} />
           <p className="text-sm">{err}</p>
@@ -144,7 +153,14 @@ export default function AdminDashboardPhase5({ phase5Widget }) {
   }
 
   const healthRows = data?.health?.rows ?? [];
-  const proxy = data?.proxy ?? { ready: false, issues: [], reachable: true };
+  const proxy = data?.proxy ?? {
+    ready: false,
+    issues: [],
+    reachable: true,
+    banCount: null,
+    avgLatencyMs: null,
+    proxies: null,
+  };
   const orders = data?.recentOrders?.orders ?? [];
   const ordersErr = data?.recentOrders?.error;
   const tickets = data?.recentTickets?.tickets ?? [];
@@ -187,7 +203,10 @@ export default function AdminDashboardPhase5({ phase5Widget }) {
       </div>
 
       <div>
-        <SectionHead title="خلاصه پروکسی اسکرپر" subtitle="تنظیمات و سلامت اتصال به سرویس اسکرپ" />
+        <SectionHead
+          title="خلاصه پروکسی اسکرپر"
+          subtitle="جزئیات per-proxy و Ban وقتی سرویس پروکسی فیلد برگرداند پر می‌شود؛ در غیر این صورت «—»."
+        />
         <Link
           href="/admin/scraper-proxy"
           className="block rounded-xl border border-gray-600 bg-gray-700/25 p-4 transition-colors hover:border-teal-500/40 hover:bg-gray-700/38"
@@ -218,6 +237,59 @@ export default function AdminDashboardPhase5({ phase5Widget }) {
             </ul>
           ) : null}
         </Link>
+        <div className="mt-3 overflow-x-auto rounded-xl border border-gray-600/80 bg-gray-800/30">
+          <table className="w-full min-w-[420px] text-xs">
+            <thead>
+              <tr className="border-b border-gray-600 text-right text-gray-500">
+                <th className="p-2.5 font-medium">شاخص</th>
+                <th className="p-2.5 font-medium">مقدار</th>
+              </tr>
+            </thead>
+            <tbody className="text-gray-200">
+              <tr className="border-b border-gray-700/80">
+                <td className="p-2.5 text-gray-400">Ban / مسدود شده</td>
+                <td className="p-2.5 font-medium">{proxy.banCount != null ? formatNum(proxy.banCount) : "—"}</td>
+              </tr>
+              <tr className="border-b border-gray-700/80">
+                <td className="p-2.5 text-gray-400">میانگین تأخیر پاسخ (ms)</td>
+                <td className="p-2.5 font-medium">{proxy.avgLatencyMs != null ? formatNum(proxy.avgLatencyMs) : "—"}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        {Array.isArray(proxy.proxies) && proxy.proxies.length > 0 ? (
+          <div className="mt-2 overflow-x-auto rounded-xl border border-gray-600/80 bg-gray-800/30">
+            <table className="w-full min-w-[520px] text-xs">
+              <thead>
+                <tr className="border-b border-gray-600 text-right text-gray-500">
+                  <th className="p-2.5 font-medium">پروکسی</th>
+                  <th className="p-2.5 font-medium">وضعیت</th>
+                  <th className="p-2.5 font-medium">Ban</th>
+                  <th className="p-2.5 font-medium">تأخیر ms</th>
+                </tr>
+              </thead>
+              <tbody className="text-gray-200">
+                {proxy.proxies.map((p, pi) => {
+                  const label =
+                    p?.name ?? p?.Name ?? p?.host ?? p?.Host ?? p?.url ?? p?.Url ?? `پروکسی ${pi + 1}`;
+                  const st = p?.status ?? p?.Status ?? p?.state ?? p?.State ?? "—";
+                  const b = p?.banCount ?? p?.BanCount ?? p?.banned ?? p?.Banned;
+                  const lat = p?.avgLatencyMs ?? p?.AvgLatencyMs ?? p?.latencyMs ?? p?.LatencyMs;
+                  return (
+                    <tr key={`px-${pi}`} className="border-b border-gray-700/80 last:border-0">
+                      <td className="max-w-[200px] truncate p-2.5">{String(label)}</td>
+                      <td className="p-2.5">{String(st)}</td>
+                      <td className="p-2.5">{b != null && b !== "" && Number.isFinite(Number(b)) ? formatNum(b) : "—"}</td>
+                      <td className="p-2.5">
+                        {lat != null && lat !== "" && Number.isFinite(Number(lat)) ? formatNum(lat) : "—"}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        ) : null}
       </div>
 
       <div>
@@ -242,11 +314,19 @@ export default function AdminDashboardPhase5({ phase5Widget }) {
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <div className="overflow-hidden rounded-xl border border-gray-600 bg-gray-700/25">
-          <div className="flex items-center justify-between border-b border-gray-600 px-4 py-3">
-            <h3 className="text-sm font-medium text-white">آخرین سفارشات</h3>
-            <Link href="/admin/orders" className="text-xs text-amber-400/90 hover:underline">
-              همه سفارشات
-            </Link>
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-600 px-4 py-3">
+            <div>
+              <h3 className="text-sm font-medium text-white">آخرین سفارشات ثبت‌شده</h3>
+              <p className="mt-0.5 text-[11px] text-gray-500">بر اساس API اخیر؛ برای سفارش‌های در جریان از فیلتر وضعیت استفاده کنید.</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Link href="/admin/orders?status=3" className="text-xs text-gray-400 hover:text-amber-300 hover:underline">
+                در حال پردازش
+              </Link>
+              <Link href="/admin/orders" className="text-xs text-amber-400/90 hover:underline">
+                همه سفارشات
+              </Link>
+            </div>
           </div>
           <div className="overflow-x-auto p-1">
             {ordersErr ? (
@@ -262,6 +342,7 @@ export default function AdminDashboardPhase5({ phase5Widget }) {
                     <TableHead className="whitespace-nowrap text-gray-400">مبلغ</TableHead>
                     <TableHead className="whitespace-nowrap text-gray-400">وضعیت</TableHead>
                     <TableHead className="whitespace-nowrap text-gray-400">تاریخ</TableHead>
+                    <TableHead className="whitespace-nowrap text-gray-400">اقدام</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -279,11 +360,16 @@ export default function AdminDashboardPhase5({ phase5Widget }) {
                           {o.customerName ?? o.userFullName ?? o.userName ?? "—"}
                         </TableCell>
                         <TableCell className="whitespace-nowrap text-gray-300">
-                          {o.totalAmount != null ? `${formatNum(o.totalAmount)} ت` : "—"}
+                          {o.totalAmount != null ? `${formatNum(o.totalAmount)} تومان` : "—"}
                         </TableCell>
                         <TableCell className="whitespace-nowrap">{orderStatusBadge(o.status)}</TableCell>
                         <TableCell className="whitespace-nowrap text-gray-400 text-xs">
                           {o.createdAt ? formatDateFa(o.createdAt) : o.date ?? "—"}
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap">
+                          <Link href={href} className="text-xs text-amber-300 hover:underline">
+                            مشاهده
+                          </Link>
                         </TableCell>
                       </TableRow>
                     );
@@ -295,8 +381,11 @@ export default function AdminDashboardPhase5({ phase5Widget }) {
         </div>
 
         <div className="overflow-hidden rounded-xl border border-gray-600 bg-gray-700/25">
-          <div className="flex items-center justify-between border-b border-gray-600 px-4 py-3">
-            <h3 className="text-sm font-medium text-white">آخرین تیکت‌ها</h3>
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-600 px-4 py-3">
+            <div>
+              <h3 className="text-sm font-medium text-white">تیکت‌های باز</h3>
+              <p className="mt-0.5 text-[11px] text-gray-500">فقط وضعیت «باز»؛ اولویت‌بندی در لیست کامل تیکت.</p>
+            </div>
             <Link href="/admin/tickets" className="text-xs text-amber-400/90 hover:underline">
               همه تیکت‌ها
             </Link>
@@ -314,6 +403,7 @@ export default function AdminDashboardPhase5({ phase5Widget }) {
                     <TableHead className="whitespace-nowrap text-gray-400">موضوع</TableHead>
                     <TableHead className="whitespace-nowrap text-gray-400">وضعیت</TableHead>
                     <TableHead className="whitespace-nowrap text-gray-400">بروزرسانی</TableHead>
+                    <TableHead className="whitespace-nowrap text-gray-400">اقدام</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -336,6 +426,11 @@ export default function AdminDashboardPhase5({ phase5Widget }) {
                         <TableCell className="whitespace-nowrap">{ticketStatusBadge(t.status)}</TableCell>
                         <TableCell className="whitespace-nowrap text-gray-400 text-xs">
                           {t.updatedAt ? formatDateFa(t.updatedAt) : t.lastUpdate ?? "—"}
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap">
+                          <Link href={href} className="text-xs text-amber-300 hover:underline">
+                            مشاهده
+                          </Link>
                         </TableCell>
                       </TableRow>
                     );

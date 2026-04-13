@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { DocumentText, Refresh } from "iconsax-reactjs";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
@@ -11,6 +11,18 @@ import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { adminOperationsService } from "@/services/admin/adminOperationsService";
+import { cn } from "@/lib/utils";
+
+const PRESET_CATEGORIES = [
+  { key: "", label: "همه" },
+  { key: "catalog", label: "کاتالوگ" },
+  { key: "integration", label: "یکپارچه‌سازی" },
+  { key: "search", label: "جستجو" },
+  { key: "scraper", label: "اسکرپر" },
+  { key: "payment", label: "پرداخت" },
+  { key: "api", label: "API" },
+  { key: "general", label: "عمومی" },
+];
 
 function normPage(raw) {
   const d = raw || {};
@@ -25,6 +37,7 @@ function normPage(raw) {
 
 export default function OperationalLogsAdminPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [pageSize] = useState(25);
@@ -33,12 +46,10 @@ export default function OperationalLogsAdminPage() {
   const [data, setData] = useState({ items: [], totalPages: 0, totalCount: 0 });
 
   useEffect(() => {
-    const q = searchParams.get("category")?.trim();
-    if (q) {
-      setCatDraft(q);
-      setAppliedCat(q);
-      setPage(1);
-    }
+    const q = searchParams.get("category")?.trim() ?? "";
+    setCatDraft(q);
+    setAppliedCat(q);
+    setPage(1);
   }, [searchParams]);
 
   const fetchData = useCallback(async () => {
@@ -62,15 +73,33 @@ export default function OperationalLogsAdminPage() {
   }, [fetchData]);
 
   const applyFilters = () => {
-    setAppliedCat(catDraft.trim());
+    const v = catDraft.trim();
+    setAppliedCat(v);
     setPage(1);
+    const p = new URLSearchParams(searchParams.toString());
+    if (v) p.set("category", v);
+    else p.delete("category");
+    const qs = p.toString();
+    router.replace(qs ? `/admin/security/operational-logs?${qs}` : "/admin/security/operational-logs");
+  };
+
+  const selectPresetCategory = (key) => {
+    const v = (key || "").trim();
+    setCatDraft(v);
+    setAppliedCat(v);
+    setPage(1);
+    const p = new URLSearchParams(searchParams.toString());
+    if (v) p.set("category", v);
+    else p.delete("category");
+    const qs = p.toString();
+    router.replace(qs ? `/admin/security/operational-logs?${qs}` : "/admin/security/operational-logs");
   };
 
   return (
     <div className="space-y-6 pb-8 p-4 md:p-6 max-w-[1200px] mx-auto">
       <AdminPageHeader
         title="لاگ عملیاتی"
-        subtitle="فاز ۱۰ — دسته‌ها: catalog، integration، search، scraper، payment، api، general"
+        subtitle="تجمیع رویدادهای عملیاتی با فیلتر دسته؛ برای تفکیک بیشتر بعداً می‌توان منبع جدا اضافه کرد."
         icon={DocumentText}
         actions={
           <Button variant="outline" size="sm" onClick={fetchData} disabled={loading}>
@@ -79,6 +108,23 @@ export default function OperationalLogsAdminPage() {
           </Button>
         }
       />
+      <div className="flex flex-wrap gap-2">
+        {PRESET_CATEGORIES.map(({ key, label }) => (
+          <Button
+            key={key || "all"}
+            type="button"
+            size="sm"
+            variant={appliedCat === key ? "default" : "outline"}
+            className={cn(
+              "h-8 text-xs",
+              appliedCat === key ? "bg-amber-600/85 text-white hover:bg-amber-600" : "border-gray-600 bg-gray-800/60"
+            )}
+            onClick={() => selectPresetCategory(key)}
+          >
+            {label}
+          </Button>
+        ))}
+      </div>
       <div className="flex flex-wrap gap-3 items-end">
         <div className="space-y-1">
           <Label className="text-xs">دسته (category)</Label>

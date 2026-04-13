@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
 import { reportService } from "@/services/report/reportService";
 import { unwrapApiData } from "@/services/api/client";
+import { toFiniteAmount } from "@/utils/adminAmountUtils";
 import { ReportPageHeader, ReportStatCard } from "@/components/admin";
 import { Chart, Wallet3, ShoppingCart, Receipt2 } from "iconsax-reactjs";
 
@@ -41,12 +42,12 @@ export default function SalesReportsPage() {
       if (todayData) {
         setReport((prev) => ({
           ...prev,
-          todaySales: todayData.totalSales ?? 0,
+          todaySales: toFiniteAmount(todayData.totalSales ?? todayData.TotalSales, 0),
         }));
       }
       if (monthData) {
-        const totalSales = monthData.totalSales ?? 0;
-        const totalOrders = monthData.totalOrders ?? 0;
+        const totalSales = toFiniteAmount(monthData.totalSales ?? monthData.TotalSales, 0);
+        const totalOrders = toFiniteAmount(monthData.totalOrders ?? monthData.TotalOrders, 0);
         setReport((prev) => ({
           ...prev,
           monthSales: totalSales,

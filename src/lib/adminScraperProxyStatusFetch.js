@@ -1,5 +1,5 @@
 /**
- * یک درخواست همزمان به /api/admin/scraper-proxy/status را برای چند مصرف‌کننده (فاز ۴ هشدار، فاز ۵)
+ * یک درخواست همزمان به /api/admin/scraper-proxy/status را برای چند مصرف‌کننده (داشبورد هشدار و بلوک عملیات)
  * به یک Promise واحد می‌چسباند تا با هر «بروزرسانی» داشبورد دوبار به Next زده نشود.
  */
 let proxyStatusInflight = null;

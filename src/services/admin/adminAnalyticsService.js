@@ -1,7 +1,7 @@
 import { getAuthenticatedClient } from "../api/client";
 
 /**
- * Phase 12 - api/admin/analytics
+ * api/admin/analytics — آمار و تحلیل ادمین
  * همهٔ متدها پاسخ استاندارد { statusCode, success, message, data } را برمی‌گردانند.
  * در لایهٔ فراخواننده از unwrapApiData استفاده کنید.
  */
@@ -56,6 +56,18 @@ export const adminAnalyticsService = {
     return client.get(`admin/analytics/no-result-searches${qs}`).json();
   },
 
+  /** GET api/admin/analytics/no-result-searches/by-date-range?startDate=&endDate=&limit= — اختیاری */
+  getNoResultSearchesByDateRange: async (params) => {
+    const { startDate, endDate, limit } = params || {};
+    const searchParams = new URLSearchParams();
+    if (startDate) searchParams.append("startDate", startDate);
+    if (endDate) searchParams.append("endDate", endDate);
+    if (typeof limit === "number") searchParams.append("limit", String(limit));
+    const qs = searchParams.toString();
+    const client = getAuthenticatedClient();
+    return client.get(`admin/analytics/no-result-searches/by-date-range${qs ? `?${qs}` : ""}`).json();
+  },
+
   /** GET api/admin/analytics/user-stats */
   getUserStats: async () => {
     const client = getAuthenticatedClient();
@@ -77,6 +89,12 @@ export const adminAnalyticsService = {
     const qs = searchParams.toString();
     const client = getAuthenticatedClient();
     return client.get(`admin/analytics/summary/by-date-range${qs ? `?${qs}` : ""}`).json();
+  },
+
+  /** GET api/admin/analytics/dashboard-alerts — هشدارهای تجمیعی داشبورد */
+  getDashboardAlerts: async () => {
+    const client = getAuthenticatedClient();
+    return client.get("admin/analytics/dashboard-alerts").json();
   },
 
   /** GET api/admin/analytics/conversion-rate?startDate=&endDate= — اختیاری */
